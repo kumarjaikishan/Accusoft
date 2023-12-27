@@ -5,11 +5,11 @@ import InputAdornment from '@mui/material/InputAdornment';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import { setloader,setlogin } from '../../store/login';
+import { setloader, setlogin } from '../../store/login';
 import { useSelector, useDispatch } from 'react-redux';
 import VpnKeyIcon from '@mui/icons-material/VpnKey';
 import { userdata } from '../../store/api'
-import {  toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 const Signin = () => {
     let navigate = useNavigate();
@@ -22,7 +22,6 @@ const Signin = () => {
     useEffect(() => {
         dispatch(setloader(false));
     }, [])
-
 
 
     const [signinp, setsigninp] = useState(init);
@@ -38,17 +37,16 @@ const Signin = () => {
     }
 
     const submit = async () => {
-        // dispatch(login(true));
         setbtnclick(true);
         const { email, password } = signinp;
 
         if (!email || !password) {
-            toast.warn("All fields are Required", 1300);
+            toast.warn("All fields are Required", { autoClose: 1100 });
             setbtnclick(false);
             return;
         }
         try {
-            // dispatch(setloader(true));
+            dispatch(setloader(true));
             const res = await fetch(`${useralldetail.apiadress}/login`, {
                 method: "POST",
                 headers: {
@@ -62,22 +60,22 @@ const Signin = () => {
             if (res.ok) {
                 dispatch(setlogin(true));
                 console.log(data);
-                toast.success("Login Successfully", 1100);
+                toast.success("Login Successfully", { autoClose: 1300 });
                 setbtnclick(false);
                 dispatch(setloader(false));
                 localStorage.setItem("token", data.token);
                 dispatch(userdata());
-                navigate('/');
+                return navigate('/');
             }
             else {
                 console.log(data);
-                toast.warn("No user found", 1300);
+                toast.warn("No user found",{ autoClose: 1500 });
                 setbtnclick(false);
             }
 
         } catch (error) {
             console.log(error);
-            toast.warn("Something Went Wrong", 1300);
+            toast.warn("Something Went Wrong",{ autoClose: 1500 });
             setbtnclick(false);
             dispatch(setloader(false));
         }

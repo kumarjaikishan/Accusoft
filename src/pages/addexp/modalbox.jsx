@@ -28,18 +28,18 @@ const Modalbox = ({ setisledupdate, modal, init, handler, inp, isupdate, sub, se
             })
             const datea = await result.json();
             if (result.ok) {
-                toast.success("Data updated Successfully", 1700)
+                toast.success("Data updated Successfully", { autoClose: 1300 })
                 dispatch(userdata());
                 setinp(init);
                 setisupdate(false);
                 setmodal(false);
                 dispatch(setloader(false));
             } else {
-                toast.warn("error occurred", 1700)
+                toast.warn("error occurred", { autoClose: 1300 })
                 console.log(datea);
             }
         } catch (error) {
-            toast.warn("Sopmething went wrong", 2500)
+            toast.warn("Sopmething went wrong", { autoClose: 1300 })
             console.log(error);
         }
 

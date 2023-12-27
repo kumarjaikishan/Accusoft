@@ -38,17 +38,17 @@ const Signup = ({setlog}) => {
         const date = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getUTCDate();
         const { name, email, phone, password, cpassword, ledger } = signinp;
         if (!name || !email || !phone || !password || !ledger) {
-            toast.warn("All Fields are Required", 1800)
+            toast.warn("All Fields are Required", { autoClose: 1300 })
             setbtnclick(false);
             return;
         }
         if (password != cpassword) {
-            toast.warn("Password does not match", 1200)
+            toast.warn("Password does not match", { autoClose: 1300 })
             setbtnclick(false);
             return;
         }
         if (phone.length < 10) {
-            toast.warn("Mobile Should be 10 Digits", 1200)
+            toast.warn("Mobile Should be 10 Digits", { autoClose: 1300 })
             setbtnclick(false);
             return;
         }
@@ -67,18 +67,18 @@ const Signup = ({setlog}) => {
             if (res.ok) {
                 const datae = await res.json();
                 setsigninp(init);
-                toast.success("Signup Successful", 1400)
+                toast.success("Signup Successful", { autoClose: 1300 })
                 setbtnclick(false);
                 setlog(true)
             } else {
                 setbtnclick(false);
-                toast.warn("Something went wrong", 1400)
+                toast.warn("Something went wrong", { autoClose: 1300 })
             }
 
             // console.log(datae);
         } catch (error) {
             setbtnclick(false);
-            toast.warn("Something went wrong catch", 1400)
+            toast.warn("Something went wrong catch", { autoClose: 1600 })
             console.log(error);
         }
 

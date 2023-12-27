@@ -15,11 +15,6 @@ const Sidebar = () => {
   const token = localStorage.getItem("token");
     const log = useSelector((state) => state.login);
     const useralldetail = useSelector((state) => state.userexplist);
-    const notify = (msg, dur) => {
-        toast.success(msg, {
-            autoClose: dur,
-        });
-    }
     const linke = [{
         name: "Dashboard",
         link: '/',
@@ -53,7 +48,7 @@ const Sidebar = () => {
         }).then(async (willDelete) => {
             if (willDelete) {
                 dispatch(header("Login"))
-                notify("Logout successfull", 2000)
+                toast.success("Logout successfull", { autoClose: 1300 })
                 navigate('/logout');
             } else {
                 // swal("Your data is safe!");

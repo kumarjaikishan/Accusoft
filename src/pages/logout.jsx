@@ -14,7 +14,6 @@ const Logout = () => {
     dispatch(userlogout());
     dispatch(setlogin(false));
     return navigate('/login');
-
   }, [])
 }
 

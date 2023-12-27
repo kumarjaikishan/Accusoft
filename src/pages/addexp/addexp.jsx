@@ -94,7 +94,7 @@ const Addexp = () => {
       }, 420);
       console.log(dvd)
       dispatch(setloader(false));
-      return toast.warn("Kindly Fill all Fields", 2100)
+      return toast.warn("Kindly Fill all Fields", { autoClose: 1700 })
     }
     try {
       dispatch(setloader(true));
@@ -110,14 +110,14 @@ const Addexp = () => {
       })
       const data = await result.json();
       if (result.ok) {
-        toast.success("Expense Added", 1600);
+        toast.success("Expense Added", { autoClose: 1300 });
         console.log(data);
         dispatch(userdata());
         dispatch(setloader(false));
         setmodal(false);
         setinp(init);
       } else {
-        toast.warn("something went wrong", 1300);
+        toast.warn("something went wrong", { autoClose: 1500 });
       }
 
     } catch (error) {
@@ -186,13 +186,13 @@ const Addexp = () => {
             })
             const data = await result.json();
             if (result.ok) {
-              toast.success("Data Deleted Successfully", 1800);
+              toast.success("Data Deleted Successfully", { autoClose: 1300 });
               dispatch(userdata());
               dispatch(setloader(false));
             }
           } catch (error) {
             console.log(error);
-            toast.error("Something went wrong", 1800);
+            toast.error("Something went wrong", { autoClose: 1600 });
           }
 
         } else {
@@ -224,7 +224,7 @@ const Addexp = () => {
           }
 
           if (arr.length < 1) {
-            return toast.warn("Kindly Select data", 2000);
+            return toast.warn("Kindly Select data", { autoClose: 1700 });
           }
           try {
             const result = await fetch(`${useralldetail.apiadress}/delmany`, {
@@ -239,7 +239,7 @@ const Addexp = () => {
             })
             const data = await result.json();
             if (result.ok) {
-              toast.success("Deleted Successfully", 1800);
+              toast.success("Deleted Successfully", { autoClose: 1300 });
               dispatch(setloader(false));
               dispatch(userdata());
 
@@ -251,7 +251,7 @@ const Addexp = () => {
 
               highlight();
             } else {
-              toast.warn("something went wrong", 1800);
+              toast.warn("something went wrong", { autoClose: 1800 });
             }
 
           } catch (error) {

@@ -3,6 +3,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 export const userdata = createAsyncThunk("userdata", async () => {
     const token = localStorage.getItem("token");
     // console.log("api calling");
+    // dispatch(setloader(true));
     try {
         const res = await fetch(`https://backend-exp-man.vercel.app/userdata`, {
             method: "GET",
@@ -27,8 +28,8 @@ const userexplist = createSlice({
         user: [],
         loading: false,
         error: null,
-        profilepic:"",
-        apiadress:"https://backend-exp-man.vercel.app",
+        profilepic: "",
+        apiadress: "https://backend-exp-man.vercel.app",
     },
     reducers: {
         userlogout(state, action) {
@@ -55,9 +56,9 @@ const userexplist = createSlice({
             state.explist = action.payload.explist;
             state.ledgerlist = action.payload.user.ledger;
             state.user = action.payload.user;
-            state.profilepic=action.payload.user.imgsrc;
+            state.profilepic = action.payload.user.imgsrc;
         })
     }
 })
-export const { userlogout,profilepicupdtae } = userexplist.actions;
+export const { userlogout, profilepicupdtae } = userexplist.actions;
 export default userexplist.reducer;

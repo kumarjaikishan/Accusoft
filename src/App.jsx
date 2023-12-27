@@ -48,7 +48,7 @@ function App() {
 
   return (
     <>
-      <ToastContainer />
+      <ToastContainer closeOnClick={true} pauseOnFocusLoss={true}/>
       <div className="App" >
         <Navbar/>
         <div className={log.narrow ? "main narrow" : "main"} onClick={sidebarclose}>

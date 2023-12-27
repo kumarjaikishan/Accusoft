@@ -17,7 +17,7 @@ const Admin = () => {
     const [adminexpdata, setadminexpdata] = useState([])
     useEffect(() => {
         if (!log.islogin) {
-            toast.warn("You Are not Logged In", 1100);
+            toast.warn("You Are not Logged In", { autoClose: 1300 });
             return navigate('/login');
         }
         // console.log(useralldetail.explist);
@@ -43,7 +43,7 @@ const Admin = () => {
                 setadminexpdata(data.explist)
                 dispatch(setloader(false));
             } else {
-                toast.warn(data.msg ? data.msg : "You are not authorised", 1100);
+                toast.warn(data.msg ? data.msg : "You are not authorised", { autoClose: 1500 });
                 return navigate('/');
             }
         } catch (error) {
@@ -127,7 +127,7 @@ const Admin = () => {
 
                     // console.log(data);
                     fetche();
-                    toast.success("Deleted Successfully", 2000);
+                    toast.success("Deleted Successfully", { autoClose: 1300 });
                 } else {
                     // swal("Your data is safe!");
                 }
@@ -156,7 +156,7 @@ const Admin = () => {
                     }
 
                     if (arr.length < 1) {
-                        toast.warn("Kindly Select data", 2000);
+                        toast.warn("Kindly Select data", { autoClose: 1300 });
                     } else {
                         const result = await fetch(`${useralldetail.apiadress}/delmany`, {
                             method: "DELETE",
@@ -168,7 +168,7 @@ const Admin = () => {
                             })
                         })
                         const data = await result.json();
-                        toast.success("Deleted Successfully", 2000);
+                        toast.success("Deleted Successfully", { autoClose: 1300 });
                         fetche();
 
                         const item = document.querySelectorAll("#tablecontent input");

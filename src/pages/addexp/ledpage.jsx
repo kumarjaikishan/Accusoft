@@ -28,7 +28,7 @@ const Ledpage = ({  setmodal, isledupdate, setisledupdate }) => {
     const token = localStorage.getItem("token");
     // console.log(ledger.length);
     if (ledger.length < 1) {
-      return toast.warn("At least One ledger Required", 2000)
+      return toast.warn("At least One ledger Required", { autoClose: 1800 })
     }
     try {
       const res = await fetch(`${useralldetail.apiadress}/userledger`, {
@@ -44,17 +44,17 @@ const Ledpage = ({  setmodal, isledupdate, setisledupdate }) => {
       const result = await res.json();
       // console.log(res);
       if(res.ok){
-        toast.success("Ledger Updated successful", 1800)
+        toast.success("Ledger Updated successful", { autoClose: 1300 })
         setledinp(init);
         dispatch(userdata());
         isupda && setinsupdat(false);
       }else{
         console.log(result)
-        return toast.warn("something wrong", 2000)
+        return toast.warn("something wrong", { autoClose: 1300 })
       }
     } catch (error) {
       console.log(error);
-      return toast.warn("something wrong", 2000)
+      return toast.warn("something wrong", { autoClose: 1300 })
     }
   }
 

@@ -13,15 +13,16 @@ const Home = () => {
   const useralldetail = useSelector((state) => state.userexplist);
   useEffect(() => {
     if (!log.islogin) {
-      // toast.warn("You Are not Logged In", 1100);
+      // toast.warn("You Are not Logged In", { autoClose: 1300 });
       return navigate('/login');
     }
-    dispatch(setloader(false));
+    dispatch(setloader(true));
     dispatch(header("Dashboard"))
   }, [])
   useEffect(() => {
 
     useralldetail.explist && load();
+    useralldetail.explist &&  dispatch(setloader(false));;
     // repeat(100000)
   }, [useralldetail])
 
@@ -132,7 +133,7 @@ const Home = () => {
       totalsum: totalsum
     })
     // console.log(totalsum);
-    dispatch(setloader(false));
+    // dispatch(setloader(false));
     // console.timeEnd('mine home')
   }
   const card = [{
@@ -182,7 +183,6 @@ const Home = () => {
             </div>
           )
         })}
-
 
       </div>
     </>

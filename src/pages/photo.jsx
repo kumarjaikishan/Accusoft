@@ -175,8 +175,9 @@ const Photo = () => {
 
                 let data = new FormData();
                 data.append('image', newimage)
-                data.append('oldimage', useralldetail.user.imgsrc)
+                data.append('oldimage', useralldetail.profilepic)
                 // console.log(newimage);
+                const id = toast.loading("Please wait...")
                 try {
                     const rese = await fetch(`${useralldetail.apiadress}/photo`, {
                         method: "POST",
@@ -194,7 +195,8 @@ const Photo = () => {
                         reset();
                         setisuploading(false);
                         dispatch(profilepicupdtae(resuke.url))
-                        toast.success("Photo Updated Successfully", 1500);
+                        // toast.success("Photo Updated Successfully", { autoClose: 1300 });
+                        toast.update(id, { render: "Photo Updated Successfully", type: "success", isLoading: false ,autoClose: 1300});
                         // navigate('/');
                     }
                 } catch (error) {

@@ -1,0 +1,9 @@
+.test {
+    border: 5px solid red;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    position: relative;
+    padding: 0 2rem;
+    /* background: #13adfa; */
+}

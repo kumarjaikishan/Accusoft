@@ -1,0 +1,209 @@
+.expprint{
+width: 100%;
+height: 100%;
+/* border: 5px solid red; */
+display: flex;
+align-items: center;
+flex-direction: column;
+}
+.expprint .box{
+   width: 80%;
+   height: 420px;
+   margin-top: 20px;
+   position: relative;
+   border: 2px solid black;
+}
+.box .header, .box .title, .box .particular, .box .sign{
+    position: relative;
+    width: 100%;
+    /* outline: auto; */
+}
+.box .header{
+    height:90px;
+    display: flex;
+    justify-content: space-between;
+    /* background: red; */
+    border-bottom: 1px solid black;
+}
+.box .header::before{
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-bottom: 1px solid black;
+}
+.box .header .logo{
+padding: 0 8px;
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+height: 100%;
+}
+.box .header .logo img{
+width: 130px;
+}
+.box .header .logo span{
+font-size: 10px;
+}
+.box .header .heading{
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   width: 70%;
+   justify-content: space-between;
+   align-items: center;
+   padding: 5px 10px;
+/* border: 1px solid green; */
+}
+.box .header .heading h6{
+    font-size: 8px;
+}
+.box .header .heading h5{
+    font-size: 10px;
+}
+.box .title{
+    height:110px;
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px solid black;
+}
+.box .title h3{
+    text-align: center;
+}
+.box .title .ans{
+    background: rgb(48, 43, 43);
+    display: inline-block;
+    /* padding: 2px 5px; */
+    text-align: center;
+    color: white;
+    padding: 2px 0;
+    
+    border: 1px solid white;
+}
+.box .title .quest {
+    display: inline-block;
+    background: grey;
+    color: black;
+    width: 110px;
+    font-weight: 600;
+    /* border: 1px solid black; */
+    text-align: center;
+    padding: 2px 0;
+    
+}
+.box .vno{
+    width: 60px;
+}
+.box .lname{
+    width: 200px;
+}
+.box .dat{
+    width: 145px;
+}
+.box .deb{
+   max-width: 60px;
+    color: white;
+}
+.box .qdat{
+   max-width: 50px;
+    color: white;
+}
+.box .title .set{
+    display: flex;
+    justify-content: space-between;
+    padding: 0;
+}
+.box .particular{
+    height: 100px;
+    width: 100%;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+}
+.box .particular .narr{
+    width: calc(100% - 132px)
+}
+.box  input , .box select{
+    width: 100%;
+    height: 100%;
+    outline: none;
+    border: none;
+    text-align: center;
+    background: transparent;
+    color: white;
+}
+.particular .narr input{
+    text-align: left;
+    padding-left: 10px;
+    font-weight: 600;
+    font-size: 1.1em;
+    color: black;
+}
+.particular .amount input{
+   font-size: 1.2em;
+   font-weight: 600;
+   color: black;
+}
+.box select{
+    color: white;
+    /* color: transparent; */
+    text-align: center;
+    /* background-color: transparent; */
+}.box option{
+    color: white;
+    background-color: rgb(22, 26, 28);
+}
+.box .particular .amount{
+    width: 130px;
+    border-left: 1px solid black;
+}
+.box .particular .word{
+   position: absolute;
+   top: -12px;
+   transform: translateY(-50%);
+   right: 25px;
+   font-size: 1.2em;
+   font-weight: 600;
+}
+.box .inttoword{
+    height: 25px;
+    /* background: red; */
+    text-align: end;
+    padding-right: 20px;
+    border-bottom: 1px solid black;
+    border-top: 1px solid black;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+.box .sign{
+    height: 90px;
+    padding: 5px 20px;
+    /* background: yellow; */
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+.box .sign div:nth-child(2){
+    /* border: 1px solid red; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.box .sign img{
+    width: 200px;
+}
+
+@media print {
+    .expprint .box{
+        width: 98%;
+     }
+     .expprint button{
+        display: none;
+     }
+     .box .deb{
+        max-width: 53px;
+     }
+}

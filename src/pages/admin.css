@@ -1,0 +1,323 @@
+.admin {
+    /* border: 1px solid red; */
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    position: relative;
+    padding: 0 2rem;
+    /* background: #13adfa; */
+}
+
+
+
+.admin .head {
+    border-top-left-radius: 11px;
+    border-top-right-radius: 11px;
+    position: relative;
+    /* border: 1px solid red; */
+    margin-top: 20px;
+    width: 100%;
+    height: 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-image: linear-gradient(179.4deg, rgba(33, 150, 243, 1) 1.8%, rgba(22, 255, 245, 0.60) 97.1%);
+}
+
+.admin .head span {
+    /* border: 1px solid red; */
+    color: rgb(39, 34, 34);
+    display: inline-block;
+    padding: 5px;
+    font-weight: 700;
+}
+
+.admin .head span:nth-child(2) select,
+.admin .head span:nth-child(3) input {
+    width: 110px;
+    outline: none;
+    border: none;
+    height: 30px;
+    border-radius: 7px;
+    text-align: center;
+}
+
+.admin .head span:nth-child(3) input {
+    width: 210px;
+}
+
+.admin .mater td {
+    text-transform: capitalize;
+}
+
+.admin .table {
+    width: 100%;
+    position: relative;
+    overflow-x: auto;
+    /* border: 1px solid red; */
+}
+
+.admin .table table {
+    width: 100%;
+    border-collapse: collapse;
+
+}
+
+.admin .table table th,
+.admin .table table td {
+    border: 1px solid rgb(190, 185, 185);
+    text-align: center;
+}
+
+.admin .table table thead th,
+.admin .table table #foot th {
+    height: 30px;
+    background:#0984e3;
+    color: whitesmoke;
+}
+.admin .table table thead{
+    position: sticky;
+    top: 0;
+}
+
+
+
+.admin .table table th:nth-child(1){
+    width: 30px;
+}
+.admin .table table th:nth-child(2) {
+    width: 90px;
+}
+
+.admin .table table th:nth-child(3) {
+    width: 60px;
+}
+.admin .table table th:nth-child(4) {
+    width: 50px;
+}
+.admin .table table th:nth-child(5) {
+    /* width: 130px; */
+}
+.admin .table table th:nth-child(6) {
+    width: 80px;
+}
+.admin .table table th:nth-child(8) {
+    width: 30px;
+}
+.admin .table table th:nth-child(9) {
+    width: 30px;
+}
+.admin .table table th:nth-child(10) {
+    width: 20px;
+}
+
+.admin .table table td {
+    font-size: 0.9em;
+    height: 25px;
+    line-height: 25px;
+}
+
+.fa-eye,
+.fa-pencil,
+.fa-trash-o {
+    font-size: 1.3em;
+    transition: 0.1s;
+    width: 100%;
+}
+
+.admin .fa-eye {
+    color: #95afc0;
+}
+
+.admin .fa-pencil {
+    color: #22a6b3;
+}
+
+.admin table .fa-trash-o,
+.admin table .fa-trash {
+    color: #eb4d4b;
+
+}
+
+.admin table .fa-trash {
+    font-size: 1.5em;
+    transform: rotate(20deg);
+    transition: 0.1s;
+}
+
+.admin table .fa-trash:hover {
+    font-size: 1.6em;
+    color: #13adfa;
+}
+
+.admin .fa-pencil:hover,
+.admin .fa-eye:hover,
+.admin .fa-trash-o:hover {
+    transform: scale(1.2);
+}
+
+.admin .foot {
+    margin-top: 10px;
+    border-radius: 5px;
+    width: 100%;
+    position: relative;
+    /* border: 1px solid red; */
+    height: 40px;
+    padding: 0px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #dbe1e6;
+    box-shadow: 0 0 5px #fff, 5px 5px 10px #a7aaaf, -5px -5px 10px #fff;
+}
+
+.admin .foot .pages {
+    display: inline-block;
+    margin: 0 5px;
+    width: 35px;
+    cursor: pointer;
+    transition: 0.2s;
+    height: 28px;
+    line-height: 25px;
+    text-align: center;
+    background: white;
+    border: 1px solid grey;
+    color: grey;
+    border-radius: 5px;
+    box-shadow: 3px 3px 8px rgb(0 0 0 / 40%);
+}
+
+.admin .foot .pages:hover,
+.admin .foot .pages.active {
+    background: grey;
+    color: white;
+}
+
+.admin .foot i {
+    background: none;
+    border: none;
+    outline: none;
+    background: #1886bd;
+    color: white;
+    /* font-weight: 600; */
+    font-size: 1.1em;
+    height: 28px;
+    text-align: center;
+    line-height: 25px;
+    padding: 0 10px;
+    margin: 0 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.1s;
+}
+
+.admin .foot i:hover {
+    transform: scale(1.1);
+    background: #13adfa;
+}
+
+.admin tr td:nth-child(2) {
+    text-transform: capitalize;
+}
+
+@media only screen and (max-width:600px) {
+
+   
+
+    .admin .table table #tablecontent td:nth-child(6),
+    .admin .table table #tablecontent td:nth-child(5) {
+        font-size: 0.5em;
+    }
+
+    .admin .table table #tablecontent td:nth-child(2),
+    .admin .table table #tablecontent td:nth-child(4) {
+        font-size: 0.4em;
+    }
+
+    .admin .table table #tablecontent td:nth-child(3) {
+        font-size: 0.5em;
+        /* background: green; */
+        text-transform: capitalize;
+    }
+
+   
+
+    .admin {
+        padding: 0 15px;
+        padding-bottom: 30px;
+    }
+
+    .admin .add {
+        height: 40px;
+    }
+
+    .admin .add i {
+        width: 40px;
+        height: 40px;
+        font-size: 2.1em;
+        line-height: 42px;
+    }
+
+    .admin .head {
+        width: 100%;
+        height: 55px;
+        font-size: 14px;
+        margin-top: 10px;
+    }
+
+    .admin .head span:nth-child(1) {
+        display: none;
+    }
+
+    .admin .head span:nth-child(2) select,
+    .admin .head span:nth-child(3) input {
+        width: 90px;
+        height: 30px;
+    }
+
+    .admin .head span:nth-child(3) input {
+        width: 150px;
+    }
+
+    .admin .table th {
+        font-size: 08px;
+        /* background: red; */
+    }
+
+    .admin .table #tablecontent {
+        font-size: 0.6em;
+    }
+
+    .admin .table table th:nth-child(1){
+        width: 20px;
+    }
+    .admin .table table th:nth-child(2) {
+        width: 40px;
+    }
+    
+    .admin .table table th:nth-child(3) {
+        width: 30px;
+    }
+    .admin .table table th:nth-child(4) {
+        width: 22px;
+    }
+    .admin .table table th:nth-child(5) {
+        /* width: 130px; */
+    }
+    .admin .table table th:nth-child(6) {
+        width: 35px;
+    }
+    .admin .table table th:nth-child(8) {
+        width: 15px;
+    }
+    .admin .table table th:nth-child(9) {
+        width: 15px;
+    }
+    .admin .table table th:nth-child(10) {
+        width: 15px;
+    }
+    .admin .foot span{
+        font-size: 14px;
+        transform: scale(0.6);
+    }
+}

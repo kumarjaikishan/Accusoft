@@ -1,0 +1,167 @@
+.exp .modal{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(5px);
+    
+}
+.exp .modal .box{
+    position: relative;
+    top: 50%;
+    left: 50%;
+    width: 730px;
+    height: 500px;
+    border-radius: 20px;
+    transform: translate(-50%,-50%);
+    background: #f0f0f0;
+    box-shadow: 10px 10px 20px rgba(0,0,0,0.4);
+    border: 3px solid rgb(7, 224, 252);
+    overflow: hidden;
+}
+.exp .modal .box.shake{
+    animation: aniok 0.4s linear forwards;
+}
+@keyframes aniok{
+    0%{
+        transform: translate(-48%,-50%);
+    }
+    20%{
+        transform: translate(-52%,-50%);
+    }
+    40%{
+        transform: translate(-47%,-50%);
+    }
+    60%{
+        transform: translate(-53%,-50%);
+    }
+    80%{
+        transform: translate(-49%,-50%);
+    }
+    100%{
+        transform: translate(-50%,-50%);
+    }
+}
+.caps{
+    text-transform: capitalize;
+}
+.exp .modal .ledgeredit{
+    position: absolute;
+    top: 55px;
+    right: 50px;
+    width: 40px;
+    height: 40px;
+}
+.exp .modal .ledgeredit i{
+   display: inline-block;
+   border-radius: 50%;
+   position: relative;
+   width: 40px;
+   text-align: center;
+   line-height: 40px;
+   height: 40px;
+   background: #dbe1e6;
+   box-shadow: 0 0 5px #fff,
+     5px 5px 10px #a7aaaf,
+     -5px -5px 10px #fff;
+     cursor: pointer;
+}
+
+.exp .box h1{
+    width: 100%;
+    /* background: skyblue; */
+    background: linear-gradient(45deg , #3498db,#1abc9c);
+    text-align: center;
+    padding: 2px;
+    color: white;
+    /* color: transparent; */
+    /* border: 1px solid red; */
+    text-shadow: 0 0 3px #FF0000, 0 0 5px #0000FF;
+}
+.exp .box div{
+    width: 100%;
+    /* border: 1px solid red; */
+    margin: 20px 0px;
+    padding: 10px 5px;
+}
+.exp .box div span{
+    display: inline-block;
+    /* border: 1px solid green; */
+    padding: 4px;
+}
+.exp .box div span:nth-child(1){
+   width: 30%;
+   text-align: end;
+   padding:0px 30px;
+   font-size: 1.1em;
+   font-weight: 700;
+   color: rgb(76, 71, 71);
+}
+.exp .box div span:nth-child(2){
+   width: 70%;
+   color: rgb(44, 40, 40);
+}
+.exp .box div span:nth-child(2) input,
+.exp .box div span:nth-child(2) select
+{
+   width: 75%;
+   /* height: 100%; */
+   font-weight: 500;
+   font-size: 1.03em;
+   border: none;
+   color: rgb(44, 40, 40);
+   outline: none;
+   text-align: center;
+   padding: 12px 10px;
+   border-radius: 5px;
+   background: #dbe1e6;
+   box-shadow: 0 0 5px #fff,
+     5px 5px 10px #a7aaaf,
+     -5px -5px 10px #fff;
+}
+.exp .box div:last-child{
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+}
+
+.exp .box div:last-child button:hover{
+    transform: scale(1.1);
+    background: #0984e3;
+}
+@media only screen and (max-width: 600px) {
+
+    .exp .modal .box{
+        top: 40%;
+        left: 50%;
+        width: 95vw;
+        height: 550px;
+        transform: translate(-50%,-50%);
+        overflow: hidden;
+        font-size: 12px;
+    }
+
+    .exp .modal .ledgeredit{
+        position: absolute;
+        top: 37px;
+        right: 20px;
+    }
+    
+    .exp .box div{
+        width: 100%;
+        margin: 20px 0px;
+        padding: 10px 1px;
+    }
+    .exp .box div span:nth-child(1){
+        padding:0px 10px;
+        font-size: 1.1em;
+        font-weight: 700;
+     }
+     .exp .box div:nth-child(6) span input{
+        /* background-color: red; */
+        font-size: 9px;
+        text-align: start;
+     }
+}

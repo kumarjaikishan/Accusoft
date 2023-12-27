@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 export const userdata = createAsyncThunk("userdata", async () => {
     const token = localStorage.getItem("token");
-    // console.log("api calling");
+    console.log("api calling");
     try {
         const res = await fetch(`https://backend-exp-man.vercel.app/userdata`, {
             method: "GET",
@@ -11,7 +11,7 @@ export const userdata = createAsyncThunk("userdata", async () => {
             }
         })
         const data = await res.json();
-        // console.log("from redux api", data);
+        console.log("from redux api", data);
         return data;
     } catch (error) {
         console.log(error);

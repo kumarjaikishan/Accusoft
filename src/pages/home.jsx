@@ -78,50 +78,7 @@ const Home = () => {
     dispatch(header("Dashboard"))
   }, [])
 
-  useEffect(() => {
- 
-  }, [useralldetail])
-  // const tempobject = {
-  //   "userid": "63aa962f68dc4f69b0f23e5e",
-  //   "ledger": "ration",
-  //   "date": "2022-09-02",
-  //   "amount": "784",
-  //   "narration": "Rajma-64, Badam-30 & Shampoo-20"
-  // }
-  // const tempdata = [
-  //   {
-  //     "userid": "63aa962f68dc4f69b0f23e5e",
-  //     "ledger": "ration",
-  //     "date": "2022-08-02",
-  //     "amount": "114",
-  //     "narration": "Rajma-64, Badam-30 & Shampoo-20"
-  //   },
-  //   {
-  //     "userid": "63aa962f68dc4f69b0f23e5e",
-  //     "ledger": "ration",
-  //     "date": "2022-08-05",
-  //     "amount": "84",
-  //     "narration": "Rajma-64, Badam-30 & Shampoo-20"
-  //   },
-  //   {
-  //     "userid": "63aa962f68dc4f69b0f23e5e",
-  //     "ledger": "ration",
-  //     "date": "2022-09-02",
-  //     "amount": "784",
-  //     "narration": "Rajma-64, Badam-30 & Shampoo-20"
-  //   }
-  // ]
-  // const repeat = (number)=>{
-  //   for (let i = 0; i < number; i++) {
-  //     tempdata.push(tempobject)
-  //   }
-  //   console.log("ab call hua hai");
-  //   calculateLedgerSum(tempdata)
-  //   // console.log("array length check",tempdata.length);
-  // }
- 
   const { totalSum, todaySum, yesterdaySum, lastWeekSum, lastMonthSum, lastYearSum } = calculateLedgerSum(useralldetail.explist);
-
 
   const card = [{
     amt: todaySum,

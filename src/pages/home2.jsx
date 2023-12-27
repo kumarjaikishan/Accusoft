@@ -13,7 +13,7 @@ const Home = () => {
   const useralldetail = useSelector((state) => state.userexplist);
   useEffect(() => {
     if (!log.islogin) {
-      toast.warn("You Are not Logged In", 1100);
+      // toast.warn("You Are not Logged In", 1100);
       return navigate('/login');
     }
     dispatch(setloader(false));

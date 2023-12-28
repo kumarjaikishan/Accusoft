@@ -151,12 +151,17 @@
   /* border: 1px solid red; */
 }
 
-.profile-bio div p {
+.profile-bio div input {
   /* width: 80%; */
-  margin-left: 20px;
+  margin-left: 10px;
   /* border: 1px solid red; */
-  padding: 10px 5px;
+  border: none;
+  /* outline: none; */
+  background: transparent;
+  color: rgb(63, 58, 58);
+  letter-spacing: 1px;
+  padding:  5px;
   font-weight: 600;
-  font-size: 1.08rem;
+  font-size: 1.02rem;
   text-align: left;
 }

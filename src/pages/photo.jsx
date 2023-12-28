@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from "react-router-dom";
+import { json, useNavigate } from "react-router-dom";
 import './photo.css';
 import { useSelector, useDispatch } from 'react-redux';
 import { header } from '../store/login';
-import { profilepicupdtae } from '../store/api';
-import {  toast } from 'react-toastify';
+import { profilepicupdtae,profiledetailupdtae } from '../store/api';
+import { toast } from 'react-toastify';
 
 const Photo = () => {
     let navigate = useNavigate();
@@ -196,7 +196,7 @@ const Photo = () => {
                         setisuploading(false);
                         dispatch(profilepicupdtae(resuke.url))
                         // toast.success("Photo Updated Successfully", { autoClose: 1300 });
-                        toast.update(id, { render: "Photo Updated Successfully", type: "success", isLoading: false ,autoClose: 1300});
+                        toast.update(id, { render: "Photo Updated Successfully", type: "success", isLoading: false, autoClose: 1300 });
                         // navigate('/');
                     }
                 } catch (error) {
@@ -239,41 +239,91 @@ const Photo = () => {
         setisfile(false);
         // console.log(newimage)
     }
-    const updatedetails = () => {
-        toast.warn("Update functionality not added", 1200);
+    const init = {
+        name: "",
+        phone: "",
+        email: ""
+    }
+    const [input, setinput] = useState(init);
+
+    const [sdfdf, wefwe] = useState(true);
+    if (sdfdf && useralldetail.user) {
+        setinput({
+            ...input,
+            name: useralldetail.user.name,
+            phone: useralldetail.user.phone,
+            email: useralldetail.user.email
+        })
+        wefwe(false);
+    }
+
+
+    const updatedetails = async () => {
+        const { name, phone } = input;
+        console.log(name, phone);
+        const token = localStorage.getItem("token");
+        // console.log(name,phone,email);
+        try {
+            const query = await fetch(`${useralldetail.apiadress}/updateuserdetail`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    name, phone
+                })
+            })
+            console.log(query);
+            const result = await query.json();
+            if (query.ok) {
+                console.log(result);
+                seteditable(!editable);
+                dispatch(profiledetailupdtae(input))
+                toast.success("Updated Successfull", {autoClose: 1300});
+            }
+        } catch (error) {
+            toast.warn("Something went wrong", {autoClose: 1500});
+            console.log(error);
+        }
     }
     const [isuploading, setisuploading] = useState(false);
     const [hide, sethide] = useState(true);
-    const [editable, seteditable] = useState(false);
+    const [editable, seteditable] = useState(true);
     const hello = () => {
         sethide(!hide);
+    }
+    const handle = (e) => {
+        let name = e.target.name;
+        let val = e.target.value;
+        setinput({
+            ...input, [name]: val
+        })
     }
     return (
         <>
             <div className="photo">
                 <div className="profile">
-                    <h2>User Profile</h2>
+                    <h2>User Profile Detail</h2>
                     <div className='upper'>
                         <div className="profile-header">
                             <img src={useralldetail.profilepic ? useralldetail.profilepic : defaultprofile} alt="User Avatar" />
                             <br />  <button onClick={hello}>Update profile</button> <br />
-
-                            {/* <p>{user.email}</p> */}
                         </div>
                         <div className="profile-bio">
                             <div>
-                                <label htmlFor="name"> <h3 >Name :</h3></label>
-                                <p contentEditable={editable}>{useralldetail.user.name}</p>
+                                <label htmlFor="name"> <h3 >Name</h3></label>
+                                :<input style={{outline: editable && "none"}} readOnly={editable} id='name' type="text" onChange={handle} name="name" defaultValue={input.name} />
                             </div>
                             <div>
-                                <label htmlFor="phone"> <h3 >Phone :</h3></label>
-                                <p contentEditable={editable}>{useralldetail.user.phone}</p>
+                                <label htmlFor="phone"> <h3 >Phone</h3></label>
+                                :<input style={{outline: editable && "none"}} readOnly={editable} id='phone' type="tel" onChange={handle} name="phone" defaultValue={input.phone} />
                             </div>
                             <div>
-                                <label htmlFor="email"> <h3 >Email :</h3></label>
-                                <p title={editable && "Email Can't be Updated"}>{useralldetail.user.email}</p>
+                                <label htmlFor="email"> <h3 >Email</h3></label>
+                                :<input style={{outline:"none"}} title={editable && "Email Can't be Updated"} readOnly={true} id='email' type="text" onChange={handle} name="email" defaultValue={input.email} />
                             </div>
-                            {editable && <div>  <button onClick={updatedetails}>Update Deatils</button> </div>}
+                            {!editable && <div>  <button onClick={updatedetails}>Update Deatils</button> </div>}
                             <i className="fa fa-pencil" title='Edit Details' aria-hidden="true" onClick={() => seteditable(!editable)}></i>
                         </div>
                     </div>

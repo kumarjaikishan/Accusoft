@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
 import swal from 'sweetalert'
 import GrassIcon from '@mui/icons-material/Grass';
-import { ToastContainer, toast } from 'react-toastify';
+import {toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { header } from '../../store/login';
 import { useSelector,useDispatch } from 'react-redux';
@@ -57,7 +57,6 @@ const Sidebar = () => {
     }
     return (
         <>
-            <ToastContainer />
             <div className={log.narrow ? "sidebar narrow" : "sidebar"}>
                 <div className="clogo">
                     <NavLink className={(navData) => (navData.isActive ? 'active' : '')} style={{ textDecoration: 'none' }} to='/' > <span className="li" ><span className="logo"> <GrassIcon className='company' /></span><span className="name">Accusoft</span></span></NavLink>

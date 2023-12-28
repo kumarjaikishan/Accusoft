@@ -69,7 +69,7 @@ const Signin = () => {
             }
             else {
                 console.log(data);
-                toast.warn("No user found",{ autoClose: 1500 });
+                toast.warn("No user found",{autoClose: 1500});
                 setbtnclick(false);
             }
 

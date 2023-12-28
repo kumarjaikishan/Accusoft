@@ -116,6 +116,9 @@ button:active,button:hover{
   transform: scale(0.96);
   background: rgb(5, 99, 137);
 }
+input{
+  color: rgb(27, 25, 25) !important;
+}
 
 @media only screen and (max-width: 600px) {
   .sidebar {

@@ -2,7 +2,7 @@
 
 Welcome to the Expense Management System! This system allows users to efficiently manage their
 expenses by providing features such as adding, deleting, updating, and managing expense data. 
-Additionally, it offers comprehensive reporting options for day, month, week, year, and ledger-wise insights.
+Additionally, it offers comprehensive reporting options for day,week,month,year, and ledger-wise insights.
 
 # Live
 Running At- https://frontend-exp-man.vercel.app

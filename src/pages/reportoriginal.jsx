@@ -17,14 +17,17 @@ const Report = () => {
             return navigate('/login');
         }
         dispatch(setloader(false));
+        setexplist(useralldetail.explist);
+        // fetching();
     }, [])
     const header = [
-        { label: "ledger", key: "ledger.ledger" },
+        { label: "ledger", key: "ledger" },
         { label: "amount", key: "amount" },
         { label: "date", key: "date" },
         { label: "narration", key: "narration" }
     ]
     const username = useralldetail.user.name;
+    const [explist, setexplist] = useState([]);
     const [issearch, setissearch] = useState(false);
     const [pious, setpious] = useState(useralldetail.explist);
     const date = new Date;
@@ -54,29 +57,35 @@ const Report = () => {
             }
         })
     }
+    // for LOading data
+    const fetching = async () => {
+        setpious(useralldetail.explist)
+        dispatch(setloader(false));
+    }
+    // for LOading data ends here
 
     // for handling search
     const search = () => {
         setissearch(true);
         let searchitem;
         if (inp.ledger == "all") {
-            searchitem = useralldetail.explist.filter((val, ind) => {
+            searchitem = explist.filter((val, ind) => {
                 if (val.date >= inp.from && val.date <= inp.to) {
                     return val;
                 }
             })
         } else {
-            searchitem = useralldetail.explist.filter((val, ind) => {
-                if (val.date >= inp.from && val.date <= inp.to && val.ledger.ledger == inp.ledger) {
+            searchitem = explist.filter((val, ind) => {
+                if (val.date >= inp.from && val.date <= inp.to && val.ledger == inp.ledger) {
                     return val;
                 }
             })
         }
         setpious(searchitem);
     }
-    const clearsearch = () => {
+    const hello = () => {
         setissearch(false);
-        setpious(useralldetail.explist);
+        setpious(explist);
     }
     const print = () => {
         dispatch(setnarrow(false))
@@ -87,7 +96,7 @@ const Report = () => {
     return (
         <>
             <div className="report">
-                {useralldetail.explist.length > 25 ? <span className='scrol'>
+                {explist.length > 25 ? <span className='scrol'>
                     <span id="bottom"><a href="#foot"><i title='Go to Bottom' className="fa fa-arrow-down" aria-hidden="true"></i></a></span>
                     <span id="top"><a href="#table"><i title='Go to Top' className="fa fa-arrow-up" aria-hidden="true"></i></a></span>
                 </span> : null}
@@ -111,7 +120,7 @@ const Report = () => {
                         <span>
                             <i onClick={search} title='Search' className="fa fa-search" aria-hidden="true"></i>
                         </span>
-                        {issearch ? <button onClick={clearsearch}>Clear</button> : null}
+                        {issearch ? <button onClick={hello}>Clear</button> : null}
                     </span>
                     <span>
                         <CSVLink data={pious} headers={header} filename={`${username}-Expense Record`}>
@@ -148,6 +157,7 @@ const Report = () => {
                                     </tr>
                                 )
                             })}
+
                             <tr id='foot'>
                                 <td colSpan={2}>Total</td>
                                 <td colSpan={1} >

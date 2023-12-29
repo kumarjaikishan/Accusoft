@@ -16,13 +16,13 @@ const Addexp = () => {
   let navigate = useNavigate();
   const log = useSelector((state) => state.login);
   const useralldetail = useSelector((state) => state.userexplist);
-  const miss = useSelector((state) => state.miss);
   const dispatch = useDispatch();
   useEffect(() => {
     if (!log.islogin) {
       toast.warn("You Are not Logged In", 1100);
       return navigate('/login');
     }
+    // console.log("addexp:",useralldetail.explist);
     // setloader(true)
   }, [])
 
@@ -43,8 +43,7 @@ const Addexp = () => {
   const today = date.getFullYear() + "-" + dfbdf + "-" + dfbfvfddf;
 
   const init = {
-    userid: "",
-    ledger: "general",
+    ledger: "",
     date: today,
     amount: "",
     narration: ""
@@ -84,6 +83,7 @@ const Addexp = () => {
   const sub = async () => {
     const token = localStorage.getItem("token");
     let { ledger, date, amount, narration } = inp;
+    // console.log(inp);
     narration = cap(narration);
 
     if (!ledger || !date || !amount || !narration) {
@@ -438,7 +438,7 @@ const Addexp = () => {
                 return (
                   <tr key={ind}>
                     <td>{firstpostindex + ind + 1}</td>
-                    <td>{val.ledger}</td>
+                    <td>{val.ledger.ledger}</td>
                     <td>{val.amount}</td>
                     <td>{val.narration}</td>
                     <td>{fde}</td>

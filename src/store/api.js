@@ -5,8 +5,8 @@ export const userdata = createAsyncThunk("userdata", async () => {
     // console.log("api calling");
     // dispatch(setloader(true));
     try {
-        const res = await fetch(`https://backend-exp-man.vercel.app/userdata`, {
-        // const res = await fetch(`http://localhost:5000/userdata`, {
+        // const res = await fetch(`https://backend-exp-man.vercel.app/userdata`, {
+        const res = await fetch(`http://localhost:5000/userdata`, {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${token}`,
@@ -30,7 +30,8 @@ const userexplist = createSlice({
         loading: false,
         error: null,
         profilepic: "",
-        apiadress: "https://backend-exp-man.vercel.app",
+        // apiadress: "https://backend-exp-man.vercel.app",
+        apiadress: "http://localhost:5000",
     },
     reducers: {
         userlogout(state, action) {
@@ -59,7 +60,7 @@ const userexplist = createSlice({
             state.loading = false;
             // console.log("fulfilled wala", action.payload.msg);
             state.explist = action.payload.explist;
-            state.ledgerlist = action.payload.user.ledger;
+            state.ledgerlist = action.payload.ledger;
             state.user = action.payload.user;
             state.profilepic = action.payload.user.imgsrc;
         })

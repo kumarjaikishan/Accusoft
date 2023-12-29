@@ -66,8 +66,9 @@ const Modalbox = ({ setisledupdate, modal, init, handler, inp, isupdate, sub, se
                     <span>Ledger :</span>
                     <span>
                         <select className='caps' name="ledger" id="" onChange={handler} value={inp.ledger} >
-                            {useralldetail.user.ledger.map((val, ind) => {
-                                return <option className='erffeg' key={ind} value={val}>{val}</option>
+                        <option value="">Select Ledger</option>
+                            {useralldetail.ledgerlist.map((val, ind) => {
+                                return <option className='erffeg' key={ind} value={val._id}>{val.ledger}</option>
                             })}
                         </select>
                     </span>

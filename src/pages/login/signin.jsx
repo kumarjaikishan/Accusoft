@@ -59,7 +59,7 @@ const Signin = () => {
             const data = await res.json();
             if (res.ok) {
                 dispatch(setlogin(true));
-                console.log(data);
+                // console.log(data);
                 toast.success("Login Successfully", { autoClose: 1300 });
                 setbtnclick(false);
                 dispatch(setloader(false));
@@ -71,6 +71,7 @@ const Signin = () => {
                 console.log(data);
                 toast.warn("No user found",{autoClose: 1500});
                 setbtnclick(false);
+                dispatch(setloader(false));
             }
 
         } catch (error) {

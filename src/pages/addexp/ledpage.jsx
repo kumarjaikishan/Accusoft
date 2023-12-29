@@ -1,63 +1,20 @@
 import React, { useState } from 'react'
 import './ledpage.css';
-import { useEffect } from 'react';
-import { useSelector,useDispatch } from 'react-redux';
+import swal from 'sweetalert'
+import { useSelector, useDispatch } from 'react-redux';
+import { setloader } from '../../store/login';
 import { userdata } from '../../store/api';
-import {  toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 
-const Ledpage = ({  setmodal, isledupdate, setisledupdate }) => {
+const Ledpage = ({ setmodal, isledupdate, setisledupdate }) => {
   const dispatch = useDispatch();
   const useralldetail = useSelector((state) => state.userexplist);
   const [isupda, setinsupdat] = useState(false)
-
-  const [ledger, setledger] = useState(useralldetail.user.ledger);
   const init = {
     ind: "",
     val: ""
   }
   const [ledinp, setledinp] = useState(init)
-  const [count,setcount]= useState(0)
-  useEffect(() => {
-    if(count>0){
-      updateledger();
-    }
-    setcount(count+1);
-  }, [ledger])
-
-  const updateledger = async () => {
-    const token = localStorage.getItem("token");
-    // console.log(ledger.length);
-    if (ledger.length < 1) {
-      return toast.warn("At least One ledger Required", { autoClose: 1800 })
-    }
-    try {
-      const res = await fetch(`${useralldetail.apiadress}/userledger`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-           userledger:ledger
-        })
-      })
-      const result = await res.json();
-      // console.log(res);
-      if(res.ok){
-        toast.success("Ledger Updated successful", { autoClose: 1300 })
-        setledinp(init);
-        dispatch(userdata());
-        isupda && setinsupdat(false);
-      }else{
-        console.log(result)
-        return toast.warn("something wrong", { autoClose: 1300 })
-      }
-    } catch (error) {
-      console.log(error);
-      return toast.warn("something wrong", { autoClose: 1300 })
-    }
-  }
-
 
   const handle = (e) => {
     setledinp({
@@ -65,30 +22,86 @@ const Ledpage = ({  setmodal, isledupdate, setisledupdate }) => {
     })
   }
 
-  const add = () => {
-    setledger([...ledger, ledinp.val]);
-  }
-
-  const updat = () => {
-    setledger(ledger.map((value, ind) => {
-      if (ind == ledinp.ind) {
-        return value = ledinp.val
+  const add = async () => {
+    const token = localStorage.getItem("token");
+    dispatch(setloader(true));
+    try {
+      const result = await fetch(`${useralldetail.apiadress}/addledger`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          ledger: ledinp.val
+        })
+      })
+      const data = await result.json();
+      if (result.ok) {
+        toast.success(data.msg, { autoClose: 1300 })
+        dispatch(userdata());
+        setledinp(init);
+        dispatch(setloader(false));
+      } else {
+        toast.warn("error occurred", { autoClose: 1300 })
+        console.log(data);
       }
-      return value;
-    }))
+    } catch (error) {
+      toast.warn("Sopmething went wrong", { autoClose: 1300 })
+      console.log(error);
+    }
   }
 
-  const deletee = (index) => {
-    setledger(ledger.filter((val, ind) => {
-      return ind != index;
-    }))
-  }
+  const deletee = async (id) => {
+    // console.log(id);
+    swal({
+      title: "Are you sure?",
+      text: "Once deleted, you will not be able to recover this Data!",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    }).then(async (willDelete) => {
+      if (willDelete) {
+        const token = localStorage.getItem("token");
+        dispatch(setloader(true));
+        try {
+          const result = await fetch(`${useralldetail.apiadress}/deleteledger`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              ledgerid: id
+            })
+          })
+          
+          const data = await result.json();
+          if (result.ok) {
+            toast.success(data.msg, { autoClose: 1300 })
+            dispatch(userdata());
+            dispatch(setloader(false));
+          } else {
+            toast.warn("error occurred", { autoClose: 1300 })
+            console.log(data);
+          }
+        } catch (error) {
+          toast.warn("Sopmething went wrong", { autoClose: 1300 })
+          console.log(error);
+        }
+      } else {
+        // swal("Your data is safe!");
+      }
+    });
 
+
+  }
 
   const back = () => {
     setmodal(true)
     setisledupdate(false)
   }
+
   var ledpage = document.querySelector(".ledpage");
 
   const sdef = function (event) {
@@ -96,12 +109,40 @@ const Ledpage = ({  setmodal, isledupdate, setisledupdate }) => {
       setisledupdate(false)
     }
   }
-  const edite = (ind, val) => {
+  const setledgerininput = (ind, val) => {
     setledinp({
       ind: ind,
       val: val
     })
     setinsupdat(true);
+  }
+
+  const updat = async () => {
+    const token = localStorage.getItem("token");
+    const newledger = ledinp.val;
+    const ledger_id = ledinp.ind;
+    //  console.log(ledger_id,newledger);
+    try {
+      const res = await fetch(`${useralldetail.apiadress}/updateledger`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          ledger_id, newledger
+        })
+      })
+      const result = await res.json();
+      console.log(result);
+      if (res.ok) {
+        toast.success(result.msg, { autoClose: 1300 })
+        dispatch(userdata());
+        dispatch(setloader(false));
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (
@@ -123,12 +164,12 @@ const Ledpage = ({  setmodal, isledupdate, setisledupdate }) => {
               </tr>
             </thead>
             <tbody>
-              {ledger.map((val, ind) => {
+              {useralldetail.ledgerlist && useralldetail.ledgerlist.map((val, ind) => {
                 return (
                   <tr key={ind}>
-                    <td>{val}</td>
-                    <td><i className="fa fa-pencil" onClick={() => edite(ind, val)} aria-hidden="true" ></i></td>
-                    <td><i className="fa fa-trash" onClick={() => deletee(ind)} aria-hidden="true" value={ind} ></i></td>
+                    <td>{val.ledger}</td>
+                    <td><i className="fa fa-pencil" onClick={() => setledgerininput(val._id, val.ledger)} aria-hidden="true" ></i></td>
+                    <td><i className="fa fa-trash" onClick={() => deletee(val._id)} aria-hidden="true" value={ind} ></i></td>
                   </tr>
                 )
               })}

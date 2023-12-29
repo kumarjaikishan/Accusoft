@@ -36,8 +36,8 @@ const Signup = ({setlog}) => {
         setbtnclick(true);
         const today = new Date;
         const date = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getUTCDate();
-        const { name, email, phone, password, cpassword, ledger } = signinp;
-        if (!name || !email || !phone || !password || !ledger) {
+        const { name, email, phone, password, cpassword } = signinp;
+        if (!name || !email || !phone || !password ) {
             toast.warn("All Fields are Required", { autoClose: 1300 })
             setbtnclick(false);
             return;
@@ -60,19 +60,19 @@ const Signup = ({setlog}) => {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    name, email, phone, password, date, ledger
+                    name, email, phone, password, date
                 })
             })
-            console.log(res);
+            const datae = await res.json();
+            console.log(datae);
             if (res.ok) {
-                const datae = await res.json();
-                setsigninp(init);
+                // setsigninp(init);
                 toast.success("Signup Successful", { autoClose: 1300 })
                 setbtnclick(false);
-                setlog(true)
+                // setlog(true)
             } else {
                 setbtnclick(false);
-                toast.warn("Something went wrong", { autoClose: 1300 })
+                toast.warn("else wala went wrong", { autoClose: 1300 })
             }
 
             // console.log(datae);

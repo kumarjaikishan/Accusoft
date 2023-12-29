@@ -31,23 +31,21 @@ const Datanalysis = () => {
     }, [inp])
 
 
-
     let ledgerSum = {};
 
     const cal = () => {
         // console.time('chatgpt')
-        useralldetail.user.ledger.forEach(element => {
-            ledgerSum[element] = 0;
+        useralldetail.ledgerlist.forEach(element => {
+            ledgerSum[element.ledger] = 0;
         })
         ledgerSum["total"] = 0;
-
         let monthIn2Digit = String(parseInt(inp.month) + 1).padStart(2, '0');
         const startdate = inp.year + "-" + monthIn2Digit + "-01";
         const enddate = inp.year + "-" + monthIn2Digit + "-31";
 
-        // data.forEach(entry => {
-            useralldetail.explist.forEach(entry => {
-            const { ledger, amount, date } = entry;
+        useralldetail.explist.forEach(entry => {
+            let { ledger, amount, date } = entry;
+            ledger = ledger.ledger;  // ledger here in object form that's why
             const amountValue = parseFloat(amount);
 
             if (!isNaN(amountValue)) {
@@ -66,41 +64,6 @@ const Datanalysis = () => {
         // console.timeEnd('chatgpt')
         // return { ledgerSum, totalsum };
     }
-
-    //     const tempobject = {
-    //     "userid": "63aa962f68dc4f69b0f23e5e",
-    //     "ledger": "ration",
-    //     "date": "2023-12-22",
-    //     "amount": "784",
-    //     "narration": "Rajma-64, Badam-30 & Shampoo-20"
-    //   }
-    //   const tempdata = [
-    //     {
-    //       "userid": "63aa962f68dc4f69b0f23e5e",
-    //       "ledger": "ration",
-    //       "date": "2022-08-02",
-    //       "amount": "114",
-    //       "narration": "Rajma-64, Badam-30 & Shampoo-20"
-    //     }
-    //   ]
-    //   const repeat = (number)=>{
-    //     for (let i = 0; i < number; i++) {
-    //       tempdata.push(tempobject)
-    //     }
-    //     console.log("ab call hua hai",tempdata.length);
-    //     // console.log(tempdata);
-    //     cal(tempdata)
-    //     // console.log("array length check",tempdata.length);
-    //   }
-
-    // const [drd, ffdge] = useState(true)
-    // if (useralldetail.explist != "" && drd) {
-    //     // console.log("custom se");
-    //     cal();
-    //     ffdge(false);
-    // }
-
-
 
     const monname = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
@@ -144,12 +107,11 @@ const Datanalysis = () => {
                                 <div className="day">{ledger}</div>
                             </div>
                             <div className="icon">
-                                <div className="cir" >
+                                <div className="cir" style={{ background: `conic-gradient(#fc5c65 ${isNaN(Math.floor((sum / cardarr["total"]) * 100)) ? 0 : Math.floor((sum / cardarr["total"]) * 100) * 3.6}deg,  #7f8fa6  10.8deg)` }}>
                                     <div className="per"> {isNaN(Math.floor((sum / cardarr["total"]) * 100)) ? 0 : Math.floor((sum / cardarr["total"]) * 100)} %</div>
                                 </div>
                             </div>
                         </div>
-
                     ))}
                 </div>
             </div>

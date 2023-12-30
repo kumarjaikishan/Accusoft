@@ -120,6 +120,7 @@ const Signup = ({setlog}) => {
                     className='filled'
                     onChange={signhandle}
                     name="phone"
+                    type='tel'
                     onKeyPress={(event) => { if (!/[0-9]/.test(event.key)) { event.preventDefault(); } }}
                     value={signinp.phone}
                     InputProps={{

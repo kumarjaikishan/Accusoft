@@ -6,7 +6,6 @@ import { useSelector,useDispatch } from 'react-redux';
 import { setnarrow } from '../../store/login';
 
 const Navbar = () => {
-  const token = localStorage.getItem("token");
   const dispatch = useDispatch();
   const log = useSelector((state) => state.login);
   const useralldetail = useSelector((state) => state.userexplist);
@@ -26,7 +25,7 @@ const Navbar = () => {
           <span onClick={fun}><MenuIcon /></span>
           <span>{log.head} </span>
         </div>
-        {token ? <div className="info">
+        {log.islogin ? <div className="info">
         <NavLink to='/photo' > <div className="photo" ><img src={ useralldetail.profilepic ? useralldetail.profilepic : defaultprofile} alt="Profile Pic" /> </div> </NavLink>
           <div className="userinfo">
             <span>{useralldetail.user && useralldetail.user.name } </span>

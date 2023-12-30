@@ -399,10 +399,10 @@ const Addexp = () => {
             <thead >
               <tr>
                 <th >S.no  </th>
-                <th onClick={() => sorte('ledger')}> <span> Ledger Name</span><i className="fa fa-arrow-down" aria-hidden="true"></i></th>
-                <th onClick={() => sorte('amount')}><span>Amount</span> <i className="fa fa-arrow-down" aria-hidden="true"></i></th>
+                <th onClick={() => sorte('ledger')}> <span>Ledger Name</span> <i className="fa fa-arrow-down" aria-hidden="true"></i></th>
+                <th onClick={() => sorte('amount')}> <span>Amount</span> <i className="fa fa-arrow-down" aria-hidden="true"></i></th>
                 <th>Narration</th>
-                <th onClick={() => sorte('date')}>Date<i className="fa fa-arrow-down" aria-hidden="true"></i></th>
+                <th onClick={() => sorte('date')}> <span>Date</span> <i className="fa fa-arrow-down" aria-hidden="true"></i></th>
                 <th>Actions</th>
                 <th title='Select All'><input type="checkbox" onClick={allselect} id="allcheck" /></th>
               </tr>

@@ -101,18 +101,23 @@
 .exp .table table thead th,
 .exp .table table #foot th {
     height: 30px;
+    padding: 0 2px;
     /* color: #0984e3; */
 }
+
+.exp thead th i{
+   float: right;
+}
+
 .exp .table thead i{
     /* background-color: red; */
     display: inline-block;
     width: 20px;
     height: 20px;
-    border: 1px solid whitesmoke;
     border-radius: 50%;
     text-align: center;
     margin-left: 2px;
-    font-weight: 100;
+    /* font-weight: 100; */
 }
 .exp .table thead th.active {
 color: rgb(54, 19, 250);

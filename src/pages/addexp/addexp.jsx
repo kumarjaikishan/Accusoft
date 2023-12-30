@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
 import { setloader } from '../../store/login';
 import { userdata } from '../../store/api'
-import {  toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 
 const Addexp = () => {
@@ -160,6 +160,7 @@ const Addexp = () => {
   }
   //  fecthing data for edit ends here
 
+
   // for deleteing data
   const delet = async (val) => {
     const token = localStorage.getItem("token");
@@ -201,6 +202,7 @@ const Addexp = () => {
       });
   }
   // for deleteing data ends here
+
 
   // for sending multiple delete request
   const senddelete = async () => {
@@ -325,11 +327,17 @@ const Addexp = () => {
   const [order, setorder] = useState("ASC");
 
   const sorte = (col) => {
-    console.log(this);
+    // console.log(this);
     if (order === "ASC") {
       if (col == "amount") {
         const sorted = [...currentpost].sort((a, b) => {
           return a[col] - b[col];
+        });
+        setsortee(sorted);
+        setorder("DSC");
+      } else if (col == "ledger") {
+        const sorted = [...currentpost].sort((a, b) => {
+          return a[col].ledger.toLowerCase() > b[col].ledger.toLowerCase() ? 1 : -1;
         });
         setsortee(sorted);
         setorder("DSC");
@@ -340,16 +348,17 @@ const Addexp = () => {
         setsortee(sorted);
         setorder("DSC");
       }
-
-      // sorted.map((valem) => {
-      //   console.log(valem.ledger)
-      // })
-
     }
     if (order === "DSC") {
       if (col == "amount") {
         const sorted = [...currentpost].sort((a, b) => {
           return b[col] - a[col];
+        });
+        setsortee(sorted);
+        setorder("ASC");
+      }else if (col == "ledger") {
+        const sorted = [...currentpost].sort((a, b) => {
+          return b[col].ledger.toLowerCase() > a[col].ledger.toLowerCase() ? 1 : -1;
         });
         setsortee(sorted);
         setorder("ASC");
@@ -390,14 +399,12 @@ const Addexp = () => {
             <thead >
               <tr>
                 <th >S.no  </th>
-                <th onClick={() => sorte('ledger')}>Ledger Name <i className="fa fa-arrow-down" aria-hidden="true"></i></th>
-                <th onClick={() => sorte('amount')}>Amount <i className="fa fa-arrow-down" aria-hidden="true"></i></th>
+                <th onClick={() => sorte('ledger')}> <span> Ledger Name</span><i className="fa fa-arrow-down" aria-hidden="true"></i></th>
+                <th onClick={() => sorte('amount')}><span>Amount</span> <i className="fa fa-arrow-down" aria-hidden="true"></i></th>
                 <th>Narration</th>
                 <th onClick={() => sorte('date')}>Date<i className="fa fa-arrow-down" aria-hidden="true"></i></th>
-                <th style={{ display: "none" }}>View</th>
-                <th>Edit</th>
-                <th>Delete</th>
-                <th>All  : <input type="checkbox" onClick={allselect} id="allcheck" /></th>
+                <th>Actions</th>
+                <th title='Select All'><input type="checkbox" onClick={allselect} id="allcheck" /></th>
               </tr>
             </thead>
             <tbody id="tablecontent">
@@ -415,18 +422,20 @@ const Addexp = () => {
                 return (
                   <tr key={ind}>
                     <td>{firstpostindex + ind + 1}</td>
-                    <td>{val.ledger}</td>
+                    <td>{val.ledger.ledger}</td>
                     <td>{val.amount}</td>
                     <td>{val.narration}</td>
                     <td>{fde}</td>
-                    <td style={{ display: "none" }} title='view'><i className="fa fa-eye" aria-hidden="true"></i></td>
-                    <td title='edit'><i onClick={() => datafetchforedit(val._id)} className="fa fa-pencil" aria-hidden="true"></i></td>
-                    <td title='delete' ><i onClick={() => delet(val._id)} className="fa fa-trash-o" aria-hidden="true"></i></td>
+                    <td >
+                    <i title='Edit' onClick={() => datafetchforedit(val._id)} className="fa fa-pencil-square-o" aria-hidden="true"></i>
+                      {/* <i title='Functionallity not added' className="fa fa-eye" aria-hidden="true"></i> */}
+                      <i title='Delete' onClick={() => delet(val._id)} className="fa fa-trash-o" aria-hidden="true"></i>
+                    </td>
                     <td><input type="checkbox" onClick={highlight} id={val._id} /></td>
                   </tr>
                 )
               }) : currentpost.filter((item) => {
-                return serinp.toLowerCase() === "" ? item : item.narration.toLowerCase().includes(serinp) || item.ledger.toLowerCase().includes(serinp);
+                return serinp.toLowerCase() === "" ? item : item.narration.toLowerCase().includes(serinp) || item.ledger.ledger.toLowerCase().includes(serinp);
               }).map((val, ind) => {
                 let daten = new Date(val.date);
                 let vf = daten.getUTCDate();
@@ -442,9 +451,11 @@ const Addexp = () => {
                     <td>{val.amount}</td>
                     <td>{val.narration}</td>
                     <td>{fde}</td>
-                    <td style={{ display: "none" }} title='view'><i className="fa fa-eye" aria-hidden="true"></i></td>
-                    <td title='edit'><i onClick={() => datafetchforedit(val._id)} className="fa fa-pencil" aria-hidden="true"></i></td>
-                    <td title='delete' ><i onClick={() => delet(val._id)} className="fa fa-trash-o" aria-hidden="true"></i></td>
+                    <td>
+                      <i title='Edit' onClick={() => datafetchforedit(val._id)} className="fa fa-pencil-square-o" aria-hidden="true"></i>
+                      {/* <i title='Functionallity not added' className="fa fa-eye" aria-hidden="true"></i> */}
+                      <i title='Delete' onClick={() => delet(val._id)} className="fa fa-trash-o" aria-hidden="true"></i>
+                    </td>
                     <td><input type="checkbox" onClick={highlight} id={val._id} /></td>
                   </tr>
                 )
@@ -458,7 +469,7 @@ const Addexp = () => {
                 <th colSpan="1" id="totalhere">
                   {
                     currentpost.filter((item) => {
-                      return serinp.toLowerCase() === "" ? item : item.narration.toLowerCase().includes(serinp) || item.ledger.toLowerCase().includes(serinp);
+                      return serinp.toLowerCase() === "" ? item : item.narration.toLowerCase().includes(serinp) || item.ledger.ledger.toLowerCase().includes(serinp);
                     }).reduce((accu, val, ind) => {
                       return accu = accu + val.amount;
                     }, 0)
@@ -466,8 +477,8 @@ const Addexp = () => {
                   }
 
                 </th>
-                <th colSpan="3" ></th>
-                <th colSpan="1" id="alldelete" title="Delete"><i onClick={senddelete} className="fa fa-trash" aria-hidden="true"></i></th>
+                <th colSpan="2" ></th>
+                <th colSpan="1" id="alldelete" title="Delete Selected Item"><i onClick={senddelete} className="fa fa-trash" aria-hidden="true"></i></th>
                 <th colSpan="1" ></th>
               </tr>
             </tfoot>
@@ -479,9 +490,9 @@ const Addexp = () => {
             <Pagination currentpage={currentpage} changepageno={changepageno} totalpost={useralldetail.explist.length} postperpage={postperpage} />
           </span>
         </div>
-        <Modalbox  setisledupdate={setisledupdate}  init={init} setinp={setinp} setisupdate={setisupdate} setmodal={setmodal} sub={sub} modal={modal} handler={handler} inp={inp} isupdate={isupdate} />
-        <Ledpage  setmodal={setmodal} setisledupdate={setisledupdate} isledupdate={isledupdate}  
-         />
+        <Modalbox setisledupdate={setisledupdate} init={init} setinp={setinp} setisupdate={setisupdate} setmodal={setmodal} sub={sub} modal={modal} handler={handler} inp={inp} isupdate={isupdate} />
+        <Ledpage setmodal={setmodal} setisledupdate={setisledupdate} isledupdate={isledupdate}
+        />
       </div>
 
     </>

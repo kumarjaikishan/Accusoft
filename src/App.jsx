@@ -6,7 +6,7 @@ import Sidebar from './components/sidebar/sidebar';
 import Home from './pages/home2';
 import Addexp from './pages/addexp/addexp';
 import Datanalysis from './pages/dataanalysis';
-import { useState,useEffect} from 'react';
+import { useEffect} from 'react';
 import Login from './pages/login/login';
 import Logout from './pages/logout';
 import Report from './pages/Report';

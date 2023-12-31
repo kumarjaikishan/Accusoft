@@ -167,6 +167,9 @@
   font-size: 1.02rem;
   text-align: left;
 }
+.profile #wrapper{
+  overflow-x: auto;
+}
 
 @media only screen and (max-width: 600px) {
   .profile  button{

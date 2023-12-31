@@ -19,6 +19,7 @@ import { setnarrow } from '../src/store/login';
 import Officeexp from './pages/officeexp';
 import Test from './pages/test';
 import { userdata } from './store/api'
+import { Errorpage } from './pages/Errorpage';
 
 function App() {
   const dispatch = useDispatch();
@@ -55,7 +56,7 @@ function App() {
             <Route path="/admin" element={<Admin />} />
             <Route path="/print" element={<Officeexp />} />
             <Route path="/test" element={<Test />} />
-            {/* <Route path="/test" element={<Test />} /> */}
+            <Route path="*" element={<Errorpage />} />
           </Routes>
           <div style={{ display: log.loader ? "flex" : "none" }} className="loader"><img src={loadere} alt="" /></div>
         </div>

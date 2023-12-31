@@ -105,11 +105,11 @@
     /* color: #0984e3; */
 }
 
-.exp thead th i{
-   float: right;
+.exp thead th i {
+    float: right;
 }
 
-.exp .table thead i{
+.exp .table thead i {
     /* background-color: red; */
     display: inline-block;
     width: 20px;
@@ -119,22 +119,26 @@
     margin-left: 2px;
     /* font-weight: 100; */
 }
+
 .exp .table thead th.active {
-color: rgb(54, 19, 250);
+    color: rgb(54, 19, 250);
 }
+
 .exp .table table thead,
 .exp .table table #foot {
     position: sticky;
-    background:#0984e3;
+    background: #0984e3;
     color: whitesmoke;
-    box-shadow: 0px 3px 5px rgba(0,0,0,0.3);
- }
- .exp .table table #foot{
-   bottom: 5px;
- }
- .exp .table table thead{
+    box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.3);
+}
+
+.exp .table table #foot {
+    bottom: 5px;
+}
+
+.exp .table table thead {
     top: 0;
- }
+}
 
 .exp .table table th:nth-child(1),
 .exp .table table th:nth-child(5),
@@ -143,7 +147,7 @@ color: rgb(54, 19, 250);
     width: 50px;
 }
 
-.exp .table table th:nth-child(6){
+.exp .table table th:nth-child(6) {
     width: 40px;
 }
 
@@ -155,11 +159,13 @@ color: rgb(54, 19, 250);
 .exp .table table th:nth-child(2) {
     width: 150px;
 }
-.exp tr td:nth-child(6){
+
+.exp tr td:nth-child(6) {
     padding: 0px 1px;
     display: flex;
     justify-content: space-evenly;
     align-items: center;
+    height: 100%;
 }
 
 .exp .table table td {
@@ -272,16 +278,18 @@ color: rgb(54, 19, 250);
         padding: 0 15px;
         padding-bottom: 30px;
     }
+
     .exp .add {
         height: 40px;
     }
-    
+
     .exp .add i {
         width: 40px;
         height: 40px;
         font-size: 2.1em;
         line-height: 42px;
     }
+
     .exp .head {
         width: 100%;
         height: 55px;
@@ -301,44 +309,59 @@ color: rgb(54, 19, 250);
     .exp .head span:nth-child(3) input {
         width: 170px;
     }
-    .exp .table th{
+
+    .exp .table th {
         font-size: 12px;
     }
+
     .exp .table #tablecontent {
         font-size: 0.6em;
     }
 
+
     .exp .table table th:nth-child(1),
+    .exp .table table th:nth-child(5),
     .exp .table table th:nth-child(6),
-    .exp .table table th:nth-child(7),
-    .exp .table table th:nth-child(8),
-    .exp .table table th:nth-child(9) {
-        width: 30px;
-    }
-    
-    .exp .table table th:nth-child(3) {
+    .exp .table table th:nth-child(7) {
         width: 50px;
     }
+
+    .exp .table table th:nth-child(6) {
+        width: 40px;
+    }
+
+    .exp .table table th:nth-child(3),
     .exp .table table th:nth-child(5) {
-        width: 80px;
+        width: 90px;
     }
-    
+
     .exp .table table th:nth-child(2) {
-        width: 70px;
+        width: 150px;
     }
+
     .exp .table table th:nth-child(4) {
         width: 160px;
     }
+
     .exp .foot {
         height: 80px;
         padding: 0px 5px;
         display: flex;
         font-size: 10px;
     }
+
     .exp .foot .pages {
         margin: 0 2px;
-        width: 25px;
+        width: 20px;
         height: 18px;
         line-height: 17px;
+    }
+    .exp .foot i {
+        font-size: 0.9em;
+        height: 20px;
+        width: 20px;
+        text-align: center;
+        line-height: 20px;
+        padding: 0 4px;
     }
 }

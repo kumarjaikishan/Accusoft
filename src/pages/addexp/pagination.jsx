@@ -28,10 +28,6 @@ const Pagination = ({ totalpost, postperpage, changepageno, currentpage }) => {
     }
   }
   const minus = () => {
-    // console.log("min:"+minpagenumberlimit)
-    // console.log("max:"+maxpagenumberlimit)
-    // console.log(pages.length)
-   
     setmaxpagenumberlimit(maxpagenumberlimit-pagenumberlimit)
     setminpagenumberlimit(minpagenumberlimit-pagenumberlimit)
     if(minpagenumberlimit <= 1){

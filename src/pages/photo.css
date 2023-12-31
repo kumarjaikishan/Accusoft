@@ -15,8 +15,9 @@
   border-radius: 5px;
   display: flex;
   flex-direction: column;
+
   /* justify-content: space-between; */
-  & h2{
+  & h2 {
     text-align: center;
     letter-spacing: 2px;
     color: rgb(71, 69, 69);
@@ -68,13 +69,14 @@
     text-align: center;
     line-height: 40px;
     letter-spacing: 1px;
-    background: linear-gradient(45deg, #00cec9,#0984e3);
+    background: linear-gradient(45deg, #00cec9, #0984e3);
     color: white;
-    transition:  0.2s;
+    transition: 0.2s;
   }
-  label:hover{
+
+  label:hover {
     border: 1px dashed #cb2e2ec8;
-    background: linear-gradient(45deg, #0984e3,#00cec9);
+    background: linear-gradient(45deg, #0984e3, #00cec9);
   }
 
 
@@ -109,7 +111,7 @@
 .profile-bio {
   position: relative;
   margin-top: 20px;
-  /* border: 1px solid red; */
+  /* border: 1px solid blue; */
   width: 58%;
   display: flex;
   flex-direction: column;
@@ -160,8 +162,77 @@
   background: transparent;
   color: rgb(63, 58, 58);
   letter-spacing: 1px;
-  padding:  5px;
+  padding: 5px;
   font-weight: 600;
   font-size: 1.02rem;
   text-align: left;
+}
+
+@media only screen and (max-width: 600px) {
+  .profile  button{
+    padding: 2px 8px;
+    font-size: 0.9rem;
+  }
+  .profile {
+    width: 400px;
+    /* border: 2px solid red; */
+    padding: 5px;
+
+    & h2 {
+      letter-spacing: 1px;
+      font-size: 1.4rem;
+    }
+  }
+
+  .profile .upper {
+    padding: 7px;
+  }
+
+  .profile-header {
+    padding: 10px 0px;
+
+    & img {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 10px;
+    }
+
+  }
+
+  .profile-bio {
+    position: relative;
+    margin-top: 5px;
+    /* border: 1px solid red; */
+    width: 63%;
+    padding: 2px;
+  }
+
+  .profile .profile-bio i {
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+  }
+
+  .profile-bio div label {
+    width: 25%;
+    /* border: 1px solid red; */
+    font-size: 12px;
+  }
+
+  .profile-bio div input {
+    margin-left: 2px;
+    padding: 2px;
+    font-size: 0.8rem;
+  }
+  .profile .lower label {
+    height: 30px;
+    line-height: 30px;
+    width: 110px;
+    border-radius: 6px;
+    margin: 5px 0px;
+    font-size: 1rem;
+    text-align: center;
+  }
 }

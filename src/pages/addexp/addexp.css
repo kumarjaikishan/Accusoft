@@ -344,10 +344,12 @@
     }
 
     .exp .foot {
-        height: 80px;
+        height: 60px;
         padding: 0px 5px;
         display: flex;
         font-size: 10px;
+        justify-content: space-between;
+        align-items: center;
     }
 
     .exp .foot .pages {
@@ -356,12 +358,20 @@
         height: 18px;
         line-height: 17px;
     }
-    .exp .foot i {
+    .exp .foot i , .exp .foot .pages.active{
         font-size: 0.9em;
         height: 20px;
         width: 20px;
         text-align: center;
         line-height: 20px;
         padding: 0 4px;
+    }
+ 
+    .exp .foot span:nth-child(1){
+        width: 40%;
+        text-align: center;
+    }
+    .exp .foot span:nth-child(2){
+        /* width: 60%; */
     }
 }

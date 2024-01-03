@@ -162,26 +162,5 @@
         margin-left: -25px;
     }
 
-    /* .sidebar .admin-panel {
-        width: 100%;
-        height: 55px;
-        margin: 2px 0px;
-        cursor: pointer;
-        color: aliceblue;
-        position: relative;
-    }
-
-    .sidebar .admin-panel .sub-menu {
-        display: flex;
-        flex-direction: column;
-        background-color: #f0f0f0;
-        border-top-left-radius: 40px;
-        border-bottom-left-radius: 40px;
-        margin-left: 10px;
-    }
-
-    .sidebar .admin-panel .sub-menu .li {
-        background: none;
-        color: #2980b9;
-    } */
+   
 }

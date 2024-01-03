@@ -111,7 +111,7 @@ const Sidebar = () => {
                                     <i title={'Admin'} className="fa fa-lock" aria-hidden="true"></i>
                                 </span>
                                 <span className="name">Admin</span>
-                                <span><i className={adminSubMenuVisible ? "fa fa-arrow-up":"fa fa-arrow-down"} aria-hidden="true"></i></span>
+                             {!log.narrow &&  <span><i className={adminSubMenuVisible ? "fa fa-arrow-up":"fa fa-arrow-down"} aria-hidden="true"></i></span> }  
                             </span>
                             {adminSubMenuVisible && (
                                 <div className="sub-menu">
@@ -130,7 +130,7 @@ const Sidebar = () => {
                                     <NavLink
                                         className={(navData) => (navData.isActive ? 'active' : '')}
                                         style={{ textDecoration: 'none' }}
-                                        to="/admin/expenses"
+                                        to="/expense"
                                     >
                                         <span className="li" onClick={() => dispatch(header('Expenses'))}>
                                             <span className="logo">

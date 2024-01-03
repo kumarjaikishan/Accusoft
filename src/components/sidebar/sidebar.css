@@ -113,6 +113,10 @@
     font-size: 1.2em;
     font-weight: 700;
 }
+.sidebar .admin-panel .sub-menu .li{
+    /* height: 35px; */
+    /* border: 1px solid red; */
+}
 
 .sidebar .admin-panel>span span:nth-child(3) {
     position: absolute;
@@ -121,7 +125,9 @@
     transform: translate(-50%,-50%);
 }
 .sidebar .admin-panel .sub-menu{
-    transform: translateX(15px);
+    transform: translateX(15px) ;
+    
+    /* border: 1px solid red; */
 }
 
 @media only screen and (max-width: 600px) {
@@ -156,7 +162,7 @@
         margin-left: -25px;
     }
 
-    .sidebar .admin-panel {
+    /* .sidebar .admin-panel {
         width: 100%;
         height: 55px;
         margin: 2px 0px;
@@ -177,5 +183,5 @@
     .sidebar .admin-panel .sub-menu .li {
         background: none;
         color: #2980b9;
-    }
+    } */
 }

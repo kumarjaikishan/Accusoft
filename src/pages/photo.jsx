@@ -3,7 +3,7 @@ import { json, useNavigate } from "react-router-dom";
 import './photo.css';
 import { useSelector, useDispatch } from 'react-redux';
 import { header } from '../store/login';
-import { profilepicupdtae,profiledetailupdtae } from '../store/api';
+import { profilepicupdtae, profiledetailupdtae } from '../store/api';
 import { toast } from 'react-toastify';
 
 const Photo = () => {
@@ -280,10 +280,10 @@ const Photo = () => {
                 console.log(result);
                 seteditable(!editable);
                 dispatch(profiledetailupdtae(input))
-                toast.success("Updated Successfull", {autoClose: 1300});
+                toast.success("Updated Successfull", { autoClose: 1300 });
             }
         } catch (error) {
-            toast.warn("Something went wrong", {autoClose: 1500});
+            toast.warn("Something went wrong", { autoClose: 1500 });
             console.log(error);
         }
     }
@@ -313,15 +313,22 @@ const Photo = () => {
                         <div className="profile-bio">
                             <div>
                                 <label htmlFor="name"> <h3 >Name</h3></label>
-                                :<input style={{outline: editable && "none"}} readOnly={editable} id='name' type="text" onChange={handle} name="name" defaultValue={input.name} />
+                                :<input style={{ outline: editable && "none" }} readOnly={editable} id='name' type="text" onChange={handle} name="name" defaultValue={input.name} />
                             </div>
                             <div>
                                 <label htmlFor="phone"> <h3 >Phone</h3></label>
-                                :<input style={{outline: editable && "none"}} readOnly={editable} id='phone' type="tel" onChange={handle} name="phone" defaultValue={input.phone} />
+                                :<input style={{ outline: editable && "none" }} readOnly={editable} id='phone' type="tel" onChange={handle} name="phone" defaultValue={input.phone} />
                             </div>
                             <div>
                                 <label htmlFor="email"> <h3 >Email</h3></label>
-                                :<input style={{outline:"none"}} title={editable && "Email Can't be Updated"} readOnly={true} id='email' type="text" onChange={handle} name="email" defaultValue={input.email} />
+                                :<input style={{ outline: "none" }} title={editable && "Email Can't be Updated"} readOnly={true} id='email' type="text" onChange={handle} name="email" defaultValue={input.email} />
+                            </div>
+                            <div>
+                                <label htmlFor="Admin"> <h3 >Admin</h3></label>
+                                : <select name="admin" id="Admin" >
+                                    <option value={true}>True</option>
+                                    <option value={false}>False</option>
+                                </select>
                             </div>
                             {!editable && <div>  <button onClick={updatedetails}>Update Deatils</button> </div>}
                             <i className="fa fa-pencil" title='Edit Details' aria-hidden="true" onClick={() => seteditable(!editable)}></i>

@@ -69,7 +69,7 @@ const Signup = ({setlog}) => {
                 // setsigninp(init);
                 toast.success("Signup Successful", { autoClose: 1300 })
                 setbtnclick(false);
-                // setlog(true)
+                setlog(true)
             } else {
                 setbtnclick(false);
                 toast.warn("else wala went wrong", { autoClose: 1300 })

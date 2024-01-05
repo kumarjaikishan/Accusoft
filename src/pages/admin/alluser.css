@@ -1,0 +1,6 @@
+.allusers tr td:nth-child(6) {
+    padding: 0px 1px;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}

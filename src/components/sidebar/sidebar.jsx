@@ -120,7 +120,7 @@ const Sidebar = () => {
                                         style={{ textDecoration: 'none' }}
                                         to="/admin/users"
                                     >
-                                        <span className="li" onClick={() => dispatch(header('Users'))}>
+                                        <span className="li" onClick={() => dispatch(header('Admin/ Users'))}>
                                             <span className="logo">
                                                 <i title={'Users'} className="fa fa-user" aria-hidden="true"></i>
                                             </span>
@@ -130,9 +130,9 @@ const Sidebar = () => {
                                     <NavLink
                                         className={(navData) => (navData.isActive ? 'active' : '')}
                                         style={{ textDecoration: 'none' }}
-                                        to="/expense"
+                                        to="/admin/expense"
                                     >
-                                        <span className="li" onClick={() => dispatch(header('Expenses'))}>
+                                        <span className="li" onClick={() => dispatch(header('Admin/ Expenses'))}>
                                             <span className="logo">
                                                 <i title={'Expenses'} className="fa fa-university" aria-hidden="true"></i>
                                             </span>

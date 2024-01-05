@@ -6,6 +6,7 @@ import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import Person4Icon from '@mui/icons-material/Person4';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VpnKeyIcon from '@mui/icons-material/VpnKey';
+import { setloader, setlogin } from '../../store/login';
 import { useSelector, useDispatch } from 'react-redux';
 import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
 import { toast } from 'react-toastify';
@@ -33,7 +34,7 @@ const Signup = ({setlog}) => {
 
     const submit = async (event) => {
         // console.log(signinp);
-        setbtnclick(true);
+        // setbtnclick(true);
         const today = new Date;
         const date = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getUTCDate();
         const { name, email, phone, password, cpassword } = signinp;
@@ -54,6 +55,7 @@ const Signup = ({setlog}) => {
         }
 
         try {
+            dispatch(setloader(true));
             const res = await fetch(`${useralldetail.apiadress}/signup`, {
                 method: "POST",
                 headers: {
@@ -67,16 +69,19 @@ const Signup = ({setlog}) => {
             console.log(datae);
             if (res.ok) {
                 // setsigninp(init);
-                toast.success("Signup Successful", { autoClose: 1300 })
+                toast.success("Signup Successful,verify your Email", { autoClose: 3300 })
                 setbtnclick(false);
                 setlog(true)
+                dispatch(setloader(false));
             } else {
+                dispatch(setloader(false));
                 setbtnclick(false);
                 toast.warn("else wala went wrong", { autoClose: 1300 })
             }
 
             // console.log(datae);
         } catch (error) {
+            dispatch(setloader(false));
             setbtnclick(false);
             toast.warn("Something went wrong catch", { autoClose: 1600 })
             console.log(error);

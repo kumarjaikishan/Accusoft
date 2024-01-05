@@ -12,6 +12,7 @@ import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
 import { toast } from 'react-toastify';
 
 const Signup = ({setlog}) => {
+    const dispatch = useDispatch();
     const useralldetail = useSelector((state) => state.userexplist);
     const init = {
         name: "",

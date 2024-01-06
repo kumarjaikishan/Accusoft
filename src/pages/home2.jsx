@@ -1,31 +1,28 @@
 import React, { useState } from 'react'
 import { useEffect } from 'react';
 import './home.css';
-import { useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
 import { header, setloader } from '../store/login';
 import { toast } from 'react-toastify';
+import { userdata } from '../store/api'
+// import { toast } from 'react-toastify';
 
 const Home = () => {
-  let navigate = useNavigate();
-  const dispatch = useDispatch();
   const log = useSelector((state) => state.login);
+  if (!log.islogin) {
+    // toast.warn("You are not Logged In",{ autoClose: 1300 })
+    return <Navigate to='/login' />
+  }
+  const dispatch = useDispatch();
   const useralldetail = useSelector((state) => state.userexplist);
   useEffect(() => {
-    if (!log.islogin) {
-      // toast.warn("You Are not Logged In", { autoClose: 1300 });
-      return navigate('/login');
-    }
-    dispatch(setloader(true));
     dispatch(header("Dashboard"))
-  }, [])
-  useEffect(() => {
-
+    dispatch(setloader(true));
     useralldetail.explist && load();
-    useralldetail.explist &&  dispatch(setloader(false));;
+    !useralldetail.loading && dispatch(setloader(false));
     // repeat(100000)
   }, [useralldetail])
-
   // const tempobject = {
   //   "userid": "63aa962f68dc4f69b0f23e5e",
   //   "ledger": "ration",

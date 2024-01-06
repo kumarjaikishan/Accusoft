@@ -56,17 +56,18 @@ const Signin = () => {
                     email, password
                 })
             })
-            console.log(res);
+            // console.log(res);
             const data = await res.json();
             if (res.ok && res.status == 200) {
                 dispatch(setlogin(true));
-                console.log(data);
+                // console.log(data);
                 toast.success("Login Successfully", { autoClose: 1300 });
-                setbtnclick(false);
-                dispatch(setloader(false));
+                // setbtnclick(false);
+                dispatch(setloader(true));
                 localStorage.setItem("token", data.token);
                 dispatch(userdata());
                 return navigate('/');
+               
             } else if (res.ok && res.status == 201) {
                 dispatch(setloader(false));
                 toast.warn("Kindly Verify Email First", { autoClose: 3300 });

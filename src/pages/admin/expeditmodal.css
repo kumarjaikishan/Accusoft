@@ -49,29 +49,6 @@
 .caps{
     text-transform: capitalize;
 }
-.admin .modal .ledgeredit,
-.allusers .modal .ledgeredit{
-    position: absolute;
-    top: 55px;
-    right: 50px;
-    width: 40px;
-    height: 40px;
-}
-.admin .modal .ledgeredit i,
-.allusers .modal .ledgeredit i{
-   display: inline-block;
-   border-radius: 50%;
-   position: relative;
-   width: 40px;
-   text-align: center;
-   line-height: 40px;
-   height: 40px;
-   background: #dbe1e6;
-   box-shadow: 0 0 5px #fff,
-     5px 5px 10px #a7aaaf,
-     -5px -5px 10px #fff;
-     cursor: pointer;
-}
 
 .admin .box h1,
 .allusers .box h1{
@@ -91,6 +68,10 @@
     /* border: 1px solid red; */
     margin: 20px 0px;
     padding: 10px 5px;
+}
+.allusers .box div{
+    margin: 8px 0px;
+    padding: 5px;
 }
 .admin .box div span,
 .allusers .box div span{

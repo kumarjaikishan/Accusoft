@@ -36,8 +36,7 @@ const Signup = ({setlog}) => {
     const submit = async (event) => {
         // console.log(signinp);
         // setbtnclick(true);
-        const today = new Date;
-        const date = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getUTCDate();
+       
         const { name, email, phone, password, cpassword } = signinp;
         if (!name || !email || !phone || !password ) {
             toast.warn("All Fields are Required", { autoClose: 1300 })
@@ -63,7 +62,7 @@ const Signup = ({setlog}) => {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    name, email, phone, password, date
+                    name, email, phone, password
                 })
             })
             const datae = await res.json();

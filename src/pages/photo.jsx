@@ -1,23 +1,22 @@
 import React, { useEffect, useState } from 'react'
-import { json, useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import './photo.css';
 import { useSelector, useDispatch } from 'react-redux';
 import { header } from '../store/login';
 import { profilepicupdtae, profiledetailupdtae } from '../store/api';
-import { toast } from 'react-toastify';
+
 
 const Photo = () => {
-    let navigate = useNavigate();
     const dispatch = useDispatch();
     const log = useSelector((state) => state.login);
+    if (!log.islogin) {
+        toast.warn("You are not Logged In",{ autoClose: 1300 })
+        return <Navigate to='/login' />
+    }
     const useralldetail = useSelector((state) => state.userexplist);
     const defaultprofile = "https://res.cloudinary.com/dusxlxlvm/image/upload/v1699090690/just_yoljye.png"
     useEffect(() => {
-        if (!log.islogin) {
-            return navigate('/login');
-        }
         dispatch(header("Profile Update"))
-        // setloader(true);
     }, [])
     const WIDTH = 200;
     const [isfile, setisfile] = useState(false);
@@ -130,7 +129,7 @@ const Photo = () => {
     //                             setisuploading(false);
     //                             dispatch(profilepicupdtae(result.url))
     //                             toast.success("Photo Updated Successfully", 1500);
-    //                             // navigate('/');
+    //                             // <Navigate to='/' />
     //                         }
     //                     } catch (error) {
     //                         console.log(error)
@@ -197,7 +196,7 @@ const Photo = () => {
                         dispatch(profilepicupdtae(resuke.url))
                         // toast.success("Photo Updated Successfully", { autoClose: 1300 });
                         toast.update(id, { render: "Photo Updated Successfully", type: "success", isLoading: false, autoClose: 1300 });
-                        // navigate('/');
+                        // <Navigate to='/' />
                     }
                 } catch (error) {
                     console.log(error);

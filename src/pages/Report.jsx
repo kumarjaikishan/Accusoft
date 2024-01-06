@@ -1,21 +1,21 @@
 import React, { useState } from 'react'
 import { useEffect } from 'react';
 import './report.css';
-import { useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { CSVLink } from 'react-csv';
 import { useSelector, useDispatch } from 'react-redux';
 import { setloader, setnarrow } from '../store/login';
+import { toast } from 'react-toastify';
 
 const Report = () => {
-    let navigate = useNavigate();
     const dispatch = useDispatch();
     const log = useSelector((state) => state.login);
+    if (!log.islogin) {
+        toast.warn("You are not Logged In",{ autoClose: 1300 })
+        return <Navigate to='/login' />
+    }
     const useralldetail = useSelector((state) => state.userexplist);
     useEffect(() => {
-        if (!log.islogin) {
-            toast.warn("You Are not Logged In", 1100);
-            return navigate('/login');
-        }
         dispatch(setloader(false));
     }, [])
     const header = [

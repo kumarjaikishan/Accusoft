@@ -2,14 +2,17 @@ import React from 'react'
 import { useState } from 'react';
 import { useEffect } from 'react';
 import './dataanalysis.css';
-import { useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
 const Datanalysis = () => {
-    let navigate = useNavigate();
     const log = useSelector((state) => state.login);
     const useralldetail = useSelector((state) => state.userexplist);
-
+    if (!log.islogin) {
+        toast.warn("You are not Logged In",{ autoClose: 1300 })
+        return <Navigate to='/login' />
+      }
     const date = new Date;
     const today = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getUTCDate();
     //    console.log(date.getFullYear());
@@ -22,10 +25,6 @@ const Datanalysis = () => {
     const [cardarr, setcardarr] = useState({});
 
     useEffect(() => {
-        if (!log.islogin) {
-            toast.warn("You Are not Logged In", { autoClose: 1300 });
-            return navigate('/login');
-        }
         cal();
         // repeat(10000);
     }, [inp])

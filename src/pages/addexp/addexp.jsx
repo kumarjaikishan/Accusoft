@@ -4,24 +4,20 @@ import swal from 'sweetalert';
 import Pagination from './pagination';
 import Modalbox from './modalbox';
 import Ledpage from './ledpage';
-import { useNavigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { setloader } from '../../store/login';
 import { userdata } from '../../store/api'
 import { toast } from 'react-toastify';
 
 const AddExpenses = () => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
-  const loginState = useSelector((state) => state.login);
+  const log = useSelector((state) => state.login);
   const userAllDetails = useSelector((state) => state.userexplist);
-
-  useEffect(() => {
-    if (!loginState.islogin) {
-      toast.warn('You Are not Logged In', 1100);
-      return navigate('/login');
-    }
-  }, []);
+  if (!log.islogin) {
+    toast.warn("You are not Logged In",{ autoClose: 1300 })
+    return <Navigate to='/login' />
+  }
   let itemIds = [];
   const currentDate = new Date();
   const [searchInput, setSearchInput] = useState('');

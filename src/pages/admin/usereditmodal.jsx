@@ -11,7 +11,7 @@ const Useredit = ({ inp,modal, setmodal,handler}) => {
     const editdetail = async (_id) => {
         const token = localStorage.getItem("token");
         dispatch(setloader(true));
-        const { id, name, phone, email, admin } = inp;
+        const { id, name, phone, email, admin,verified } = inp;
         console.log(inp);
         try {
             const result = await fetch(`${useralldetail.apiadress}/adminuserupdate`, {
@@ -21,7 +21,7 @@ const Useredit = ({ inp,modal, setmodal,handler}) => {
                     "Authorization": `Bearer ${token}`,
                 },
                 body: JSON.stringify({
-                    id, name, phone, email, admin
+                    id, name, phone, email, admin,verified
                 })
             })
             const datea = await result.json();
@@ -84,6 +84,15 @@ const Useredit = ({ inp,modal, setmodal,handler}) => {
                     <span>Admin :</span>
                     <span>
                        <select name="admin" id="" onChange={handler} value={inp.admin}>
+                        <option value={true}>true</option>
+                        <option value={false}>False</option>
+                       </select>
+                    </span>
+                </div>
+                <div>
+                    <span>Verified :</span>
+                    <span>
+                       <select name="verified" id="" onChange={handler} value={inp.verified}>
                         <option value={true}>true</option>
                         <option value={false}>False</option>
                        </select>

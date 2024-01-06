@@ -3,24 +3,24 @@ import { useEffect } from 'react';
 import './allexpense.css';
 import swal from 'sweetalert';
 import Pagination from '../addexp/pagination';
-import { useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
 import { setloader } from '../../store/login';
 import { toast } from 'react-toastify';
 import Userexpedit from './expeditmodal';
 
 const Allexpense = () => {
-    let navigate = useNavigate();
     const dispatch = useDispatch();
     const log = useSelector((state) => state.login);
     const useralldetail = useSelector((state) => state.userexplist);
+    if (!log.islogin || !useralldetail.user.isadmin) {
+        // console.log(log);
+        toast.warn("You are not Admin",{ autoClose: 1300 })
+        return <Navigate to='/' />
+    }
     const [adminexpdata, setadminexpdata] = useState([])
     useEffect(() => {
-        if (!log.islogin) {
-            toast.warn("You Are not Logged In", { autoClose: 1300 });
-            return navigate('/login');
-        }
-        fetche();
+        log.islogin && useralldetail.user.isadmin && fetche();
     }, [])
     let itemIds = [];
     const fetche = async () => {
@@ -41,8 +41,8 @@ const Allexpense = () => {
                 setadminexpdata(data.explist)
                 dispatch(setloader(false));
             } else {
-                toast.warn(data.msg ? data.msg : "You are not authorised", { autoClose: 1500 });
-                return navigate('/');
+                // toast.warn(data.msg ? data.msg : "You are not authorised", { autoClose: 1500 });
+                // return <Navigate to='/' />
             }
         } catch (error) {
             console.log(error);

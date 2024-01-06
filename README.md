@@ -13,6 +13,10 @@ Running At- https://frontend-exp-man.vercel.app
 - **Delete Expense:** Remove unwanted expenses from the system.
 - **Update Expense:** Modify existing expense details.
 - **Manage Expenses:** View and organize expenses efficiently.
+- **User Authentication:**
+  - **Signup:** New users can create accounts with email and password.
+  - **Login:** Existing users can log in securely.
+  - **Email Verification:** Users receive a verification email upon signup for account confirmation.
 
 ## Reporting
 

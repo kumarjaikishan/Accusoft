@@ -139,18 +139,7 @@ const Sidebar = () => {
                                             <span className="name">Expenses</span>
                                         </span>
                                     </NavLink>
-                                    <NavLink
-                                        className={(navData) => (navData.isActive ? 'active' : '')}
-                                        style={{ textDecoration: 'none' }}
-                                        to="/admin/reporting"
-                                    >
-                                        <span className="li" onClick={() => dispatch(header('Reporting'))}>
-                                            <span className="logo">
-                                                <i title={'Reporting'} className="fa fa-cloud-download" aria-hidden="true"></i>
-                                            </span>
-                                            <span className="name">Reporting</span>
-                                        </span>
-                                    </NavLink>
+                                   
                                 </div>
                             )}
                         </div>

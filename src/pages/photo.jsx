@@ -322,13 +322,6 @@ const Photo = () => {
                                 <label htmlFor="email"> <h3 >Email</h3></label>
                                 :<input style={{ outline: "none" }} title={editable && "Email Can't be Updated"} readOnly={true} id='email' type="text" onChange={handle} name="email" defaultValue={input.email} />
                             </div>
-                            <div>
-                                <label htmlFor="Admin"> <h3 >Admin</h3></label>
-                                : <select name="admin" id="Admin" >
-                                    <option value={true}>True</option>
-                                    <option value={false}>False</option>
-                                </select>
-                            </div>
                             {!editable && <div>  <button onClick={updatedetails}>Update Deatils</button> </div>}
                             <i className="fa fa-pencil" title='Edit Details' aria-hidden="true" onClick={() => seteditable(!editable)}></i>
                         </div>

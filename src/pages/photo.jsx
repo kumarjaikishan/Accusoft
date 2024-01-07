@@ -4,6 +4,7 @@ import './photo.css';
 import { useSelector, useDispatch } from 'react-redux';
 import { header } from '../store/login';
 import { profilepicupdtae, profiledetailupdtae } from '../store/api';
+import { toast } from 'react-toastify';
 
 
 const Photo = () => {

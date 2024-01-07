@@ -11,11 +11,18 @@ const Pagination = ({ totalpost, postperpage, changepageno, currentpage }) => {
   }
 
   const renderpagination = pages.map((val, ind) => {
+   
     if (val < maxpagenumberlimit + 1 && val > minpagenumberlimit) {
       return (
         <span key={ind} onClick={() => changepageno(val)} className={currentpage == val ? "pages active" : "pages"}>{val}</span>
       )
     }
+    
+     // if (val >= (currentpage-2) && val <= (currentpage+2)) {
+    //   return (
+    //     <span key={ind} onClick={() => changepageno(val)} className={currentpage == val ? "pages active" : "pages"}>{val}</span>
+    //   )
+    // }
   })
 
   const plus = () => {

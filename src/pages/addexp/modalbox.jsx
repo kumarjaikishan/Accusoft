@@ -4,53 +4,38 @@ import './modalbox.css';
 import { useSelector, useDispatch } from 'react-redux';
 import { setloader } from '../../store/login';
 import { userdata } from '../../store/api'
-import {  toast } from 'react-toastify';
+import { toast } from 'react-toastify';
+import apiWrapper from './apiWrapper';
 
-const Modalbox = ({ setisledupdate, modal,disable,setdisable, init, handler, inp, isupdate, sub, setmodal, setisupdate, setinp }) => {
+const Modalbox = ({ setisledupdate, modal, disable, setdisable, init, handler, inp, isupdate, sub, setmodal, setisupdate, setinp }) => {
     const useralldetail = useSelector((state) => state.userexplist);
     const dispatch = useDispatch();
-  
-    // for updating data fetched above 
+
+    // for updating data  
     const updatee = async (_id) => {
         const token = localStorage.getItem("token");
         const { ledger, date, amount, narration } = inp;
-        dispatch(setloader(true));
-        try {
-            setdisable(true);
-            const result = await fetch(`${useralldetail.apiadress}/updateexp`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`,
-                },
-                body: JSON.stringify({
-                    _id, ledger, date, amount, narration
-                })
-            })
-            const datea = await result.json();
-            if (result.ok) {
-                toast.success("Data updated Successfully", { autoClose: 1300 })
+        setdisable(true);
+
+        const url = `${useralldetail.apiadress}/updateexp`;
+        const method = 'POST';
+        const body = {
+            _id, ledger, date, amount, narration
+        };
+        const successAction = (data) => {
+            toast.success(data.msg, { autoClose: 1300 });
                 dispatch(userdata());
                 setinp(init);
                 setdisable(false);
                 setisupdate(false);
                 setmodal(false);
-                dispatch(setloader(false));
-            } else {
-                toast.warn("error occurred", { autoClose: 1300 })
-                console.log(datea);
-                setdisable(false);
-                dispatch(setloader(false));
-            }
-        } catch (error) {
-            toast.warn("Sopmething went wrong", { autoClose: 1300 })
-            console.log(error);
-            dispatch(setloader(false));
-            setdisable(false);
-        }
+        };
 
+        const loaderAction = (isLoading) => dispatch(setloader(isLoading));
+
+        await apiWrapper(url, method, body, dispatch, successAction, loaderAction);
     }
-    // for updating data fetched above ends here
+    // for updating data ends here
 
 
     const jkh = () => {
@@ -72,7 +57,7 @@ const Modalbox = ({ setisledupdate, modal,disable,setdisable, init, handler, inp
                     <span>Ledger :</span>
                     <span>
                         <select className='caps' name="ledger" id="" onChange={handler} value={inp.ledger} >
-                        <option value="">Select Ledger</option>
+                            <option value="">Select Ledger</option>
                             {useralldetail.ledgerlist.map((val, ind) => {
                                 return <option className='erffeg' key={ind} value={val._id}>{val.ledger}</option>
                             })}

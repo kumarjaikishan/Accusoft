@@ -9,6 +9,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setloader } from '../../store/login';
 import { userdata } from '../../store/api'
 import { toast } from 'react-toastify';
+import apiWrapper from './apiWrapper';
 
 const AddExpenses = () => {
   const dispatch = useDispatch();
@@ -64,47 +65,29 @@ const AddExpenses = () => {
       return toast.warn('Kindly Fill all Fields', { autoClose: 1700 });
     }
 
-    try {
-      dispatch(setloader(true));
-      const result = await fetch(`${userAllDetails.apiadress}/addexpense`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          ledger,
-          date,
-          amount,
-          narration: capitalize(narration),
-        }),
-      });
+    const url = `${userAllDetails.apiadress}/addexpense`;
+    const method = 'POST';
+    const body = {  ledger,
+      date,
+      // amount,
+      narration: capitalize(narration)};
 
-      const data = await result.json();
+    const successAction = (data) => {
+      toast.success(data.msg, { autoClose: 1300 });
+      dispatch(userdata());
+      dispatch(setloader(false));
+      setIsModalOpen(false);
+      setExpenseInput(init);
+    };
 
-      if (result.ok) {
-        toast.success('Expense Added', { autoClose: 1300 });
-        dispatch(userdata());
-        dispatch(setloader(false));
-        setIsModalOpen(false);
-        setExpenseInput({
-          _id: '',
-          ledger: '',
-          date: `${currentDate.getFullYear()}-${(currentDate.getMonth() + 1).toString().padStart(2, '0')}-${currentDate.getUTCDate().toString().padStart(2, '0')}`,
-          amount: '',
-          narration: '',
-        });
-      } else {
-        toast.warn('Something went wrong', { autoClose: 1500 });
-      }
-    } catch (error) {
-      console.log(error);
-    }
+    const loaderAction = (isLoading) => dispatch(setloader(isLoading));
+
+    await apiWrapper(url, method, body, dispatch, successAction, loaderAction);
   };
  // adding new expense ends here
 
-
-  const fetchDataForEdit = async (expense) => {
+  // setting input data on edit button click
+  const setDataForEdit = async (expense) => {
     setExpenseInput({
       _id: expense._id,
       ledger: expense.ledger._id,
@@ -146,42 +129,27 @@ const AddExpenses = () => {
       dangerMode: true,
     }).then(async (willDelete) => {
       if (willDelete) {
-        dispatch(setloader(true));
-        try {
-          const result = await fetch(`${userAllDetails.apiadress}/delmany`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-              id: itemIds,
-            }),
-          });
-
-          const data = await result.json();
-
-          if (result.ok) {
-            toast.success('Deleted Successfully', { autoClose: 1300 });
+        const url = `${userAllDetails.apiadress}/delmany`;
+        const method = 'POST';
+        const body = {  id: itemIds};
+    
+        const successAction = (data) => {
+          toast.success(data.msg, { autoClose: 1300 });
             dispatch(setloader(false));
             dispatch(userdata());
 
             const selectedItems = document.querySelectorAll('#tablecontent input:checked');
-            const tableRows = document.querySelectorAll('#tablecontent tr');
 
             selectedItems.forEach((item) => {
               item.checked = false;
             });
 
             highlight();
-          } else {
-            toast.warn('Something went wrong', { autoClose: 1800 });
-            dispatch(setloader(false));
-          }
-        } catch (error) {
-          console.log(error);
-          dispatch(setloader(false));
-        }
+        };
+    
+        const loaderAction = (isLoading) => dispatch(setloader(isLoading));
+    
+        await apiWrapper(url, method, body, dispatch, successAction, loaderAction);
       } else {
         swal('Your data is safe!');
       }
@@ -219,7 +187,6 @@ const AddExpenses = () => {
   const handleSearch = (e) => {
     setSearchInput(e.target.value);
   };
-
 
   const highlight = () => {
     const checkboxes = document.querySelectorAll('#tablecontent input');
@@ -354,7 +321,7 @@ const AddExpenses = () => {
                       <td>{expense.narration}</td>
                       <td>{formattedDate}</td>
                       <td>
-                        <i title="Edit" onClick={() => fetchDataForEdit(expense)} className="fa fa-pencil-square-o" aria-hidden="true"></i>
+                        <i title="Edit" onClick={() => setDataForEdit(expense)} className="fa fa-pencil-square-o" aria-hidden="true"></i>
                         <i title="Delete" onClick={() => deleteExpense(expense._id)} className="fa fa-trash-o" aria-hidden="true"></i>
                       </td>
                       <td>

@@ -2,17 +2,17 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 export const userdata = createAsyncThunk("userdata", async () => {
     const token = localStorage.getItem("token");
-    console.time("time taken by userdata");
+    // console.time("time taken by userdata");
         try {
-            const res = await fetch(`https://backend-exp-man.vercel.app/userdata`, {
-                // const res = await fetch(`http://localhost:5000/userdata`, {
+            // const res = await fetch(`https://backend-exp-man.vercel.app/userdata`, {
+                const res = await fetch(`http://localhost:5000/userdata`, {
                 method: "GET",
                 headers: {
                     "Authorization": `Bearer ${token}`,
                 }
             })
             const data = await res.json();
-             console.timeEnd("time taken by userdata");
+            //  console.timeEnd("time taken by userdata");
             // console.log("from redux api", data);
             return data;
         } catch (error) {
@@ -26,19 +26,19 @@ const userexplist = createSlice({
     initialState: {
         explist: [],
         ledgerlist: [],
-        user: [],
+        user: {},
         loading: false,
         error: null,
         profilepic: "",
-        apiadress: "https://backend-exp-man.vercel.app",
-        // apiadress: "http://localhost:5000",
+        // apiadress: "https://backend-exp-man.vercel.app",
+        apiadress: "http://localhost:5000",
     },
     reducers: {
         userlogout(state, action) {
             localStorage.clear();
             state.explist = [];
             state.ledgerlist = [];
-            state.user = [];
+            state.user = {};
         },
         profilepicupdtae(state, action) {
             state.profilepic = action.payload;
@@ -54,7 +54,7 @@ const userexplist = createSlice({
         })
         builder.addCase(userdata.rejected, (state, action) => {
             state.loading = false;
-            state.error = action.payload;
+            state.error = action.error
         })
         builder.addCase(userdata.fulfilled, (state, action) => {
             state.loading = false;

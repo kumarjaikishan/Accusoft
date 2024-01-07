@@ -1,112 +1,94 @@
-import React, { useState } from 'react'
+
+import React, { useState } from 'react';
 import './ledpage.css';
-import swal from 'sweetalert'
 import { useSelector, useDispatch } from 'react-redux';
 import { setloader } from '../../store/login';
 import { userdata } from '../../store/api';
 import { toast } from 'react-toastify';
+import swal from 'sweetalert';
+import apiWrapper from './apiWrapper'; // Import the wrapper
 
-const Ledpage = ({ setmodal, setdisable,disable, isledupdate, setisledupdate }) => {
+const Ledpage = ({ setmodal, setdisable, disable, isledupdate, setisledupdate }) => {
   const dispatch = useDispatch();
   const useralldetail = useSelector((state) => state.userexplist);
-  const [isupda, setinsupdat] = useState(false)
+  const [isupda, setinsupdat] = useState(false);
   const init = {
-    ind: "",
-    val: ""
-  }
-  const [ledinp, setledinp] = useState(init)
+    ind: '',
+    val: '',
+  };
+  const [ledinp, setledinp] = useState(init);
 
   const handle = (e) => {
     setledinp({
-      ...ledinp, val: e.target.value.toLowerCase()
-    })
-  }
+      ...ledinp,
+      val: e.target.value.toLowerCase(),
+    });
+  };
 
   const add = async () => {
-    const token = localStorage.getItem("token");
-    dispatch(setloader(true));
-    try {
-      setdisable(true);
-      const result = await fetch(`${useralldetail.apiadress}/addledger`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          ledger: ledinp.val
-        })
-      })
-      const data = await result.json();
-      if (result.ok) {
-        toast.success(data.msg, { autoClose: 1300 })
-        dispatch(userdata());
-        setledinp(init);
-        setdisable(false);
-        dispatch(setloader(false));
-      } else {
-        toast.warn("error occurred", { autoClose: 1300 })
-        console.log(data);
-        dispatch(setloader(false));
-        setdisable(false);
-      }
-    } catch (error) {
-      toast.warn("Sopmething went wrong", { autoClose: 1300 })
-      console.log(error);
+     if(!ledinp.val){
+      return toast.warn("Ledger Can't be Blank", { autoClose: 1300 });
+     }
+    const url = `${useralldetail.apiadress}/addledger`;
+    const method = 'POST';
+    const body = { ledger: ledinp.val };
+
+    const successAction = (data) => {
+      toast.success(data.msg, { autoClose: 1300 });
+      dispatch(userdata());
+      setledinp(init);
       setdisable(false);
-      dispatch(setloader(false));
-    }
-  }
+    };
+
+    const loaderAction = (isLoading) => dispatch(setloader(isLoading));
+
+    await apiWrapper(url, method, body, dispatch, successAction, loaderAction);
+  };
 
   const deletee = async (id) => {
-    // console.log(id);
     swal({
-      title: "Are you sure?",
-      text: "Once deleted, you will not be able to recover this Data!",
-      icon: "warning",
+      title: 'Are you sure?',
+      text: 'Once deleted, you will not be able to recover this Data!',
+      icon: 'warning',
       buttons: true,
       dangerMode: true,
     }).then(async (willDelete) => {
       if (willDelete) {
-        setdisable(true);
-        const token = localStorage.getItem("token");
-        dispatch(setloader(true));
-        try {
-          const result = await fetch(`${useralldetail.apiadress}/deleteledger`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-              ledgerid: id
-            })
-          })
-          
-          const data = await result.json();
-          if (result.ok) {
-            toast.success(data.msg, { autoClose: 1300 })
-            dispatch(userdata());
-            setdisable(false);
-            dispatch(setloader(false));
-          } else {
-            toast.warn("error occurred", { autoClose: 1300 })
-            console.log(data);
-            setdisable(false);
-            dispatch(setloader(false));
-          }
-        } catch (error) {
-          toast.warn("Sopmething went wrong", { autoClose: 1300 })
-          console.log(error);
-          dispatch(setloader(false));
+        const url = `${useralldetail.apiadress}/deleteledger`;
+        const method = 'POST';
+        const body = { ledgerid: id };
+
+        const successAction = (data) => {
+          toast.success(data.msg, { autoClose: 1300 });
+          dispatch(userdata());
           setdisable(false);
-        }
-      } else {
-        // swal("Your data is safe!");
+        };
+
+        const loaderAction = (isLoading) => dispatch(setloader(isLoading));
+
+        await apiWrapper(url, method, body, dispatch, successAction, loaderAction);
       }
     });
+  };
 
+  const updat = async () => {
+    const newledger = ledinp.val;
+    const ledger_id = ledinp.ind;
 
+    const url = `${useralldetail.apiadress}/updateledger`;
+    const method = 'POST';
+    const body = {  ledger_id, newledger };
+
+    const successAction = (data) => {
+      toast.success(data.msg, { autoClose: 1300 });
+      setledinp(init);
+      setinsupdat(false);
+      dispatch(userdata());
+    };
+
+    const loaderAction = (isLoading) => dispatch(setloader(isLoading));
+
+    await apiWrapper(url, method, body, dispatch, successAction, loaderAction);
   }
 
   const back = () => {
@@ -128,34 +110,7 @@ const Ledpage = ({ setmodal, setdisable,disable, isledupdate, setisledupdate }) 
     })
     setinsupdat(true);
   }
-
-  const updat = async () => {
-    const token = localStorage.getItem("token");
-    const newledger = ledinp.val;
-    const ledger_id = ledinp.ind;
-    //  console.log(ledger_id,newledger);
-    try {
-      const res = await fetch(`${useralldetail.apiadress}/updateledger`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          ledger_id, newledger
-        })
-      })
-      const result = await res.json();
-      console.log(result);
-      if (res.ok) {
-        toast.success(result.msg, { autoClose: 1300 })
-        dispatch(userdata());
-        dispatch(setloader(false));
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  // Other functions using the apiWrapper...
 
   return (
     <div className="ledpage" onClick={sdef} style={{ display: isledupdate ? "block" : "none" }}>
@@ -192,6 +147,6 @@ const Ledpage = ({ setmodal, setdisable,disable, isledupdate, setisledupdate }) 
       </div>
     </div>
   )
-}
+};
 
 export default Ledpage;

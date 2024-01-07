@@ -69,7 +69,7 @@ const AddExpenses = () => {
     const method = 'POST';
     const body = {  ledger,
       date,
-      // amount,
+      amount,
       narration: capitalize(narration)};
 
     const successAction = (data) => {

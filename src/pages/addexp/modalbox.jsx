@@ -6,16 +6,17 @@ import { setloader } from '../../store/login';
 import { userdata } from '../../store/api'
 import {  toast } from 'react-toastify';
 
-const Modalbox = ({ setisledupdate, modal, init, handler, inp, isupdate, sub, setmodal, setisupdate, setinp }) => {
+const Modalbox = ({ setisledupdate, modal,disable,setdisable, init, handler, inp, isupdate, sub, setmodal, setisupdate, setinp }) => {
     const useralldetail = useSelector((state) => state.userexplist);
     const dispatch = useDispatch();
-
+  
     // for updating data fetched above 
     const updatee = async (_id) => {
         const token = localStorage.getItem("token");
         const { ledger, date, amount, narration } = inp;
-        // dispatch(setloader(true));
+        dispatch(setloader(true));
         try {
+            setdisable(true);
             const result = await fetch(`${useralldetail.apiadress}/updateexp`, {
                 method: "POST",
                 headers: {
@@ -31,16 +32,21 @@ const Modalbox = ({ setisledupdate, modal, init, handler, inp, isupdate, sub, se
                 toast.success("Data updated Successfully", { autoClose: 1300 })
                 dispatch(userdata());
                 setinp(init);
+                setdisable(false);
                 setisupdate(false);
                 setmodal(false);
                 dispatch(setloader(false));
             } else {
                 toast.warn("error occurred", { autoClose: 1300 })
                 console.log(datea);
+                setdisable(false);
+                dispatch(setloader(false));
             }
         } catch (error) {
             toast.warn("Sopmething went wrong", { autoClose: 1300 })
             console.log(error);
+            dispatch(setloader(false));
+            setdisable(false);
         }
 
     }
@@ -95,7 +101,7 @@ const Modalbox = ({ setisledupdate, modal, init, handler, inp, isupdate, sub, se
                     </span>
                 </div>
                 <div>
-                    {isupdate ? <button onClick={() => updatee(inp._id)}>Update</button> : <button onClick={sub}>Submit</button>}
+                    {isupdate ? <button disabled={disable} onClick={() => updatee(inp._id)}>Update</button> : <button disabled={disable} onClick={sub}>Submit</button>}
                     <button onClick={() => {
                         setmodal(false);
                         setisupdate(false);

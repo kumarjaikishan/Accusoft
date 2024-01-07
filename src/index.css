@@ -112,6 +112,9 @@ button{
    background: #36a0f1;
    transition: 0.2s;
 }
+button:disabled{
+  background: grey !important;
+}
 button:active,button:hover{
   transform: scale(0.96);
   background: rgb(5, 99, 137);

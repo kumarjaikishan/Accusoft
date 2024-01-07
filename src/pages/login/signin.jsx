@@ -37,7 +37,7 @@ const Signin = () => {
     }
 
     const submit = async () => {
-        // setbtnclick(true);
+        setbtnclick(true);
         const { email, password } = signinp;
 
         if (!email || !password) {
@@ -62,7 +62,7 @@ const Signin = () => {
                 dispatch(setlogin(true));
                 // console.log(data);
                 toast.success("Login Successfully", { autoClose: 1300 });
-                // setbtnclick(false);
+                setbtnclick(false);
                 dispatch(setloader(true));
                 localStorage.setItem("token", data.token);
                 dispatch(userdata());
@@ -70,6 +70,7 @@ const Signin = () => {
                
             } else if (res.ok && res.status == 201) {
                 dispatch(setloader(false));
+                setbtnclick(false);
                 toast.warn("Kindly Verify Email First", { autoClose: 3300 });
             } else {
                 console.log(data);

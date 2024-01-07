@@ -35,7 +35,7 @@ const Signup = ({setlog}) => {
 
     const submit = async (event) => {
         // console.log(signinp);
-        // setbtnclick(true);
+        setbtnclick(true);
        
         const { name, email, phone, password, cpassword } = signinp;
         if (!name || !email || !phone || !password ) {

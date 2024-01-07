@@ -22,6 +22,7 @@ const AddExpenses = () => {
   const currentDate = new Date();
   const [searchInput, setSearchInput] = useState('');
   const [isUpdateMode, setIsUpdateMode] = useState(false);
+  const [disable,setdisable]= useState(false);
   const init = {
     _id: '',
     ledger: '',
@@ -175,9 +176,11 @@ const AddExpenses = () => {
             highlight();
           } else {
             toast.warn('Something went wrong', { autoClose: 1800 });
+            dispatch(setloader(false));
           }
         } catch (error) {
           console.log(error);
+          dispatch(setloader(false));
         }
       } else {
         swal('Your data is safe!');
@@ -401,6 +404,8 @@ const AddExpenses = () => {
         <Modalbox
           setisledupdate={setIsLedgerUpdate}
           init={init}
+          setdisable={setdisable}
+          disable={disable}
           setinp={setExpenseInput}
           setisupdate={setIsUpdateMode}
           setmodal={setIsModalOpen}
@@ -410,7 +415,7 @@ const AddExpenses = () => {
           inp={expenseInput}
           isupdate={isUpdateMode}
         />
-        <Ledpage setmodal={setIsModalOpen} setisledupdate={setIsLedgerUpdate} isledupdate={isLedgerUpdate} />
+        <Ledpage setmodal={setIsModalOpen}  setdisable={setdisable} disable={disable} setisledupdate={setIsLedgerUpdate} isledupdate={isLedgerUpdate} />
       </div>
     </>
   );

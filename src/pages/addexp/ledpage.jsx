@@ -6,7 +6,7 @@ import { setloader } from '../../store/login';
 import { userdata } from '../../store/api';
 import { toast } from 'react-toastify';
 
-const Ledpage = ({ setmodal, isledupdate, setisledupdate }) => {
+const Ledpage = ({ setmodal, setdisable,disable, isledupdate, setisledupdate }) => {
   const dispatch = useDispatch();
   const useralldetail = useSelector((state) => state.userexplist);
   const [isupda, setinsupdat] = useState(false)
@@ -26,6 +26,7 @@ const Ledpage = ({ setmodal, isledupdate, setisledupdate }) => {
     const token = localStorage.getItem("token");
     dispatch(setloader(true));
     try {
+      setdisable(true);
       const result = await fetch(`${useralldetail.apiadress}/addledger`, {
         method: "POST",
         headers: {
@@ -41,14 +42,19 @@ const Ledpage = ({ setmodal, isledupdate, setisledupdate }) => {
         toast.success(data.msg, { autoClose: 1300 })
         dispatch(userdata());
         setledinp(init);
+        setdisable(false);
         dispatch(setloader(false));
       } else {
         toast.warn("error occurred", { autoClose: 1300 })
         console.log(data);
+        dispatch(setloader(false));
+        setdisable(false);
       }
     } catch (error) {
       toast.warn("Sopmething went wrong", { autoClose: 1300 })
       console.log(error);
+      setdisable(false);
+      dispatch(setloader(false));
     }
   }
 
@@ -62,6 +68,7 @@ const Ledpage = ({ setmodal, isledupdate, setisledupdate }) => {
       dangerMode: true,
     }).then(async (willDelete) => {
       if (willDelete) {
+        setdisable(true);
         const token = localStorage.getItem("token");
         dispatch(setloader(true));
         try {
@@ -80,14 +87,19 @@ const Ledpage = ({ setmodal, isledupdate, setisledupdate }) => {
           if (result.ok) {
             toast.success(data.msg, { autoClose: 1300 })
             dispatch(userdata());
+            setdisable(false);
             dispatch(setloader(false));
           } else {
             toast.warn("error occurred", { autoClose: 1300 })
             console.log(data);
+            setdisable(false);
+            dispatch(setloader(false));
           }
         } catch (error) {
           toast.warn("Sopmething went wrong", { autoClose: 1300 })
           console.log(error);
+          dispatch(setloader(false));
+          setdisable(false);
         }
       } else {
         // swal("Your data is safe!");
@@ -152,7 +164,7 @@ const Ledpage = ({ setmodal, isledupdate, setisledupdate }) => {
         <div className="cont">
 
           <input type="text" className='caps' value={ledinp.val} onChange={handle} />
-          {isupda ? <button onClick={updat}>Update</button> : <button onClick={add}>Add</button>}
+          {isupda ? <button disabled={disable} onClick={updat}>Update</button> : <button disabled={disable} onClick={add}>Add</button>}
         </div>
         <div className="mater">
           <table>

@@ -83,7 +83,7 @@ const Signup = ({setlog}) => {
         } catch (error) {
             dispatch(setloader(false));
             setbtnclick(false);
-            toast.warn("Something went wrong catch", { autoClose: 1600 })
+            toast.warn("Something went wrong", { autoClose: 1600 })
             console.log(error);
         }
 

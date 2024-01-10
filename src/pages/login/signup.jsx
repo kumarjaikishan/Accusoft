@@ -76,7 +76,7 @@ const Signup = ({setlog}) => {
             } else {
                 dispatch(setloader(false));
                 setbtnclick(false);
-                toast.warn(datae.msg, { autoClose: 1300 })
+                toast.warn(datae.msg, { autoClose: 2300 })
             }
 
             // console.log(datae);

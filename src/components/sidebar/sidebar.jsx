@@ -118,6 +118,18 @@ const Sidebar = () => {
                                     <NavLink
                                         className={(navData) => (navData.isActive ? 'active' : '')}
                                         style={{ textDecoration: 'none' }}
+                                        to="/admin/dashboard"
+                                    >
+                                        <span className="li" onClick={() => dispatch(header('Admin/ Dashboard'))}>
+                                            <span className="logo">
+                                                <i title={'Users'} className="fa fa-user" aria-hidden="true"></i>
+                                            </span>
+                                            <span className="name">Dashboard</span>
+                                        </span>
+                                    </NavLink>
+                                    <NavLink
+                                        className={(navData) => (navData.isActive ? 'active' : '')}
+                                        style={{ textDecoration: 'none' }}
                                         to="/admin/users"
                                     >
                                         <span className="li" onClick={() => dispatch(header('Admin/ Users'))}>

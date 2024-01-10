@@ -21,6 +21,7 @@ import { userdata } from './store/api'
 import { Errorpage } from './pages/Errorpage';
 import Allexpense from './pages/admin/Allexpenses';
 import Alluser from './pages/admin/alluser';
+import Admin_Dashboard from './pages/admin/admin_Dashboard';
 
 function App() {
   const dispatch = useDispatch();
@@ -54,7 +55,8 @@ function App() {
             <Route path="/photo" element={<Photo />} />
             <Route path="/login" element={<Login />} />
             <Route path="/logout" element={<Logout />} />
-            <Route path="/admin"  >
+            <Route path="/admin" >
+              <Route path="dashboard" element={<Admin_Dashboard />} />
               <Route path="users" element={<Alluser />} />
               <Route path="expense" element={<Allexpense />} />
             </Route>

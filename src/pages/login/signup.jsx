@@ -76,7 +76,7 @@ const Signup = ({setlog}) => {
             } else {
                 dispatch(setloader(false));
                 setbtnclick(false);
-                toast.warn("else wala went wrong", { autoClose: 1300 })
+                toast.warn(datae.msg, { autoClose: 1300 })
             }
 
             // console.log(datae);

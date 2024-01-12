@@ -10,9 +10,9 @@ const Datanalysis = () => {
     const log = useSelector((state) => state.login);
     const useralldetail = useSelector((state) => state.userexplist);
     if (!log.islogin) {
-        toast.warn("You are not Logged In",{ autoClose: 1300 })
+        toast.warn("You are not Logged In", { autoClose: 1300 })
         return <Navigate to='/login' />
-      }
+    }
     const date = new Date;
     const today = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getUTCDate();
     //    console.log(date.getFullYear());
@@ -26,6 +26,7 @@ const Datanalysis = () => {
 
     useEffect(() => {
         cal();
+        dispatch(setloader(false))
         // repeat(10000);
     }, [inp])
 

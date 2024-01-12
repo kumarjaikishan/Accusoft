@@ -27,7 +27,7 @@ const apiWrapper = async (url, method = 'GET', body = null, dispatch, successAct
     } catch (error) {
         // You can dispatch an error action here if needed
         toast.warn(error.message, { autoClose: 2300 })
-        console.log(error);
+        console.log(error.message);
         dispatch(loaderAction(false));
         throw error; // Rethrow the error for the calling code to handle
     } finally {

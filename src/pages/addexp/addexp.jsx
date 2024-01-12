@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import './addexp.css';
 import swal from 'sweetalert';
 import Pagination from './pagination';
@@ -15,10 +15,14 @@ const AddExpenses = () => {
   const dispatch = useDispatch();
   const log = useSelector((state) => state.login);
   const userAllDetails = useSelector((state) => state.userexplist);
+ 
   if (!log.islogin) {
     toast.warn("You are not Logged In",{ autoClose: 1300 })
     return <Navigate to='/login' />
   }
+  useEffect(()=>{
+    dispatch(setloader(false))
+  },[])
   let itemIds = [];
   const currentDate = new Date();
   const [searchInput, setSearchInput] = useState('');

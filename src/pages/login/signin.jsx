@@ -61,7 +61,7 @@ const Signin = () => {
             if (res.ok && res.status == 200) {
                 dispatch(setlogin(true));
                 // console.log(data);
-                toast.success("Login Successfully", { autoClose: 1300 });
+                toast.success(data.msg, { autoClose: 1300 });
                 setbtnclick(false);
                 dispatch(setloader(true));
                 localStorage.setItem("token", data.token);
@@ -74,14 +74,14 @@ const Signin = () => {
                 toast.warn("Kindly Verify Email First", { autoClose: 3300 });
             } else {
                 console.log(data);
-                toast.warn("No user found", { autoClose: 1500 });
+                toast.warn(data.msg ? data.msg : "ye wala kaise", { autoClose: 1500 });
                 setbtnclick(false);
                 dispatch(setloader(false));
             }
 
         } catch (error) {
             console.log(error);
-            toast.warn("Something Went Wrong", { autoClose: 1500 });
+            toast.warn(error.msg, { autoClose: 1500 });
             setbtnclick(false);
             dispatch(setloader(false));
         }

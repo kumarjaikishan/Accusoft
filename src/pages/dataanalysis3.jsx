@@ -27,6 +27,7 @@ const Datanalysis = () => {
             return navigate('/login');
         }
         cal();
+       
         // repeat(10000);
     }, [inp])
 

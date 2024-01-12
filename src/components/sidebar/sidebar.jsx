@@ -122,7 +122,7 @@ const Sidebar = () => {
                                     >
                                         <span className="li" onClick={() => dispatch(header('Admin/ Dashboard'))}>
                                             <span className="logo">
-                                                <i title={'Users'} className="fa fa-user" aria-hidden="true"></i>
+                                                <i title={'Users'} className="fa fa-tachometer" aria-hidden="true"></i>
                                             </span>
                                             <span className="name">Dashboard</span>
                                         </span>
@@ -134,7 +134,7 @@ const Sidebar = () => {
                                     >
                                         <span className="li" onClick={() => dispatch(header('Admin/ Users'))}>
                                             <span className="logo">
-                                                <i title={'Users'} className="fa fa-user" aria-hidden="true"></i>
+                                                <i title={'Users'} className="fa fa-user-o" aria-hidden="true"></i>
                                             </span>
                                             <span className="name">Users</span>
                                         </span>

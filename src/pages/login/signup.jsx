@@ -66,7 +66,7 @@ const Signup = ({setlog}) => {
                 })
             })
             const datae = await res.json();
-            console.log(datae);
+            // console.log(datae);
             if (res.ok) {
                 // setsigninp(init);
                 toast.success("Signup Successful,verify your Email", { autoClose: 3300 })
@@ -76,14 +76,14 @@ const Signup = ({setlog}) => {
             } else {
                 dispatch(setloader(false));
                 setbtnclick(false);
-                toast.warn(datae.msg, { autoClose: 2300 })
+                toast.warn(datae.msg, { autoClose: 8300 })
             }
 
             // console.log(datae);
         } catch (error) {
             dispatch(setloader(false));
             setbtnclick(false);
-            toast.warn("Something went wrong", { autoClose: 1600 })
+            toast.warn(error.msg, { autoClose: 5600 })
             console.log(error);
         }
 

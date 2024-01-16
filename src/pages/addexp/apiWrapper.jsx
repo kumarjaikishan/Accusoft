@@ -19,17 +19,22 @@ const apiWrapper = async (url, method = 'GET', body = null, dispatch, successAct
 
         if (!response.ok) {
             throw new Error(responseData.msg || 'Something went wrong');
-            // toast.warn(responseData.msg, { autoClose: 2300 })
         }
 
         successAction(responseData);
         return responseData;
     } catch (error) {
-        // You can dispatch an error action here if needed
-        toast.warn(error.message, { autoClose: 2300 })
-        console.log(error.message);
+        // Log the error for debugging purposes
+        console.error("apiWrapper Error:", error);
+
+        // Dispatch an error action if needed
+        // Example: dispatch(errorAction(error));
         dispatch(loaderAction(false));
-        throw error; // Rethrow the error for the calling code to handle
+        // Display a toast notification for the user
+        toast.warn(error.message || 'An error occurred', { autoClose: 2300 });
+
+        // Rethrow the error for the calling code to handle if necessary
+        throw error;
     } finally {
         dispatch(loaderAction(false));
     }

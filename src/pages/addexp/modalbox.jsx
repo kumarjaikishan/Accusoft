@@ -13,7 +13,6 @@ const Modalbox = ({ setisledupdate, modal, disable, setdisable, init, handler, i
 
     // for updating data  
     const updatee = async (_id) => {
-        const token = localStorage.getItem("token");
         const { ledger, date, amount, narration } = inp;
         setdisable(true);
 

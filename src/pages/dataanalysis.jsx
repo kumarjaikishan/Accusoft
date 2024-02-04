@@ -2,8 +2,8 @@ import React from 'react'
 import { useState } from 'react';
 import { useEffect } from 'react';
 import './dataanalysis.css';
+import { Navigate } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
-import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 
 const Datanalysis = () => {

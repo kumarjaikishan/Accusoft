@@ -5,6 +5,7 @@ import './dataanalysis.css';
 import { Navigate } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
+import { setloader } from '../store/login';
 
 const Datanalysis = () => {
     const log = useSelector((state) => state.login);

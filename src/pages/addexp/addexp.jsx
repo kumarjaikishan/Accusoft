@@ -10,24 +10,25 @@ import { setloader } from '../../store/login';
 import { userdata } from '../../store/api'
 import { toast } from 'react-toastify';
 import apiWrapper from './apiWrapper';
+import { AnimatePresence, motion } from 'framer-motion';
 
 const AddExpenses = () => {
   const dispatch = useDispatch();
   const log = useSelector((state) => state.login);
   const userAllDetails = useSelector((state) => state.userexplist);
- 
+
   if (!log.islogin) {
-    toast.warn("You are not Logged In",{ autoClose: 1300 })
+    toast.warn("You are not Logged In", { autoClose: 1300 })
     return <Navigate to='/login' />
   }
-  useEffect(()=>{
+  useEffect(() => {
     dispatch(setloader(false))
-  },[])
+  }, [])
   let itemIds = [];
   const currentDate = new Date();
   const [searchInput, setSearchInput] = useState('');
   const [isUpdateMode, setIsUpdateMode] = useState(false);
-  const [disable,setdisable]= useState(false);
+  const [disable, setdisable] = useState(false);
   const init = {
     _id: '',
     ledger: '',
@@ -71,10 +72,12 @@ const AddExpenses = () => {
 
     const url = `${userAllDetails.apiadress}/addexpense`;
     const method = 'POST';
-    const body = {  ledger,
+    const body = {
+      ledger,
       date,
       amount,
-      narration: capitalize(narration)};
+      narration: capitalize(narration)
+    };
 
     const successAction = (data) => {
       toast.success(data.msg, { autoClose: 1300 });
@@ -88,7 +91,7 @@ const AddExpenses = () => {
 
     await apiWrapper(url, method, body, dispatch, successAction, loaderAction);
   };
- // adding new expense ends here
+  // adding new expense ends here
 
   // setting input data on edit button click
   const setDataForEdit = async (expense) => {
@@ -109,7 +112,7 @@ const AddExpenses = () => {
     // console.log(itemIds);
     sendDeleteRequest(itemIds);
   };
-  
+
   const deletemanyExpense = async () => {
     itemIds = []
     const selectedItems = document.querySelectorAll('#tablecontent input:checked');
@@ -135,24 +138,24 @@ const AddExpenses = () => {
       if (willDelete) {
         const url = `${userAllDetails.apiadress}/delmany`;
         const method = 'POST';
-        const body = {  id: itemIds};
-    
+        const body = { id: itemIds };
+
         const successAction = (data) => {
           toast.success(data.msg, { autoClose: 1300 });
-            dispatch(setloader(false));
-            dispatch(userdata());
+          dispatch(setloader(false));
+          dispatch(userdata());
 
-            const selectedItems = document.querySelectorAll('#tablecontent input:checked');
+          const selectedItems = document.querySelectorAll('#tablecontent input:checked');
 
-            selectedItems.forEach((item) => {
-              item.checked = false;
-            });
+          selectedItems.forEach((item) => {
+            item.checked = false;
+          });
 
-            highlight();
+          highlight();
         };
-    
+
         const loaderAction = (isLoading) => dispatch(setloader(isLoading));
-    
+
         await apiWrapper(url, method, body, dispatch, successAction, loaderAction);
       } else {
         swal('Your data is safe!');
@@ -282,7 +285,7 @@ const AddExpenses = () => {
           </span>
         </div>
         <div className="table">
-          <table cellSpacing="15">
+          <motion.table layout cellSpacing="15">
             <thead>
               <tr>
                 <th>S.no</th>
@@ -302,39 +305,42 @@ const AddExpenses = () => {
                 </th>
               </tr>
             </thead>
-            <tbody id="tablecontent">
-              {(sortedList ? sortedList : currentPosts)
-                .filter((item) => {
-                  return (
-                    searchInput.toLowerCase() === '' ||
-                    item.narration.toLowerCase().includes(searchInput) ||
-                    item.ledger.ledger.toLowerCase().includes(searchInput) ||
-                    item.amount.toString().includes(searchInput)
-                  );
-                })
-                .map((expense, index) => {
-                  const expenseDate = new Date(expense.date);
-                  const formattedDate = `${expenseDate.getUTCDate().toString().padStart(2, '0')} ${expenseDate.toLocaleString('default', { month: 'short' })
-                    }, ${expenseDate.getFullYear().toString().substr(-2)}`;
+              <AnimatePresence>
+            <motion.tbody layout id="tablecontent">
+                {(sortedList ? sortedList : currentPosts)
+                  .filter((item) => {
+                    return (
+                      searchInput.toLowerCase() === '' ||
+                      item.narration.toLowerCase().includes(searchInput) ||
+                      item.ledger.ledger.toLowerCase().includes(searchInput) ||
+                      item.amount.toString().includes(searchInput)
+                    );
+                  })
+                  .map((expense, index) => {
+                    const expenseDate = new Date(expense.date);
+                    const formattedDate = `${expenseDate.getUTCDate().toString().padStart(2, '0')} ${expenseDate.toLocaleString('default', { month: 'short' })
+                      }, ${expenseDate.getFullYear().toString().substr(-2)}`;
 
-                  return (
-                    <tr key={index}>
-                      <td>{firstPostIndex + index + 1}</td>
-                      <td>{expense.ledger.ledger}</td>
-                      <td>{expense.amount}</td>
-                      <td>{expense.narration}</td>
-                      <td>{formattedDate}</td>
-                      <td>
-                        <i title="Edit" onClick={() => setDataForEdit(expense)} className="fa fa-pencil-square-o" aria-hidden="true"></i>
-                        <i title="Delete" onClick={() => deleteExpense(expense._id)} className="fa fa-trash-o" aria-hidden="true"></i>
-                      </td>
-                      <td>
-                        <input type="checkbox" onClick={highlight} id={expense._id} />
-                      </td>
-                    </tr>
-                  );
-                })}
-            </tbody>
+                    return (
+                      <motion.tr
+                       layout key={index}>
+                        <td>{firstPostIndex + index + 1}</td>
+                        <td>{expense.ledger.ledger}</td>
+                        <td>{expense.amount}</td>
+                        <td>{expense.narration}</td>
+                        <td>{formattedDate}</td>
+                        <td>
+                          <i title="Edit" onClick={() => setDataForEdit(expense)} className="fa fa-pencil-square-o" aria-hidden="true"></i>
+                          <i title="Delete" onClick={() => deleteExpense(expense._id)} className="fa fa-trash-o" aria-hidden="true"></i>
+                        </td>
+                        <td>
+                          <input type="checkbox" onClick={highlight} id={expense._id} />
+                        </td>
+                      </motion.tr>
+                    );
+                  })}
+            </motion.tbody>
+              </AnimatePresence>
             <tfoot>
               <tr id="foot">
                 <th colSpan="1"></th>
@@ -359,7 +365,7 @@ const AddExpenses = () => {
                 <th colSpan="1"></th>
               </tr>
             </tfoot>
-          </table>
+          </motion.table>
         </div>
         <div className="foot">
           <span>
@@ -386,7 +392,7 @@ const AddExpenses = () => {
           inp={expenseInput}
           isupdate={isUpdateMode}
         />
-        <Ledpage setmodal={setIsModalOpen}  setdisable={setdisable} disable={disable} setisledupdate={setIsLedgerUpdate} isledupdate={isLedgerUpdate} />
+        <Ledpage setmodal={setIsModalOpen} setdisable={setdisable} disable={disable} setisledupdate={setIsLedgerUpdate} isledupdate={isLedgerUpdate} />
       </div>
     </>
   );

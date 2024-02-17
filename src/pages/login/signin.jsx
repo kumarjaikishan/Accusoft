@@ -36,7 +36,8 @@ const Signin = () => {
         })
     }
 
-    const submit = async () => {
+    const submit = async (e) => {
+        e.preventDefault();
         setbtnclick(true);
         const { email, password } = signinp;
 
@@ -67,14 +68,14 @@ const Signin = () => {
                 localStorage.setItem("token", data.token);
                 dispatch(userdata());
                 return navigate('/');
-               
+
             } else if (res.ok && res.status == 201) {
                 dispatch(setloader(false));
                 setbtnclick(false);
                 toast.warn("Kindly Verify Email First", { autoClose: 3300 });
             } else {
                 console.log(data);
-                toast.warn(data.msg ? data.msg : "ye wala kaise", { autoClose: 1500 });
+                toast.warn(data.msg ? data.msg : "Error Occured", { autoClose: 1500 });
                 setbtnclick(false);
                 dispatch(setloader(false));
             }
@@ -91,40 +92,44 @@ const Signin = () => {
     return (
         <>
             <div className="logine" id='forme'>
-                <TextField
-                    label="Email*"
-                    size="small"
-                    className='filled'
-                    onChange={signhandle}
-                    name="email"
-                    value={signinp.email}
-                    InputProps={{
-                        startAdornment: <InputAdornment position="start">
-                            <MailOutlineIcon />
-                        </InputAdornment>,
+                <form onSubmit={submit}>
+                    <TextField
+                        label="Email*"
+                        size="small"
+                        required
+                        type='email'
+                        className='filled'
+                        onChange={signhandle}
+                        name="email"
+                        value={signinp.email}
+                        InputProps={{
+                            startAdornment: <InputAdornment position="start">
+                                <MailOutlineIcon />
+                            </InputAdornment>,
 
-                    }}
-                />
-                <TextField
-                    label="Password*"
-                    className='filled'
-                    size="small"
-                    type={loginpass ? "password" : null}
-                    onChange={signhandle}
-                    name="password"
-                    value={signinp.password}
-                    InputProps={{
-                        startAdornment: <InputAdornment position="start">
-                            <VpnKeyIcon />
-                        </InputAdornment>,
-                        endAdornment: <InputAdornment position="end" style={{ cursor: "pointer" }} onClick={() => loginpass ? setloginpass(false) : setloginpass(true)}>
-                            {loginpass ? <RemoveRedEyeIcon /> : <VisibilityOffIcon />}
-                        </InputAdornment>
-                    }}
+                        }}
+                    />
+                    <TextField
+                        label="Password*"
+                        className='filled'
+                        size="small"
+                        required
+                        type={loginpass ? "password" : null}
+                        onChange={signhandle}
+                        name="password"
+                        value={signinp.password}
+                        InputProps={{
+                            startAdornment: <InputAdornment position="start">
+                                <VpnKeyIcon />
+                            </InputAdornment>,
+                            endAdornment: <InputAdornment position="end" style={{ cursor: "pointer" }} onClick={() => loginpass ? setloginpass(false) : setloginpass(true)}>
+                                {loginpass ? <RemoveRedEyeIcon /> : <VisibilityOffIcon />}
+                            </InputAdornment>
+                        }}
 
-                />
-                <button disabled={btnclick} style={btnclick ? { background: "#cccccc", color: "#666666" } : { background: "#0984e3", color: "white" }} onClick={submit}>Login</button>
-
+                    />
+                    <button type='submit' disabled={btnclick} style={btnclick ? { background: "#cccccc", color: "#666666" } : { background: "#0984e3", color: "white" }} >Login</button>
+                </form>
             </div>
         </>
     )

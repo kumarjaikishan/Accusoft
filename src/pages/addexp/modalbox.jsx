@@ -6,6 +6,7 @@ import { setloader } from '../../store/login';
 import { userdata } from '../../store/api'
 import { toast } from 'react-toastify';
 import apiWrapper from './apiWrapper';
+import { motion } from 'framer-motion';
 
 const Modalbox = ({ setisledupdate, modal, disable, setdisable, init, handler, inp, isupdate, sub, setmodal, setisupdate, setinp }) => {
     const useralldetail = useSelector((state) => state.userexplist);
@@ -23,11 +24,11 @@ const Modalbox = ({ setisledupdate, modal, disable, setdisable, init, handler, i
         };
         const successAction = (data) => {
             toast.success(data.msg, { autoClose: 1300 });
-                dispatch(userdata());
-                setinp(init);
-                setdisable(false);
-                setisupdate(false);
-                setmodal(false);
+            dispatch(userdata());
+            setinp(init);
+            setdisable(false);
+            setisupdate(false);
+            setmodal(false);
         };
 
         const loaderAction = (isLoading) => dispatch(setloader(isLoading));
@@ -49,7 +50,8 @@ const Modalbox = ({ setisledupdate, modal, disable, setdisable, init, handler, i
     }
     return (
         <div className="modal" onClick={sdef} style={{ display: modal ? "block" : "none" }}>
-            <div className="box">
+            <div
+                className="box">
                 <h1>Add Voucher</h1>
                 <div className="ledgeredit"><i onClick={jkh} className="fa fa-pencil" aria-hidden="true"></i></div>
                 <div className='leger'>

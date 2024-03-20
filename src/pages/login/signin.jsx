@@ -95,7 +95,6 @@ const Signin = () => {
                 <form onSubmit={submit}>
                     <TextField
                         label="Email"
-                        size="small"
                         required
                         type='email'
                         className='filled'
@@ -112,7 +111,6 @@ const Signin = () => {
                     <TextField
                         label="Password"
                         className='filled'
-                        size="small"
                         required
                         type={loginpass ? "password" : null}
                         onChange={signhandle}
@@ -128,7 +126,7 @@ const Signin = () => {
                         }}
 
                     />
-                    <button type='submit' disabled={btnclick} style={btnclick ? { background: "#cccccc", color: "#666666" } : { background: "#0984e3", color: "white" }} >Login</button>
+                    <button className='btn' type='submit' disabled={btnclick} style={btnclick ? { background: "#cccccc", color: "#666666" } : { background: "rgb(3, 73, 114)", color: "white" }} >Login</button>
                 </form>
             </div>
         </>

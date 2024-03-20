@@ -95,8 +95,8 @@ const Signup = ({ setlog }) => {
             <div className="singup">
                 <form onSubmit={submit}>
                     <TextField
-                        label="Name*"
-                        size="small"
+                        label="Name"
+                        required
                         className='filled'
                         onChange={signhandle}
                         name="name"
@@ -108,8 +108,8 @@ const Signup = ({ setlog }) => {
                         }}
                     />
                     <TextField
-                        label="Email*"
-                        size="small"
+                        label="Email"
+                        required
                         className='filled'
                         onChange={signhandle}
                         name="email"
@@ -122,8 +122,8 @@ const Signup = ({ setlog }) => {
                         }}
                     />
                     <TextField
-                        label="Phone*"
-                        size="small"
+                        label="Phone"
+                        required
                         color={signinp.phone.length == 10 ? "primary" : "warning"}
                         className='filled'
                         onChange={signhandle}
@@ -138,9 +138,9 @@ const Signup = ({ setlog }) => {
                         }}
                     />
                     <TextField
-                        label="Password*"
+                        label="Password"
                         className='filled'
-                        size="small"
+                        required
                         onChange={signhandle}
                         name="password"
                         type={signuppass ? "password" : null}
@@ -155,10 +155,10 @@ const Signup = ({ setlog }) => {
                         }}
                     />
                     <TextField
-                        label="Confirm Password*"
+                        label="Confirm Password"
                         className='filled'
                         color={signinp.password == signinp.cpassword ? "primary" : "warning"}
-                        size="small"
+                        required
                         onChange={signhandle}
                         name="cpassword"
                         value={signinp.cpassword}
@@ -168,7 +168,7 @@ const Signup = ({ setlog }) => {
                             </InputAdornment>,
                         }}
                     />
-                    <button type='submit' disabled={btnclick} style={btnclick ? { background: "#cccccc", color: "#666666" } : { background: "#0984e3", color: "white" }} >Signup</button>
+                    <button type='submit' disabled={btnclick} style={btnclick ? { background: "#cccccc", color: "#666666" } : { background: "rgb(3, 73, 114)", color: "white" }} >Signup</button>
                 </form>
             </div>
         </>

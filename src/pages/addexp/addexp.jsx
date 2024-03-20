@@ -29,19 +29,21 @@ const AddExpenses = () => {
 
   useEffect(() => {
     const timerId = setTimeout(() => {
+      // console.log("called");
       setfinalserach(searchInput);
     }, 2000);
 
     return () => {
+      // console.log("unmount");
       clearTimeout(timerId);
     };
   }, [searchInput]);
 
   useEffect(() => {
     if (finalsearch) {
-      console.log('Serach for:', finalsearch);
+      // console.log('Serach for:', finalsearch);
     }
-    
+
   }, [finalsearch]);
 
 
@@ -330,8 +332,8 @@ const AddExpenses = () => {
                   .filter((item) => {
                     return (
                       finalsearch.toLowerCase() === '' ||
-                      item.narration.toLowerCase().includes(finalsearch) ||
-                      item.ledger.ledger.toLowerCase().includes(finalsearch) ||
+                      item.narration.toLowerCase().includes(finalsearch.toLowerCase()) ||
+                      item.ledger.ledger.toLowerCase().includes(finalsearch.toLowerCase()) ||
                       item.amount.toString().includes(finalsearch)
                     );
                   })
@@ -369,8 +371,9 @@ const AddExpenses = () => {
                     .filter((item) => {
                       return (
                         finalsearch.toLowerCase() === '' ||
-                        item.narration.toLowerCase().includes(finalsearch) ||
-                        item.ledger.ledger.toLowerCase().includes(finalsearch)
+                        item.narration.toLowerCase().includes(finalsearch.toLowerCase()) ||
+                        item.ledger.ledger.toLowerCase().includes(finalsearch.toLowerCase()) ||
+                        item.amount.toString().includes(finalsearch)
                       );
                     })
                     .reduce((accumulator, expense) => {

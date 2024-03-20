@@ -42,11 +42,11 @@ const Sidebar = () => {
             link: '/report',
             logo: 'fa fa-cloud-download',
         },
-        {
-            name: 'Print',
-            link: '/print',
-            logo: 'fa fa-print',
-        },
+        // {
+        //     name: 'Print',
+        //     link: '/print',
+        //     logo: 'fa fa-print',
+        // },
     ];
 
     const fr = () => {

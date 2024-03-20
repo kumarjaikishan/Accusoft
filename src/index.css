@@ -14,6 +14,8 @@ input{
   --navheightmobile:70px;
   --sidebarwide: 230px;
   --sidebarnarrow: 90px;
+  --maincolor: rgb(3, 73, 114);
+  --hovercolor:  rgb(1, 35, 54);
 }
 
 body {
@@ -109,15 +111,14 @@ button{
    font-weight: 500;
    letter-spacing: 1px;
    border-radius: 5px;
-   background: #36a0f1;
+   background: var(--maincolor);
    transition: 0.2s;
 }
 button:disabled{
   background: grey !important;
 }
 button:active,button:hover{
-  transform: scale(0.96);
-  background: rgb(5, 99, 137);
+  background:  rgb(1, 35, 54);
 }
 input{
   color: rgb(27, 25, 25) !important;

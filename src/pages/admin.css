@@ -21,7 +21,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-image: linear-gradient(179.4deg, rgba(33, 150, 243, 1) 1.8%, rgba(22, 255, 245, 0.60) 97.1%);
+    background: var(--maincolor);
 }
 
 .admin .head span {
@@ -72,7 +72,7 @@
 .admin .table table thead th,
 .admin .table table #foot th {
     height: 30px;
-    background:#0984e3;
+    background:var(--maincolor);
     color: whitesmoke;
 }
 .admin .table table thead{
@@ -197,7 +197,7 @@
     background: none;
     border: none;
     outline: none;
-    background: #1886bd;
+    background: var(--maincolor);
     color: white;
     /* font-weight: 600; */
     font-size: 1.1em;

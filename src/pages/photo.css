@@ -69,7 +69,8 @@
     text-align: center;
     line-height: 40px;
     letter-spacing: 1px;
-    background: linear-gradient(45deg, #00cec9, #0984e3);
+    /* background: linear-gradient(45deg, #00cec9, #0984e3); */
+    background: var(--maincolor);
     color: white;
     transition: 0.2s;
   }
@@ -131,7 +132,7 @@
   text-align: center;
   line-height: 40px;
   border-radius: 50%;
-  background: rgb(16, 155, 209);
+  background: var(--maincolor);
   color: white;
   cursor: pointer;
   transition: 0.2s;

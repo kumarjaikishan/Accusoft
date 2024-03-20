@@ -26,9 +26,9 @@ const Ledpage = ({ setmodal, setdisable, disable, isledupdate, setisledupdate })
   };
 
   const add = async () => {
-     if(!ledinp.val){
+    if (!ledinp.val) {
       return toast.warn("Ledger Can't be Blank", { autoClose: 1300 });
-     }
+    }
     const url = `${useralldetail.apiadress}/addledger`;
     const method = 'POST';
     const body = { ledger: ledinp.val };
@@ -77,7 +77,7 @@ const Ledpage = ({ setmodal, setdisable, disable, isledupdate, setisledupdate })
 
     const url = `${useralldetail.apiadress}/updateledger`;
     const method = 'POST';
-    const body = {  ledger_id, newledger };
+    const body = { ledger_id, newledger };
 
     const successAction = (data) => {
       toast.success(data.msg, { autoClose: 1300 });
@@ -117,10 +117,10 @@ const Ledpage = ({ setmodal, setdisable, disable, isledupdate, setisledupdate })
       <div className="box">
         <h2>Hi jai kishan</h2>  <span onClick={back}> <i className="fa fa-undo" aria-hidden="true"></i> Back</span>
         <div className="cont">
-
-          <input type="text" className='caps' value={ledinp.val} onChange={handle} />
+          <input type="text" placeholder='Enter Ledger' className='caps' value={ledinp.val} onChange={handle} />
           {isupda ? <button disabled={disable} onClick={updat}>Update</button> : <button disabled={disable} onClick={add}>Add</button>}
         </div>
+
         <div className="mater">
           <table>
             <thead>

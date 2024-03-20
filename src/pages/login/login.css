@@ -25,7 +25,7 @@
 }
 .login .logo .company{
     font-size: 4em;
-    color: #0984e3;
+    color: var(--maincolor);
     
 }
 .login .want{
@@ -33,7 +33,7 @@
     padding: 0px 20px;
 }
 .login .want .active{
-   background: #0984e3;
+   background: var(--maincolor);
    border-radius: 50px;
    color: white;
 }
@@ -91,12 +91,12 @@
     padding: 8px 16px;
     transition: 0.1s;
     text-align: center;
-    background: #0984e3;
+    background: var(--maincolor);
     border-radius: 15px;
     color: white;
 }
 .login .both button:hover{
-    background: #0daef4;
+    background: var(--maincolor);
 }
 .login .logine .filled{
     color: rgb(43, 38, 38);

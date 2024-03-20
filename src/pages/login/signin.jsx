@@ -94,7 +94,7 @@ const Signin = () => {
             <div className="logine" id='forme'>
                 <form onSubmit={submit}>
                     <TextField
-                        label="Email*"
+                        label="Email"
                         size="small"
                         required
                         type='email'
@@ -110,7 +110,7 @@ const Signin = () => {
                         }}
                     />
                     <TextField
-                        label="Password*"
+                        label="Password"
                         className='filled'
                         size="small"
                         required

@@ -1,12 +1,18 @@
 import React, { useState } from 'react'
-import swal from 'sweetalert'
 import './modalbox.css';
 import { useSelector, useDispatch } from 'react-redux';
 import { setloader } from '../../store/login';
 import { userdata } from '../../store/api'
 import { toast } from 'react-toastify';
 import apiWrapper from './apiWrapper';
-import { motion } from 'framer-motion';
+import TextField from '@mui/material/TextField';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 const Modalbox = ({ setisledupdate, modal, disable, setdisable, init, handler, inp, isupdate, sub, setmodal, setisupdate, setinp }) => {
     const useralldetail = useSelector((state) => state.userexplist);
@@ -53,40 +59,45 @@ const Modalbox = ({ setisledupdate, modal, disable, setdisable, init, handler, i
             <div
                 className="box">
                 <h1>Add Voucher</h1>
-                <div className="ledgeredit"><i onClick={jkh} className="fa fa-pencil" aria-hidden="true"></i></div>
-                <div className='leger'>
-                    <span>Ledger :</span>
-                    <span>
-                        <select className='caps' name="ledger" id="" onChange={handler} value={inp.ledger} >
-                            <option value="">Select Ledger</option>
-                            {useralldetail.ledgerlist.map((val, ind) => {
-                                return <option className='erffeg' key={ind} value={val._id}>{val.ledger}</option>
-                            })}
-                        </select>
-                    </span>
-                </div>
-                <div>
-                    <span>Date :</span>
-                    <span>
-                        <input name="date" type="date" value={inp.date} onChange={handler} />
-                    </span>
-                </div>
-                <div>
-                    <span>Amount :</span>
-                    <span>
-                        <input name="amount"
-                            onKeyPress={(event) => { if (!/[0-9]/.test(event.key)) { event.preventDefault(); } }}
-                            type="tel" value={inp.amount} onChange={handler} />
-                    </span>
+                <span className="ledgeredit" title='Edit Ledger'><i onClick={jkh} className="fa fa-pencil" aria-hidden="true"></i></span>
 
-                </div>
-                <div>
-                    <span>Narration :</span>
-                    <span>
-                        <input name="narration" value={inp.narration} type="text" onChange={handler} />
-                    </span>
-                </div>
-                <div>
+                <FormControl className='caps' sx={{ width: '90%', mt: 2, mb: 2 }}>
+                    <InputLabel id="demo-simple-select-label">Ledger</InputLabel>
+                    <Select
+                        name="ledger"
+                        labelId="demo-simple-select-label"
+                        onChange={handler} value={inp.ledger}
+                        id="demo-simple-select"
+                        label="Ledger"
+                    >
+                        {useralldetail.ledgerlist.map((val, ind) => {
+                            return <MenuItem className='caps' key={ind} value={val._id}>{val.ledger}</MenuItem>
+                        })}
+
+                    </Select>
+                </FormControl>
+
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker
+                        name="date"
+                        label="Date"
+                        value={inp.date}
+                        onChange={handler}
+                        sx={{width:'90%',mt:2,mb:2}}
+                        format="DD-MM-YYYY"
+                    />
+                </LocalizationProvider>
+
+
+                <TextField sx={{ width: '90%', mt: 2, mb: 2 }} id="outlined-basic" label="Amount" name="amount"
+                    onKeyPress={(event) => { if (!/[0-9]/.test(event.key)) { event.preventDefault(); } }}
+                    type="tel" value={inp.amount} onChange={handler}
+                    variant="outlined" />
+
+                <TextField multiline rows={2} sx={{ width: '90%', mt: 2, mb: 2 }} id="outlined-basic" label="Narration"
+                    name="narration" value={inp.narration} type="text" onChange={handler}
+                    variant="outlined" />
+                <div className='btn'>
                     {isupdate ? <button disabled={disable} onClick={() => updatee(inp._id)}>Update</button> : <button disabled={disable} onClick={sub}>Submit</button>}
                     <button onClick={() => {
                         setmodal(false);

@@ -8,6 +8,8 @@ import { Navigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { setloader } from '../../store/login';
 import { userdata } from '../../store/api'
+import TextField from '@mui/material/TextField';
+import dayjs from 'dayjs';
 import { toast } from 'react-toastify';
 import apiWrapper from './apiWrapper';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -57,7 +59,8 @@ const AddExpenses = () => {
   const init = {
     _id: '',
     ledger: '',
-    date: `${currentDate.getFullYear()}-${(currentDate.getMonth() + 1).toString().padStart(2, '0')}-${currentDate.getUTCDate().toString().padStart(2, '0')}`,
+    // date: `${currentDate.getFullYear()}-${(currentDate.getMonth() + 1).toString().padStart(2, '0')}-${currentDate.getUTCDate().toString().padStart(2, '0')}`,
+    date:dayjs() ,
     amount: '',
     narration: '',
   }
@@ -123,7 +126,7 @@ const AddExpenses = () => {
     setExpenseInput({
       _id: expense._id,
       ledger: expense.ledger._id,
-      date: expense.date,
+      date: dayjs(expense.date),
       amount: expense.amount,
       narration: expense.narration,
     });
@@ -225,6 +228,7 @@ const AddExpenses = () => {
 
       if (checkbox.checked) {
         parentRow.style.background = 'rgb(16 135 129)';
+        // parentRow.style.background = 'rgb(3, 73, 114)';
         parentRow.style.color = 'white';
       } else {
         parentRow.style.background = 'transparent';
@@ -306,7 +310,7 @@ const AddExpenses = () => {
           </span>
         </div>
         <div className="table">
-          <motion.table layout cellSpacing="15">
+          <table layout cellSpacing="15">
             <thead>
               <tr>
                 <th>S.no</th>
@@ -338,18 +342,14 @@ const AddExpenses = () => {
                     );
                   })
                   .map((expense, index) => {
-                    const expenseDate = new Date(expense.date);
-                    const formattedDate = `${expenseDate.getUTCDate().toString().padStart(2, '0')} ${expenseDate.toLocaleString('default', { month: 'short' })
-                      }, ${expenseDate.getFullYear().toString().substr(-2)}`;
-
                     return (
                       <motion.tr
                         layout key={index}>
                         <td>{firstPostIndex + index + 1}</td>
-                        <td>{expense.ledger.ledger}</td>
+                        <td className='caps'>{expense.ledger.ledger}</td>
                         <td>{expense.amount}</td>
                         <td>{expense.narration}</td>
-                        <td>{formattedDate}</td>
+                        <td>{dayjs(expense.date).format('DD MMM, YYYY')}</td>
                         <td>
                           <i title="Edit" onClick={() => setDataForEdit(expense)} className="fa fa-pencil-square-o" aria-hidden="true"></i>
                           <i title="Delete" onClick={() => deleteExpense(expense._id)} className="fa fa-trash-o" aria-hidden="true"></i>
@@ -387,7 +387,7 @@ const AddExpenses = () => {
                 <th colSpan="1"></th>
               </tr>
             </tfoot>
-          </motion.table>
+          </table>
         </div>
         <div className="foot">
           <span>

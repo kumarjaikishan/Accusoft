@@ -41,6 +41,7 @@ const AddExpenses = () => {
     if (finalsearch) {
       console.log('Serach for:', finalsearch);
     }
+    
   }, [finalsearch]);
 
 

@@ -30,7 +30,7 @@ const AddExpenses = () => {
   useEffect(() => {
     const timerId = setTimeout(() => {
       // console.log("called");
-      setfinalserach(searchInput);
+      setfinalserach(searchInput.toLowerCase());
     }, 2000);
 
     return () => {
@@ -331,9 +331,9 @@ const AddExpenses = () => {
                 {(sortedList ? sortedList : currentPosts)
                   .filter((item) => {
                     return (
-                      finalsearch.toLowerCase() === '' ||
-                      item.narration.toLowerCase().includes(finalsearch.toLowerCase()) ||
-                      item.ledger.ledger.toLowerCase().includes(finalsearch.toLowerCase()) ||
+                      finalsearch === '' ||
+                      item.narration.toLowerCase().includes(finalsearch) ||
+                      item.ledger.ledger.toLowerCase().includes(finalsearch) ||
                       item.amount.toString().includes(finalsearch)
                     );
                   })
@@ -370,9 +370,9 @@ const AddExpenses = () => {
                   {currentPosts
                     .filter((item) => {
                       return (
-                        finalsearch.toLowerCase() === '' ||
-                        item.narration.toLowerCase().includes(finalsearch.toLowerCase()) ||
-                        item.ledger.ledger.toLowerCase().includes(finalsearch.toLowerCase()) ||
+                        finalsearch === '' ||
+                        item.narration.toLowerCase().includes(finalsearch) ||
+                        item.ledger.ledger.toLowerCase().includes(finalsearch) ||
                         item.amount.toString().includes(finalsearch)
                       );
                     })

@@ -16,6 +16,8 @@ const AddExpenses = () => {
   const dispatch = useDispatch();
   const log = useSelector((state) => state.login);
   const userAllDetails = useSelector((state) => state.userexplist);
+  const [searchInput, setSearchInput] = useState('');
+  const [finalsearch,setfinalserach] = useState('');
 
   if (!log.islogin) {
     toast.warn("You are not Logged In", { autoClose: 1300 })
@@ -24,11 +26,31 @@ const AddExpenses = () => {
   useEffect(() => {
     dispatch(setloader(false))
   }, [])
+
+  useEffect(() => {
+    const timerId = setTimeout(() => {
+      setfinalserach(searchInput);
+    }, 2000);
+
+    return () => {
+      clearTimeout(timerId);
+    };
+  }, [searchInput]);
+
+  useEffect(() => {
+    if (finalsearch) {
+      console.log('Serach for:', finalsearch);
+    }
+  }, [finalsearch]);
+
+
+
   let itemIds = [];
   const currentDate = new Date();
-  const [searchInput, setSearchInput] = useState('');
   const [isUpdateMode, setIsUpdateMode] = useState(false);
   const [disable, setdisable] = useState(false);
+
+
   const init = {
     _id: '',
     ledger: '',
@@ -190,11 +212,7 @@ const AddExpenses = () => {
     setSortedList();
     setCurrentPage(pageNumber);
   };
-
-  const handleSearch = (e) => {
-    setSearchInput(e.target.value);
-  };
-
+ 
   const highlight = () => {
     const checkboxes = document.querySelectorAll('#tablecontent input');
     const tableRows = document.querySelectorAll('#tablecontent tr');
@@ -281,7 +299,7 @@ const AddExpenses = () => {
             </select>
           </span>
           <span>
-            <input type="text" onChange={handleSearch} value={searchInput} placeholder="Type to search..." />
+            <input type="text" onChange={(e)=> setSearchInput(e.target.value)} value={searchInput} placeholder="Type to search..." />
           </span>
         </div>
         <div className="table">
@@ -305,15 +323,15 @@ const AddExpenses = () => {
                 </th>
               </tr>
             </thead>
-              <AnimatePresence>
-            <motion.tbody layout id="tablecontent">
+            <AnimatePresence>
+              <motion.tbody layout id="tablecontent">
                 {(sortedList ? sortedList : currentPosts)
                   .filter((item) => {
                     return (
-                      searchInput.toLowerCase() === '' ||
-                      item.narration.toLowerCase().includes(searchInput) ||
-                      item.ledger.ledger.toLowerCase().includes(searchInput) ||
-                      item.amount.toString().includes(searchInput)
+                      finalsearch.toLowerCase() === '' ||
+                      item.narration.toLowerCase().includes(finalsearch) ||
+                      item.ledger.ledger.toLowerCase().includes(finalsearch) ||
+                      item.amount.toString().includes(finalsearch)
                     );
                   })
                   .map((expense, index) => {
@@ -323,7 +341,7 @@ const AddExpenses = () => {
 
                     return (
                       <motion.tr
-                       layout key={index}>
+                        layout key={index}>
                         <td>{firstPostIndex + index + 1}</td>
                         <td>{expense.ledger.ledger}</td>
                         <td>{expense.amount}</td>
@@ -339,8 +357,8 @@ const AddExpenses = () => {
                       </motion.tr>
                     );
                   })}
-            </motion.tbody>
-              </AnimatePresence>
+              </motion.tbody>
+            </AnimatePresence>
             <tfoot>
               <tr id="foot">
                 <th colSpan="1"></th>
@@ -349,9 +367,9 @@ const AddExpenses = () => {
                   {currentPosts
                     .filter((item) => {
                       return (
-                        searchInput.toLowerCase() === '' ||
-                        item.narration.toLowerCase().includes(searchInput) ||
-                        item.ledger.ledger.toLowerCase().includes(searchInput)
+                        finalsearch.toLowerCase() === '' ||
+                        item.narration.toLowerCase().includes(finalsearch) ||
+                        item.ledger.ledger.toLowerCase().includes(finalsearch)
                       );
                     })
                     .reduce((accumulator, expense) => {

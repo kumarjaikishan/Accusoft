@@ -23,45 +23,7 @@ const Home = () => {
     !useralldetail.loading && dispatch(setloader(false));
     // repeat(100000)
   }, [useralldetail])
-  // const tempobject = {
-  //   "userid": "63aa962f68dc4f69b0f23e5e",
-  //   "ledger": "ration",
-  //   "date": "2023-12-22",
-  //   "amount": "784",
-  //   "narration": "Rajma-64, Badam-30 & Shampoo-20"
-  // }
-  // const tempdata = [
-  //   {
-  //     "userid": "63aa962f68dc4f69b0f23e5e",
-  //     "ledger": "ration",
-  //     "date": "2022-08-02",
-  //     "amount": "114",
-  //     "narration": "Rajma-64, Badam-30 & Shampoo-20"
-  //   },
-  //   {
-  //     "userid": "63aa962f68dc4f69b0f23e5e",
-  //     "ledger": "ration",
-  //     "date": "2022-08-05",
-  //     "amount": "84",
-  //     "narration": "Rajma-64, Badam-30 & Shampoo-20"
-  //   },
-  //   {
-  //     "userid": "63aa962f68dc4f69b0f23e5e",
-  //     "ledger": "ration",
-  //     "date": "2022-09-02",
-  //     "amount": "784",
-  //     "narration": "Rajma-64, Badam-30 & Shampoo-20"
-  //   }
-  // ]
-  // const repeat = (number)=>{
-  //   for (let i = 0; i < number; i++) {
-  //     tempdata.push(tempobject)
-  //   }
-  //   console.log("ab call hua hai",tempdata.length);
-  //   // console.log(tempdata);
-  //   load(tempdata)
-  //   // console.log("array length check",tempdata.length);
-  // }
+ 
 
   const a = new Date();
 
@@ -99,9 +61,7 @@ const Home = () => {
   let totalsum = 0;
 
   const load = () => {
-    // console.time('mine home')
-    // console.log(log.explist[0]);
-    // data.map((val, ind) => {
+    console.log(useralldetail.explist);
     useralldetail.explist.map((val, ind) => {
       if (val.date == today) {
         todaysum = todaysum + val.amount

@@ -60,7 +60,7 @@ const AddExpenses = () => {
     _id: '',
     ledger: '',
     // date: `${currentDate.getFullYear()}-${(currentDate.getMonth() + 1).toString().padStart(2, '0')}-${currentDate.getUTCDate().toString().padStart(2, '0')}`,
-    date:dayjs() ,
+    date:dayjs(),
     amount: '',
     narration: '',
   }
@@ -71,9 +71,11 @@ const AddExpenses = () => {
   const [postsPerPage, setPostsPerPage] = useState(10);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setExpenseInput((prevInputs) => ({ ...prevInputs, [name]: value }));
+  const handleInputChange = (e,field) => {
+    // console.log(field,e.target.value);
+    setExpenseInput({
+      ...expenseInput,[field]:e.target.value
+    });
   };
 
   const capitalize = (value) => {
@@ -86,7 +88,9 @@ const AddExpenses = () => {
   // adding new expense
   const submitExpense = async () => {
     const token = localStorage.getItem('token');
-    const { ledger, date, amount, narration } = expenseInput;
+    let { ledger, date, amount, narration } = expenseInput;
+    date = dayjs(date).format("YYYY-MM-DD");
+    // console.log(date);
 
     if (!ledger || !date || !amount || !narration) {
       const shakeElement = document.querySelector('.box');

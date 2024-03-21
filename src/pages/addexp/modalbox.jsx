@@ -13,6 +13,7 @@ import Select from '@mui/material/Select';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs from 'dayjs';
 
 const Modalbox = ({ setisledupdate, modal, disable, setdisable, init, handler, inp, isupdate, sub, setmodal, setisupdate, setinp }) => {
     const useralldetail = useSelector((state) => state.userexplist);
@@ -54,6 +55,12 @@ const Modalbox = ({ setisledupdate, modal, disable, setdisable, init, handler, i
             setmodal(false);
         }
     }
+    const setValue=(val)=>{
+       let now = dayjs(val);
+        setinp({
+            ...inp, date:now
+        })
+    }
     return (
         <div className="modal" onClick={sdef} style={{ display: modal ? "block" : "none" }}>
             <div
@@ -66,7 +73,8 @@ const Modalbox = ({ setisledupdate, modal, disable, setdisable, init, handler, i
                     <Select
                         name="ledger"
                         labelId="demo-simple-select-label"
-                        onChange={handler} value={inp.ledger}
+                        onChange={(e) => handler(e, 'ledger')}
+                        value={inp.ledger}
                         id="demo-simple-select"
                         label="Ledger"
                     >
@@ -77,13 +85,12 @@ const Modalbox = ({ setisledupdate, modal, disable, setdisable, init, handler, i
                     </Select>
                 </FormControl>
 
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <LocalizationProvider onChange={(e) => handler(e, 'date')} dateAdapter={AdapterDayjs}>
                     <DatePicker
-                        name="date"
                         label="Date"
                         value={inp.date}
-                        onChange={handler}
-                        sx={{width:'90%',mt:2,mb:2}}
+                        onChange={(newValue) => setValue(newValue)}
+                        sx={{ width: '90%', mt: 2, mb: 2 }}
                         format="DD-MM-YYYY"
                     />
                 </LocalizationProvider>
@@ -91,11 +98,13 @@ const Modalbox = ({ setisledupdate, modal, disable, setdisable, init, handler, i
 
                 <TextField sx={{ width: '90%', mt: 2, mb: 2 }} id="outlined-basic" label="Amount" name="amount"
                     onKeyPress={(event) => { if (!/[0-9]/.test(event.key)) { event.preventDefault(); } }}
-                    type="tel" value={inp.amount} onChange={handler}
+                    type="tel" value={inp.amount}
+                    onChange={(e) => handler(e, 'amount')}
                     variant="outlined" />
 
                 <TextField multiline rows={2} sx={{ width: '90%', mt: 2, mb: 2 }} id="outlined-basic" label="Narration"
-                    name="narration" value={inp.narration} type="text" onChange={handler}
+                    name="narration" value={inp.narration} type="text"
+                    onChange={(e) => handler(e, 'narration')}
                     variant="outlined" />
                 <div className='btn'>
                     {isupdate ? <button disabled={disable} onClick={() => updatee(inp._id)}>Update</button> : <button disabled={disable} onClick={sub}>Submit</button>}

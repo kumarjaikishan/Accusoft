@@ -12,6 +12,8 @@
     .clogo {
         position: relative;
         width: 100%;
+        /* border: 1px solid yellow; */
+        overflow: hidden;
         height: 110px;
 
         .li {

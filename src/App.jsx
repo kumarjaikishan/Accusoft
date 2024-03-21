@@ -2,7 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/navbar/navbar';
 import loadere from '../src/img/loader.png'
 import Sidebar from './components/sidebar/sidebar';
-import Home from './pages/home2';
+import Home from './pages/home';
 import Addexp from './pages/addexp/addexp';
 import Datanalysis from './pages/dataanalysis';
 import { useEffect } from 'react';

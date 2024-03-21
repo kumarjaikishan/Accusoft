@@ -1,117 +1,125 @@
 import React, { useState } from 'react'
 import { useEffect } from 'react';
 import './home.css';
-import { useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
 import { header, setloader } from '../store/login';
-import {  toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { userdata } from '../store/api'
-
-const calculateLedgerSum = (data) => {
-  const log = useSelector((state) => state.login);
-  if (!log.islogin) {
-    return navigate('/login');
-  }
-  // console.time('chatgpt home')
-  let totalSum = 0;
-  let todaySum = 0;
-  let yesterdaySum = 0;
-  let lastWeekSum = 0;
-  let lastMonthSum = 0;
-  let lastYearSum = 0;
-
-  const today = new Date();
-  const yesterday = new Date(today);
-  yesterday.setDate(today.getDate() - 1);
-
-  const lastWeek = new Date(today);
-  lastWeek.setDate(today.getDate() - 7);
-  // console.log("chatgpt last week",lastWeek);
-
-  const lastMonth = new Date(today);
-  lastMonth.setMonth(today.getMonth() - 1);
-
-  const lastYear = new Date(today);
-  lastYear.setFullYear(today.getFullYear() - 1);
-
-  data.forEach(entry => {
-    const { ledger, amount, date } = entry;
-    const amountValue = parseFloat(amount);
-    const entryDate = new Date(date);
-
-    if (!isNaN(amountValue)) {
-      totalSum += amountValue;
-
-      if (entryDate.toDateString() === today.toDateString()) {
-        todaySum += amountValue;
-      }
-
-      if (entryDate.toDateString() === yesterday.toDateString()) {
-        yesterdaySum += amountValue;
-      }
-
-      if (entryDate >= lastWeek) {
-        lastWeekSum += amountValue;
-      }
-
-      if (entryDate >= lastMonth) {
-        lastMonthSum += amountValue;
-      }
-
-      if (entryDate >= lastYear) {
-        lastYearSum += amountValue;
-      }
-    }
-  });
-
-  // console.timeEnd('chatgpt home')
-  return { totalSum, todaySum, yesterdaySum, lastWeekSum, lastMonthSum, lastYearSum };
-};
+// import { toast } from 'react-toastify';
 
 const Home = () => {
+  const log = useSelector((state) => state.login);
+  if (!log.islogin) {
+    // toast.warn("You are not Logged In",{ autoClose: 1300 })
+    return <Navigate to='/login' />
+  }
   const dispatch = useDispatch();
- 
   const useralldetail = useSelector((state) => state.userexplist);
   useEffect(() => {
-    // repeat(1000000);
     dispatch(header("Dashboard"))
     dispatch(setloader(true));
-    const fvf= async()=>{
-      await dispatch(userdata());
-      dispatch(setloader(false));
-    }
-    fvf();
-  }, [])
+    useralldetail.explist && load();
+    !useralldetail.loading && dispatch(setloader(false));
+    // repeat(100000)
+  }, [useralldetail])
+ 
 
-  const { totalSum, todaySum, yesterdaySum, lastWeekSum, lastMonthSum, lastYearSum } = calculateLedgerSum(useralldetail.explist);
+  const a = new Date();
 
+  const lastday = () => {
+    const date = new Date();
+    return new Date(date.setDate(date.getDate() - 1));
+  }
+  const endOfWeek = () => {
+    const date = new Date();
+    var lastday = date.getDate() - (date.getDay() - 1) - 6;
+    // console.log("mine last week",new Date(date.setDate(lastday)) );
+    return new Date(date.setDate(lastday));
+  }
+  const endOfMonth = () => {
+    const date = new Date();
+    return new Date(date.setMonth(date.getMonth() - 1));
+  }
+  const endOfyear = () => {
+    const date = new Date();
+    return new Date(date.setYear(date.getFullYear() - 1));
+  }
+
+  const today = (a.getFullYear() + "-" + String(a.getMonth() + 1).padStart(2, '0') + "-" + String(a.getDate()).padStart(2, '0'));
+  const yesterday = (lastday().getFullYear() + "-" + String(lastday().getMonth() + 1).padStart(2, '0') + "-" + String(lastday().getDate()).padStart(2, '0'));
+  const lastweek = (endOfWeek().getFullYear() + "-" + String(endOfWeek().getMonth() + 1).padStart(2, '0') + "-" + String(endOfWeek().getDate()).padStart(2, '0'));
+  const lastmonth = (endOfMonth().getFullYear() + "-" + String(endOfMonth().getMonth() + 1).padStart(2, '0') + "-" + String(endOfMonth().getDate()).padStart(2, '0'));
+  const lastyear = ((endOfyear().getFullYear()) + "-" + String(endOfyear().getMonth() + 1).padStart(2, '0') + "-" + String(endOfyear().getDate()).padStart(2, '0'));
+
+  const [arr, setarr] = useState([]);
+  let todaysum = 0;
+  let yestersum = 0;
+  let weeksum = 0;
+  let monthsum = 0;
+  let yearsum = 0;
+  let totalsum = 0;
+
+  const load = () => {
+    // console.log(useralldetail.explist);
+    useralldetail.explist.map((val, ind) => {
+      if (val.date == today) {
+        todaysum = todaysum + val.amount
+      }
+      if (val.date == yesterday) {
+        yestersum = yestersum + val.amount
+      }
+      if (val.date >= lastweek && val.date <= today) {
+        weeksum = weeksum + val.amount
+      }
+      if (val.date >= lastmonth && val.date <= today) {
+        monthsum = monthsum + val.amount
+      }
+      if (val.date >= lastyear && val.date <= today) {
+        yearsum = yearsum + val.amount
+      }
+
+      totalsum = totalsum + val.amount
+    })
+    setarr({
+      todaysum: todaysum,
+      yestersum: yestersum,
+      weeksum: weeksum,
+      monthsum: monthsum,
+      yearsum: yearsum,
+      totalsum: totalsum
+    })
+    // console.log(totalsum);
+    // dispatch(setloader(false));
+    // console.timeEnd('mine home')
+  }
   const card = [{
-    amt: todaySum,
+    amt: arr.todaysum,
     day: "Today",
     icon: <i className="fa fa-inr" aria-hidden="true"></i>,
     back: 'radial-gradient( circle 759px at -6.7% 50%, rgba(80,131,73,1) 0%, rgba(140,209,131,1) 26.2%, rgba(178,231,170,1) 50.6%, rgba(144,213,135,1) 74.1%, rgba(75,118,69,1) 100.3% )'
   }, {
-    amt: yesterdaySum,
+    amt: arr.yestersum,
     day: "Yesterday",
     icon: <i className="fa fa-bolt" aria-hidden="true"></i>,
     back: 'radial-gradient( circle 597px at 93% 9.8%, rgba(255,61,89,1) 1.7%, rgba(252,251,44,1) 97% )'
   }, {
-    amt: lastWeekSum,
+    amt: arr.weeksum,
     day: "Last Week",
     icon: <i className="fa fa-shopping-bag" aria-hidden="true"></i>,
     back: 'linear-gradient( 179.4deg, rgba(33,150,243,1) 1.8%, rgba(22,255,245,0.60) 97.1% )'
   }, {
-    amt: lastMonthSum,
+    amt: arr.monthsum,
     day: "Last Month",
     icon: <i className="fa fa-google-wallet" aria-hidden="true"></i>,
     back: 'linear-gradient(90deg, #00C9FF 0%, #92FE9D 100%)'
   }, {
-    amt: lastYearSum,
+    amt: arr.yearsum,
     day: "Last Year",
     icon: <i className="fa fa-balance-scale" aria-hidden="true"></i>,
     back: 'linear-gradient(90deg, #1CB5E0 0%, #000851 100%)'
   }, {
-    amt: totalSum,
+    amt: arr.totalsum,
     day: "Total",
     icon: <i className="fa fa-university" aria-hidden="true"></i>,
     back: 'linear-gradient( 109.6deg, rgba(39,142,255,1) 11.2%, rgba(98,113,255,0.78) 100.2% )'
@@ -133,11 +141,9 @@ const Home = () => {
           )
         })}
 
-
       </div>
     </>
   )
 }
-
 
 export default Home

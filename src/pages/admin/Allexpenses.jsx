@@ -6,6 +6,7 @@ import Pagination from '../addexp/pagination';
 import { Navigate } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
 import { setloader } from '../../store/login';
+import dayjs from 'dayjs';
 import { toast } from 'react-toastify';
 import Userexpedit from './expeditmodal';
 
@@ -36,7 +37,7 @@ const Allexpense = () => {
                 }
             })
             const data = await result.json();
-            // console.log("whole",data);
+            console.log("whole",data);
             if (result.ok) {
                 setadminexpdata(data.explist)
                 dispatch(setloader(false));
@@ -61,27 +62,24 @@ const Allexpense = () => {
         dfbfvfddf = "0" + dfbfvfddf;
     }
 
-    const today = date.getFullYear() + "-" + dfbdf + "-" + dfbfvfddf;
 
     const init = {
-        _id: "",
-        ledger: "general",
-        date: today,
-        amount: "",
-        narration: ""
-    }
+        _id: '',
+        ledger: '',
+       date:dayjs(),
+        amount: '',
+        narration: '',
+      }
     const [inp, setinp] = useState(init);
     const [currentpage, setcurrentpage] = useState(1);
     const [postperpage, setpostperpage] = useState(10);
 
 
     const [modal, setmodal] = useState(false);
-    const handler = (e) => {
-        let name = e.target.name;
-        let value = e.target.value;
+    const handler = (e,field) => {
         setinp({
-            ...inp, [name]: value
-        })
+            ...inp,[field]:e.target.value
+          });
     }
 
     //  setting input field for edit user data
@@ -90,7 +88,7 @@ const Allexpense = () => {
         setinp({
             _id: val._id,
             ledger: val.ledger._id,
-            date: val.date,
+            date: dayjs(val.date),
             amount: val.amount,
             narration: val.narration
         })
@@ -227,7 +225,7 @@ const Allexpense = () => {
     let sum = 0;
     return (
         <>
-            <div className="admin">
+            <div className="adminexp">
                 <div className="head">
                     <span>All User Expense List</span>
                     <span>
@@ -268,11 +266,11 @@ const Allexpense = () => {
                                 return (
                                     <tr key={ind}>
                                         <td>{firstpostindex + ind + 1}</td>
-                                        <td>{val.userid.name}</td>
-                                        <td>{val.ledger.ledger}</td>
+                                        <td className='caps'>{val.userid.name}</td>
+                                        <td className='caps'>{val.ledger.ledger}</td>
                                         <td>{val.amount}</td>
                                         <td>{val.narration}</td>
-                                        <td>{fde}</td>
+                                        <td> {dayjs(val.date).format('DD MMM, YYYY')}</td>
                                         <td >
                                             <i title='Edit' onClick={() => setinputfield(val)} className="fa fa-pencil-square-o" aria-hidden="true"></i>
                                             {/* <i title='Functionallity not added' className="fa fa-eye" aria-hidden="true"></i> */}

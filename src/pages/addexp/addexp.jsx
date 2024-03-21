@@ -59,8 +59,7 @@ const AddExpenses = () => {
   const init = {
     _id: '',
     ledger: '',
-    // date: `${currentDate.getFullYear()}-${(currentDate.getMonth() + 1).toString().padStart(2, '0')}-${currentDate.getUTCDate().toString().padStart(2, '0')}`,
-    date:dayjs(),
+   date:dayjs(),
     amount: '',
     narration: '',
   }
@@ -72,7 +71,6 @@ const AddExpenses = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleInputChange = (e,field) => {
-    // console.log(field,e.target.value);
     setExpenseInput({
       ...expenseInput,[field]:e.target.value
     });

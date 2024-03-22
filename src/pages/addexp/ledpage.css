@@ -12,10 +12,11 @@
             position: relative;
             top: 50%;
             left: 50%;
-            width: 600px;
+            width: 500px;
             height: max-content;
             border-radius: 20px;
             transform: translate(-50%, -50%);
+            box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.4);
             background: #dbe1e6;
             padding: 1em 2em;
 
@@ -96,19 +97,20 @@
             .mater {
                 width: 100%;
                 height: 270px;
-                /* border: 1px solid black; */
+                border-radius: 20px;
+                box-shadow: 0 0 5px #fff,
+                    5px 5px 10px #a7aaaf,
+                    -5px -5px 10px #fff;
                 overflow: auto;
 
                 table {
                     width: 100%;
+                    height: 100%;
                     padding: 5px 2px;
                     text-align: center;
                     overflow: auto;
                     border-radius: 20px;
                     background: #dbe1e6;
-                    box-shadow: 0 0 5px #fff,
-                        5px 5px 10px #a7aaaf,
-                        -5px -5px 10px #fff;
 
                     th:nth-child(1) {
                         width: 50%;
@@ -148,7 +150,6 @@
         .ledpage {
 
             .box {
-                /* margin-top: 30px; */
                 top: 45%;
                 left: 50%;
                 width: 95vw;
@@ -186,7 +187,9 @@
 
                 .mater {
                     width: 100%;
-                    height: 100%;
+                    height: 380px;
+                    overflow: auto;
+                    /* border: 1px solid red; */
                 }
             }
 

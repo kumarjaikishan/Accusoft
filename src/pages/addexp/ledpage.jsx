@@ -135,7 +135,7 @@ const Ledpage = ({ setmodal, setdisable, disable, isledupdate, setisledupdate })
                 return (
                   <tr key={ind}>
                     <td>{val.ledger}</td>
-                    <td><i className="fa fa-pencil" onClick={() => setledgerininput(val._id, val.ledger)} aria-hidden="true" ></i></td>
+                    <td><i className="fa fa-pencil-square-o" onClick={() => setledgerininput(val._id, val.ledger)} aria-hidden="true" ></i></td>
                     <td><i className="fa fa-trash" onClick={() => deletee(val._id)} aria-hidden="true" value={ind} ></i></td>
                   </tr>
                 )

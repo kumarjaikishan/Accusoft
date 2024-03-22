@@ -115,7 +115,7 @@ const Ledpage = ({ setmodal, setdisable, disable, isledupdate, setisledupdate })
   return (
     <div className="ledpage" onClick={sdef} style={{ display: isledupdate ? "block" : "none" }}>
       <div className="box">
-        <h2>Hi jai kishan</h2>  <span onClick={back}> <i className="fa fa-undo" aria-hidden="true"></i> Back</span>
+        <h2>Hi, {useralldetail?.user.name}</h2>  <span onClick={back}> <i className="fa fa-undo" aria-hidden="true"></i> Back</span>
         <div className="cont">
           <input type="text" placeholder='Enter Ledger' className='caps' value={ledinp.val} onChange={handle} />
           {isupda ? <button disabled={disable} onClick={updat}>Update</button> : <button disabled={disable} onClick={add}>Add</button>}

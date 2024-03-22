@@ -28,7 +28,7 @@ const Navbar = () => {
         {log.islogin ? <div className="info">
         <NavLink to='/photo' > <div className="photo" ><img src={ useralldetail.profilepic ? useralldetail.profilepic : defaultprofile} alt="Profile Pic" /> </div> </NavLink>
           <div className="userinfo">
-            <span>{useralldetail.user && useralldetail.user.name }</span>
+            <span>{useralldetail?.user.name }</span>
             <span>{useralldetail.user.isadmin ? "Admin":"User"}</span>
           </div>
         </div> : null}

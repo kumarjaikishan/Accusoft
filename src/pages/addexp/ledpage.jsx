@@ -6,6 +6,7 @@ import { setloader } from '../../store/login';
 import { userdata } from '../../store/api';
 import { toast } from 'react-toastify';
 import swal from 'sweetalert';
+import TextField from '@mui/material/TextField';
 import apiWrapper from './apiWrapper'; // Import the wrapper
 
 const Ledpage = ({ setmodal, setdisable, disable, isledupdate, setisledupdate }) => {
@@ -115,9 +116,11 @@ const Ledpage = ({ setmodal, setdisable, disable, isledupdate, setisledupdate })
   return (
     <div className="ledpage" onClick={sdef} style={{ display: isledupdate ? "block" : "none" }}>
       <div className="box">
-        <h2>Hi, {useralldetail?.user.name}</h2>  <span onClick={back}> <i className="fa fa-undo" aria-hidden="true"></i> Back</span>
+        <h2>Hi, {useralldetail?.user.name}</h2>  <span className='back' onClick={back}> <i className="fa fa-undo" aria-hidden="true"></i> Back</span>
         <div className="cont">
-          <input type="text" placeholder='Enter Ledger' className='caps' value={ledinp.val} onChange={handle} />
+
+          <TextField id="outlined-basic" label="Enter Ledger" className='inpe' variant="outlined" value={ledinp.val} onChange={handle} />
+          {/* <input type="text" placeholder='Enter Ledger' className='caps' value={ledinp.val} onChange={handle} /> */}
           {isupda ? <button disabled={disable} onClick={updat}>Update</button> : <button disabled={disable} onClick={add}>Add</button>}
         </div>
 

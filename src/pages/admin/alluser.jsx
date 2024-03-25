@@ -85,6 +85,7 @@ const Alluser = () => {
 
     //  setting input field for edit user data
     const setinputfield = async (val) => {
+        console.log(val);
         setinp({
             id: val._id,
             name: val.name,

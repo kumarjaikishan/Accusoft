@@ -110,6 +110,7 @@ const Alluser = () => {
         }).then(async (willDelete) => {
             if (willDelete) {
                 try {
+                    const id = toast.loading('Please Wait...')
                     const token = localStorage.getItem("token");
                     // dispatch(setloader(true));
                     const result = await fetch(`${useralldetail.apiadress}/removeuser`, {
@@ -123,11 +124,13 @@ const Alluser = () => {
                         })
                     })
                     const data = await result.json();
-                    console.log(data);
+                    // console.log(data);
                     if (result.ok) {
-                        toast.success("Deleted Successfully", { autoClose: 1300 });
+                        toast.update(id, { render: 'Deleted Successfully', type: "success", isLoading: false, autoClose: 1600 });
+                        fetche();
                     }
                 } catch (error) {
+                    toast.update(id, { render: "Someting went wrong", type: "warn", isLoading: false, autoClose: 1600 });
                     console.log(error);
                 }
 

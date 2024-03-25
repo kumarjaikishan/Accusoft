@@ -2,6 +2,11 @@ import React, { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 import { setloader } from '../../store/login';
 import {  toast } from 'react-toastify';
+import TextField from '@mui/material/TextField';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 
 const Useredit = ({ inp,modal, setmodal,handler}) => {
     const useralldetail = useSelector((state) => state.userexplist);
@@ -59,46 +64,48 @@ const Useredit = ({ inp,modal, setmodal,handler}) => {
             <div className="box">
                 <h1>User Detail</h1>
                  
-                <div>
-                    <span>Name :</span>
-                    <span>
-                        <input name="name" type="text" value={inp.name} onChange={handler} />
-                    </span>
-                </div>
-                <div>
-                    <span>Phone :</span>
-                    <span>
-                        <input name="phone"
-                            onKeyPress={(event) => { if (!/[0-9]/.test(event.key)) { event.preventDefault(); } }}
-                            type="tel" value={inp.phone} onChange={handler} />
-                    </span>
-                </div>
-                <div>
-                    <span>Email :</span>
-                    <span>
-                        <input name="email" type="text" value={inp.email} onChange={handler} />
-                    </span>
-                </div>
+                <TextField  sx={{ width: '90%', mt: 2, mb: 2 }} id="outlined-basic" label="Name"
+                    name="name" value={inp.name} type="text" onChange={handler}
+                    variant="outlined" />
+                <TextField sx={{ width: '90%', mt: 2, mb: 2 }} id="outlined-basic" label="Phone" name="phone"
+                    onKeyPress={(event) => { if (!/[0-9]/.test(event.key)) { event.preventDefault(); } }}
+                    type="tel" value={inp.phone}
+                    onChange={handler}
+                    variant="outlined" />
+             
+                <TextField disabled  sx={{ width: '90%', mt: 2, mb: 2 }} id="outlined-basic" label="Name"
+                    name="email" value={inp.email} type="text" onChange={handler}
+                    variant="outlined" />
                
-                <div>
-                    <span>Admin :</span>
-                    <span>
-                       <select name="admin" id="" onChange={handler} value={inp.admin}>
-                        <option value={true}>true</option>
-                        <option value={false}>False</option>
-                       </select>
-                    </span>
-                </div>
-                <div>
-                    <span>Verified :</span>
-                    <span>
-                       <select name="verified" id="" onChange={handler} value={inp.verified}>
-                        <option value={true}>true</option>
-                        <option value={false}>False</option>
-                       </select>
-                    </span>
-                </div>
-                <div>
+                <FormControl className='caps' sx={{ width: '90%', mt: 2, mb: 2 }}>
+                    <InputLabel id="demo-simple-select-label">Admin</InputLabel>
+                    <Select
+                        name="admin"
+                        labelId="demo-simple-select-label"
+                        onChange={handler}
+                        value={inp.admin}
+                        id="demo-simple-select"
+                        label="admin"
+                    >
+                     <MenuItem className='caps' value={true}>True</MenuItem>
+                     <MenuItem className='caps' value={false}>False</MenuItem>  
+                    </Select>
+                </FormControl>
+                <FormControl className='caps' sx={{ width: '90%', mt: 2, mb: 2 }}>
+                    <InputLabel id="demo-simple-select-label">Verified</InputLabel>
+                    <Select
+                        name="verified"
+                        labelId="demo-simple-select-label"
+                        onChange={handler}
+                        value={inp.verified}
+                        id="demo-simple-select"
+                        label="verified"
+                    >
+                     <MenuItem className='caps' value={true}>True</MenuItem>
+                     <MenuItem className='caps' value={false}>False</MenuItem>  
+                    </Select>
+                </FormControl>
+                <div className='btn'>
                    <button onClick={editdetail}>submit</button>
                    <button onClick={()=> setmodal(false)}>Cancel</button>
                 </div>

@@ -15,7 +15,7 @@
 }
 .allusers .table table th:nth-child(3)
 {
-    width: 90px;
+    width: 120px !important;
 }
 .allusers .table table th:nth-child(8){
     width: 90px !important;

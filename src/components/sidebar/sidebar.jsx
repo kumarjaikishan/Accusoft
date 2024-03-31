@@ -139,7 +139,7 @@ const Sidebar = () => {
                                             <span className="name">Users</span>
                                         </span>
                                     </NavLink>
-                                    <NavLink
+                                    {/* <NavLink
                                         className={(navData) => (navData.isActive ? 'active' : '')}
                                         style={{ textDecoration: 'none' }}
                                         to="/admin/expense"
@@ -150,7 +150,7 @@ const Sidebar = () => {
                                             </span>
                                             <span className="name">Expenses</span>
                                         </span>
-                                    </NavLink>
+                                    </NavLink> */}
                                    
                                 </div>
                             )}

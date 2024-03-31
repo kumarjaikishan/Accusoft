@@ -55,16 +55,15 @@ const Modalbox = ({ setisledupdate, modal, disable, setdisable, init, handler, i
             setmodal(false);
         }
     }
-    const setValue=(val)=>{
-       let now = dayjs(val);
+    const setValue = (val) => {
+        let now = dayjs(val);
         setinp({
-            ...inp, date:now
+            ...inp, date: now
         })
     }
     return (
         <div className="modal" onClick={sdef} style={{ display: modal ? "block" : "none" }}>
-            <div
-                className="box">
+            <div className="box">
                 <h1>Add Voucher</h1>
                 <span className="ledgeredit" title='Edit Ledger'><i onClick={jkh} className="fa fa-pencil" aria-hidden="true"></i></span>
 

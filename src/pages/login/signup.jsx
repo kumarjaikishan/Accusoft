@@ -129,6 +129,7 @@ const Signup = ({ setlog }) => {
                         onChange={signhandle}
                         name="phone"
                         type='tel'
+                        inputProps={{ minLength: 10, maxLength: 10 }}
                         onKeyPress={(event) => { if (!/[0-9]/.test(event.key)) { event.preventDefault(); } }}
                         value={signinp.phone}
                         InputProps={{

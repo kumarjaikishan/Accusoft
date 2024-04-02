@@ -64,7 +64,7 @@ function App() {
             <Route path="*" element={<Errorpage />} />
           </Routes>
           <div style={{ display: log.loader ? "flex" : "none" }} className="loader"><img src={loadere} alt="" /></div>
-        <footer>Hello</footer>
+        <footer></footer>
         </div>
         <Sidebar />
       </div>

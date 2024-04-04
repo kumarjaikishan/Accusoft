@@ -100,7 +100,6 @@
             td {
                 border: 1px solid rgb(190, 185, 185);
                 text-align: center;
-                cursor: pointer;
             }
 
             thead th,
@@ -116,6 +115,8 @@
                 border-radius: 50%;
                 text-align: center;
                 margin-left: 2px;
+                cursor: pointer;
+                font-size: 5em;
             }
 
             th.active {
@@ -163,6 +164,7 @@
                 td:nth-child(6) {
 
                     i {
+                        /* cursor: pointer; */
                         width: 25px;
                         margin: 0 auto;
                     }
@@ -179,6 +181,7 @@
                 font-size: 1.2em;
                 transition: 0.1s;
                 width: max-content;
+                cursor: pointer;
 
                 &.fa-eye {
                     color: #95afc0;
@@ -201,7 +204,6 @@
 
                     &:hover {
                         font-size: 1.6em;
-                        color: var(--maincolor);
                     }
                 }
             }
@@ -225,7 +227,6 @@
             display: inline-block;
             margin: 0 5px;
             width: 35px;
-            cursor: pointer;
             transition: 0.2s;
             height: 28px;
             line-height: 25px;
@@ -233,6 +234,7 @@
             background: white;
             border: 1px solid grey;
             color: grey;
+            cursor: pointer;
             border-radius: 5px;
             box-shadow: 3px 3px 8px rgb(0 0 0 / 40%);
 

@@ -55,7 +55,7 @@
 
                 .name {
                     font-family: 'East Sea Dokdo', cursive;
-                    font-size: 1.8em;
+                    font-size: 1.7em;
                 }
 
                 &::after,
@@ -110,7 +110,7 @@
             }
             .name {
                 text-align: start;
-                font-size: 1.1em;
+                font-size: 1em;
                 font-weight: 400;
                 line-height: 55px;
                 

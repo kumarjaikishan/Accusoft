@@ -274,10 +274,11 @@
         padding: 5px 8px;
     }
     .report .table #table th{
-      font-size: 12px;
+      font-size: 12px ;
     }
     .report .table td{
-        font-size: 8px;
+        font-size: 11px !important;
+        line-height: 18px;
     }
     .report .table table th:nth-child(1) {
         width: 30px;

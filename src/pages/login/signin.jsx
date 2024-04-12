@@ -10,6 +10,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import VpnKeyIcon from '@mui/icons-material/VpnKey';
 import { userdata } from '../../store/api'
 import { toast } from 'react-toastify';
+import LoadingButton from '@mui/lab/LoadingButton';
 
 const Signin = () => {
     let navigate = useNavigate();
@@ -87,6 +88,37 @@ const Signin = () => {
             dispatch(setloader(false));
         }
     }
+    const [forget, setforget] = useState(false);
+    const emailset = async () => {
+        const email = signinp.email;
+        // console.log(email);
+        if (email == "") {
+            return toast.warn("Email can't be empty", { autoClose: 2100 })
+        }
+        try {
+            setbtnclick(true)
+            const res = await fetch(`${useralldetail.apiadress}/checkmail`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ email })
+            })
+            const data = await res.json();
+            console.log(data);
+            setbtnclick(false)
+
+            if (!res.ok) {
+                return toast.warn(data.message, { autoClose: 2100 });
+            }
+            setforget(false);
+            toast.success(data.message, { autoClose: 2100 })
+        } catch (error) {
+            toast.warn(error.message, { autoClose: 2100 });
+            setbtnclick(false)
+            console.log(error);
+        }
+    }
 
 
     return (
@@ -108,7 +140,7 @@ const Signin = () => {
 
                         }}
                     />
-                    <TextField
+                  {!forget &&  <TextField
                         label="Password"
                         className='filled'
                         required
@@ -125,9 +157,35 @@ const Signin = () => {
                             </InputAdornment>
                         }}
 
-                    />
-                    <button className='btn' type='submit' disabled={btnclick} style={btnclick ? { background: "#cccccc", color: "#666666" } : { background: "rgb(3, 73, 114)", color: "white" }} >Login</button>
-                </form>
+                    />}
+                      {!forget && <div className='forget'>
+                        <span onClick={() => setforget(true)}>Forget Password?</span>
+                    </div>}
+
+                    {forget && <div className='forget'>
+                        <span onClick={() => setforget(false)}>SignIn?</span>
+                    </div>}
+                    
+                    {!forget && <LoadingButton
+                        loading={btnclick}
+                        type='submit'
+                        startIcon={<VpnKeyIcon />}
+                        loadingPosition="start"
+                        variant="contained"
+                    >
+                        Login
+                    </LoadingButton>}
+                    {forget && <LoadingButton
+                        loading={btnclick}
+                        onClick={emailset}
+                        startIcon={<VpnKeyIcon />}
+                        loadingPosition="start"
+                        variant="contained"
+                    >
+                        Email sent
+                    </LoadingButton>}
+
+                 </form>
             </div>
         </>
     )

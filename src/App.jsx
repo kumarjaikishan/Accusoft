@@ -20,6 +20,7 @@ import { userdata } from './store/api'
 import { Errorpage } from './pages/Errorpage';
 import Allexpense from './pages/admin/Allexpenses';
 import Alluser from './pages/admin/alluser';
+import PasswordReset from './pages/password/password';
 import Admin_Dashboard from './pages/admin/admin_Dashboard';
 
 function App() {
@@ -53,6 +54,7 @@ function App() {
             <Route path="/report" element={<Report />} />
             <Route path="/photo" element={<Photo />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/resetpassword/:token" element={<PasswordReset />} />
             <Route path="/logout" element={<Logout />} />
             <Route path="/admin" >
               <Route path="dashboard" element={<Admin_Dashboard />} />

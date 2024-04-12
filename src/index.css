@@ -12,8 +12,8 @@ input{
 :root {
   --navheight: 70px;
   --navheightmobile:60px;
-  --sidebarwide: 230px;
-  --sidebarnarrow: 90px;
+  --sidebarwide: 210px;
+  --sidebarnarrow: 75px;
   --maincolor: #034972;
   --hovercolor:  #012336;
 }
@@ -60,7 +60,7 @@ code {
 }
 
 .sidebar.narrow .company {
-  transform: scale(3.5) translateX(-4px);
+  transform: scale(3) translateX(-4px);
 }
 
 .main {

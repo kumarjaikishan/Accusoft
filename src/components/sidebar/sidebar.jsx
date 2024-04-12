@@ -33,7 +33,7 @@ const Sidebar = () => {
             logo: 'fa fa-university',
         },
         {
-            name: 'Data Alaysis',
+            name: 'Exp. Alaysis',
             link: '/datanalysis',
             logo: 'fa fa-book',
         },

@@ -1,13 +1,17 @@
 import './password.css'
 import { useParams } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import SaveIcon from '@mui/icons-material/Save';
 import LoadingButton from '@mui/lab/LoadingButton';
 import TextField from '@mui/material/TextField';
+import { useSelector, useDispatch } from 'react-redux';
 import { useState } from 'react';
 import { toast } from "react-toastify";
 
 const PasswordReset = () => {
     const { token } = useParams();
+    const navigate = useNavigate();
+    const useralldetail = useSelector((state) => state.userexplist);
     const [inp, setinp] = useState({
         pass: '',
         cpass: ''
@@ -22,10 +26,10 @@ const PasswordReset = () => {
     }
     const handlesubmit = async (e) => {
         e.preventDefault();
-        console.log(inp);
+        // console.log(inp);
         try {
             setloading(true)
-            const rese = await fetch(`${import.meta.env.VITE_API_ADDRESS}setpassword?token=${token}`, {
+            const rese = await fetch(`${useralldetail.apiadress}/setpassword?token=${token}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -36,11 +40,12 @@ const PasswordReset = () => {
             console.log(resuke);
             setloading(false)
             if (!rese.ok) {
-                return toast.warn(resuke.message, { autoClose: 2100 })
+                return toast.warn(resuke.msg, { autoClose: 2100 })
             }
-            toast.success(resuke.message, { autoClose: 1600 })
+            toast.success(resuke.msg, { autoClose: 1600 })
+            navigate('/login')
         } catch (error) {
-            toast.warn(resuke.message, { autoClose: 2100 })
+            toast.warn(error.msg, { autoClose: 2100 })
             console.log(error);
             setloading(false)
         }

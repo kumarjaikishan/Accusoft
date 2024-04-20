@@ -19,7 +19,7 @@ const AddExpenses = () => {
   const log = useSelector((state) => state.login);
   const userAllDetails = useSelector((state) => state.userexplist);
   const [searchInput, setSearchInput] = useState('');
-  const [finalsearch,setfinalserach] = useState('');
+  const [finalsearch, setfinalserach] = useState('');
 
   if (!log.islogin) {
     toast.warn("You are not Logged In", { autoClose: 1300 })
@@ -59,7 +59,7 @@ const AddExpenses = () => {
   const init = {
     _id: '',
     ledger: '',
-   date:dayjs(),
+    date: dayjs(),
     amount: '',
     narration: '',
   }
@@ -70,9 +70,9 @@ const AddExpenses = () => {
   const [postsPerPage, setPostsPerPage] = useState(10);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleInputChange = (e,field) => {
+  const handleInputChange = (e, field) => {
     setExpenseInput({
-      ...expenseInput,[field]:e.target.value
+      ...expenseInput, [field]: e.target.value
     });
   };
 
@@ -220,7 +220,7 @@ const AddExpenses = () => {
     setSortedList();
     setCurrentPage(pageNumber);
   };
- 
+
   const highlight = () => {
     const checkboxes = document.querySelectorAll('#tablecontent input');
     const tableRows = document.querySelectorAll('#tablecontent tr');
@@ -308,7 +308,7 @@ const AddExpenses = () => {
             </select>
           </span>
           <span>
-            <input type="text" onChange={(e)=> setSearchInput(e.target.value)} value={searchInput} placeholder="Type to search..." />
+            <input type="text" onChange={(e) => setSearchInput(e.target.value)} value={searchInput} placeholder="Type to search..." />
           </span>
         </div>
         <div className="table">
@@ -317,10 +317,10 @@ const AddExpenses = () => {
               <tr>
                 <th>S.no</th>
                 <th onClick={() => sortPosts('ledger')}>
-                  <span>Ledger Name</span> <i className="fa fa-arrow-down" aria-hidden="true"></i>
+                  <span>Ledger</span> <i className="fa fa-arrow-down" aria-hidden="true"></i>
                 </th>
                 <th onClick={() => sortPosts('amount')}>
-                  <span>Amount</span> <i className="fa fa-arrow-down" aria-hidden="true"></i>
+                  <span>Amt.</span> <i className="fa fa-arrow-down" aria-hidden="true"></i>
                 </th>
                 <th>Narration</th>
                 <th onClick={() => sortPosts('date')}>

@@ -6,7 +6,8 @@
     height: 100%;
     overflow: auto;
     position: relative;
-    padding: 0 2rem;
+    padding: 0 1rem;
+
 
     .caps {
         text-transform: capitalize;
@@ -108,15 +109,19 @@
                 padding: 0 2px;
             }
 
-            thead i {
-                display: inline-block;
-                width: 20px;
-                height: 20px;
-                border-radius: 50%;
-                text-align: center;
-                margin-left: 2px;
-                cursor: pointer;
-                font-size: 5em;
+            thead th{
+               
+
+                .fa {
+                    display: inline-block;
+                    width: 20px;
+                    height: 20px;
+                    border-radius: 50%;
+                    text-align: center;
+                    margin-left: 2px;
+                    cursor: pointer;
+                    font-size: 1em;
+                }
             }
 
             th.active {

@@ -40,12 +40,12 @@ const PasswordReset = () => {
             console.log(resuke);
             setloading(false)
             if (!rese.ok) {
-                return toast.warn(resuke.msg, { autoClose: 2100 })
+                return toast.warn(resuke.message, { autoClose: 2100 })
             }
-            toast.success(resuke.msg, { autoClose: 1600 })
+            toast.success(resuke.message, { autoClose: 1600 })
             navigate('/login')
         } catch (error) {
-            toast.warn(error.msg, { autoClose: 2100 })
+            toast.warn(error.message, { autoClose: 2100 })
             console.log(error);
             setloading(false)
         }

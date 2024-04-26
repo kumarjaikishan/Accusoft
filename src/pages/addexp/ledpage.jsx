@@ -35,7 +35,7 @@ const Ledpage = ({ setmodal, setdisable, disable, isledupdate, setisledupdate })
     const body = { ledger: ledinp.val };
 
     const successAction = (data) => {
-      toast.success(data.msg, { autoClose: 1300 });
+      toast.success(data.message, { autoClose: 1300 });
       dispatch(userdata());
       setledinp(init);
       setdisable(false);
@@ -60,7 +60,7 @@ const Ledpage = ({ setmodal, setdisable, disable, isledupdate, setisledupdate })
         const body = { ledgerid: id };
 
         const successAction = (data) => {
-          toast.success(data.msg, { autoClose: 1300 });
+          toast.success(data.message, { autoClose: 1300 });
           dispatch(userdata());
           setdisable(false);
         };
@@ -81,7 +81,7 @@ const Ledpage = ({ setmodal, setdisable, disable, isledupdate, setisledupdate })
     const body = { ledger_id, newledger };
 
     const successAction = (data) => {
-      toast.success(data.msg, { autoClose: 1300 });
+      toast.success(data.message, { autoClose: 1300 });
       setledinp(init);
       setinsupdat(false);
       dispatch(userdata());

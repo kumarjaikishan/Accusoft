@@ -41,7 +41,7 @@ const Alluser = () => {
                 setusers(data.users);
                 // dispatch(setloader(false));
             } else {
-                toast.warn(data.msg ? data.msg : "You are not authorised", { autoClose: 1500 });
+                toast.warn(data.message ? data.message : "You are not authorised", { autoClose: 1500 });
             }
         } catch (error) {
             console.log(error);

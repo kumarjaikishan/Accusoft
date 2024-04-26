@@ -110,7 +110,7 @@ const AddExpenses = () => {
     };
 
     const successAction = (data) => {
-      toast.success(data.msg, { autoClose: 1300 });
+      toast.success(data.message, { autoClose: 1300 });
       dispatch(userdata());
       dispatch(setloader(false));
       setIsModalOpen(false);
@@ -171,7 +171,7 @@ const AddExpenses = () => {
         const body = { id: itemIds };
 
         const successAction = (data) => {
-          toast.success(data.msg, { autoClose: 1300 });
+          toast.success(data.message, { autoClose: 1300 });
           dispatch(setloader(false));
           dispatch(userdata());
 

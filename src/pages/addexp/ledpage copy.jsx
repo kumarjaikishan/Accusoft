@@ -42,7 +42,7 @@ const Ledpage = ({ setmodal, setdisable,disable, isledupdate, setisledupdate }) 
       })
       const data = await result.json();
       if (result.ok) {
-        toast.success(data.msg, { autoClose: 1300 })
+        toast.success(data.message, { autoClose: 1300 })
         dispatch(userdata());
         setledinp(init);
         setdisable(false);
@@ -88,7 +88,7 @@ const Ledpage = ({ setmodal, setdisable,disable, isledupdate, setisledupdate }) 
           
           const data = await result.json();
           if (result.ok) {
-            toast.success(data.msg, { autoClose: 1300 })
+            toast.success(data.message, { autoClose: 1300 })
             dispatch(userdata());
             setdisable(false);
             dispatch(setloader(false));
@@ -151,7 +151,7 @@ const Ledpage = ({ setmodal, setdisable,disable, isledupdate, setisledupdate }) 
       const result = await res.json();
       console.log(result);
       if (res.ok) {
-        toast.success(result.msg, { autoClose: 1300 })
+        toast.success(result.message, { autoClose: 1300 })
         dispatch(userdata());
         dispatch(setloader(false));
       }

@@ -30,7 +30,7 @@ const Modalbox = ({ setisledupdate, modal, disable, setdisable, init, handler, i
             _id, ledger, date, amount, narration
         };
         const successAction = (data) => {
-            toast.success(data.msg, { autoClose: 1300 });
+            toast.success(data.message, { autoClose: 1300 });
             dispatch(userdata());
             setinp(init);
             setdisable(false);

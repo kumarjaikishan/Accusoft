@@ -42,7 +42,7 @@ const Allexpense = () => {
                 setadminexpdata(data.explist)
                 dispatch(setloader(false));
             } else {
-                // toast.warn(data.msg ? data.msg : "You are not authorised", { autoClose: 1500 });
+                // toast.warn(data.message ? data.message : "You are not authorised", { autoClose: 1500 });
                 // return <Navigate to='/' />
             }
         } catch (error) {

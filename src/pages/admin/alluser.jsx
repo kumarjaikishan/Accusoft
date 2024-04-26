@@ -36,7 +36,7 @@ const Alluser = () => {
                 }
             })
             const data = await result.json();
-            console.log("admin all users", data);
+            // console.log("admin all users", data);
             if (result.ok) {
                 setusers(data.users);
                 // dispatch(setloader(false));
@@ -67,7 +67,8 @@ const Alluser = () => {
         name: "",
         phone: "",
         email: "",
-        admin: ""
+        admin: "",
+        verified:""
     }
     const [inp, setinp] = useState(init);
     const [currentpage, setcurrentpage] = useState(1);
@@ -78,6 +79,7 @@ const Alluser = () => {
     const handler = (e) => {
         let name = e.target.name;
         let value = e.target.value;
+        console.log(name , " : ",value);
         setinp({
             ...inp, [name]: value
         })
@@ -85,7 +87,7 @@ const Alluser = () => {
 
     //  setting input field for edit user data
     const setinputfield = async (val) => {
-        console.log(val);
+        // console.log(val);
         setinp({
             id: val._id,
             name: val.name,
@@ -101,7 +103,7 @@ const Alluser = () => {
 
     // for deleteing data
     const delet = async (val) => {
-        console.log(val);
+        // console.log(val);
         swal({
             title: "Are you sure?",
             text: "Once deleted, you will not be able to recover this Data!",

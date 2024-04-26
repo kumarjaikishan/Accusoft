@@ -2,6 +2,7 @@
 import { toast } from 'react-toastify';
 
 const apiWrapper = async (url, method = 'GET', body = null, dispatch, successAction, loaderAction) => {
+    // console.log(successAction);
     try {
         dispatch(loaderAction(true));
         const token = localStorage.getItem("token");
@@ -17,6 +18,8 @@ const apiWrapper = async (url, method = 'GET', body = null, dispatch, successAct
         const response = await fetch(url, options);
         const responseData = await response.json();
 
+        // console.log(responseData);
+
         if (!response.ok) {
             throw new Error(responseData.message || 'Something went wrong');
         }
@@ -29,7 +32,6 @@ const apiWrapper = async (url, method = 'GET', body = null, dispatch, successAct
 
         // Dispatch an error action if needed
         // Example: dispatch(errorAction(error));
-        dispatch(loaderAction(false));
         // Display a toast notification for the user
         toast.warn(error.message || 'An error occurred', { autoClose: 2300 });
 

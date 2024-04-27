@@ -131,7 +131,7 @@ const Home = () => {
 
         {card && card.map((val, ind) => {
           return (
-            <div className="card" key={ind} style={{ background: val.back, color: "white" }}>
+            <div className="card" key={ind} >
               <div className="data">
                 <div className="amt">{val.amt}</div>
                 <div className="day">{val.day}</div>

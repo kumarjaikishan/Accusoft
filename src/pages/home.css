@@ -10,6 +10,11 @@
     display: flex;
     overflow: hidden;
     border-radius: 8px;
+    background: #dbe1e6;
+    box-shadow: 0 0 5px #fff,
+        5px 5px 10px #a7aaaf,
+        -5px -5px 10px #fff;
+        color: #212529;
 }
 /* .home .card:hover{
     box-shadow: inset 2px 2px 5px #a7aaaf,
@@ -49,7 +54,7 @@ position: relative;
 }
 .home .card .icon i{
     font-size: 3.7em;
-    /* color: rgb(83, 80, 80); */
+    color: rgb(83, 80, 80);
 }
 @media only screen and (max-width:1200px) {
     .home {

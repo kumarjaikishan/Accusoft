@@ -22,6 +22,7 @@ const Signin = () => {
     }
     useEffect(() => {
         dispatch(setloader(false));
+        console.log("api :", useralldetail.apiadress);
     }, [])
 
 

@@ -55,6 +55,24 @@ code {
     monospace;
 }
 
+.preloder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(7px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 50;
+}
+.App.loader .main{
+  /* border: 3px solid red; */
+  overflow: hidden;
+}
+
 .nav {
   height: var(--navheight);
   left: var(--sidebarwide);

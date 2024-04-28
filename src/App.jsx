@@ -3,6 +3,7 @@ import Navbar from './components/navbar/navbar';
 import loadere from '../src/img/loader.png'
 import Sidebar from './components/sidebar/sidebar';
 import Home from './pages/home';
+import Preloader from './preloader';
 import Addexp from './pages/addexp/addexp';
 import Datanalysis from './pages/dataanalysis';
 import { useEffect } from 'react';
@@ -44,7 +45,7 @@ function App() {
   return (
     <>
       <ToastContainer closeOnClick={true} pauseOnFocusLoss={true} />
-      <div className="App" >
+      <div className={log.loader ? 'App loader' : 'App'} >
         <Navbar />
         <div className={log.narrow ? "main narrow" : "main"} onClick={sidebarclose}>
           <Routes>
@@ -65,7 +66,8 @@ function App() {
             <Route path="/test" element={<Test />} />
             <Route path="*" element={<Errorpage />} />
           </Routes>
-          <div style={{ display: log.loader ? "flex" : "none" }} className="loader"><img src={loadere} alt="" /></div>
+          {/* <div style={{ display: log.loader ? "flex" : "none" }} className="loader"><img src={loadere} alt="" /></div> */}
+          {log.loader && <Preloader />}
         <footer></footer>
         </div>
         <Sidebar />

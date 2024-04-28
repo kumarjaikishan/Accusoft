@@ -21,7 +21,7 @@ const Home = () => {
     dispatch(setloader(true));
     useralldetail.explist && load();
     !useralldetail.loading && dispatch(setloader(false));
-    // repeat(100000)
+   
   }, [useralldetail])
  
 

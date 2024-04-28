@@ -89,6 +89,7 @@ const AddExpenses = () => {
     let { ledger, date, amount, narration } = expenseInput;
     date = dayjs(date).format("YYYY-MM-DD");
     // console.log(date);
+    // return
 
     if (!ledger || !date || !amount || !narration) {
       const shakeElement = document.querySelector('.box');

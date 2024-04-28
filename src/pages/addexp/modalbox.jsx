@@ -21,8 +21,10 @@ const Modalbox = ({ setisledupdate, modal, disable, setdisable, init, handler, i
 
     // for updating data  
     const updatee = async (_id) => {
-        const { ledger, date, amount, narration } = inp;
+        let { ledger, date, amount, narration } = inp;
         setdisable(true);
+        date = dayjs(date).format("YYYY-MM-DD");
+        //   console.log(date);
 
         const url = `${useralldetail.apiadress}/updateexp`;
         const method = 'POST';

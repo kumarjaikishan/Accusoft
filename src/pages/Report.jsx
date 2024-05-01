@@ -82,7 +82,7 @@ const Report = () => {
         dispatch(setnarrow(false))
         setTimeout(() => {
             window.print()
-        }, 10);
+        }, 1);
     }
     return (
         <>

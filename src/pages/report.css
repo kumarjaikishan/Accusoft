@@ -3,17 +3,18 @@
     width: 100%;
     height: 100%;
     overflow: hidden;
+
+    .cont {
+        width: 100%;
+        /* border: 1px solid blue; */
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 80px;
+        padding: 0px 20px;
+    }
 }
 
-.report .cont {
-    width: 100%;
-    /* border: 1px solid blue; */
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 80px;
-    padding: 0px 20px;
-}
 
 .report .cont>span {
     padding: 0px 20px;
@@ -128,11 +129,11 @@
 }
 
 .report .table table th:nth-child(2) {
-    width: 220px;
+    width: 180px;
 }
 
 .report .table table th:nth-child(3) {
-    width: 110px;
+    width: 100px;
 }
 
 .report .table table th:nth-child(5) {
@@ -147,7 +148,8 @@
 .report .table table td {
     border: 1px solid rgb(190, 185, 185);
     text-align: center;
-    font-size: 14px;
+    font-size: 13px;
+    line-height: 20px;
 }
 
 .report .table table tbody tr {
@@ -162,7 +164,9 @@
     color: white;
     background: var(--maincolor);
 }
-
+.report #foot td{
+    font-size: 0.9em;
+}
 .report #bottom,
 .report #top {
     position: absolute;
@@ -214,13 +218,46 @@
         display: none;
     }
 
-    .report .table {
-        overflow: visible;
+    .report {
+
+        .table {
+            overflow: visible;
+
+            table{
+
+                th{
+                    color: var(--maincolor);
+                    background: var(--maincolor);
+                }
+
+                tbody {
+
+                    tr {
+                        height: 25px;
+                    }
+                }
+                #foot td{
+                    color: var(--maincolor);
+                }
+            }
+        }
+    }
+    .report .table table th:nth-child(1) {
+        width: 50px;
+    }
+    
+    .report .table table th:nth-child(2) {
+        width: 150px;
+    }
+    
+    .report .table table th:nth-child(3) {
+        width: 40px;
+    }
+    
+    .report .table table th:nth-child(5) {
+        width: 70px;
     }
 
-    .report .table table tbody tr {
-        height: 30px;
-    }
 }
 
 @media only screen and (max-width: 600px) {

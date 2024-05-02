@@ -159,6 +159,7 @@ const Report = () => {
                             </tr>
                         </tbody>
                     </table>
+                    <div class="watermark"></div>
                 </div>
             </div>
         </>

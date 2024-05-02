@@ -83,15 +83,7 @@
     border: none;
     outline: none;
     background: var(--maincolor);
-    color: white;
-    cursor: pointer;
-    box-shadow: 0 0 5px #fff,
-        5px 5px 10px #a7aaaf,
-        -5px -5px 10px #fff;
-    padding: 8px 18px;
-    border-radius: 20px;
-    font-size: 1.1em;
-    font-weight: 600;
+    font-size: 0.9em;
     margin: 0 10px;
     transition: 0.1s;
 }
@@ -99,7 +91,6 @@
 .report .cont>span:nth-child(2) button:hover,
 .report .cont>span:nth-child(1) span i:hover {
     background: var(--hovercolor);
-    transform: scale(0.95);
 }
 
 .report .table {

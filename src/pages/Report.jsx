@@ -6,12 +6,15 @@ import { CSVLink } from 'react-csv';
 import { useSelector, useDispatch } from 'react-redux';
 import { setloader, setnarrow } from '../store/login';
 import { toast } from 'react-toastify';
+import DownloadIcon from '@mui/icons-material/Download';
+import PrintIcon from '@mui/icons-material/Print';
+import Button from '@mui/material/Button';
 
 const Report = () => {
     const dispatch = useDispatch();
     const log = useSelector((state) => state.login);
     if (!log.islogin) {
-        toast.warn("You are not Logged In",{ autoClose: 1300 })
+        toast.warn("You are not Logged In", { autoClose: 1300 })
         return <Navigate to='/login' />
     }
     const useralldetail = useSelector((state) => state.userexplist);
@@ -115,9 +118,14 @@ const Report = () => {
                     </span>
                     <span>
                         <CSVLink data={pious} headers={header} filename={`${username}-Expense Record`}>
-                            <button title='Download'>Download csv</button>
+                            {/* <button title='Download'>Download csv</button> */}
+                            <Button title='Download' size='small' variant="contained" startIcon={<DownloadIcon />}>
+                                Csv
+                            </Button>
                         </CSVLink>
-                        <button title='Print' onClick={print}>Print</button>
+                        <Button title='print' size='small' variant="contained" onClick={print} startIcon={<PrintIcon />}>
+                            Print
+                        </Button>
                     </span>
                 </div>
                 <div className="table" >

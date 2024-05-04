@@ -100,6 +100,13 @@
     height: calc(100% - 80px);
     overflow: auto;
     position: relative;
+
+    h2{
+        text-align: center;
+        text-transform: capitalize;
+        color: var(--maincolor);
+        display: none;
+    }
    
 }
 
@@ -231,6 +238,10 @@
 
         .table {
             overflow: visible;
+
+            h2{
+                display: block;
+            }
 
             table{
                 

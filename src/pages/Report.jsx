@@ -20,6 +20,7 @@ const Report = () => {
     const useralldetail = useSelector((state) => state.userexplist);
     useEffect(() => {
         dispatch(setloader(false));
+        // console.log(useralldetail.user.name);
     }, [])
     const header = [
         { label: "ledger", key: "ledger.ledger" },
@@ -43,7 +44,7 @@ const Report = () => {
     const today = date.getFullYear() + "-" + monthIn2Digit + "-" + dateIn2Digit;
     const yesterday = (lastday().getFullYear() + "-" + String(lastday().getMonth() + 1).padStart(2, '0') + "-" + String(lastday().getDate()).padStart(2, '0'));
     const [inp, setinp] = useState({
-        from: yesterday,
+        from: '2022-01-01',
         to: today,
         ledger: "all"
     });
@@ -129,7 +130,7 @@ const Report = () => {
                     </span>
                 </div>
                 <div className="table" >
-
+                    <h2>Accusoft - {useralldetail.user.name} from {inp.from} to {inp.to} </h2>
                     <table id='tavlecontent'>
                         <thead id='table'>
                             <tr>

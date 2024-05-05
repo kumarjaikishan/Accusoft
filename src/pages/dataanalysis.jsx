@@ -111,7 +111,7 @@ const Datanalysis = () => {
                                 <div className="day">{ledger}</div>
                             </div>
                             <div className="icon">
-                                <div className="cir" style={{ background: `conic-gradient(#fc5c65 ${isNaN(Math.floor((sum / cardarr["total"]) * 100)) ? 0 : Math.floor((sum / cardarr["total"]) * 100) * 3.6}deg,  #7f8fa6  10.8deg)` }}>
+                                <div className="cir" style={{ background: `conic-gradient(#034972 ${isNaN(Math.floor((sum / cardarr["total"]) * 100)) ? 0 : Math.floor((sum / cardarr["total"]) * 100) * 3.6}deg,  #afbbcb  10.8deg)` }}>
                                     <div className="per"> {isNaN(Math.floor((sum / cardarr["total"]) * 100)) ? 0 : Math.floor((sum / cardarr["total"]) * 100)} %</div>
                                 </div>
                             </div>

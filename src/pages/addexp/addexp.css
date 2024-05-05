@@ -10,7 +10,7 @@
 
 
     .caps {
-        text-transform: capitalize;
+        text-transform: capitalize !important;
     }
 
     .add {

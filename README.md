@@ -5,7 +5,7 @@ expenses by providing features such as adding, deleting, updating, and managing 
 Additionally, it offers comprehensive reporting options for day,week,month,year, and ledger-wise insights.
 
 # Live
-Running At- https://accusoft.vercel.app
+Running At- https://accusoft.battlefiesta.in
 
 ## Key Features
 

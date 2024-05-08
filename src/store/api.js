@@ -4,7 +4,8 @@ export const userdata = createAsyncThunk("userdata", async () => {
     const token = localStorage.getItem("token");
     // console.time("time taken by userdata");
         try {
-            const res = await fetch(`https://backend-exp-man.vercel.app/api/userdata`, {
+            const res = await fetch(`/api/userdata`, {
+            // const res = await fetch(`https://backend-exp-man.vercel.app/api/userdata`, {
                 // const res = await fetch(`http://localhost:5000/api/userdata`, {
                 method: "GET",
                 headers: {
@@ -30,7 +31,8 @@ const userexplist = createSlice({
         loading: false,
         error: null,
         profilepic: "",
-        apiadress: "https://backend-exp-man.vercel.app/api",
+        apiadress: "/api",
+        // apiadress: "https://backend-exp-man.vercel.app/api",
         // apiadress: "http://localhost:5000/api",
     },
     reducers: {

@@ -22,6 +22,7 @@ const Report = () => {
         dispatch(setloader(false));
         // console.log(useralldetail.user.name);
     }, [])
+
     const header = [
         { label: "ledger", key: "ledger.ledger" },
         { label: "amount", key: "amount" },
@@ -30,7 +31,7 @@ const Report = () => {
     ]
     const username = useralldetail.user.name;
     const [issearch, setissearch] = useState(false);
-    const [pious, setpious] = useState(useralldetail.explist);
+    const [pious, setpious] = useState([]);
     const date = new Date;
 
     const lastday = () => {
@@ -42,9 +43,9 @@ const Report = () => {
     var dateIn2Digit = String(date.getDate()).padStart(2, '0');
 
     const today = date.getFullYear() + "-" + monthIn2Digit + "-" + dateIn2Digit;
-    const yesterday = (lastday().getFullYear() + "-" + String(lastday().getMonth() + 1).padStart(2, '0') + "-" + String(lastday().getDate()).padStart(2, '0'));
+    const yesterday = (lastday().getFullYear() + "-" + String(lastday().getMonth() ).padStart(2, '0') + "-" + String(lastday().getDate()).padStart(2, '0'));
     const [inp, setinp] = useState({
-        from: '2022-01-01',
+        from: yesterday,
         to: today,
         ledger: "all"
     });
@@ -88,6 +89,12 @@ const Report = () => {
             window.print()
         }, 1);
     }
+
+    useEffect(() => {
+        search();
+        // console.log(yesterday);
+    }, [])
+
     return (
         <>
             <div className="report">
@@ -113,7 +120,9 @@ const Report = () => {
                             </select>
                         </span>
                         <span>
+                        
                             <i onClick={search} title='Search' className="fa fa-search" aria-hidden="true"></i>
+                           
                         </span>
                         {issearch ? <button onClick={clearsearch}>Clear</button> : null}
                     </span>
@@ -142,7 +151,7 @@ const Report = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {pious.map((val, ind) => {
+                            {pious?.map((val, ind) => {
                                 let daten = new Date(val.date);
 
                                 var dateIn2Digit2 = String(daten.getDate()).padStart(2, '0');
@@ -160,7 +169,7 @@ const Report = () => {
                             <tr id='foot'>
                                 <td colSpan={2}>Total</td>
                                 <td colSpan={1} >
-                                    {pious.reduce((accu, val) => {
+                                    {pious?.reduce((accu, val) => {
                                         return accu = accu + val.amount
                                     }, 0)}
                                 </td>

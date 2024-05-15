@@ -43,9 +43,9 @@ const Report = () => {
     var dateIn2Digit = String(date.getDate()).padStart(2, '0');
 
     const today = date.getFullYear() + "-" + monthIn2Digit + "-" + dateIn2Digit;
-    const yesterday = (lastday().getFullYear() + "-" + String(lastday().getMonth() ).padStart(2, '0') + "-" + String(lastday().getDate()).padStart(2, '0'));
+    const prevMonth = (lastday().getFullYear() + "-" + String(lastday().getMonth() ).padStart(2, '0') + "-" + String(lastday().getDate()).padStart(2, '0'));
     const [inp, setinp] = useState({
-        from: yesterday,
+        from: prevMonth,
         to: today,
         ledger: "all"
     });
@@ -81,7 +81,12 @@ const Report = () => {
     }
     const clearsearch = () => {
         setissearch(false);
-        setpious(useralldetail.explist);
+        setinp({
+            from: prevMonth,
+            to: today,
+            ledger: "all"
+        })
+       search();
     }
     const print = () => {
         dispatch(setnarrow(false))

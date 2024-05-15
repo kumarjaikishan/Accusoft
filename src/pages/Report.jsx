@@ -86,7 +86,6 @@ const Report = () => {
             to: today,
             ledger: "all"
         })
-       search();
     }
     const print = () => {
         dispatch(setnarrow(false))
@@ -98,7 +97,7 @@ const Report = () => {
     useEffect(() => {
         search();
         // console.log(yesterday);
-    }, [])
+    }, [inp])
 
     return (
         <>
@@ -124,11 +123,7 @@ const Report = () => {
                                 })}
                             </select>
                         </span>
-                        <span>
-                        
-                            <i onClick={search} title='Search' className="fa fa-search" aria-hidden="true"></i>
-                           
-                        </span>
+                       
                         {issearch ? <button onClick={clearsearch}>Clear</button> : null}
                     </span>
                     <span>

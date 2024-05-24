@@ -4,11 +4,9 @@ import swal from 'sweetalert';
 import Pagination from './pagination';
 import Modalbox from './modalbox';
 import Ledpage from './ledpage';
-import { Navigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { setloader } from '../../store/login';
 import { userdata } from '../../store/api'
-import TextField from '@mui/material/TextField';
 import dayjs from 'dayjs';
 import { toast } from 'react-toastify';
 import apiWrapper from './apiWrapper';
@@ -16,15 +14,11 @@ import { AnimatePresence, motion } from 'framer-motion';
 
 const AddExpenses = () => {
   const dispatch = useDispatch();
-  const log = useSelector((state) => state.login);
   const userAllDetails = useSelector((state) => state.userexplist);
   const [searchInput, setSearchInput] = useState('');
   const [finalsearch, setfinalserach] = useState('');
 
-  if (!log.islogin) {
-    toast.warn("You are not Logged In", { autoClose: 1300 })
-    return <Navigate to='/login' />
-  }
+ 
   useEffect(() => {
     dispatch(setloader(false))
   }, [])

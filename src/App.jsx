@@ -22,6 +22,8 @@ import Allexpense from './pages/admin/Allexpenses';
 import Alluser from './pages/admin/alluser';
 import PasswordReset from './pages/password/password';
 import Admin_Dashboard from './pages/admin/admin_Dashboard';
+import ProtectedRoutes from './utils/protectedRoute';
+import AdminRoute from './utils/adminRoute';
 
 function App() {
   const dispatch = useDispatch();
@@ -36,7 +38,6 @@ function App() {
   // autocolse sidebar when screensize below 600px
   const sidebarclose = () => {
     const width = window.innerWidth;
-    // console.log(width)
     width < 600 ? dispatch(setnarrow(true)) : null;
   }
 
@@ -48,26 +49,33 @@ function App() {
         <Navbar />
         <div className={log.narrow ? "main narrow" : "main"} onClick={sidebarclose}>
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/addexpense" element={<Addexp />} />
-            <Route path="/datanalysis" element={<Datanalysis />} />
-            <Route path="/report" element={<Report />} />
-            <Route path="/photo" element={<Photo />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/resetpassword/:token" element={<PasswordReset />} />
-            <Route path="/logout" element={<Logout />} />
-            <Route path="/admin" >
-              <Route path="dashboard" element={<Admin_Dashboard />} />
-              <Route path="users" element={<Alluser />} />
-              <Route path="expense" element={<Allexpense />} />
+            <Route element={<ProtectedRoutes />}>
+              <Route path="/" element={<Home />} />
+              <Route path="/addexpense" element={<Addexp />} />
+              <Route path="/datanalysis" element={<Datanalysis />} />
+              <Route path="/report" element={<Report />} />
+              <Route path="/photo" element={<Photo />} />
+              <Route path="/resetpassword/:token" element={<PasswordReset />} />
+              <Route path="/print" element={<Officeexp />} />
             </Route>
-            <Route path="/print" element={<Officeexp />} />
+
+            <Route element={<AdminRoute />}>
+              <Route path="/admin" >
+                <Route path="dashboard" element={<Admin_Dashboard />} />
+                <Route path="users" element={<Alluser />} />
+                <Route path="expense" element={<Allexpense />} />
+              </Route>
+            </Route>
+
+
+            <Route path="/logout" element={<Logout />} />
             <Route path="/test" element={<Test />} />
             <Route path="*" element={<Errorpage />} />
+            <Route path="/login" element={<Login />} />
           </Routes>
           {/* <div style={{ display: log.loader ? "flex" : "none" }} className="loader"><img src={loadere} alt="" /></div> */}
           {log.loader && <Preloader />}
-        <footer></footer>
+          <footer></footer>
         </div>
         <Sidebar />
       </div>

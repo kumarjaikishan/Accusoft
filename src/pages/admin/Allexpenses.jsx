@@ -3,7 +3,6 @@ import { useEffect } from 'react';
 import './allexpense.css';
 import swal from 'sweetalert';
 import Pagination from '../addexp/pagination';
-import { Navigate } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
 import { setloader } from '../../store/login';
 import dayjs from 'dayjs';
@@ -12,16 +11,11 @@ import Userexpedit from './expeditmodal';
 
 const Allexpense = () => {
     const dispatch = useDispatch();
-    const log = useSelector((state) => state.login);
     const useralldetail = useSelector((state) => state.userexplist);
-    if (!log.islogin || !useralldetail.user.isadmin) {
-        // console.log(log);
-        toast.warn("You are not Admin",{ autoClose: 1300 })
-        return <Navigate to='/' />
-    }
+
     const [adminexpdata, setadminexpdata] = useState([])
     useEffect(() => {
-        log.islogin && useralldetail.user.isadmin && fetche();
+        fetche();
     }, [])
     let itemIds = [];
     const fetche = async () => {
@@ -37,7 +31,7 @@ const Allexpense = () => {
                 }
             })
             const data = await result.json();
-            console.log("whole",data);
+            console.log("whole", data);
             if (result.ok) {
                 setadminexpdata(data.explist)
                 dispatch(setloader(false));
@@ -66,20 +60,20 @@ const Allexpense = () => {
     const init = {
         _id: '',
         ledger: '',
-       date:dayjs(),
+        date: dayjs(),
         amount: '',
         narration: '',
-      }
+    }
     const [inp, setinp] = useState(init);
     const [currentpage, setcurrentpage] = useState(1);
     const [postperpage, setpostperpage] = useState(10);
 
 
     const [modal, setmodal] = useState(false);
-    const handler = (e,field) => {
+    const handler = (e, field) => {
         setinp({
-            ...inp,[field]:e.target.value
-          });
+            ...inp, [field]: e.target.value
+        });
     }
 
     //  setting input field for edit user data

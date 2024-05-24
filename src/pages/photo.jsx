@@ -9,11 +9,6 @@ import { toast } from 'react-toastify';
 
 const Photo = () => {
     const dispatch = useDispatch();
-    const log = useSelector((state) => state.login);
-    if (!log.islogin) {
-        toast.warn("You are not Logged In",{ autoClose: 1300 })
-        return <Navigate to='/login' />
-    }
     const useralldetail = useSelector((state) => state.userexplist);
     const defaultprofile = "https://res.cloudinary.com/dusxlxlvm/image/upload/v1699090690/just_yoljye.png"
     useEffect(() => {

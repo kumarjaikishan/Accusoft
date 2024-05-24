@@ -12,11 +12,6 @@ import Button from '@mui/material/Button';
 
 const Report = () => {
     const dispatch = useDispatch();
-    const log = useSelector((state) => state.login);
-    if (!log.islogin) {
-        toast.warn("You are not Logged In", { autoClose: 1300 })
-        return <Navigate to='/login' />
-    }
     const useralldetail = useSelector((state) => state.userexplist);
     useEffect(() => {
         dispatch(setloader(false));

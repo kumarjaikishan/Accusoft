@@ -6,7 +6,6 @@ const Officeexp = () => {
     const [toogle, settoogle] = useState(false);
     const [led, setled] = useState([]);
     const [exp, setexp] = useState([]);
-    const [lastvoucher, setlastvoucher] = useState("");
     useEffect(() => {
         fetche();
         expfetch();

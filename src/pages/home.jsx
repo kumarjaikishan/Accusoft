@@ -9,11 +9,6 @@ import { userdata } from '../store/api'
 // import { toast } from 'react-toastify';
 
 const Home = () => {
-  const log = useSelector((state) => state.login);
-  if (!log.islogin) {
-    // toast.warn("You are not Logged In",{ autoClose: 1300 })
-    return <Navigate to='/login' />
-  }
   const dispatch = useDispatch();
   const useralldetail = useSelector((state) => state.userexplist);
   useEffect(() => {
@@ -21,9 +16,9 @@ const Home = () => {
     dispatch(setloader(true));
     useralldetail.explist && load();
     !useralldetail.loading && dispatch(setloader(false));
-   
+
   }, [useralldetail])
- 
+
 
   const a = new Date();
 
@@ -113,11 +108,11 @@ const Home = () => {
     amt: arr.yearsum,
     day: "Last Year",
     icon: <i className="fa fa-balance-scale" aria-hidden="true"></i>,
-   }, {
+  }, {
     amt: arr.totalsum,
     day: "Total",
     icon: <i className="fa fa-university" aria-hidden="true"></i>,
-   }]
+  }]
 
   return (
     <>

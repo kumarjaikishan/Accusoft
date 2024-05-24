@@ -1,6 +1,6 @@
 .allusers.admin{
     position: relative;
-
+    margin-top: 10px;
 }
 .allusers tr td:nth-child(7) {
     padding: 0px 1px;

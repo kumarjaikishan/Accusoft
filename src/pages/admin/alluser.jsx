@@ -3,7 +3,6 @@ import { useEffect } from 'react';
 import './alluser.css';
 import swal from 'sweetalert';
 import Pagination from '../addexp/pagination';
-import { Navigate } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
 import { setloader } from '../../store/login';
 import { toast } from 'react-toastify';
@@ -12,16 +11,12 @@ import Useredit from './usereditmodal';
 
 const Alluser = () => {
     const dispatch = useDispatch();
-    const log = useSelector((state) => state.login);
     const useralldetail = useSelector((state) => state.userexplist);
-    if (!log.islogin || !useralldetail.user.isadmin) {
-        toast.warn("You are not Admin", { autoClose: 1300 })
-        return <Navigate to='/' />
-    }
+   
     const [users, setusers] = useState([]);
     useEffect(() => {
         // dispatch(setloader(true));
-        log.islogin && useralldetail.user.isadmin && fetche();
+         fetche();
     }, [])
 
     const fetche = async () => {

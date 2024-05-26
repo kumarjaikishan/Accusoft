@@ -24,6 +24,8 @@ import PasswordReset from './pages/password/password';
 import Admin_Dashboard from './pages/admin/admin_Dashboard';
 import ProtectedRoutes from './utils/protectedRoute';
 import AdminRoute from './utils/adminRoute';
+import SlowPage from './pages/serverTest/slow';
+import SlowWorkerPage from './pages/serverTest/workerSlow';
 
 function App() {
   const dispatch = useDispatch();
@@ -68,6 +70,8 @@ function App() {
             </Route>
 
 
+            <Route path="/slow" element={<SlowPage />} />
+            <Route path="/slowworker" element={<SlowWorkerPage />} />
             <Route path="/logout" element={<Logout />} />
             <Route path="/test" element={<Test />} />
             <Route path="*" element={<Errorpage />} />

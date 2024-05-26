@@ -16,9 +16,13 @@ const Sidebar = () => {
     const useralldetail = useSelector((state) => state.userexplist);
 
     const [adminSubMenuVisible, setAdminSubMenuVisible] = React.useState(false);
+    const [testSubMenuVisible, settestSubMenuVisible] = React.useState(false);
 
     const toggleAdminSubMenu = () => {
         setAdminSubMenuVisible(!adminSubMenuVisible);
+    };
+    const toggletestSubMenu = () => {
+        settestSubMenuVisible(!testSubMenuVisible);
     };
 
     const linke = [
@@ -149,6 +153,46 @@ const Sidebar = () => {
                                             <span className="name">Expenses</span>
                                         </span>
                                     </NavLink> */}
+                                   
+                                </div>
+                            )}
+                        </div>
+                    ) : null:null}
+                    {log.islogin ? useralldetail.user.isadmin ? (
+                        <div className="admin-panel">
+                            <span className={`li ${testSubMenuVisible ? 'active' : ''}`} onClick={toggletestSubMenu} >
+                                <span className="logo">
+                                    <i title={'Admin'} className="fa fa-server" aria-hidden="true"></i>
+                                </span>
+                                <span className="name">Server Test</span>
+                             {!log.narrow &&  <span><i className={testSubMenuVisible ? "fa fa-arrow-up":"fa fa-arrow-down"} aria-hidden="true"></i></span> }  
+                            </span>
+                            {testSubMenuVisible && (
+                                <div className="sub-menu">
+                                    <NavLink
+                                        className={(navData) => (navData.isActive ? 'active' : '')}
+                                        style={{ textDecoration: 'none' }}
+                                        to="/slow"
+                                    >
+                                        <span className="li" onClick={() => dispatch(header('Slow Page'))}>
+                                            <span className="logo">
+                                                <i title={'Users'} className="fa fa-snowflake-o" aria-hidden="true"></i>
+                                            </span>
+                                            <span className="name">Server Slow</span>
+                                        </span>
+                                    </NavLink>
+                                    <NavLink
+                                        className={(navData) => (navData.isActive ? 'active' : '')}
+                                        style={{ textDecoration: 'none' }}
+                                        to="/slowworker"
+                                    >
+                                        <span className="li" onClick={() => dispatch(header('Slow Worker'))}>
+                                            <span className="logo">
+                                                <i title={'Users'} className="fa fa-shower" aria-hidden="true"></i>
+                                            </span>
+                                            <span className="name">Worker Slow</span>
+                                        </span>
+                                    </NavLink>
                                    
                                 </div>
                             )}

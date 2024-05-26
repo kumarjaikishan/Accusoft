@@ -1,0 +1,18 @@
+.slow{
+    width: 100%;
+    height: calc(100vh - var(--navheight));
+    gap: 1.2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    & form{
+        width: 200px;
+        /* border: 3px solid red; */
+        height: 100px;
+        gap: 1.2rem;
+        display: flex;
+        flex-direction: column;
+    }
+}

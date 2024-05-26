@@ -8,7 +8,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
-const Useredit = ({ inp, modal, setmodal, handler }) => {
+const Useredit = ({ inp, modal, setmodal, handler,fetche }) => {
     const useralldetail = useSelector((state) => state.userexplist);
     const dispatch = useDispatch();
 
@@ -32,17 +32,19 @@ const Useredit = ({ inp, modal, setmodal, handler }) => {
             const datea = await result.json();
             // console.log(datea);
             if (result.ok) {
-                toast.success("Data updated Successfully", { autoClose: 1300 })
+                toast.success(datea.message, { autoClose: 1300 })
                 // dispatch(userdata());
+                fetche();
                 setmodal(false);
-                dispatch(setloader(false));
             } else {
-                toast.warn("error occurred", { autoClose: 1300 })
+                toast.warn(datea.message, { autoClose: 1300 })
                 console.log(datea);
             }
+            dispatch(setloader(false));
         } catch (error) {
             toast.warn("Sopmething went wrong", { autoClose: 1300 })
             console.log(error);
+            dispatch(setloader(false));
         }
 
     }

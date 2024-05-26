@@ -288,7 +288,7 @@ const Alluser = () => {
                         <Pagination currentpage={currentpage} changepageno={changepageno} totalpost={users.length} postperpage={postperpage} />
                     </span>
                 </div>
-                <Useredit handler={handler} inp={inp} setinp={setinp} modal={modal} setmodal={setmodal} />
+                <Useredit handler={handler} inp={inp} setinp={setinp} modal={modal} setmodal={setmodal} fetche={fetche} />
             </div>
         </>
     )

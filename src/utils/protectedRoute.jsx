@@ -9,7 +9,7 @@ const ProtectedRoutes = () => {
 
     useEffect(() => {
         if (!user) {
-            toast.warn('You are not Logged In protected.', { autoClose: 2700 });
+            toast.warn('You are not Logged In.', { autoClose: 2700 });
         }
     }, []);
 

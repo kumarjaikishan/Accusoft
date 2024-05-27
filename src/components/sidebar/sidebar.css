@@ -8,6 +8,7 @@
     height: 100vh;
     overflow: hidden;
     background: var(--maincolor);
+    z-index: 100;
 
     .clogo {
         position: relative;

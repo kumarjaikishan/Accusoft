@@ -189,6 +189,10 @@
                 }
 
                 .mater {
+                    &::-webkit-scrollbar {
+                        width: 1px;
+                    }
+
                     width: 95%;
                     height: 380px;
                     overflow: auto;

@@ -173,6 +173,11 @@ input {
 }
 
 @media only screen and (max-width: 600px) {
+  *{
+    &::-webkit-scrollbar {
+      width: 2px;
+    }
+  }
   .sidebar {
     width: 200px;
   }

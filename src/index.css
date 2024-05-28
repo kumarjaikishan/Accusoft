@@ -101,7 +101,7 @@ code {
 
 .main {
   position: relative;
-  height: calc(100vh - var(--navheight));
+  height: calc(100vh - var(--navheight) - var(--footerheight));
   width: calc(100% - var(--sidebarwide));
   left: var(--sidebarwide);
   top: var(--navheight);
@@ -121,9 +121,11 @@ footer{
   top: var(--navheight);
   width: calc(100% - var(--sidebarwide));
   height: var(--footerheight);
+  line-height:calc( var(--footerheight) - 1px);
   transition: 0.2s;
   padding-right: 10px;
   font-size: .8em;
+  border-top: 1px dotted #212529;
   color: #212529;
   z-index: 102;
   text-align: end;
@@ -203,7 +205,7 @@ input {
     top: var(--navheightmobile);
     width: 100%;
     left: 0px;
-    /* border: 1px solid red; */
+    /* border: 3px solid red; */
   }
 
   .main.narrow {

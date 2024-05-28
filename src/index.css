@@ -146,7 +146,7 @@ footer.narrow{
   width: calc(var(--sidebarwide) - var(--sidebarnarrow));
 }
 
-button {
+button, .splbtn {
   border: none;
   cursor: pointer;
   outline: none;

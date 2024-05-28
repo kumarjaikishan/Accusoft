@@ -5,6 +5,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { header } from '../store/login';
 import { profilepicupdtae, profiledetailupdtae } from '../store/api';
 import { toast } from 'react-toastify';
+import Button from '@mui/material/Button';
+import SentimentDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied';
 
 
 const Photo = () => {
@@ -202,6 +204,7 @@ const Photo = () => {
     const [isuploading, setisuploading] = useState(false);
     const [hide, sethide] = useState(true);
     const [editable, seteditable] = useState(true);
+    const [messagesent, setmessagesent] = useState()
     const hello = () => {
         sethide(!hide);
     }
@@ -211,6 +214,33 @@ const Photo = () => {
         setinput({
             ...input, [name]: val
         })
+    }
+
+    const resetpassword = async () => {
+        const id = toast.loading("Please wait...")
+        try {
+            // setisloadinge(true)
+            const token = localStorage.getItem("token");
+            const res = await fetch(`${useralldetail.apiadress}/passreset`, {
+                method: "Get",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                }
+            })
+            const data = await res.json();
+            // console.log(data);
+            // setisloadinge(false)
+
+            if (!res.ok) {
+                return toast.update(id, { render: data.message, type: "warn", isLoading: false, autoClose: 2100 });
+            }
+            setmessagesent(data.extramessage)
+            toast.update(id, { render: data.message, type: "success", isLoading: false, autoClose: 2100 });
+        } catch (error) {
+            toast.update(id, { render: error.message, type: "warn", isLoading: false, autoClose: 2200 });
+            // setisloadinge(false)
+            console.log(error);
+        }
     }
     return (
         <>
@@ -236,8 +266,13 @@ const Photo = () => {
                                 :<input style={{ outline: "none" }} title={editable && "Email Can't be Updated"} readOnly={true} id='email' type="text" onChange={handle} name="email" defaultValue={input.email} />
                             </div>
                             {!editable && <div>  <button onClick={updatedetails}>Update Deatils</button> </div>}
+                            <Button onClick={resetpassword} title='Feature coming soon' variant="contained" className='splbtn' startIcon={<SentimentDissatisfiedIcon />}>
+                                Send Password Reset Link
+                            </Button>
+                           {messagesent && <span style={{fontSize:'12px',color:'green'}}>{messagesent}</span> }
                             <i className="fa fa-pencil" title='Edit Details' aria-hidden="true" onClick={() => seteditable(!editable)}></i>
                         </div>
+
                     </div>
                     <div className={hide ? "lower hide" : "lower"}>
                         <input type="file" accept="image/*" onChange={hi} name="" id="dfe" />

@@ -14,7 +14,7 @@ export const userdata = createAsyncThunk("userdata", async () => {
             })
             const data = await res.json();
             //  console.timeEnd("time taken by userdata");
-            // console.log("from redux api", data);
+            console.log("from redux api", data);
             return data;
         } catch (error) {
             console.log(error);

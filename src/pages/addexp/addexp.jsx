@@ -290,7 +290,7 @@ const AddExpenses = () => {
           <i title="Add Expense" className="fa fa-plus" onClick={() => setIsModalOpen(true)} aria-hidden="true" id="addexp"></i>
         </div>
         <div className="head">
-          <span>Expense Voucher List </span>
+          <span>Expense List </span>
           <span>
             Record :{' '}
             <select name="" id="" value={postsPerPage} onChange={handlePageSizeChange}>

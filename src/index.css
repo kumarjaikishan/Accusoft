@@ -29,6 +29,8 @@ input {
   --navheightmobile: 60px;
   --sidebarwide: 210px;
   --sidebarnarrow: 75px;
+  --footerheight: 25px;
+  --footerheightmobile: 20px;
   --maincolor: #034972;
   --hovercolor: #012336;
 }
@@ -45,7 +47,7 @@ body {
   width: 100%;
   /* font-size: 18px; */
   height: 100vh;
-  overflow: hidden;
+  overflow-x: hidden;
   user-select: none;
 
 }
@@ -98,7 +100,7 @@ code {
 }
 
 .main {
-  position: absolute;
+  position: relative;
   height: calc(100vh - var(--navheight));
   width: calc(100% - var(--sidebarwide));
   left: var(--sidebarwide);
@@ -108,12 +110,30 @@ code {
   /* border: 3px solid rgb(244, 9, 48); */
   transition: 0.2s;
 }
-
-
 .main.narrow {
   width: calc(100% - var(--sidebarnarrow));
   left: var(--sidebarnarrow);
 }
+
+footer{
+  position: relative;
+  left: var(--sidebarwide); 
+  top: var(--navheight);
+  width: calc(100% - var(--sidebarwide));
+  height: var(--footerheight);
+  transition: 0.2s;
+  padding-right: 10px;
+  font-size: .8em;
+  color: #212529;
+  z-index: 102;
+  text-align: end;
+}
+
+footer.narrow{
+  left: var(--sidebarnarrow);
+  width: calc(100% - var(--sidebarnarrow));
+}
+
 
 .sidebar .link .li .logo {
   width: var(--sidebarnarrow);
@@ -174,11 +194,11 @@ input {
   }
 
   .main {
-    position: absolute;
     height: calc(100vh - var(--navheightmobile));
     top: var(--navheightmobile);
     width: 100%;
     left: 0px;
+    /* border: 1px solid red; */
   }
 
   .main.narrow {
@@ -186,4 +206,17 @@ input {
     left: 0px;
   }
 
+  footer{
+    left: 0; 
+    top: var(--navheightmobile);
+    width: 100%;
+    height: var(--footerheightmobile);
+    padding-right: 2px;
+    font-size: .6em;
+    text-align: center;
+  }
+  footer.narrow{
+    left: 0;
+    width: 100%;
+  }
 }

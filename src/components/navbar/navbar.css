@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Moon+Dance&display=swap');
 
 .nav {
-    position: absolute;
+    position: fixed;
     top: 0;
     background: #fff;
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
@@ -11,6 +11,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 0px 20px;
+    z-index: 10;
 
     .cont {
         height: 40px;

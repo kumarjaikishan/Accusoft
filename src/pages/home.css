@@ -16,10 +16,7 @@
         -5px -5px 10px #fff;
         color: #212529;
 }
-/* .home .card:hover{
-    box-shadow: inset 2px 2px 5px #a7aaaf,
-      inset -5px -5px 5px #fff;
-} */
+
 .home .card .data{
     position: relative;
     width: 60%;
@@ -71,6 +68,5 @@ position: relative;
     .home {
         grid-template-columns: repeat(1, 1fr);
         grid-gap: 1.5rem;
-        padding-bottom: 5em;
     }
 }

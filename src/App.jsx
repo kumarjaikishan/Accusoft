@@ -49,7 +49,7 @@ function App() {
       <ToastContainer closeOnClick={true} pauseOnFocusLoss={true} />
       <div className={log.loader ? 'App loader' : 'App'} >
         <Navbar />
-        <div className={log.narrow ? "main narrow" : "main"} onClick={sidebarclose}>
+        <main className={log.narrow ? "main narrow" : "main"} onClick={sidebarclose}>
           <Routes>
             <Route element={<ProtectedRoutes />}>
               <Route path="/" element={<Home />} />
@@ -77,10 +77,12 @@ function App() {
             <Route path="*" element={<Errorpage />} />
             <Route path="/login" element={<Login />} />
           </Routes>
-          {/* <div style={{ display: log.loader ? "flex" : "none" }} className="loader"><img src={loadere} alt="" /></div> */}
           {log.loader && <Preloader />}
-          <footer></footer>
-        </div>
+        </main>
+        <footer className={log.narrow ? "footer narrow" : "footer"}>
+          <p>&copy; 2024 Accusoft. All rights reserved.
+            Designed and developed by Jai kishan</p>
+        </footer>
         <Sidebar />
       </div>
     </>

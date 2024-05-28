@@ -20,7 +20,7 @@ const Navbar = () => {
  
   return (
     <>
-      <div className={log.narrow ? "nav narrow" : "nav"}>
+      <nav className={log.narrow ? "nav narrow" : "nav"}>
         <div className="cont">
           <span onClick={fun}><MenuIcon /></span>
           <span>{log.head} </span>
@@ -32,7 +32,7 @@ const Navbar = () => {
             <span>{useralldetail.user.isadmin ? "Admin":"User"}</span>
           </div>
         </div> : null}
-      </div>
+      </nav>
     </>
   )
 }

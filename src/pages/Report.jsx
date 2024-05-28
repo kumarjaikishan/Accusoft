@@ -97,10 +97,10 @@ const Report = () => {
     return (
         <>
             <div className="report">
-                {useralldetail.explist.length > 25 ? <span className='scrol'>
+                {/* {useralldetail.explist.length > 25 ? <span className='scrol'>
                     <span id="bottom"><a href="#foot"><i title='Go to Bottom' className="fa fa-arrow-down" aria-hidden="true"></i></a></span>
                     <span id="top"><a href="#tavlecontent"><i title='Go to Top' className="fa fa-arrow-up" aria-hidden="true"></i></a></span>
-                </span> : null}
+                </span> : null} */}
 
                 <div className="cont">
                     <span>

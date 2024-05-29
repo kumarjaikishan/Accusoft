@@ -76,20 +76,66 @@ const Ledpage = ({ setmodal, setdisable, disable, isledupdate, setisledupdate })
     const newledger = ledinp.val;
     const ledger_id = ledinp.ind;
 
-    const url = `${useralldetail.apiadress}/updateledger`;
-    const method = 'POST';
-    const body = { ledger_id, newledger };
-
-    const successAction = (data) => {
-      toast.success(data.message, { autoClose: 1300 });
-      setledinp(init);
-      setinsupdat(false);
-      dispatch(userdata());
-    };
-
-    const loaderAction = (isLoading) => dispatch(setloader(isLoading));
-
-    await apiWrapper(url, method, body, dispatch, successAction, loaderAction);
+    const token = localStorage.getItem("token");
+    try {
+      setdisable(true);
+      const res = await fetch(`${useralldetail.apiadress}/updateledger`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          ledger_id, newledger
+        })
+      })
+      const data = await res.json();
+      if (res.ok && res.status == 200) {
+        toast.success(data.message, { autoClose: 1300 });
+        setledinp(init);
+        setinsupdat(false);
+        dispatch(userdata());
+      } else if (res.status == 421) {
+        toast.warn(data.message, { autoClose: 2300 });
+        swal({
+          title: 'Want to merge Ledger?',
+          text: `If Merge,old Ledger Expenses transferred to ${newledger} Ledger`,
+          icon: 'warning',
+          buttons: true,
+          dangerMode: true,
+        }).then(async (merge) => {
+          if (merge) {
+            try {
+              const res = await fetch(`${useralldetail.apiadress}/mergeledger`, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  "Authorization": `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                  ledger_id, newledger
+                })
+              })
+              const datae = await res.json();
+              if(!res.ok){
+               return toast.warn(datae.message, { autoClose: 2300 });
+              }else{
+                dispatch(userdata());
+                toast.success(datae.message, { autoClose: 1300 });
+              }
+            } catch (error) {
+              console.log(error);
+            }
+          }
+        });
+      } else {
+        toast.warn(data.message, { autoClose: 2300 });
+      }
+      setdisable(false)
+    } catch (error) {
+      console.log(error);
+      setdisable(false)
+    }
   }
 
   const back = () => {

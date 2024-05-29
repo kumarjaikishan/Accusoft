@@ -72,7 +72,7 @@ const AddExpenses = () => {
 
   const capitalize = (value) => {
     const words = value.split(' ');
-    const capitalizedWords = words.map((word) => word.charAt(0).toUpperCase() + word.slice(1));
+    const capitalizedWords = words.map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase());
     return capitalizedWords.join(' ');
   };
 

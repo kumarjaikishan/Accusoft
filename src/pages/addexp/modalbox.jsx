@@ -29,7 +29,7 @@ const Modalbox = ({ setisledupdate, modal, disable, setdisable, init, handler, i
         const url = `${useralldetail.apiadress}/updateexp`;
         const method = 'POST';
         const body = {
-            _id, ledger, date, amount, narration
+            _id, ledger, date, amount,   narration: capitalize(narration)
         };
         const successAction = (data) => {
             toast.success(data.message, { autoClose: 1300 });
@@ -46,6 +46,11 @@ const Modalbox = ({ setisledupdate, modal, disable, setdisable, init, handler, i
     }
     // for updating data ends here
 
+    const capitalize = (value) => {
+        const words = value.split(' ');
+        const capitalizedWords = words.map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase());
+        return capitalizedWords.join(' ');
+      };
 
     const jkh = () => {
         setisledupdate(true);

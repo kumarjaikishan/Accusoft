@@ -57,7 +57,6 @@ function App() {
               <Route path="/datanalysis" element={<Datanalysis />} />
               <Route path="/report" element={<Report />} />
               <Route path="/photo" element={<Photo />} />
-              <Route path="/resetpassword/:token" element={<PasswordReset />} />
               <Route path="/print" element={<Officeexp />} />
             </Route>
 
@@ -70,6 +69,7 @@ function App() {
             </Route>
 
 
+            <Route path="/resetpassword/:token" element={<PasswordReset />} />
             <Route path="/slow" element={<SlowPage />} />
             <Route path="/slowworker" element={<SlowWorkerPage />} />
             <Route path="/logout" element={<Logout />} />

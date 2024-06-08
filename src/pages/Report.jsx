@@ -38,7 +38,7 @@ const Report = () => {
     var dateIn2Digit = String(date.getDate()).padStart(2, '0');
 
     const today = date.getFullYear() + "-" + monthIn2Digit + "-" + dateIn2Digit;
-    const prevMonth = (lastday().getFullYear() + "-" + String(lastday().getMonth() ).padStart(2, '0') + "-" + String(lastday().getDate()).padStart(2, '0'));
+    const prevMonth = (lastday().getFullYear() + "-" + String(lastday().getMonth()).padStart(2, '0') + "-" + String(lastday().getDate()).padStart(2, '0'));
     const [inp, setinp] = useState({
         from: prevMonth,
         to: today,
@@ -88,6 +88,13 @@ const Report = () => {
             window.print()
         }, 1);
     }
+    const formatDate = (date) => {
+        let daten = new Date(date);
+
+        var dateIn2Digit2 = String(daten.getDate()).padStart(2, '0');
+        let formatted = dateIn2Digit2 + "-" + daten.toLocaleString('default', { month: 'short' }) + "-" + daten.getFullYear().toString().substr(-2);
+        return formatted;
+    }
 
     useEffect(() => {
         search();
@@ -118,7 +125,7 @@ const Report = () => {
                                 })}
                             </select>
                         </span>
-                       
+
                         {issearch ? <button onClick={clearsearch}>Clear</button> : null}
                     </span>
                     <span>
@@ -134,7 +141,7 @@ const Report = () => {
                     </span>
                 </div>
                 <div className="table" >
-                    <h2>Accusoft - {useralldetail.user.name} from {inp.from} to {inp.to} </h2>
+                    <h2>Accusoft - {useralldetail.user.name} from {formatDate(inp.from)} to {formatDate(inp.to)} </h2>
                     <table id='tavlecontent'>
                         <thead id='table'>
                             <tr>

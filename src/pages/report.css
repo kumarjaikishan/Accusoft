@@ -202,6 +202,9 @@
 }
 
 @media print {
+    .footer{
+        display: none;
+    }
     .main {
         position: absolute;
         height: auto;
@@ -220,6 +223,7 @@
 
     .report {
         -webkit-print-color-adjust: exact;
+
 
         &::before {
             content: '';

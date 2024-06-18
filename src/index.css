@@ -13,6 +13,7 @@
 
   &::-webkit-scrollbar-track {
     background-color: white;
+    background-color: var(--background);
   }
 
   &::-webkit-scrollbar-thumb {
@@ -20,19 +21,36 @@
   }
 }
 
-input {
-  color: rgb(40, 37, 37);
-}
 
-:root {
+:root{
   --navheight: 70px;
   --navheightmobile: 60px;
   --sidebarwide: 210px;
   --sidebarnarrow: 75px;
   --footerheight: 25px;
   --footerheightmobile: 20px;
+}
+
+.light-theme {
   --maincolor: #0a3d62;
   --hovercolor: #012336;
+  --background: #f0f0f0;
+  --color:#212529;
+  --sbc: #f0f0f0;
+  --asbc: #0a3d62;
+  --contrast: #151516;
+}
+.dark-theme {
+  --maincolor: #121212;
+  --sbc: #d1d1d1;
+  --asbc: #d1d1d1;
+  --hovercolor: #323232;
+  --background: #222;
+  --color:#d1d1d1 ;
+  --contrast: #d1d1d1;
+}
+input {
+  color: #212529 !important;
 }
 
 body {
@@ -42,8 +60,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: #f0f0f0;
   position: relative;
+  color: #e0e0e0;
   width: 100%;
   /* font-size: 18px; */
   height: 100vh;
@@ -71,13 +89,15 @@ code {
   z-index: 50;
 }
 .App.loader .main{
-  /* border: 3px solid red; */
+  background: var(--darkbackground);
   overflow: hidden;
 }
 
 .nav {
   height: var(--navheight);
   left: var(--sidebarwide);
+  background: var(--background);
+  color: var(--contrast);
   width: calc(100% - var(--sidebarwide));
 }
 
@@ -88,6 +108,7 @@ code {
 }
 
 .sidebar {
+  background: var(--maincolor);
   width: var(--sidebarwide);
 }
 
@@ -107,8 +128,8 @@ code {
   top: var(--navheight);
   overflow-x: hidden;
   overflow-y: auto;
-  /* border: 3px solid rgb(244, 9, 48); */
   transition: 0.2s;
+  background: var(--background);
 }
 .main.narrow {
   width: calc(100% - var(--sidebarnarrow));
@@ -126,7 +147,8 @@ footer{
   padding-right: 10px;
   font-size: .8em;
   border-top: 1px dotted #212529;
-  color: #212529;
+  background: var(--background);
+  color: var(--color);
   z-index: 102;
   text-align: end;
 }
@@ -171,7 +193,6 @@ button:hover {
 
 input {
   text-align: start !important;
-  color: rgb(27, 25, 25) !important;
 }
 
 @media only screen and (max-width: 600px) {

@@ -307,7 +307,7 @@ const AddExpenses = () => {
           </span>
         </div>
         <div className="table">
-          <table layout cellSpacing="15">
+          <table cellSpacing="15">
             <thead>
               <tr>
                 <th>S.no</th>
@@ -328,7 +328,7 @@ const AddExpenses = () => {
               </tr>
             </thead>
             <AnimatePresence>
-              <motion.tbody layout id="tablecontent">
+              <tbody  id="tablecontent">
                 {(sortedList ? sortedList : currentPosts)
                   .filter((item) => {
                     return (
@@ -340,8 +340,8 @@ const AddExpenses = () => {
                   })
                   .map((expense, index) => {
                     return (
-                      <motion.tr
-                        layout key={index}>
+                      <tr
+                         key={index}>
                         <td>{firstPostIndex + index + 1}</td>
                         <td className='caps'>{expense.ledger.ledger}</td>
                         <td>{expense.amount}</td>
@@ -354,10 +354,10 @@ const AddExpenses = () => {
                         <td>
                           <input type="checkbox" onClick={highlight} id={expense._id} />
                         </td>
-                      </motion.tr>
+                      </tr>
                     );
                   })}
-              </motion.tbody>
+              </tbody>
             </AnimatePresence>
             <tfoot>
               <tr id="foot">

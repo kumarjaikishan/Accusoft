@@ -7,6 +7,7 @@
     overflow: auto;
     position: relative;
     padding: 0 1rem;
+    color: var(--color);
 
 
     .caps {
@@ -101,6 +102,7 @@
             th,
             td {
                 border: 1px solid rgb(190, 185, 185);
+                border: 1px solid rgb(95, 94, 94);
                 text-align: center;
             }
 
@@ -110,8 +112,8 @@
                 padding: 0 2px;
             }
 
-            thead th{
-               
+            thead th {
+
 
                 .fa {
                     display: inline-block;
@@ -170,7 +172,6 @@
                 td:nth-child(6) {
 
                     i {
-                        /* cursor: pointer; */
                         width: 25px;
                         margin: 0 auto;
                     }
@@ -195,6 +196,7 @@
 
                 &.fa-pencil-square-o {
                     color: var(--maincolor);
+                    color: var(--contrast);
                 }
 
                 &.fa-trash-o,
@@ -226,8 +228,8 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        background: #dbe1e6;
-        box-shadow: 0 0 5px #fff, 5px 5px 10px #a7aaaf, -5px -5px 10px #fff;
+        background: var(--background);
+        border:1px solid var(--color);
 
         .pages {
             display: inline-block;

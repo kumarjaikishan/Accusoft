@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import './expprint.css';
-import sig from '../../img/JAISIGN.png'
-import img from '../../img/good-nature-logo.png'
+// import sig from '../../img/JAISIGN.png'
+// import img from '../../img/good-nature-logo.png'
 
 const Expprint = ({led,exp,isupdate,setisupdate,inp,setinp,}) => {
         
@@ -78,7 +78,7 @@ const Expprint = ({led,exp,isupdate,setisupdate,inp,setinp,}) => {
             <div className="box">
                 <div className="header">
                     <div className="logo">
-                        <img src={img} alt="" />
+                        {/* <img src={img} alt="" /> */}
                         <span>"हमारा सपना सबका हो घर अपना "</span>
                     </div>
                     <div className="heading">
@@ -128,7 +128,7 @@ const Expprint = ({led,exp,isupdate,setisupdate,inp,setinp,}) => {
                     <div><u>Approver By</u></div>
                     <div>
                         <span><u>Accountant</u></span>
-                        <img src={sig} alt="" />
+                        {/* <img src={sig} alt="" /> */}
                     </div>
                     <div><u>Receiver Signature</u></div>
                 </div>

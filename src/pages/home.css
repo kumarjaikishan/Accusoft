@@ -1,11 +1,12 @@
-.home{
+.home {
     max-width: 100%;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     grid-gap: 2.5rem;
     padding: 2em;
 }
-.home .card{
+
+.home .card {
     height: 120px;
     display: flex;
     overflow: hidden;
@@ -14,16 +15,23 @@
     box-shadow: 0 0 5px #fff,
         5px 5px 10px #a7aaaf,
         -5px -5px 10px #fff;
-        color: #212529;
+    color: var(--color);
 }
 
-.home .card .data{
+.dark-theme .home .card {
+    background: var(--background);
+    box-shadow: inset -2px -2px 5px rgba(0, 0, 0, 0.5),
+        inset 3px 3px 5px rgba(255, 255, 255, 0.07);
+}
+
+.home .card .data {
     position: relative;
     width: 60%;
     /* border: 1px solid red; */
     height: 100%;
 }
-.home .card .data .amt{
+
+.home .card .data .amt {
     position: relative;
     width: 100%;
     /* border: 1px solid red; */
@@ -31,33 +39,38 @@
     font-size: 1.8em;
     font-weight: 700;
     padding-left: 10px;
-    line-height:60px;
+    line-height: 60px;
 }
-.home .card .data .day{
+
+.home .card .data .day {
     position: relative;
     width: 100%;
     /* border: 1px solid red; */
     height: 50%;
     padding-left: 10px;
 }
-.home .card .icon{
-width: 40%;
-height: 100%;
-display: flex;
-justify-content: center;
-align-items: center;
-/* border: 1px solid rgb(12, 61, 238); */
-position: relative;
+
+.home .card .icon {
+    width: 40%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* border: 1px solid rgb(12, 61, 238); */
+    position: relative;
 }
-.home .card .icon i{
+
+.home .card .icon i {
     font-size: 3.7em;
     color: rgb(83, 80, 80);
 }
+
 @media only screen and (max-width:1200px) {
     .home {
         grid-template-columns: repeat(3, 1fr);
     }
 }
+
 @media only screen and (max-width:960px) {
     .home {
         grid-template-columns: repeat(2, 1fr);

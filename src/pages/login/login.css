@@ -16,6 +16,12 @@
     box-shadow: 0 0 10px #fff, 5px 5px 10px #a7aaaf, -5px -5px 10px #fff;
     overflow: hidden;
 }
+.dark-theme .login .box {
+    /* background: var(--background); */
+    background: #c6c4c4;
+    color: #212529;
+    box-shadow: none;
+}
 .login .logo, .login .want{
     width: 100%;
     position: relative;

@@ -21,6 +21,7 @@
     text-align: center;
     letter-spacing: 2px;
     color: rgb(71, 69, 69);
+    color: var(--contrast);
     font-size: 1.5rem;
   }
 }
@@ -69,7 +70,7 @@
     text-align: center;
     line-height: 40px;
     letter-spacing: 1px;
-    /* background: linear-gradient(45deg, #00cec9, #0984e3); */
+    background: linear-gradient(45deg, #00cec9, #0984e3);
     background: var(--maincolor);
     color: white;
     transition: 0.2s;
@@ -124,7 +125,7 @@
 .profile .profile-bio i {
   display: inline-block;
   position: absolute;
-  top: 5px;
+  top: -25px;
   left: 86%;
   box-shadow: 2px 3px 8px rgba(0, 0, 0, 0.7);
   width: 40px;
@@ -160,8 +161,7 @@
   /* border: 1px solid red; */
   border: none;
   /* outline: none; */
-  background: transparent;
-  color: rgb(63, 58, 58);
+  background: #f0f0f0;
   letter-spacing: 1px;
   padding: 5px;
   font-weight: 600;

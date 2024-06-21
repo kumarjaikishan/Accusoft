@@ -78,6 +78,7 @@ function App() {
             <Route path="/login" element={<Login />} />
           </Routes>
           {log.loader && <Preloader />}
+          {/* <Preloader /> */}
         </main>
         <footer className={log.narrow ? "footer narrow" : "footer"}>
           <p>&copy; 2024 Accusoft. All rights reserved.

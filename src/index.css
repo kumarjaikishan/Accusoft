@@ -22,7 +22,7 @@
 }
 
 
-:root{
+:root {
   --navheight: 70px;
   --navheightmobile: 60px;
   --sidebarwide: 210px;
@@ -35,20 +35,22 @@
   --maincolor: #0a3d62;
   --hovercolor: #012336;
   --background: #f0f0f0;
-  --color:#212529;
+  --color: #212529;
   --sbc: #f0f0f0;
   --asbc: #0a3d62;
   --contrast: #151516;
 }
+
 .dark-theme {
   --maincolor: #121212;
   --sbc: #d1d1d1;
   --asbc: #d1d1d1;
   --hovercolor: #323232;
   --background: #222;
-  --color:#d1d1d1 ;
+  --color: #d1d1d1;
   --contrast: #d1d1d1;
 }
+
 input {
   color: #212529 !important;
 }
@@ -82,18 +84,15 @@ code {
   width: 100%;
   height: 100%;
   background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(5px);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 50;
 }
-.dark-theme .preloder{
-  background: rgba(0,0,0,0.4);
-}
-.App.loader .main{
-  background: var(--darkbackground);
-  overflow: hidden;
+
+.dark-theme .preloder {
+  background: rgba(0, 0, 0, 0.7);
 }
 
 .nav {
@@ -134,18 +133,24 @@ code {
   transition: 0.2s;
   background: var(--background);
 }
+
 .main.narrow {
   width: calc(100% - var(--sidebarnarrow));
   left: var(--sidebarnarrow);
 }
 
-footer{
+.App.loader .main {
+  overflow: hidden;
+  /* border: 2px solid red; */
+}
+
+footer {
   position: relative;
-  left: var(--sidebarwide); 
+  left: var(--sidebarwide);
   top: var(--navheight);
   width: calc(100% - var(--sidebarwide));
   height: var(--footerheight);
-  line-height:calc( var(--footerheight) - 1px);
+  line-height: calc(var(--footerheight) - 1px);
   transition: 0.2s;
   padding-right: 10px;
   font-size: .8em;
@@ -156,7 +161,7 @@ footer{
   text-align: end;
 }
 
-footer.narrow{
+footer.narrow {
   left: var(--sidebarnarrow);
   width: calc(100% - var(--sidebarnarrow));
 }
@@ -171,7 +176,8 @@ footer.narrow{
   width: calc(var(--sidebarwide) - var(--sidebarnarrow));
 }
 
-button, .splbtn {
+button,
+.splbtn {
   border: none;
   cursor: pointer;
   outline: none;
@@ -199,11 +205,12 @@ input {
 }
 
 @media only screen and (max-width: 600px) {
-  *{
+  * {
     &::-webkit-scrollbar {
       width: 2px;
     }
   }
+
   .sidebar {
     width: 200px;
   }
@@ -237,8 +244,8 @@ input {
     left: 0px;
   }
 
-  footer{
-    left: 0; 
+  footer {
+    left: 0;
     top: var(--navheightmobile);
     width: 100%;
     height: var(--footerheightmobile);
@@ -246,7 +253,8 @@ input {
     font-size: .6em;
     text-align: center;
   }
-  footer.narrow{
+
+  footer.narrow {
     left: 0;
     width: 100%;
   }

@@ -3,22 +3,22 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 export const userdata = createAsyncThunk("userdata", async () => {
     const token = localStorage.getItem("token");
     // console.time("time taken by userdata");
-        try {
-            const res = await fetch(`/api/userdata`, {
+    try {
+        const res = await fetch(`/api/userdata`, {
             // const res = await fetch(`https://backend-exp-man.vercel.app/api/userdata`, {
-                // const res = await fetch(`http://localhost:5000/api/userdata`, {
-                method: "GET",
-                headers: {
-                    "Authorization": `Bearer ${token}`,
-                }
-            })
-            const data = await res.json();
-            //  console.timeEnd("time taken by userdata");
-            // console.log("from redux api", data);
-            return data;
-        } catch (error) {
-            console.log(error);
-        }
+            // const res = await fetch(`http://localhost:5000/api/userdata`, {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+            }
+        })
+        const data = await res.json();
+        //  console.timeEnd("time taken by userdata");
+        // console.log("from redux api", data);
+        return data;
+    } catch (error) {
+        console.log(error);
+    }
 })
 
 

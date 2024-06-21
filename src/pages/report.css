@@ -4,7 +4,7 @@
     height: 100%;
     overflow: hidden;
 
-    .cont {
+   & .cont {
         width: 100%;
         /* border: 1px solid blue; */
         display: flex;
@@ -106,7 +106,7 @@
     overflow: auto;
     position: relative;
 
-    h2{
+  &  h2{
         text-align: center;
         text-transform: capitalize;
         color: var(--maincolor);
@@ -246,18 +246,18 @@
             opacity: 0.4;
         }
 
-        .table {
+       & .table {
             overflow: visible;
 
-            h2{
+          &  h2{
                 display: block;
             }
 
-            table{
+          &  table{
                 
-                tbody {
+               & tbody {
 
-                    tr {
+                 &   tr {
                         height: 25px;
                     }
                 }

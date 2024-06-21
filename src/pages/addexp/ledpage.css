@@ -1,6 +1,6 @@
 .exp {
 
-    .ledpage {
+   & .ledpage {
         position: absolute;
         top: 0;
         left: 0;
@@ -26,7 +26,7 @@
             flex-direction: column;
             align-items: center;
 
-            h2 {
+          &  h2 {
                 width: 100%;
                 text-align: center;
                 margin-bottom: 10px;
@@ -37,7 +37,7 @@
                 background: var(--maincolor);
             }
 
-            .back {
+          &  .back {
                 position: absolute;
                 top: 25px;
                 transform: translate(-50%, -50%);
@@ -58,7 +58,7 @@
                 }
             }
 
-            .cont {
+          &  .cont {
                 display: flex;
                 width: 95%;
                 height: 60px;
@@ -72,7 +72,7 @@
                     width: 70%;
                 }
 
-                button {
+               & button {
                     width: 90px;
                     border: none;
                     cursor: pointer;
@@ -91,7 +91,7 @@
                 }
             }
 
-            .mater {
+           & .mater {
                 width: 95%;
                 height: 270px;
                 border-radius: 20px;
@@ -111,7 +111,7 @@
                     background-color: var(--maincolor);
                 }
 
-                table {
+              &  table {
                     width: 100%;
                     height: 100%;
                     padding: 5px 2px;
@@ -156,19 +156,19 @@
 
 @media only screen and (max-width: 600px) {
     .exp {
-        .ledpage {
+       & .ledpage {
 
-            .box {
+           & .box {
                 top: 35%;
                 left: 50%;
                 width: 95vw;
                 height: 520px;
 
-                h2 {
+               & h2 {
                     font-size: 20PX;
                 }
 
-                .back {
+               & .back {
                     padding: 3px 8px;
                     font-size: 0.8em;
 
@@ -177,9 +177,9 @@
                     }
                 }
 
-                .cont {
+               & .cont {
 
-                    button {
+                  &  button {
                         width: 70px;
                         padding: 5px 8px;
                         color: white;
@@ -187,7 +187,7 @@
                     }
                 }
 
-                .mater {
+               & .mater {
                     &::-webkit-scrollbar {
                         width: 1px;
                     }

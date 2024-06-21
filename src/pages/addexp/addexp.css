@@ -10,11 +10,11 @@
     color: var(--color);
 
 
-    .caps {
+    &.caps {
         text-transform: capitalize !important;
     }
 
-    .add {
+   & .add {
         position: relative;
         top: 0;
         left: 0;
@@ -27,7 +27,7 @@
         margin-top: 5px;
         margin-bottom: 2px;
 
-        i {
+      &  i {
             display: inline-block;
             /* border: 1px solid red; */
             width: 50px;
@@ -47,7 +47,7 @@
         }
     }
 
-    .head {
+   & .head {
         border-top-left-radius: 11px;
         border-top-right-radius: 11px;
         position: relative;
@@ -59,7 +59,7 @@
         align-items: center;
         background: var(--maincolor);
 
-        span {
+      &  span {
             /* border: 1px solid red; */
             color: rgb(39, 34, 34);
             color: white;
@@ -85,36 +85,36 @@
         }
     }
 
-    .mater td {
+   & .mater td {
         text-transform: capitalize;
     }
 
-    .table {
+   & .table {
         width: 100%;
         position: relative;
         /* border: 1px solid red; */
 
-        table {
+       & table {
             position: relative;
             width: 100%;
             border-collapse: collapse;
 
-            th,
+          &  th,
             td {
                 border: 1px solid rgb(190, 185, 185);
                 text-align: center;
             }
 
-            thead th,
+          &  thead th,
             #foot th {
                 height: 30px;
                 padding: 0 2px;
             }
 
-            thead th {
+          &  thead th {
 
 
-                .fa {
+              &  .fa {
                     display: inline-block;
                     width: 20px;
                     height: 20px;
@@ -126,11 +126,11 @@
                 }
             }
 
-            th.active {
+          &  th.active {
                 color: rgb(54, 19, 250);
             }
 
-            thead,
+          &  thead,
             #foot {
                 position: sticky;
                 background: var(--maincolor);
@@ -138,18 +138,18 @@
                 box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.3);
             }
 
-            #foot {
+          &  #foot {
                 bottom: 5px;
             }
 
-            thead {
+           & thead {
 
                 th:nth-child(1),
                 th:nth-child(7) {
                     width: 47px;
                 }
 
-                th:nth-child(5) {
+             &   th:nth-child(5) {
                     width: 110px;
                 }
 
@@ -166,7 +166,7 @@
                 }
             }
 
-            tbody {
+          &  tbody {
 
                 td:nth-child(6) {
 
@@ -177,13 +177,13 @@
                 }
             }
 
-            td {
+          &  td {
                 font-size: 0.9em;
                 height: 25px;
                 line-height: 25px;
             }
 
-            .fa {
+          &  .fa {
                 font-size: 1.2em;
                 transition: 0.1s;
                 width: max-content;
@@ -217,7 +217,7 @@
         }
     }
 
-    .foot {
+   & .foot {
         margin-top: 10px;
         border-radius: 5px;
         width: 100%;
@@ -230,7 +230,7 @@
         background: var(--background);
         border:1px solid var(--color);
 
-        .pages {
+       & .pages {
             display: inline-block;
             margin: 0 5px;
             width: 35px;
@@ -253,7 +253,7 @@
             }
         }
 
-        i {
+       & i {
             background: none;
             border: none;
             outline: none;
@@ -275,7 +275,7 @@
             }
         }
 
-        tr td:nth-child(2) {
+      &  tr td:nth-child(2) {
             text-transform: capitalize;
         }
     }
@@ -284,7 +284,7 @@
         padding: 0 15px;
         padding-bottom: 30px;
 
-        .add {
+       & .add {
             height: 40px;
 
             i {
@@ -295,7 +295,7 @@
             }
         }
 
-        .head {
+       & .head {
             width: 100%;
             height: 55px;
             font-size: 14px;
@@ -316,9 +316,9 @@
         }
 
 
-        .table {
+       & .table {
 
-            table {
+          &  table {
                 #tablecontent {
                     font-size: 0.6em;
                 }
@@ -327,7 +327,7 @@
                     font-size: 12px;
                 }
 
-                thead {
+              &  thead {
 
                     th:nth-child(1),
                     th:nth-child(7) {
@@ -351,7 +351,7 @@
                     }
                 }
 
-                tbody {
+              &  tbody {
 
                     td:nth-child(6) {
 
@@ -369,7 +369,7 @@
             }
         }
 
-        .foot {
+       & .foot {
             height: 60px;
             padding: 0px 5px;
             display: flex;

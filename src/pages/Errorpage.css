@@ -14,8 +14,7 @@
     justify-content: center;
     flex-direction: column;
 
-    &
-     h1 {
+    & h1 {
         font-size: 12rem;
         color: #333;
         font-weight: 800;

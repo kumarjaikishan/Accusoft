@@ -58,7 +58,7 @@
     display: none;
   }
 
-  label {
+ & label {
     height: 40px;
     width: 130px;
     border-radius: 6px;
@@ -168,15 +168,17 @@
   font-size: 1.02rem;
   text-align: left;
 }
-.profile #wrapper{
+
+.profile #wrapper {
   overflow-x: auto;
 }
 
 @media only screen and (max-width: 600px) {
-  .profile  button{
+  .profile button {
     padding: 2px 8px;
     font-size: 0.9rem;
   }
+
   .profile {
     width: 400px;
     /* border: 2px solid red; */
@@ -230,6 +232,7 @@
     padding: 2px;
     font-size: 0.8rem;
   }
+
   .profile .lower label {
     height: 30px;
     line-height: 30px;

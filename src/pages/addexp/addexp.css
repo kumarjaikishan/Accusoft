@@ -1,9 +1,9 @@
 .exp,
 .adminexp,
 .allusers.admin {
-    /* border: 1px solid blue; */
+    /* border: 3px solid blue; */
     width: 100%;
-    min-height: calc(100vh - var(--navheight));
+    min-height: 100%;
     overflow: auto;
     position: relative;
     padding: 0 1rem;
@@ -400,4 +400,9 @@
             }
         }
     }
+}
+.exp.ismodal{
+    height: calc(100vh - (var(--navheight) + var(--footerheight)));
+    /* border: 2px solid blue; */
+    overflow: hidden;
 }

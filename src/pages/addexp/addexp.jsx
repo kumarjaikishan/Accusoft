@@ -18,7 +18,7 @@ const AddExpenses = () => {
   const [searchInput, setSearchInput] = useState('');
   const [finalsearch, setfinalserach] = useState('');
 
- 
+
   useEffect(() => {
     dispatch(setloader(false))
   }, [])
@@ -285,7 +285,7 @@ const AddExpenses = () => {
 
   return (
     <>
-      <div className="exp">
+      <div className={isModalOpen || isLedgerUpdate ? 'exp ismodal' : 'exp'}>
         <div className="add">
           <i title="Add Expense" className="fa fa-plus" onClick={() => setIsModalOpen(true)} aria-hidden="true" id="addexp"></i>
         </div>
@@ -328,7 +328,7 @@ const AddExpenses = () => {
               </tr>
             </thead>
             <AnimatePresence>
-              <tbody  id="tablecontent">
+              <tbody id="tablecontent">
                 {(sortedList ? sortedList : currentPosts)
                   .filter((item) => {
                     return (
@@ -341,7 +341,7 @@ const AddExpenses = () => {
                   .map((expense, index) => {
                     return (
                       <tr
-                         key={index}>
+                        key={index}>
                         <td>{firstPostIndex + index + 1}</td>
                         <td className='caps'>{expense.ledger.ledger}</td>
                         <td>{expense.amount}</td>

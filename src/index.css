@@ -166,6 +166,9 @@ footer.narrow {
   width: calc(100% - var(--sidebarnarrow));
 }
 
+.caps{
+  text-transform: capitalize;
+}
 
 .sidebar .link .li .logo {
   width: var(--sidebarnarrow);

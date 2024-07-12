@@ -10,11 +10,14 @@ const Login = () => {
     const fun = (val) => {
         setlog(val);
     }
-  
- 
+
+
     return (
         <>
             <div className="login">
+            <div className="img">
+                <img src="https://res.cloudinary.com/dusxlxlvm/image/upload/v1720778631/accusoft/assets/calc_wb_cwg7ig.svg" alt="" />
+            </div>
                 <div className="box">
                     <div className="logo">
                         <GrassIcon className='company' />
@@ -24,8 +27,8 @@ const Login = () => {
                         <span className={log ? null : "active"} onClick={() => fun(false)}>Register</span>
                     </div>
                     <div className="both" style={{ transform: log ? "translateX(0%)" : "translateX(-50%)" }}>
-                    <Signin/>
-                        <Signup setlog={setlog}/>
+                        <Signin />
+                        <Signup setlog={setlog} />
                     </div>
                 </div>
             </div>

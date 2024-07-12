@@ -53,8 +53,8 @@ const Navbar = () => {
         <span className='mode'>
           <input onChange={handle} id='checkbox' name='checkbox' checked={darkmode} type="checkbox" className="checkbox" />
           {darkmode == true ?
-            <label htmlFor="checkbox"> <BedtimeIcon /> Light </label> :
-            <label htmlFor="checkbox"> <LightModeIcon /> Dark </label>}
+            <label htmlFor="checkbox"> <LightModeIcon /> Light </label> :
+            <label htmlFor="checkbox"> <BedtimeIcon /> Dark </label>}
         </span>
 
         {log.islogin ? <div className="info">

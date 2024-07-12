@@ -4,6 +4,8 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { NavLink } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { setnarrow } from '../../store/login';
+import LightModeIcon from '@mui/icons-material/LightMode';
+import BedtimeIcon from '@mui/icons-material/Bedtime';
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -20,10 +22,10 @@ const Navbar = () => {
   }
   useEffect(() => {
     let modee = localStorage.getItem('mode');
-    if (modee=='true') {
+    if (modee == 'true') {
       setdarkmode(true)
       document.body.className = 'dark-theme';
-    }else{
+    } else {
       setdarkmode(false)
       document.body.className = 'light-theme';
     }
@@ -49,7 +51,10 @@ const Navbar = () => {
           <span>{log.head} </span>
         </div>
         <span className='mode'>
-          Light <input onChange={handle} checked={darkmode} type="checkbox" className="checkbox" /> Dark 
+          <input onChange={handle} id='checkbox' name='checkbox' checked={darkmode} type="checkbox" className="checkbox" />
+          {darkmode == true ?
+            <label htmlFor="checkbox"> <BedtimeIcon /> Light </label> :
+            <label htmlFor="checkbox"> <LightModeIcon /> Dark </label>}
         </span>
 
         {log.islogin ? <div className="info">

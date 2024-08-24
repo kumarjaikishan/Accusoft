@@ -4,9 +4,9 @@ import { toast } from 'react-toastify';
 export const userdata = createAsyncThunk("userdata", async () => {
     const token = localStorage.getItem("token");
     try {
-        // const res = await fetch(`/api/userdata`, {
+        const res = await fetch(`/api/userdata`, {
         // const res = await fetch(`https://backend-exp-man.vercel.app/api/userdata`, {
-        const res = await fetch(`http://localhost:5000/api/userdata`, {
+        // const res = await fetch(`http://localhost:5000/api/userdata`, {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${token}`,
@@ -34,9 +34,9 @@ const userexplist = createSlice({
         loading: false,
         error: null,
         profilepic: "",
-        // apiadress: "/api",
+        apiadress: "/api",
         // apiadress: "https://backend-exp-man.vercel.app/api",
-        apiadress: "http://localhost:5000/api",
+        // apiadress: "http://localhost:5000/api",
     },
     reducers: {
         userlogout(state, action) {

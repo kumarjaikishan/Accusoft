@@ -230,7 +230,6 @@
     .report {
         -webkit-print-color-adjust: exact;
 
-
         &::before {
             content: '';
             position: absolute;

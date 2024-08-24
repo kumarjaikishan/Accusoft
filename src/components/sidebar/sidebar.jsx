@@ -106,7 +106,7 @@ const Sidebar = () => {
                             );
                         })
                         : null}
-                    {log.islogin ? useralldetail.user.isadmin ? (
+                    {log.islogin ? useralldetail?.user?.isadmin ? (
                         <div className="admin-panel">
                             <span className={`li ${adminSubMenuVisible ? 'active' : ''}`} onClick={toggleAdminSubMenu} >
                                 <span className="logo">
@@ -158,7 +158,7 @@ const Sidebar = () => {
                             )}
                         </div>
                     ) : null:null}
-                    {log.islogin ? useralldetail.user.isadmin ? (
+                    {log.islogin ? useralldetail.user?.isadmin ? (
                         <div className="admin-panel">
                             <span className={`li ${testSubMenuVisible ? 'active' : ''}`} onClick={toggletestSubMenu} >
                                 <span className="logo">

@@ -11,9 +11,11 @@ import dayjs from 'dayjs';
 import { toast } from 'react-toastify';
 import apiWrapper from './apiWrapper';
 import { AnimatePresence, motion } from 'framer-motion';
+import { useNavigate } from "react-router-dom";
 
 const AddExpenses = () => {
   const dispatch = useDispatch();
+  let navigate = useNavigate();
   const userAllDetails = useSelector((state) => state.userexplist);
   const [searchInput, setSearchInput] = useState('');
   const [finalsearch, setfinalserach] = useState('');
@@ -114,7 +116,7 @@ const AddExpenses = () => {
 
     const loaderAction = (isLoading) => dispatch(setloader(isLoading));
 
-    await apiWrapper(url, method, body, dispatch, successAction, loaderAction);
+    await apiWrapper(url, method, body, dispatch, successAction, loaderAction,navigate);
   };
   // adding new expense ends here
 
@@ -181,7 +183,7 @@ const AddExpenses = () => {
 
         const loaderAction = (isLoading) => dispatch(setloader(isLoading));
 
-        await apiWrapper(url, method, body, dispatch, successAction, loaderAction);
+        await apiWrapper(url, method, body, dispatch, successAction, loaderAction,navigate);
       } else {
         swal('Your data is safe!');
       }
@@ -237,7 +239,7 @@ const AddExpenses = () => {
   let lastPostIndex = currentPage * postsPerPage;
   const firstPostIndex = lastPostIndex - postsPerPage;
 
-  const currentPosts = userAllDetails.explist.slice(firstPostIndex, lastPostIndex);
+  const currentPosts = userAllDetails.explist?.slice(firstPostIndex, lastPostIndex);
   const [sortedList, setSortedList] = useState();
   const [sortOrder, setSortOrder] = useState('ASC');
 
@@ -329,8 +331,7 @@ const AddExpenses = () => {
             </thead>
             <AnimatePresence>
               <tbody id="tablecontent">
-                {(sortedList ? sortedList : currentPosts)
-                  .filter((item) => {
+                {(sortedList ? sortedList : currentPosts)?.filter((item) => {
                     return (
                       finalsearch === '' ||
                       item.narration.toLowerCase().includes(finalsearch) ||
@@ -364,8 +365,7 @@ const AddExpenses = () => {
                 <th colSpan="1"></th>
                 <th colSpan="1">Total</th>
                 <th colSpan="1" id="totalhere">
-                  {currentPosts
-                    .filter((item) => {
+                  {currentPosts?.filter((item) => {
                       return (
                         finalsearch === '' ||
                         item.narration.toLowerCase().includes(finalsearch) ||
@@ -389,12 +389,12 @@ const AddExpenses = () => {
         <div className="foot">
           <span>
             Showing Result From {firstPostIndex + 1} To{' '}
-            {lastPostIndex >= userAllDetails.explist.length ? (lastPostIndex = userAllDetails.explist.length) : lastPostIndex} of{' '}
-            {userAllDetails.explist.length} Results
+            {lastPostIndex >= userAllDetails.explist?.length ? (lastPostIndex = userAllDetails.explist.length) : lastPostIndex} of{' '}
+            {userAllDetails.explist?.length} Results
           </span>
           <span>
             Pages :
-            <Pagination currentpage={currentPage} changepageno={changePageNumber} totalpost={userAllDetails.explist.length} postperpage={postsPerPage} />
+            <Pagination currentpage={currentPage} changepageno={changePageNumber} totalpost={userAllDetails.explist?.length} postperpage={postsPerPage} />
           </span>
         </div>
         <Modalbox
@@ -410,8 +410,9 @@ const AddExpenses = () => {
           handler={handleInputChange}
           inp={expenseInput}
           isupdate={isUpdateMode}
+          navigate={navigate}
         />
-        <Ledpage setmodal={setIsModalOpen} setdisable={setdisable} disable={disable} setisledupdate={setIsLedgerUpdate} isledupdate={isLedgerUpdate} />
+        <Ledpage  navigate={navigate} setmodal={setIsModalOpen} setdisable={setdisable} disable={disable} setisledupdate={setIsLedgerUpdate} isledupdate={isLedgerUpdate} />
       </div>
     </>
   );

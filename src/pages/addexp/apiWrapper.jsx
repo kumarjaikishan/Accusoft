@@ -1,7 +1,7 @@
-// apiWrapper.js
 import { toast } from 'react-toastify';
 
-const apiWrapper = async (url, method = 'GET', body = null, dispatch, successAction, loaderAction) => {
+
+const apiWrapper = async (url, method = 'GET', body = null, dispatch, successAction, loaderAction,navigate) => {
     // console.log(successAction);
     try {
         dispatch(loaderAction(true));
@@ -18,10 +18,18 @@ const apiWrapper = async (url, method = 'GET', body = null, dispatch, successAct
         const response = await fetch(url, options);
         const responseData = await response.json();
 
-        console.log(responseData);
+        // if (!response.ok) {
+        //     throw new Error(responseData.message || 'Something went wrong');
+        // }
 
         if (!response.ok) {
-            throw new Error(responseData.message || 'Something went wrong');
+            if (responseData.message === 'jwt expired') {
+                toast.warn('Session expired. Please log in again.', { autoClose: 1700 });
+                // localStorage.removeItem('token');  // Optional: clear the token
+                return navigate('/logout'); 
+            } else {
+                throw new Error(responseData.message || 'Something went wrong');
+            }
         }
 
         successAction(responseData);

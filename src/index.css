@@ -39,6 +39,7 @@
   --sbc: #f0f0f0;
   --asbc: #0a3d62;
   --contrast: #151516;
+  --tableborder:rgb(190, 185, 185);
 }
 
 .dark-theme {
@@ -49,6 +50,7 @@
   --background: #222;
   --color: #d1d1d1;
   --contrast: #d1d1d1;
+  --tableborder:rgb(73, 72, 72);
 }
 
 input {

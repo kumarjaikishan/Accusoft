@@ -1,20 +1,23 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { toast } from 'react-toastify';
 
 export const userdata = createAsyncThunk("userdata", async () => {
     const token = localStorage.getItem("token");
-    // console.time("time taken by userdata");
     try {
-        const res = await fetch(`/api/userdata`, {
-            // const res = await fetch(`https://backend-exp-man.vercel.app/api/userdata`, {
-            // const res = await fetch(`http://localhost:5000/api/userdata`, {
+        // const res = await fetch(`/api/userdata`, {
+        // const res = await fetch(`https://backend-exp-man.vercel.app/api/userdata`, {
+        const res = await fetch(`http://localhost:5000/api/userdata`, {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${token}`,
             }
         })
         const data = await res.json();
-        //  console.timeEnd("time taken by userdata");
         // console.log("from redux api", data);
+        // console.log(data);
+        if (!res.ok && data.message=='jwt expired') {
+            toast.warn('Session expired. Please log in again.', { autoClose: 1700 });
+        }
         return data;
     } catch (error) {
         console.log(error);
@@ -31,9 +34,9 @@ const userexplist = createSlice({
         loading: false,
         error: null,
         profilepic: "",
-        apiadress: "/api",
+        // apiadress: "/api",
         // apiadress: "https://backend-exp-man.vercel.app/api",
-        // apiadress: "http://localhost:5000/api",
+        apiadress: "http://localhost:5000/api",
     },
     reducers: {
         userlogout(state, action) {
@@ -64,7 +67,7 @@ const userexplist = createSlice({
             state.explist = action.payload.explist;
             state.ledgerlist = action.payload.ledger;
             state.user = action.payload.user;
-            state.profilepic = action.payload.user.imgsrc;
+            state.profilepic = action.payload.user?.imgsrc;
         })
     }
 })

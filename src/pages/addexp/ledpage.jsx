@@ -9,7 +9,7 @@ import swal from 'sweetalert';
 import TextField from '@mui/material/TextField';
 import apiWrapper from './apiWrapper'; // Import the wrapper
 
-const Ledpage = ({ setmodal, setdisable, disable, isledupdate, setisledupdate }) => {
+const Ledpage = ({ setmodal, setdisable, disable, navigate, isledupdate, setisledupdate }) => {
   const dispatch = useDispatch();
   const useralldetail = useSelector((state) => state.userexplist);
   const [isupda, setinsupdat] = useState(false);
@@ -43,7 +43,7 @@ const Ledpage = ({ setmodal, setdisable, disable, isledupdate, setisledupdate })
 
     const loaderAction = (isLoading) => dispatch(setloader(isLoading));
 
-    await apiWrapper(url, method, body, dispatch, successAction, loaderAction);
+    await apiWrapper(url, method, body, dispatch, successAction, loaderAction, navigate);
   };
 
   const deletee = async (id) => {
@@ -67,7 +67,7 @@ const Ledpage = ({ setmodal, setdisable, disable, isledupdate, setisledupdate })
 
         const loaderAction = (isLoading) => dispatch(setloader(isLoading));
 
-        await apiWrapper(url, method, body, dispatch, successAction, loaderAction);
+        await apiWrapper(url, method, body, dispatch, successAction, loaderAction, navigate);
       }
     });
   };
@@ -90,6 +90,11 @@ const Ledpage = ({ setmodal, setdisable, disable, isledupdate, setisledupdate })
         })
       })
       const data = await res.json();
+      if (!res.ok && data.message === 'jwt expired') {
+        toast.warn('Session expired. Please log in again.', { autoClose: 1700 });
+        return navigate('/logout');
+      }
+      
       if (res.ok && res.status == 200) {
         toast.success(data.message, { autoClose: 1300 });
         setledinp(init);
@@ -117,12 +122,13 @@ const Ledpage = ({ setmodal, setdisable, disable, isledupdate, setisledupdate })
                 })
               })
               const datae = await res.json();
-              if(!res.ok){
-               return toast.warn(datae.message, { autoClose: 2300 });
-              }else{
-                dispatch(userdata());
-                toast.success(datae.message, { autoClose: 1300 });
+              if (!res.ok) {
+                return toast.warn(datae.message, { autoClose: 2300 });
               }
+
+              dispatch(userdata());
+              toast.success(datae.message, { autoClose: 1300 });
+
             } catch (error) {
               console.log(error);
             }

@@ -151,7 +151,7 @@
 }
 
 .report .table table td {
-    border: 1px solid rgb(95, 94, 94);
+    border: 1px solid var(--tableborder);
     text-align: center;
     font-size: 13px;
     line-height: 20px;

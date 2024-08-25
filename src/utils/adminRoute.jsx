@@ -10,7 +10,7 @@ const AdminRoute = () => {
 
     useEffect(() => {
         if (!admin) {
-            toast.warn('Access Denied, Admin Authorization is required.', { autoClose: 2700 });
+            toast.warn('Access Denied, Admin Authorization is required.', { autoClose: 2300 });
         }
     }, []);
 

@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/navbar/navbar';
 import Sidebar from './components/sidebar/sidebar';
 import Home from './pages/home';
@@ -29,13 +29,13 @@ import SlowWorkerPage from './pages/serverTest/workerSlow';
 
 function App() {
   const dispatch = useDispatch();
+  const log = useSelector((state) => state.login);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     token && dispatch(userdata());
   }, [])
 
-  const log = useSelector((state) => state.login);
 
   // autocolse sidebar when screensize below 600px
   const sidebarclose = () => {
@@ -75,10 +75,11 @@ function App() {
             <Route path="/logout" element={<Logout />} />
             <Route path="/test" element={<Test />} />
             <Route path="*" element={<Errorpage />} />
-            <Route path="/login" element={<Login />} />
+
+            {log.islogin?  <Route path="/login" element={<Navigate to="/" />} />: <Route path="/login" element={<Login />} />}
+          
           </Routes>
           {log.loader && <Preloader />}
-          {/* <Preloader /> */}
         </main>
         <footer className={log.narrow ? "footer narrow" : "footer"}>
           <p>&copy; 2024 Accusoft. All rights reserved.

@@ -37,7 +37,7 @@ const Admin_Dashboard = () => {
                         <div className="amt"> {leng ? leng.userlen : 0}</div>
                         <div className="day">Total Users</div>
                     </div>
-                    <div className="icon" style={{ color: "white" }}><i class="fa fa-users" aria-hidden="true"></i></div>
+                    <div className="icon" style={{ color: "white" }}><i className="fa fa-users" aria-hidden="true"></i></div>
                 </div>
                 <div className="card"  >
                     <div className="data">

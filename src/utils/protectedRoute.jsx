@@ -9,17 +9,11 @@ const ProtectedRoutes = () => {
 
     useEffect(() => {
         if (!user) {
-            toast.warn('You are not Logged In.', { autoClose: 2700 });
+            toast.warn('You are not Logged In.', { autoClose: 2300 });
         }
     }, []);
 
-    return user ? (
-        <div>
-            <Outlet />
-        </div>
-    ) : (
-        <Navigate to="/login" />
-    );
+    return user ?  <Outlet /> :  <Navigate to="/login" />;
 };
 
 export default ProtectedRoutes;

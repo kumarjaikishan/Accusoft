@@ -3,7 +3,7 @@ import apiWrapper from '../addexp/apiWrapper';
 import { useSelector, useDispatch } from 'react-redux';
 import { setloader } from '../../store/login';
 import { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
+import { motion } from 'framer-motion';
 
 const Admin_Dashboard = () => {
     const dispatch = useDispatch();
@@ -31,7 +31,12 @@ const Admin_Dashboard = () => {
 
     return (
         <>
-            <div className="admindashboard">
+            <motion.div
+                initial={{ opacity: 0, x: '100%' }}  // Initial state
+                animate={{ opacity: 1, x: 0 }}  // Animation state
+                exit={{ opacity: 0, x: '-100%' }}  // Exit animation
+                transition={{ duration: 0.2, ease: "easeInOut" }}
+                className="admindashboard">
                 <div className="card"  >
                     <div className="data">
                         <div className="amt"> {leng ? leng.userlen : 0}</div>
@@ -46,7 +51,7 @@ const Admin_Dashboard = () => {
                     </div>
                     <div className="icon" style={{ color: "white" }}><i className="fa fa-balance-scale" aria-hidden="true"></i></div>
                 </div>
-            </div>
+            </motion.div>
         </>
     )
 }

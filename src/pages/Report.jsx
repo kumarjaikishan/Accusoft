@@ -9,6 +9,7 @@ import { toast } from 'react-toastify';
 import DownloadIcon from '@mui/icons-material/Download';
 import PrintIcon from '@mui/icons-material/Print';
 import Button from '@mui/material/Button';
+import { motion } from 'framer-motion';
 
 const Report = () => {
     const dispatch = useDispatch();
@@ -103,7 +104,12 @@ const Report = () => {
 
     return (
         <>
-            <div className="report">
+            <motion.div
+                initial={{ opacity: 0, x: '100%' }}  // Initial state
+                animate={{ opacity: 1, x: 0 }}  // Animation state
+                exit={{ opacity: 0, x: '-100%' }}  // Exit animation
+                transition={{ duration: 0.2, ease: "easeInOut" }}
+                className="report">
                 {/* {useralldetail.explist.length > 25 ? <span className='scrol'>
                     <span id="bottom"><a href="#foot"><i title='Go to Bottom' className="fa fa-arrow-down" aria-hidden="true"></i></a></span>
                     <span id="top"><a href="#tavlecontent"><i title='Go to Top' className="fa fa-arrow-up" aria-hidden="true"></i></a></span>
@@ -180,7 +186,7 @@ const Report = () => {
                         </tbody>
                     </table>
                 </div>
-            </div>
+            </motion.div>
         </>
     )
 }

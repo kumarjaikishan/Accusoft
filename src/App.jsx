@@ -26,10 +26,13 @@ import ProtectedRoutes from './utils/protectedRoute';
 import AdminRoute from './utils/adminRoute';
 import SlowPage from './pages/serverTest/slow';
 import SlowWorkerPage from './pages/serverTest/workerSlow';
+import { AnimatePresence } from 'framer-motion';
+import { useLocation } from 'react-router-dom';
 
 function App() {
   const dispatch = useDispatch();
   const log = useSelector((state) => state.login);
+let location = useLocation();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -50,7 +53,8 @@ function App() {
       <div className={log.loader ? 'App loader' : 'App'} >
         <Navbar />
         <main className={log.narrow ? "main narrow" : "main"} onClick={sidebarclose}>
-          <Routes>
+        <AnimatePresence mode='wait'>
+          <Routes key={location.pathname} location={location}>
             <Route element={<ProtectedRoutes />}>
               <Route path="/" element={<Home />} />
               <Route path="/addexpense" element={<Addexp />} />
@@ -79,6 +83,7 @@ function App() {
             {log.islogin?  <Route path="/login" element={<Navigate to="/" />} />: <Route path="/login" element={<Login />} />}
           
           </Routes>
+          </AnimatePresence>
           {log.loader && <Preloader />}
         </main>
         <footer className={log.narrow ? "footer narrow" : "footer"}>

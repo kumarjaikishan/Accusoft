@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { header, setloader } from '../store/login';
 import { toast } from 'react-toastify';
 import { userdata } from '../store/api'
+import { motion } from 'framer-motion';
 // import { toast } from 'react-toastify';
 
 const Home = () => {
@@ -116,7 +117,12 @@ const Home = () => {
 
   return (
     <>
-      <div className="home">
+      <motion.div
+        initial={{ opacity: 0, x: '100%' }}  // Initial state
+        animate={{ opacity: 1, x: 0 }}  // Animation state
+        exit={{ opacity: 0, x: '-100%' }}  // Exit animation
+        transition={{ duration: 0.2, ease: "easeInOut" }}
+        className="home">
 
         {card && card.map((val, ind) => {
           return (
@@ -130,7 +136,7 @@ const Home = () => {
           )
         })}
 
-      </div>
+      </motion.div>
     </>
   )
 }

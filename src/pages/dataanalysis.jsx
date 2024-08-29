@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import './dataanalysis.css';
 import { useSelector, useDispatch } from 'react-redux';
 import { setloader } from '../store/login';
+import { motion } from 'framer-motion';
 
 const Datanalysis = () => {
     const dispatch = useDispatch();
@@ -73,10 +74,14 @@ const Datanalysis = () => {
         })
     }
 
-
     return (
         <>
-            <div className="datanalysis" >
+            <motion.div
+                initial={{ opacity: 0, x: '100%' }}  // Initial state
+                animate={{ opacity: 1, x: 0 }}  // Animation state
+                exit={{ opacity: 0, x: '-100%' }}  // Exit animation
+                transition={{ duration: 0.2, ease: "easeInOut" }}
+                className="datanalysis" >
                 <div className="cont">
                     <span>
                         Month :  <select onChange={handle} name="month" value={inp.month} id="">
@@ -112,7 +117,7 @@ const Datanalysis = () => {
                         </div>
                     ))}
                 </div>
-            </div>
+            </motion.div>
         </>
     )
 }

@@ -116,7 +116,7 @@ const AddExpenses = () => {
 
     const loaderAction = (isLoading) => dispatch(setloader(isLoading));
 
-    await apiWrapper(url, method, body, dispatch, successAction, loaderAction,navigate);
+    await apiWrapper(url, method, body, dispatch, successAction, loaderAction, navigate);
   };
   // adding new expense ends here
 
@@ -183,7 +183,7 @@ const AddExpenses = () => {
 
         const loaderAction = (isLoading) => dispatch(setloader(isLoading));
 
-        await apiWrapper(url, method, body, dispatch, successAction, loaderAction,navigate);
+        await apiWrapper(url, method, body, dispatch, successAction, loaderAction, navigate);
       } else {
         swal('Your data is safe!');
       }
@@ -287,7 +287,12 @@ const AddExpenses = () => {
 
   return (
     <>
-      <div className={isModalOpen || isLedgerUpdate ? 'exp ismodal' : 'exp'}>
+      <motion.div
+        initial={{ opacity: 0, x: '100%' }}  // Initial state
+        animate={{ opacity: 1, x: 0 }}  // Animation state
+        exit={{ opacity: 0, x: '-100%' }}  // Exit animation
+        transition={{ duration: 0.2, ease: "easeInOut" }}
+        className={isModalOpen || isLedgerUpdate ? 'exp ismodal' : 'exp'}>
         <div className="add">
           <i title="Add Expense" className="fa fa-plus" onClick={() => setIsModalOpen(true)} aria-hidden="true" id="addexp"></i>
         </div>
@@ -332,13 +337,13 @@ const AddExpenses = () => {
             <AnimatePresence>
               <tbody id="tablecontent">
                 {(sortedList ? sortedList : currentPosts)?.filter((item) => {
-                    return (
-                      finalsearch === '' ||
-                      item.narration.toLowerCase().includes(finalsearch) ||
-                      item.ledger.ledger.toLowerCase().includes(finalsearch) ||
-                      item.amount.toString().includes(finalsearch)
-                    );
-                  })
+                  return (
+                    finalsearch === '' ||
+                    item.narration.toLowerCase().includes(finalsearch) ||
+                    item.ledger.ledger.toLowerCase().includes(finalsearch) ||
+                    item.amount.toString().includes(finalsearch)
+                  );
+                })
                   .map((expense, index) => {
                     return (
                       <tr
@@ -366,13 +371,13 @@ const AddExpenses = () => {
                 <th colSpan="1">Total</th>
                 <th colSpan="1" id="totalhere">
                   {currentPosts?.filter((item) => {
-                      return (
-                        finalsearch === '' ||
-                        item.narration.toLowerCase().includes(finalsearch) ||
-                        item.ledger.ledger.toLowerCase().includes(finalsearch) ||
-                        item.amount.toString().includes(finalsearch)
-                      );
-                    })
+                    return (
+                      finalsearch === '' ||
+                      item.narration.toLowerCase().includes(finalsearch) ||
+                      item.ledger.ledger.toLowerCase().includes(finalsearch) ||
+                      item.amount.toString().includes(finalsearch)
+                    );
+                  })
                     .reduce((accumulator, expense) => {
                       return (accumulator += expense.amount);
                     }, 0)}
@@ -412,8 +417,8 @@ const AddExpenses = () => {
           isupdate={isUpdateMode}
           navigate={navigate}
         />
-        <Ledpage  navigate={navigate} setmodal={setIsModalOpen} setdisable={setdisable} disable={disable} setisledupdate={setIsLedgerUpdate} isledupdate={isLedgerUpdate} />
-      </div>
+        <Ledpage navigate={navigate} setmodal={setIsModalOpen} setdisable={setdisable} disable={disable} setisledupdate={setIsLedgerUpdate} isledupdate={isLedgerUpdate} />
+      </motion.div>
     </>
   );
 };

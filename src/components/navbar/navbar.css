@@ -9,46 +9,37 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0px 20px;
+    padding: 0px 10px;
     z-index: 10;
 
     .cont {
-        height: 40px;
+        /* outline: auto; */
+        font-family: 'East Sea Dokdo', cursive;
         display: flex;
         align-items: center;
-        font-family: 'East Sea Dokdo', cursive;
-        font-size: 1.7em;
-        letter-spacing: 1px;
 
-        span {
-            display: inline-block;
-            padding: 2px;
-            margin-right: 10px;
-            /* border: 1px solid yellow; */
+        .navicon {
+            /* outline: auto; */
+            width: 50px;
+            font-size: 2.6em;
+            transition: 0.1s;
             cursor: pointer;
 
-            &:nth-child(1) {
-                transform: scale(1.4);
-                font-size: 2em;
-
-                &:hover {
-                    color: var(--maincolor);
-                    transform: scale(1.5);
-                }
+            &:hover {
+                font-size: 2.7em;
+                color: var(--hovercolor);
             }
+        }
 
-            &:nth-child(2) {
-                font-weight: 500;
-                font-size: 1.2em;
-            }
+        span {
+            font-size: 2em;
         }
     }
 
     .info {
-        width: 180px;
         display: flex;
-        justify-content: space-between;
         height: 60px;
+        /* outline: auto; */
 
         .photo {
             border: 1px solid grey;
@@ -65,12 +56,16 @@
         }
 
         .userinfo {
-            width: 120px;
+            max-width: 220px;
+            padding: 0 5px;
+            /* outline: auto; */
             height: 100%;
 
-            span {
-                display: inline-block;
+            div {
                 width: 100%;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
                 text-transform: capitalize;
                 font-weight: 500;
                 padding-left: 5px;
@@ -78,11 +73,12 @@
             }
         }
     }
-    .mode{
-        /* border: 1px solid red; */
-       
 
-        label{
+    .mode {
+        /* border: 1px solid red; */
+
+
+        label {
             border-radius: 60px;
             border: 1px solid grey;
             color: rgb(33, 33, 33);
@@ -96,45 +92,68 @@
         }
     }
 
-    .checkbox{
-       display: none; 
+    .checkbox {
+        display: none;
     }
-    
-    .checkbox:checked + label {
+
+    .checkbox:checked+label {
         border: 1px solid white;
         color: white;
-      }
-    
-    
-    
+    }
+
 
     @media only screen and (max-width: 600px) {
         padding: 0px 3px;
         /* border: 2px solid red; */
 
-        .info {
-            transform: translateX(250px) scale(0.8);
-            width: 150px;
-            /* border: 1px solid red; */
-
-            .userinfo {
-                width: 90px;
+        .cont {
+          
+            .navicon {
+                /* outline: auto; */
+                width: 35px;
+                font-size: 1.9em;
+    
+                &:hover {
+                    font-size: 2.0em;
+                }
+            }
+            span {
+                /* outline: auto; */
+                max-width: 100px;
+                font-size: 1.2em;
             }
         }
 
-        &.narrow .info {
-            transform: translateX(-23px) scale(0.8);
+        .info {
+            display: flex;
+            height: 50px;
+            /* outline: auto; */
+
+            .photo {
+                width: 50px;
+                height: 50px;
+            }
+
+            .userinfo {
+                max-width: 120px;
+                padding: 0 4px;
+                /* outline: auto; */
+
+                div {
+                    font-size: 11px;
+                    padding-left: 0px;
+                }
+            }
         }
 
-        .cont span:nth-child(2) {
-            font-size: 1em;
-        }
-        .mode{
+
+        .mode {
             transform: translateX(250px) scale(0.55);
             /* border: 1px solid red; */
         }
-        &.narrow .mode{
-            transform: translateX(-10px) scale(0.55);
+
+        &.narrow .mode {
+            transform: translateX(0px) scale(0.55);
         }
     }
 }

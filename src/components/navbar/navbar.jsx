@@ -49,7 +49,7 @@ const Navbar = () => {
     <>
       <nav className={log.narrow ? "nav narrow" : "nav"}>
         <div className="cont">
-          <span onClick={fun}><MenuIcon /></span>
+          <MenuIcon onClick={fun} className='navicon' titleAccess='menu' />
           <span>{log.head} </span>
         </div>
         <span className='mode'>
@@ -59,13 +59,14 @@ const Navbar = () => {
             <label htmlFor="checkbox"> <BedtimeIcon /> Dark </label>}
         </span>
 
-        {log.islogin ? <div className="info">
-          <NavLink to='/photo' > <div className="photo" ><img src={useralldetail.profilepic ? useralldetail.profilepic : defaultprofile} alt="Profile Pic" /> </div> </NavLink>
-          <div className="userinfo">
-            <span>{useralldetail?.user?.name}</span>
-            <span>{useralldetail?.user?.isadmin ? "Admin" : "User"}</span>
-          </div>
-        </div> : null}
+        {log.islogin ?
+          <div className="info">
+            <div className="userinfo">
+              <div>{useralldetail?.user?.name} </div>
+              <div>{useralldetail?.user?.isadmin ? "Admin" : "User"}</div>
+            </div>
+            <NavLink to='/photo' > <div className="photo" ><img src={useralldetail.profilepic ? useralldetail.profilepic : defaultprofile} alt="Profile Pic" /> </div> </NavLink>
+          </div> : null}
       </nav>
     </>
   )

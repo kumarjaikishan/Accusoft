@@ -147,7 +147,7 @@ const Report = () => {
                     </span>
                 </div>
                 <div className="table" >
-                    <h2>Accusoft - {useralldetail.user.name} from {formatDate(inp.from)} to {formatDate(inp.to)} </h2>
+                    <h2>Accusoft - {useralldetail.user.name}</h2> <h3> (Report from {formatDate(inp.from)} to {formatDate(inp.to)} )</h3>
                     <table id='tavlecontent'>
                         <thead id='table'>
                             <tr>

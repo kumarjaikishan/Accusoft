@@ -89,13 +89,12 @@ font-size: 10px;
     color: black;
     width: 110px;
     font-weight: 600;
-    /* border: 1px solid black; */
-    text-align: center;
     padding: 2px 0;
+    padding-left: 5px;
     
 }
 .box .vno{
-    width: 60px;
+    width: 260.5px;
 }
 .box .lname{
     width: 200px;
@@ -121,6 +120,8 @@ font-size: 10px;
     width: 100%;
     position: relative;
     display: flex;
+    align-items:center ;
+    padding-left: 5px;
     justify-content: space-between;
 }
 .box .particular .narr{
@@ -142,11 +143,6 @@ font-size: 10px;
     font-size: 1.1em;
     color: black;
 }
-.particular .amount input{
-   font-size: 1.2em;
-   font-weight: 600;
-   color: black;
-}
 .box select{
     color: white;
     /* color: transparent; */
@@ -158,6 +154,9 @@ font-size: 10px;
 }
 .box .particular .amount{
     width: 130px;
+    font-weight: 700;
+    line-height: 100px;
+    text-align: center;
     border-left: 1px solid black;
 }
 .box .particular .word{

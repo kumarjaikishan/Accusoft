@@ -14,7 +14,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Photo from './pages/photo';
 import { useSelector, useDispatch } from 'react-redux';
 import { setnarrow } from '../src/store/login';
-import Officeexp from './pages/officeexp';
+import Officeexp from './pages/voucher';
 import Test from './pages/test';
 import { userdata } from './store/api'
 import { Errorpage } from './pages/Errorpage';
@@ -61,7 +61,7 @@ let location = useLocation();
               <Route path="/datanalysis" element={<Datanalysis />} />
               <Route path="/report" element={<Report />} />
               <Route path="/photo" element={<Photo />} />
-              <Route path="/print" element={<Officeexp />} />
+              <Route path="/print/:expId" element={<Officeexp />} />
             </Route>
 
             <Route element={<AdminRoute />}>

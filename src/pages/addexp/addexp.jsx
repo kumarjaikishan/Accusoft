@@ -284,6 +284,9 @@ const AddExpenses = () => {
       }
     }
   };
+  const voucherpage=(expid)=>{
+    navigate(`/print/${expid}`);
+  }
 
   return (
     <>
@@ -356,6 +359,7 @@ const AddExpenses = () => {
                         <td>
                           <i title="Edit" onClick={() => setDataForEdit(expense)} className="fa fa-pencil-square-o" aria-hidden="true"></i>
                           <i title="Delete" onClick={() => deleteExpense(expense._id)} className="fa fa-trash-o" aria-hidden="true"></i>
+                          {/* <i title="print" onClick={() => voucherpage(expense._id)} className="fa fa-print" aria-hidden="true"></i> */}
                         </td>
                         <td>
                           <input type="checkbox" onClick={highlight} id={expense._id} />

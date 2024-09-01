@@ -14,8 +14,9 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
+import { motion } from 'framer-motion';
 
-const Modalbox = ({ setisledupdate, modal, navigate,disable, setdisable, init, handler, inp, isupdate, sub, setmodal, setisupdate, setinp }) => {
+const Modalbox = ({ setisledupdate, modal, navigate, disable, setdisable, init, handler, inp, isupdate, sub, setmodal, setisupdate, setinp }) => {
     const useralldetail = useSelector((state) => state.userexplist);
     const dispatch = useDispatch();
 
@@ -29,7 +30,7 @@ const Modalbox = ({ setisledupdate, modal, navigate,disable, setdisable, init, h
         const url = `${useralldetail.apiadress}/updateexp`;
         const method = 'POST';
         const body = {
-            _id, ledger, date, amount,   narration: capitalize(narration)
+            _id, ledger, date, amount, narration: capitalize(narration)
         };
         const successAction = (data) => {
             toast.success(data.message, { autoClose: 1300 });
@@ -42,7 +43,7 @@ const Modalbox = ({ setisledupdate, modal, navigate,disable, setdisable, init, h
 
         const loaderAction = (isLoading) => dispatch(setloader(isLoading));
 
-        await apiWrapper(url, method, body, dispatch, successAction, loaderAction,navigate);
+        await apiWrapper(url, method, body, dispatch, successAction, loaderAction, navigate);
     }
     // for updating data ends here
 
@@ -50,7 +51,7 @@ const Modalbox = ({ setisledupdate, modal, navigate,disable, setdisable, init, h
         const words = value.split(' ');
         const capitalizedWords = words.map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase());
         return capitalizedWords.join(' ');
-      };
+    };
 
     const jkh = () => {
         setisledupdate(true);
@@ -73,53 +74,54 @@ const Modalbox = ({ setisledupdate, modal, navigate,disable, setdisable, init, h
             <div className="box">
                 <h1>Add Voucher</h1>
                 <span className="ledgeredit" title='Edit Ledger'><i onClick={jkh} className="fa fa-pencil" aria-hidden="true"></i></span>
+                <span className="wrapper">
+                    <FormControl className='caps' sx={{ width: '90%', mt: 2, mb: 2 }}>
+                        <InputLabel id="demo-simple-select-label">Ledger</InputLabel>
+                        <Select
+                            name="ledger"
+                            labelId="demo-simple-select-label"
+                            onChange={(e) => handler(e, 'ledger')}
+                            value={inp.ledger}
+                            id="demo-simple-select"
+                            label="Ledger"
+                        >
+                            {useralldetail.ledgerlist.map((val, ind) => {
+                                return <MenuItem sx={{ textTransform: "capitalize" }} key={ind} value={val._id}>{val.ledger}</MenuItem>
+                            })}
 
-                <FormControl className='caps' sx={{ width: '90%', mt: 2, mb: 2 }}>
-                    <InputLabel id="demo-simple-select-label">Ledger</InputLabel>
-                    <Select
-                        name="ledger"
-                        labelId="demo-simple-select-label"
-                        onChange={(e) => handler(e, 'ledger')}
-                        value={inp.ledger}
-                        id="demo-simple-select"
-                        label="Ledger"
-                    >
-                        {useralldetail.ledgerlist.map((val, ind) => {
-                            return <MenuItem  sx={{textTransform:"capitalize"}} key={ind} value={val._id}>{val.ledger}</MenuItem>
-                        })}
+                        </Select>
+                    </FormControl>
 
-                    </Select>
-                </FormControl>
-
-                <LocalizationProvider onChange={(e) => handler(e, 'date')} dateAdapter={AdapterDayjs}>
-                    <DatePicker
-                        label="Date"
-                        value={inp.date}
-                        onChange={(newValue) => setValue(newValue)}
-                        sx={{ width: '90%', mt: 2, mb: 2 }}
-                        format="DD-MM-YYYY"
-                    />
-                </LocalizationProvider>
+                    <LocalizationProvider onChange={(e) => handler(e, 'date')} dateAdapter={AdapterDayjs}>
+                        <DatePicker
+                            label="Date"
+                            value={inp.date}
+                            onChange={(newValue) => setValue(newValue)}
+                            sx={{ width: '90%', mt: 2, mb: 2 }}
+                            format="DD-MM-YYYY"
+                        />
+                    </LocalizationProvider>
 
 
-                <TextField sx={{ width: '90%', mt: 2, mb: 2 }} id="outlined-basic" label="Amount" name="amount"
-                    onKeyPress={(event) => { if (!/[0-9]/.test(event.key)) { event.preventDefault(); } }}
-                    type="tel" value={inp.amount}
-                    onChange={(e) => handler(e, 'amount')}
-                    variant="outlined" />
+                    <TextField sx={{ width: '90%', mt: 2, mb: 2 }} id="outlined-basic" label="Amount" name="amount"
+                        onKeyPress={(event) => { if (!/[0-9]/.test(event.key)) { event.preventDefault(); } }}
+                        type="tel" value={inp.amount}
+                        onChange={(e) => handler(e, 'amount')}
+                        variant="outlined" />
 
-                <TextField multiline rows={2} sx={{ width: '90%', mt: 2, mb: 2 }} id="outlined-basic" label="Narration"
-                    name="narration" value={inp.narration} type="text"
-                    onChange={(e) => handler(e, 'narration')}
-                    variant="outlined" />
-                <div className='btn'>
-                    {isupdate ? <button disabled={disable} onClick={() => updatee(inp._id)}>Update</button> : <button disabled={disable} onClick={sub}>Submit</button>}
-                    <button onClick={() => {
-                        setmodal(false);
-                        setisupdate(false);
-                        setinp(init);
-                    }}>Cancel</button>
-                </div>
+                    <TextField multiline rows={2} sx={{ width: '90%', mt: 2, mb: 2 }} id="outlined-basic" label="Narration"
+                        name="narration" value={inp.narration} type="text"
+                        onChange={(e) => handler(e, 'narration')}
+                        variant="outlined" />
+                    <div className='btn'>
+                        {isupdate ? <button disabled={disable} onClick={() => updatee(inp._id)}>Update</button> : <button disabled={disable} onClick={sub}>Submit</button>}
+                        <button onClick={() => {
+                            setmodal(false);
+                            setisupdate(false);
+                            setinp(init);
+                        }}>Cancel</button>
+                    </div>
+                </span>
             </div>
         </div>
     )

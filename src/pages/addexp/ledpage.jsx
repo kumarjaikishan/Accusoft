@@ -94,7 +94,7 @@ const Ledpage = ({ setmodal, setdisable, disable, navigate, isledupdate, setisle
         toast.warn('Session expired. Please log in again.', { autoClose: 1700 });
         return navigate('/logout');
       }
-      
+
       if (res.ok && res.status == 200) {
         toast.success(data.message, { autoClose: 1300 });
         setledinp(init);
@@ -169,36 +169,37 @@ const Ledpage = ({ setmodal, setdisable, disable, navigate, isledupdate, setisle
     <div className="ledpage" onClick={sdef} style={{ display: isledupdate ? "block" : "none" }}>
       <div className="box">
         <h2>Hi, {useralldetail?.user.name}</h2>  <span className='back' onClick={back}> <i className="fa fa-undo" aria-hidden="true"></i> Back</span>
-        <div className="cont">
 
-          <TextField id="outlined-basic" label="Enter Ledger" className='inpe' variant="outlined" value={ledinp.val} onChange={handle} />
-          {/* <input type="text" placeholder='Enter Ledger' className='caps' value={ledinp.val} onChange={handle} /> */}
-          {isupda ? <button disabled={disable} onClick={updat}>Update</button> : <button disabled={disable} onClick={add}>Add</button>}
-        </div>
+        <span className='ledwrapper'>
+          <div className="cont">
+            <TextField id="outlined-basic" label="Enter Ledger" className='inpe' variant="outlined" value={ledinp.val} onChange={handle} />
+            {/* <input type="text" placeholder='Enter Ledger' className='caps' value={ledinp.val} onChange={handle} /> */}
+            {isupda ? <button disabled={disable} onClick={updat}>Update</button> : <button disabled={disable} onClick={add}>Add</button>}
+          </div>
 
-        <div className="mater">
-          <table>
-            <thead>
-              <tr>
-                <th>Ledger</th>
-                <th>Edit</th>
-                <th>Delete</th>
-              </tr>
-            </thead>
-            <tbody>
-              {useralldetail.ledgerlist && useralldetail.ledgerlist.map((val, ind) => {
-                return (
-                  <tr key={ind}>
-                    <td>{val.ledger}</td>
-                    <td><i className="fa fa-pencil-square-o" onClick={() => setledgerininput(val._id, val.ledger)} aria-hidden="true" ></i></td>
-                    <td><i className="fa fa-trash" onClick={() => deletee(val._id)} aria-hidden="true" value={ind} ></i></td>
-                  </tr>
-                )
-              })}
-            </tbody>
-          </table>
-        </div>
-
+          <div className="mater">
+            <table>
+              <thead>
+                <tr>
+                  <th>Ledger</th>
+                  <th>Edit</th>
+                  <th>Delete</th>
+                </tr>
+              </thead>
+              <tbody>
+                {useralldetail.ledgerlist && useralldetail.ledgerlist.map((val, ind) => {
+                  return (
+                    <tr key={ind}>
+                      <td>{val.ledger}</td>
+                      <td><i className="fa fa-pencil-square-o" onClick={() => setledgerininput(val._id, val.ledger)} aria-hidden="true" ></i></td>
+                      <td><i className="fa fa-trash" onClick={() => deletee(val._id)} aria-hidden="true" value={ind} ></i></td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </div>
+        </span>
       </div>
     </div>
   )

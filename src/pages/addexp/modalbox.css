@@ -14,10 +14,10 @@
         top: 50%;
         left: 50%;
         width: 500px;
-        padding-bottom: 20px;
+        
         border-radius: 20px;
         transform: translate(-50%, -50%);
-        background: white;
+        background: var(--maincolor);
         box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.4);
         overflow: hidden;
         display: flex;
@@ -32,7 +32,6 @@
             color: aliceblue;
             letter-spacing: 2px;
             text-align: center;
-            background: var(--maincolor);
         }
 
       &  .ledgeredit {
@@ -51,6 +50,15 @@
             i {
                 font-size: 20px;
             }
+        }
+        .wrapper{
+            display: flex;
+            flex-direction: column;
+            border-radius: 30px 30px 0 0;
+            align-items: center;
+            width: 100%;
+            background: white;
+            padding-bottom: 20px;
         }
 
        & .btn {
@@ -101,7 +109,7 @@
            & .box {
                 top: 35%;
                 width: 96vw;
-                padding-bottom: 15px;
+               
 
               &  h1 {
                     font-size: 1.5em;
@@ -110,6 +118,9 @@
 
               &  .ledgeredit {
                     right: 20px;
+                }
+               .wrapper{
+                    padding-bottom: 15px;
                 }
             }
         }

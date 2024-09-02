@@ -3,6 +3,7 @@
     height: 100%;
     overflow: auto;
     position: relative;
+    background: white;
     padding: 0 1rem;
 
     .container {
@@ -14,7 +15,7 @@
         flex-direction: column;
 
         img {
-            width: 500px;
+            width: 30vw;
         }
 
         p {

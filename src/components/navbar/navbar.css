@@ -163,7 +163,7 @@
             }
 
             .info {
-                transform: translateX(0px);
+                transform: translateX(-3px);
             }
         }
     }

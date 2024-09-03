@@ -79,7 +79,7 @@ const Ledpage = ({ setmodal, setdisable, disable, navigate, isledupdate, setisle
     const token = localStorage.getItem("token");
     try {
       setdisable(true);
-      const res = await fetch(`${useralldetail.apiadress}/updateledger`, {
+      const res = await fetch(`${import.meta.env.VITE_API_ADDRESS}updateledger`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -111,7 +111,7 @@ const Ledpage = ({ setmodal, setdisable, disable, navigate, isledupdate, setisle
         }).then(async (merge) => {
           if (merge) {
             try {
-              const res = await fetch(`${useralldetail.apiadress}/mergeledger`, {
+              const res = await fetch(`${import.meta.env.VITE_API_ADDRESS}mergeledger`, {
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",

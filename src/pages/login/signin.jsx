@@ -51,7 +51,7 @@ const Signin = () => {
         }
         try {
             dispatch(setloader(true));
-            const res = await fetch(`${useralldetail.apiadress}/login`, {
+            const res = await fetch(`${import.meta.env.VITE_API_ADDRESS}login`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -99,7 +99,7 @@ const Signin = () => {
         }
         try {
             setbtnclick(true)
-            const res = await fetch(`${useralldetail.apiadress}/checkmail`, {
+            const res = await fetch(`${import.meta.env.VITE_API_ADDRESS}checkmail`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

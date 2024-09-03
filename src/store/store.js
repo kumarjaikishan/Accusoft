@@ -6,7 +6,7 @@ import {persistReducer} from 'redux-persist';
 import { combineReducers } from "@reduxjs/toolkit";
 
 const persistConfig={
-    key:"Accosofter",
+    key:"Accosoftere",
     version:1,
     storage:storage
 }

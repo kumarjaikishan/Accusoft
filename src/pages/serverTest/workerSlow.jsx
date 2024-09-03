@@ -19,7 +19,7 @@ const SlowWorkerPage = () => {
         const token = localStorage.getItem("token");
         try {
             setdisable(true)
-            const res = await fetch(`${useralldetail.apiadress}/slow`, {
+            const res = await fetch(`${import.meta.env.VITE_API_ADDRESS}slow`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

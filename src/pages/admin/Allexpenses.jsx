@@ -23,7 +23,7 @@ const Allexpense = () => {
         // console.log("from admin",token);
         dispatch(setloader(true));
         try {
-            const result = await fetch(`${useralldetail.apiadress}/adminexp`, {
+            const result = await fetch(`${import.meta.env.VITE_API_ADDRESS}adminexp`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -123,7 +123,7 @@ const Allexpense = () => {
             if (willDelete) {
                 dispatch(setloader(true));
                 try {
-                    const result = await fetch(`${useralldetail.apiadress}/deletemanyexp`, {
+                    const result = await fetch(`${import.meta.env.VITE_API_ADDRESS}deletemanyexp`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',

@@ -29,7 +29,7 @@ const PasswordReset = () => {
         // console.log(inp);
         try {
             setloading(true)
-            const rese = await fetch(`${useralldetail.apiadress}/setpassword?token=${token}`, {
+            const rese = await fetch(`${import.meta.env.VITE_API_ADDRESS}setpassword?token=${token}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

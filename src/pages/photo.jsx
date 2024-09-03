@@ -95,7 +95,7 @@ const Photo = () => {
                 // console.log(newimage);
                 const id = toast.loading("Please wait...")
                 try {
-                    const rese = await fetch(`${useralldetail.apiadress}/photo`, {
+                    const rese = await fetch(`${import.meta.env.VITE_API_ADDRESS}photo`, {
                         method: "POST",
                         headers: {
                             "Authorization": `Bearer ${token}`,
@@ -181,7 +181,7 @@ const Photo = () => {
         // console.log(name,phone,email);
         setdisable(true);
         try {
-            const query = await fetch(`${useralldetail.apiadress}/updateuserdetail`, {
+            const query = await fetch(`${import.meta.env.VITE_API_ADDRESS}updateuserdetail`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -228,7 +228,7 @@ const Photo = () => {
         try {
             // setisloadinge(true)
             const token = localStorage.getItem("token");
-            const res = await fetch(`${useralldetail.apiadress}/passreset`, {
+            const res = await fetch(`${import.meta.env.VITE_API_ADDRESS}passreset`, {
                 method: "Get",
                 headers: {
                     "Authorization": `Bearer ${token}`,

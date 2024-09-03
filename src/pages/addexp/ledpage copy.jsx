@@ -30,7 +30,7 @@ const Ledpage = ({ setmodal, setdisable,disable, isledupdate, setisledupdate }) 
     dispatch(setloader(true));
     try {
       setdisable(true);
-      const result = await fetch(`${useralldetail.apiadress}/addledger`, {
+      const result = await fetch(`${import.meta.env.VITE_API_ADDRESS}addledger`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -75,7 +75,7 @@ const Ledpage = ({ setmodal, setdisable,disable, isledupdate, setisledupdate }) 
         const token = localStorage.getItem("token");
         dispatch(setloader(true));
         try {
-          const result = await fetch(`${useralldetail.apiadress}/deleteledger`, {
+          const result = await fetch(`${import.meta.env.VITE_API_ADDRESS}deleteledger`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -138,7 +138,7 @@ const Ledpage = ({ setmodal, setdisable,disable, isledupdate, setisledupdate }) 
     const ledger_id = ledinp.ind;
     //  console.log(ledger_id,newledger);
     try {
-      const res = await fetch(`${useralldetail.apiadress}/updateledger`, {
+      const res = await fetch(`${import.meta.env.VITE_API_ADDRESS}updateledger`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

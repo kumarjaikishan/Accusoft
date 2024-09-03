@@ -32,7 +32,8 @@ import { useLocation } from 'react-router-dom';
 function App() {
   const dispatch = useDispatch();
   const log = useSelector((state) => state.login);
-let location = useLocation();
+  let location = useLocation();
+  console.log(import.meta.env.VITE_API_ADDRESS)
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -53,36 +54,36 @@ let location = useLocation();
       <div className={log.loader ? 'App loader' : 'App'} >
         <Navbar />
         <main className={log.narrow ? "main narrow" : "main"} onClick={sidebarclose}>
-        <AnimatePresence mode='wait'>
-          <Routes key={location.pathname} location={location}>
-            <Route element={<ProtectedRoutes />}>
-              <Route path="/" element={<Home />} />
-              <Route path="/addexpense" element={<Addexp />} />
-              <Route path="/datanalysis" element={<Datanalysis />} />
-              <Route path="/report" element={<Report />} />
-              <Route path="/photo" element={<Photo />} />
-              <Route path="/print/:expId" element={<Officeexp />} />
-            </Route>
-
-            <Route element={<AdminRoute />}>
-              <Route path="/admin" >
-                <Route path="dashboard" element={<Admin_Dashboard />} />
-                <Route path="users" element={<Alluser />} />
-                <Route path="expense" element={<Allexpense />} />
+          <AnimatePresence mode='wait'>
+            <Routes key={location.pathname} location={location}>
+              <Route element={<ProtectedRoutes />}>
+                <Route path="/" element={<Home />} />
+                <Route path="/addexpense" element={<Addexp />} />
+                <Route path="/datanalysis" element={<Datanalysis />} />
+                <Route path="/report" element={<Report />} />
+                <Route path="/photo" element={<Photo />} />
+                <Route path="/print/:expId" element={<Officeexp />} />
               </Route>
-            </Route>
+
+              <Route element={<AdminRoute />}>
+                <Route path="/admin" >
+                  <Route path="dashboard" element={<Admin_Dashboard />} />
+                  <Route path="users" element={<Alluser />} />
+                  <Route path="expense" element={<Allexpense />} />
+                </Route>
+              </Route>
 
 
-            <Route path="/resetpassword/:token" element={<PasswordReset />} />
-            <Route path="/slow" element={<SlowPage />} />
-            <Route path="/slowworker" element={<SlowWorkerPage />} />
-            <Route path="/logout" element={<Logout />} />
-            <Route path="/test" element={<Test />} />
-            <Route path="*" element={<Errorpage />} />
+              <Route path="/resetpassword/:token" element={<PasswordReset />} />
+              <Route path="/slow" element={<SlowPage />} />
+              <Route path="/slowworker" element={<SlowWorkerPage />} />
+              <Route path="/logout" element={<Logout />} />
+              <Route path="/test" element={<Test />} />
+              <Route path="*" element={<Errorpage />} />
 
-            {log.islogin?  <Route path="/login" element={<Navigate to="/" />} />: <Route path="/login" element={<Login />} />}
-          
-          </Routes>
+              {log.islogin ? <Route path="/login" element={<Navigate to="/" />} /> : <Route path="/login" element={<Login />} />}
+
+            </Routes>
           </AnimatePresence>
           {log.loader && <Preloader />}
         </main>

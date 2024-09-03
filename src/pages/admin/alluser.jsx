@@ -23,7 +23,7 @@ const Alluser = () => {
         const token = localStorage.getItem("token");
         // dispatch(setloader(true));
         try {
-            const result = await fetch(`${useralldetail.apiadress}/adminuser`, {
+            const result = await fetch(`${import.meta.env.VITE_API_ADDRESS}adminuser`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -111,7 +111,7 @@ const Alluser = () => {
                     const id = toast.loading('Please Wait...')
                     const token = localStorage.getItem("token");
                     // dispatch(setloader(true));
-                    const result = await fetch(`${useralldetail.apiadress}/removeuser`, {
+                    const result = await fetch(`${import.meta.env.VITE_API_ADDRESS}removeuser`, {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
@@ -162,7 +162,7 @@ const Alluser = () => {
                     if (arr.length < 1) {
                         toast.warn("Kindly Select data", { autoClose: 1300 });
                     } else {
-                        const result = await fetch(`${useralldetail.apiadress}/delmany`, {
+                        const result = await fetch(`${import.meta.env.VITE_API_ADDRESS}delmany`, {
                             method: "DELETE",
                             headers: {
                                 "Content-Type": "application/json"

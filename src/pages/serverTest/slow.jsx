@@ -19,7 +19,7 @@ const SlowPage = () => {
         const token = localStorage.getItem("token");
         try {
             setdisable(true)
-            const res = await fetch(`${useralldetail.apiadress}/stillslow`, {
+            const res = await fetch(`${import.meta.env.VITE_API_ADDRESS}stillslow`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

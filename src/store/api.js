@@ -4,9 +4,7 @@ import { toast } from 'react-toastify';
 export const userdata = createAsyncThunk("userdata", async () => {
     const token = localStorage.getItem("token");
     try {
-        const res = await fetch(`/api/userdata`, {
-        // const res = await fetch(`https://backend-exp-man.vercel.app/api/userdata`, {
-        // const res = await fetch(`http://localhost:5000/api/userdata`, {
+        const res = await fetch(`${import.meta.env.VITE_API_ADDRESS}userdata`, {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${token}`,
@@ -15,7 +13,7 @@ export const userdata = createAsyncThunk("userdata", async () => {
         const data = await res.json();
         // console.log("from redux api", data);
         // console.log(data);
-        if (!res.ok && data.message=='jwt expired') {
+        if (!res.ok && data.message == 'jwt expired') {
             toast.warn('Session expired. Please log in again.', { autoClose: 1700 });
         }
         return data;
@@ -34,8 +32,8 @@ const userexplist = createSlice({
         loading: false,
         error: null,
         profilepic: "",
-        apiadress: "/api",
-        // apiadress: "https://backend-exp-man.vercel.app/api",
+        // apiadress: "/api",
+        apiadress: "https://backend-exp-man.vercel.app/api",
         // apiadress: "http://localhost:5000/api",
     },
     reducers: {

@@ -19,7 +19,7 @@ const Useredit = ({ inp, modal, setmodal, handler,fetche }) => {
         const { id, name, phone, email, admin, verified } = inp;
         console.log(inp);
         try {
-            const result = await fetch(`${useralldetail.apiadress}/adminuserupdate`, {
+            const result = await fetch(`${import.meta.env.VITE_API_ADDRESS}adminuserupdate`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

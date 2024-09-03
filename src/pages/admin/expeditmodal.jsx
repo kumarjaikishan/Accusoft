@@ -24,7 +24,7 @@ const Userexpedit = ({ inp, modal, setmodal, handler,setinp }) => {
         date = dayjs(date).format("YYYY-MM-DD");
         // console.log(inp);
         try {
-            const result = await fetch(`${useralldetail.apiadress}/adminupdateexp`, {
+            const result = await fetch(`${import.meta.env.VITE_API_ADDRESS}adminupdateexp`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

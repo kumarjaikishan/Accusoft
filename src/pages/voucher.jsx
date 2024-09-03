@@ -20,7 +20,7 @@ const Voucher = () => {
         dispatch(setloader(true));
         try {
             const token = localStorage.getItem("token");
-            const result = await fetch(`${useralldetail.apiadress}/expdetail`, {
+            const result = await fetch(`${import.meta.env.VITE_API_ADDRESS}expdetail`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

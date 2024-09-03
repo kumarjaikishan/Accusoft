@@ -57,7 +57,7 @@ const Signup = ({ setlog }) => {
 
         try {
             dispatch(setloader(true));
-            const res = await fetch(`${useralldetail.apiadress}/signup`, {
+            const res = await fetch(`${import.meta.env.VITE_API_ADDRESS}signup`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

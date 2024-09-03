@@ -7,6 +7,7 @@ import { profilepicupdtae, profiledetailupdtae } from '../store/api';
 import { toast } from 'react-toastify';
 import Button from '@mui/material/Button';
 import SentimentDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied';
+import TextField from '@mui/material/TextField';
 
 
 const Photo = () => {
@@ -18,6 +19,7 @@ const Photo = () => {
     }, [])
     const WIDTH = 200;
     const [isfile, setisfile] = useState(false);
+    const [disable, setdisable]= useState(false);
     let newimage;
 
     const common = (event) => {
@@ -174,9 +176,10 @@ const Photo = () => {
 
     const updatedetails = async () => {
         const { name, phone } = input;
-        console.log(name, phone);
         const token = localStorage.getItem("token");
+        const toastId = toast.loading("Please wait...");
         // console.log(name,phone,email);
+        setdisable(true);
         try {
             const query = await fetch(`${useralldetail.apiadress}/updateuserdetail`, {
                 method: "POST",
@@ -188,17 +191,20 @@ const Photo = () => {
                     name, phone
                 })
             })
-            console.log(query);
             const result = await query.json();
             if (query.ok) {
-                console.log(result);
-                seteditable(!editable);
+                // console.log(result);
                 dispatch(profiledetailupdtae(input))
-                toast.success("Updated Successfull", { autoClose: 1300 });
             }
+            toast.update(toastId, { render: 'Updated Successfull', type: "success", isLoading: false, autoClose: 1600 });
+            seteditable(!editable);
+            setdisable(false)
         } catch (error) {
             toast.warn("Something went wrong", { autoClose: 1500 });
             console.log(error);
+            setdisable(false)
+            seteditable(!editable);
+            toast.update(toastId, { render: error.message, type: "warning", isLoading: false, autoClose: 2600 });
         }
     }
     const [isuploading, setisuploading] = useState(false);
@@ -218,6 +224,7 @@ const Photo = () => {
 
     const resetpassword = async () => {
         const id = toast.loading("Please wait...")
+        setdisable(true)
         try {
             // setisloadinge(true)
             const token = localStorage.getItem("token");
@@ -232,14 +239,17 @@ const Photo = () => {
             // setisloadinge(false)
 
             if (!res.ok) {
+                setdisable(false)
                 return toast.update(id, { render: data.message, type: "warn", isLoading: false, autoClose: 2100 });
             }
+            setdisable(false)
             setmessagesent(data.extramessage)
             toast.update(id, { render: data.message, type: "success", isLoading: false, autoClose: 2100 });
         } catch (error) {
             toast.update(id, { render: error.message, type: "warn", isLoading: false, autoClose: 2200 });
             // setisloadinge(false)
             console.log(error);
+            setdisable(false)
         }
     }
     return (
@@ -247,30 +257,31 @@ const Photo = () => {
             <div className="photo">
                 <div className="profile">
                     <h2>User Profile Detail</h2>
+                    <i className="fa fa-pencil" title='Edit Details' aria-hidden="true" onClick={() => seteditable(!editable)}></i>
                     <div className='upper'>
                         <div className="profile-header">
                             <img src={useralldetail.profilepic ? useralldetail.profilepic : defaultprofile} alt="User Avatar" />
                             <br />  <button onClick={hello}>Update profile</button> <br />
                         </div>
                         <div className="profile-bio">
-                            <div>
-                                <label htmlFor="name"> <h3 >Name</h3></label>
-                                :<input style={{ outline: editable && "none" }} readOnly={editable} id='name' type="text" onChange={handle} name="name" defaultValue={input.name} />
-                            </div>
-                            <div>
-                                <label htmlFor="phone"> <h3 >Phone</h3></label>
-                                :<input style={{ outline: editable && "none" }} readOnly={editable} id='phone' type="tel" onChange={handle} name="phone" defaultValue={input.phone} />
-                            </div>
-                            <div>
-                                <label htmlFor="email"> <h3 >Email</h3></label>
-                                :<input style={{ outline: "none" }} title={editable && "Email Can't be Updated"} readOnly={true} id='email' type="text" onChange={handle} name="email" defaultValue={input.email} />
-                            </div>
-                            {!editable && <div>  <button onClick={updatedetails}>Update Deatils</button> </div>}
-                            <Button onClick={resetpassword} title='Feature coming soon' variant="contained" className='splbtn' startIcon={<SentimentDissatisfiedIcon />}>
+
+                            <TextField id="name" size='small' fullWidth label="Name" InputProps={{ readOnly: editable, }} variant="outlined" onChange={handle} name="name" defaultValue={input.name} />
+
+                            <TextField id="phone" size='small' label="Phone" fullWidth InputProps={{ readOnly: editable, }} inputProps={{
+                                maxLength: 10,
+                                inputMode: "numeric",
+                                pattern: "[0-9]*",
+                            }} variant="outlined" onChange={handle} type="tel" name="phone" defaultValue={input.phone} />
+
+                            <TextField id="email" size='small' label="Email" fullWidth InputProps={{ readOnly: editable, }} variant="outlined" onChange={handle} type="email" name="email" defaultValue={input.email} />
+
+
+                            {!editable && <div>  <Button fullWidth disabled={disable} variant='contained' onClick={updatedetails}>Update Deatils</Button> </div>}
+                            <Button disabled={disable} onClick={resetpassword} title='Password Reset' variant="contained" className='splbtn' startIcon={<SentimentDissatisfiedIcon />}>
                                 Send Password Reset Link
                             </Button>
-                           {messagesent && <span style={{fontSize:'12px',color:'green'}}>{messagesent}</span> }
-                            <i className="fa fa-pencil" title='Edit Details' aria-hidden="true" onClick={() => seteditable(!editable)}></i>
+                            {messagesent && <span style={{ fontSize: '12px', color: 'green' }}>{messagesent}</span>}
+
                         </div>
 
                     </div>

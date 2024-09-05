@@ -114,7 +114,6 @@ const Report = () => {
                     <span id="bottom"><a href="#foot"><i title='Go to Bottom' className="fa fa-arrow-down" aria-hidden="true"></i></a></span>
                     <span id="top"><a href="#tavlecontent"><i title='Go to Top' className="fa fa-arrow-up" aria-hidden="true"></i></a></span>
                 </span> : null} */}
-
                 <div className="cont">
                     <span>
                         <span>
@@ -147,7 +146,7 @@ const Report = () => {
                     </span>
                 </div>
                 <div className="table" >
-                    <h2>Accusoft - {useralldetail.user.name}</h2> <h3> (Report from {formatDate(inp.from)} to {formatDate(inp.to)} )</h3>
+                    <div className='head'> <b>Accusoft - {useralldetail.user.name}</b> (Report from {formatDate(inp.from)} to {formatDate(inp.to)})</div>
                     <table id='tavlecontent'>
                         <thead id='table'>
                             <tr>

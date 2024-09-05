@@ -3,6 +3,7 @@
     width: 100%;
     height: 100%;
     overflow: hidden;
+    position: relative;
 
    & .cont {
         width: 100%;
@@ -13,6 +14,21 @@
         height: 80px;
         padding: 0px 20px;
         color: #212529;
+    }
+    &::before {
+        content: '';
+        position: fixed; 
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url('https://res.cloudinary.com/dusxlxlvm/image/upload/v1725526409/accusoft/assets/preloader/fox_ajgfyv.webp');
+        background-size: 450px;
+        background-repeat: no-repeat;
+        background-position: 50% 70%;
+        opacity: 0.2;
+        pointer-events: none;
+        display: none;
     }
 }
 
@@ -106,13 +122,13 @@
     overflow: auto;
     position: relative;
 
-  &  h2{
+  &  div{
         text-align: center;
         text-transform: capitalize;
         color: var(--maincolor);
         display: none;
+        margin-bottom: 5px;
     }
-   
 }
 
 
@@ -229,26 +245,17 @@
 
     .report {
         -webkit-print-color-adjust: exact;
+        page-break-inside: avoid; 
 
         &::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('/src/assets/watermark.png');
-            background-size: 250px;
-            background-repeat: no-repeat;
-            background-position: center;
-            z-index: -1;
-            opacity: 0.4;
+           display: block;
+           background-position: 50% 50%;
         }
 
        & .table {
             overflow: visible;
 
-          &  h2{
+          &  div{
                 display: block;
             }
 

@@ -10,6 +10,11 @@ import DownloadIcon from '@mui/icons-material/Download';
 import PrintIcon from '@mui/icons-material/Print';
 import Button from '@mui/material/Button';
 import { motion } from 'framer-motion';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
 
 const Report = () => {
     const dispatch = useDispatch();
@@ -99,6 +104,7 @@ const Report = () => {
 
     useEffect(() => {
         search();
+        console.log(inp.ledger)
         // console.log(yesterday);
     }, [inp])
 
@@ -122,16 +128,28 @@ const Report = () => {
                         <span>
                             To: <input value={inp.to} onChange={handler} type="date" name="to" id="" />
                         </span>
-                        <span>
-                            Select Ledger : <select value={inp.ledger} onChange={handler} name="ledger" id="">
-                                <option value="all">All</option>
+                        <FormControl className='ledger caps mui' size='small'>
+                            <InputLabel  id="demo-simple-select-label">Ledger</InputLabel>
+                            <Select
+                                name="ledger"
+                                labelId="demo-simple-select-label"
+                                onChange={handler}
+                                value={inp.ledger}
+                                defaultValue={inp.ledger[1]}
+                                id="demo-simple-select"
+                                label="Ledger"
+                            >
+                                <MenuItem value="all">All</MenuItem>
                                 {useralldetail.ledgerlist.map((val, ind) => {
-                                    return <option key={ind} value={val.ledger}>{val.ledger}</option>
+                                    return <MenuItem sx={{ textTransform: "capitalize" }} key={ind} value={val.ledger}>{val.ledger}</MenuItem>
                                 })}
-                            </select>
-                        </span>
 
-                        {issearch ? <button onClick={clearsearch}>Clear</button> : null}
+                            </Select>
+                        </FormControl>
+
+                        <Button className='mui' disabled={!issearch} title='Clear search' variant="contained" onClick={clearsearch} startIcon={<RestartAltIcon />}>
+                            Clear
+                        </Button>
                     </span>
                     <span>
                         <CSVLink data={pious} headers={header} filename={`${username}-Expense Record`}>

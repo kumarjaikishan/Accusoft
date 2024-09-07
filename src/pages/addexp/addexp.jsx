@@ -163,7 +163,7 @@ const AddExpenses = () => {
       dangerMode: true,
     }).then(async (willDelete) => {
       if (willDelete) {
-        const url = `${userAllDetails.apiadress}/delmany`;
+        const url = `${import.meta.env.VITE_API_ADDRESS}delmany`;
         const method = 'POST';
         const body = { id: itemIds };
 

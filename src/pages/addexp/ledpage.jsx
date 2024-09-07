@@ -7,7 +7,7 @@ import { userdata } from '../../store/api';
 import { toast } from 'react-toastify';
 import swal from 'sweetalert';
 import TextField from '@mui/material/TextField';
-import apiWrapper from './apiWrapper'; // Import the wrapper
+import apiWrapper from './apiWrapper';
 
 const Ledpage = ({ setmodal, setdisable, disable, navigate, isledupdate, setisledupdate }) => {
   const dispatch = useDispatch();

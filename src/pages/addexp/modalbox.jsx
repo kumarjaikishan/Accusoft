@@ -14,7 +14,6 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
-import { motion } from 'framer-motion';
 
 const Modalbox = ({ setisledupdate, modal, navigate, disable, setdisable, init, handler, inp, isupdate, sub, setmodal, setisupdate, setinp }) => {
     const useralldetail = useSelector((state) => state.userexplist);
@@ -27,7 +26,7 @@ const Modalbox = ({ setisledupdate, modal, navigate, disable, setdisable, init, 
         date = dayjs(date).format("YYYY-MM-DD");
         //   console.log(date);
 
-        const url = `${useralldetail.apiadress}/updateexp`;
+        const url = `${import.meta.env.VITE_API_ADDRESS}updateexp`;
         const method = 'POST';
         const body = {
             _id, ledger, date, amount, narration: capitalize(narration)

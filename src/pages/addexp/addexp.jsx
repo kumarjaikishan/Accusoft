@@ -97,7 +97,7 @@ const AddExpenses = () => {
       return toast.warn('Kindly Fill all Fields', { autoClose: 1700 });
     }
 
-    const url = `${userAllDetails.apiadress}/addexpense`;
+    const url = `${import.meta.env.VITE_API_ADDRESS}addexpense`;
     const method = 'POST';
     const body = {
       ledger,

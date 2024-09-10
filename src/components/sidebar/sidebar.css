@@ -142,6 +142,7 @@
 
 .sidebar .admin-panel>span span:nth-child(3) {
     position: absolute;
+    /* border: 1px solid red; */
     right: 5px;
     top: 80%;
     transform: translate(-50%, -50%);

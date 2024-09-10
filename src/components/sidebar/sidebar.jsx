@@ -8,6 +8,8 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { header } from '../../store/login';
 import { useSelector, useDispatch } from 'react-redux';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 const Sidebar = () => {
     let navigate = useNavigate();
@@ -113,7 +115,8 @@ const Sidebar = () => {
                                     <i title={'Admin'} className="fa fa-lock" aria-hidden="true"></i>
                                 </span>
                                 <span className="name">Admin</span>
-                             {!log.narrow &&  <span><i className={adminSubMenuVisible ? "fa fa-arrow-up":"fa fa-arrow-down"} aria-hidden="true"></i></span> }  
+                                {/* {!log.narrow &&  <span><i className={adminSubMenuVisible ? "fa fa-arrow-up":"fa fa-arrow-down"} aria-hidden="true"></i></span> }   */}
+                                {!log.narrow && <span> {adminSubMenuVisible ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}</span>}
                             </span>
                             {adminSubMenuVisible && (
                                 <div className="sub-menu">
@@ -153,11 +156,11 @@ const Sidebar = () => {
                                             <span className="name">Expenses</span>
                                         </span>
                                     </NavLink> */}
-                                   
+
                                 </div>
                             )}
                         </div>
-                    ) : null:null}
+                    ) : null : null}
                     {log.islogin ? useralldetail.user?.isadmin ? (
                         <div className="admin-panel">
                             <span className={`li ${testSubMenuVisible ? 'active' : ''}`} onClick={toggletestSubMenu} >
@@ -165,8 +168,8 @@ const Sidebar = () => {
                                     <i title={'Admin'} className="fa fa-server" aria-hidden="true"></i>
                                 </span>
                                 <span className="name">Server Test</span>
-                             {!log.narrow &&  <span><i className={testSubMenuVisible ? "fa fa-arrow-up":"fa fa-arrow-down"} aria-hidden="true"></i></span> }  
-                            </span>
+                                {/* {!log.narrow &&  <span><i className={testSubMenuVisible ? "fa fa-arrow-up":"fa fa-arrow-down"} aria-hidden="true"></i></span> }   */}
+                                {!log.narrow && <span> {testSubMenuVisible ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}</span>}    </span>
                             {testSubMenuVisible && (
                                 <div className="sub-menu">
                                     <NavLink
@@ -193,11 +196,11 @@ const Sidebar = () => {
                                             <span className="name">Worker Slow</span>
                                         </span>
                                     </NavLink>
-                                   
+
                                 </div>
                             )}
                         </div>
-                    ) : null:null}
+                    ) : null : null}
                     {log.islogin ? (
                         <span className="li" onClick={fr}>
                             <span className="logo">

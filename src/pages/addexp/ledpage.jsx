@@ -168,7 +168,7 @@ const Ledpage = ({ setmodal, setdisable, disable, navigate, isledupdate, setisle
   return (
     <div className="ledpage" onClick={sdef} style={{ display: isledupdate ? "block" : "none" }}>
       <div className="box">
-        <h2>Hi, {useralldetail?.user.name}</h2>  <span className='back' onClick={back}> <i className="fa fa-undo" aria-hidden="true"></i> Back</span>
+        <h2>Hi, {useralldetail?.user?.name}</h2>  <span className='back' onClick={back}> <i className="fa fa-undo" aria-hidden="true"></i> Back</span>
 
         <span className='ledwrapper'>
           <div className="cont">

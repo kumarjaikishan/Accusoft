@@ -27,22 +27,11 @@
         margin-top: 5px;
         margin-bottom: 2px;
 
-        & i {
-            display: inline-block;
-            /* border: 1px solid red; */
-            width: 50px;
-            height: 50px;
-            cursor: pointer;
-            font-size: 2.6em;
-            transition: 0.1s;
-            text-align: center;
-            line-height: 50px;
+        .btne{
             background: var(--maincolor);
-            border-radius: 11px;
-            color: white;
 
-            &:hover {
-                transform: scale(1.03);
+            &:hover{
+                background:var(--hovercolor);
             }
         }
     }
@@ -113,17 +102,15 @@
 
             & thead th {
 
-
-                & .fa {
+                >span{
+                    width: 100%;
                     display: inline-block;
-                    width: 20px;
-                    height: 20px;
-                    border-radius: 50%;
-                    text-align: center;
-                    margin-left: 2px;
-                    cursor: pointer;
-                    font-size: 1em;
+                    display: flex;
+                    flex-wrap: wrap;
+                    justify-content: space-evenly;
                 }
+
+              
             }
 
             & th.active {
@@ -162,7 +149,7 @@
                 }
 
                 th:nth-child(3) {
-                    width: 60px;
+                    width: 70px;
                 }
             }
 
@@ -286,12 +273,11 @@
 
         & .add {
             height: 40px;
+            margin: 5px 0;
+            justify-content: center;
 
-            i {
-                width: 40px;
-                height: 40px;
-                font-size: 2.1em;
-                line-height: 42px;
+            .btne{
+                width: 50vw;
             }
         }
 
@@ -324,7 +310,11 @@
                 }
 
                 th {
-                    font-size: 12px;
+                    font-size: 11px;
+
+                    svg{
+                        font-size: 10px;
+                    }
                 }
 
                 & thead {

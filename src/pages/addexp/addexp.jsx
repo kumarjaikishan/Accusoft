@@ -12,6 +12,9 @@ import { toast } from 'react-toastify';
 import apiWrapper from './apiWrapper';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useNavigate } from "react-router-dom";
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import Button from '@mui/material/Button';
+import AddBoxIcon from '@mui/icons-material/AddBox';
 
 const AddExpenses = () => {
   const dispatch = useDispatch();
@@ -284,7 +287,7 @@ const AddExpenses = () => {
       }
     }
   };
-  const voucherpage=(expid)=>{
+  const voucherpage = (expid) => {
     navigate(`/print/${expid}`);
   }
 
@@ -297,7 +300,8 @@ const AddExpenses = () => {
         transition={{ duration: 0.2, ease: "easeInOut" }}
         className={isModalOpen || isLedgerUpdate ? 'exp ismodal' : 'exp'}>
         <div className="add">
-          <i title="Add Expense" className="fa fa-plus" onClick={() => setIsModalOpen(true)} aria-hidden="true" id="addexp"></i>
+        <Button size='large' className='btne' title='Add Expense' onClick={() => setIsModalOpen(true)} startIcon={<AddBoxIcon />} variant="contained">Add Expense</Button>
+          {/* <i title="Add Expense" className="fa fa-plus" onClick={() => setIsModalOpen(true)} aria-hidden="true" id="addexp"></i> */}
         </div>
         <div className="head">
           <span>Expense List </span>
@@ -320,16 +324,16 @@ const AddExpenses = () => {
           <table cellSpacing="15">
             <thead>
               <tr>
-                <th>S.no</th>
+                <th><span> S.no </span></th>
                 <th onClick={() => sortPosts('ledger')}>
-                  <span>Ledger</span> <i className="fa fa-arrow-down" aria-hidden="true"></i>
+                  <span>Ledger <i ><KeyboardArrowDownIcon /> </i> </span>
                 </th>
                 <th onClick={() => sortPosts('amount')}>
-                  <span>Amt.</span> <i className="fa fa-arrow-down" aria-hidden="true"></i>
+                  <span>Amt. <i ><KeyboardArrowDownIcon /> </i> </span>
                 </th>
                 <th>Narration</th>
                 <th onClick={() => sortPosts('date')}>
-                  <span>Date</span> <i className="fa fa-arrow-down" aria-hidden="true"></i>
+                <span>Date <i ><KeyboardArrowDownIcon /> </i> </span>
                 </th>
                 <th>Actions</th>
                 <th title="Select All">

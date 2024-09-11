@@ -4,19 +4,17 @@ import Sidebar from './components/sidebar/sidebar';
 import Home from './pages/home';
 import Preloader from './preloader';
 import Addexp from './pages/addexp/addexp';
-import Datanalysis from './pages/dataanalysis';
-import { useEffect } from 'react';
+import { useEffect, lazy, Suspense } from 'react';
 import Login from './pages/login/login';
 import Logout from './pages/logout';
-import Report from './pages/Report';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import Photo from './pages/photo';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useSelector, useDispatch } from 'react-redux';
 import { setnarrow } from '../src/store/login';
 import Officeexp from './pages/voucher';
 import Test from './pages/test';
-import { userdata } from './store/api'
+import { userdata } from './store/api';
 import { Errorpage } from './pages/Errorpage';
 import Allexpense from './pages/admin/Allexpenses';
 import Alluser from './pages/admin/alluser';
@@ -29,29 +27,30 @@ import SlowWorkerPage from './pages/serverTest/workerSlow';
 import { AnimatePresence } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
 
+const Datanalysis = lazy(() => import('./pages/dataanalysis'));
+const Report = lazy(() => import('./pages/Report'));
+
 function App() {
   const dispatch = useDispatch();
   const log = useSelector((state) => state.login);
   let location = useLocation();
-  console.log(import.meta.env.VITE_API_ADDRESS)
+  console.log(import.meta.env.VITE_API_ADDRESS);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     token && dispatch(userdata());
-  }, [])
+  }, []);
 
-
-  // autocolse sidebar when screensize below 600px
+  // Autoclose sidebar when screen size is below 600px
   const sidebarclose = () => {
     const width = window.innerWidth;
     width < 600 ? dispatch(setnarrow(true)) : null;
-  }
-
+  };
 
   return (
     <>
       <ToastContainer closeOnClick={true} pauseOnFocusLoss={true} />
-      <div className={log.loader ? 'App loader' : 'App'} >
+      <div className={log.loader ? 'App loader' : 'App'}>
         <Navbar />
         <main className={log.narrow ? "main narrow" : "main"} onClick={sidebarclose}>
           <AnimatePresence mode='wait'>
@@ -59,20 +58,35 @@ function App() {
               <Route element={<ProtectedRoutes />}>
                 <Route path="/" element={<Home />} />
                 <Route path="/addexpense" element={<Addexp />} />
-                <Route path="/datanalysis" element={<Datanalysis />} />
-                <Route path="/report" element={<Report />} />
                 <Route path="/photo" element={<Photo />} />
                 <Route path="/print/:expId" element={<Officeexp />} />
+                
+                {/* Lazy loaded routes inside Suspense with proper structure */}
+                <Route
+                  path="/datanalysis"
+                  element={
+                    <Suspense fallback={<div>Loading...</div>}>
+                      <Datanalysis />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="/report"
+                  element={
+                    <Suspense fallback={<div>Loading...</div>}>
+                      <Report />
+                    </Suspense>
+                  }
+                />
               </Route>
 
               <Route element={<AdminRoute />}>
-                <Route path="/admin" >
+                <Route path="/admin">
                   <Route path="dashboard" element={<Admin_Dashboard />} />
                   <Route path="users" element={<Alluser />} />
                   <Route path="expense" element={<Allexpense />} />
                 </Route>
               </Route>
-
 
               <Route path="/resetpassword/:token" element={<PasswordReset />} />
               <Route path="/slow" element={<SlowPage />} />
@@ -81,15 +95,17 @@ function App() {
               <Route path="/test" element={<Test />} />
               <Route path="*" element={<Errorpage />} />
 
-              {log.islogin ? <Route path="/login" element={<Navigate to="/" />} /> : <Route path="/login" element={<Login />} />}
-
+              {log.islogin ? (
+                <Route path="/login" element={<Navigate to="/" />} />
+              ) : (
+                <Route path="/login" element={<Login />} />
+              )}
             </Routes>
           </AnimatePresence>
           {log.loader && <Preloader />}
         </main>
         <footer className={log.narrow ? "footer narrow" : "footer"}>
-          <p>&copy; 2024 Accusoft. All rights reserved.
-            Designed and developed by Jai kishan</p>
+          <p>&copy; 2024 Accusoft. All rights reserved. Designed and developed by Jai Kishan</p>
         </footer>
         <Sidebar />
       </div>

@@ -65,7 +65,7 @@ function App() {
                 <Route
                   path="/datanalysis"
                   element={
-                    <Suspense fallback={<div>Loading...</div>}>
+                    <Suspense fallback={<Preloader />}>
                       <Datanalysis />
                     </Suspense>
                   }
@@ -73,7 +73,7 @@ function App() {
                 <Route
                   path="/report"
                   element={
-                    <Suspense fallback={<div>Loading...</div>}>
+                    <Suspense fallback={<Preloader />}>
                       <Report />
                     </Suspense>
                   }

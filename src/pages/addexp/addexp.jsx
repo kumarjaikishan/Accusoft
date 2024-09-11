@@ -307,7 +307,7 @@ const AddExpenses = () => {
           <span>Expense List </span>
           <span>
             Record :{' '}
-            <select name="" id="" value={postsPerPage} onChange={handlePageSizeChange}>
+            <select title='Items Per Page' name="" id="" value={postsPerPage} onChange={handlePageSizeChange}>
               <option value="10">10</option>
               <option value="20">20</option>
               <option value="50">50</option>
@@ -317,7 +317,7 @@ const AddExpenses = () => {
             </select>
           </span>
           <span>
-            <input type="text" onChange={(e) => setSearchInput(e.target.value)} value={searchInput} placeholder="Type to search..." />
+            <input type="text" title='Search' onChange={(e) => setSearchInput(e.target.value)} value={searchInput} placeholder="Type to search..." />
           </span>
         </div>
         <div className="table">
@@ -366,7 +366,7 @@ const AddExpenses = () => {
                           {/* <i title="print" onClick={() => voucherpage(expense._id)} className="fa fa-print" aria-hidden="true"></i> */}
                         </td>
                         <td>
-                          <input type="checkbox" onClick={highlight} id={expense._id} />
+                          <input type="checkbox" title='select' onClick={highlight} id={expense._id} />
                         </td>
                       </tr>
                     );

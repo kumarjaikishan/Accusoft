@@ -22,8 +22,7 @@ const AddExpenses = () => {
   const userAllDetails = useSelector((state) => state.userexplist);
   const [searchInput, setSearchInput] = useState('');
   const [finalsearch, setfinalserach] = useState('');
-  const isAnimatingRef = React.useRef(false);
-  
+
 
   useEffect(() => {
     dispatch(setloader(false))
@@ -32,7 +31,6 @@ const AddExpenses = () => {
   useEffect(() => {
     const timerId = setTimeout(() => {
       // console.log("called");
-      
       setfinalserach(searchInput.toLowerCase());
     }, 2000);
 
@@ -139,7 +137,6 @@ const AddExpenses = () => {
   };
 
   const deleteExpense = async (expenseId) => {
-    isAnimatingRef.current = true;
     itemIds = []
     itemIds.push(expenseId);
     // console.log(itemIds);
@@ -183,11 +180,10 @@ const AddExpenses = () => {
           selectedItems.forEach((item) => {
             item.checked = false;
           });
-          setTimeout(() => {
-            isAnimatingRef.current = false;
-          }, 100); 
+
           highlight();
         };
+
         const loaderAction = (isLoading) => dispatch(setloader(isLoading));
 
         await apiWrapper(url, method, body, dispatch, successAction, loaderAction, navigate);
@@ -227,7 +223,7 @@ const AddExpenses = () => {
 
   const highlight = () => {
     const checkboxes = document.querySelectorAll('#tablecontent input');
-    const tableRows = document.querySelectorAll('#tablecontent div');
+    const tableRows = document.querySelectorAll('#tablecontent tr');
 
     checkboxes.forEach((checkbox, index) => {
       const parentRow = tableRows[index];
@@ -295,41 +291,33 @@ const AddExpenses = () => {
     navigate(`/print/${expid}`);
   }
   const container = {
+    hidden: { opacity: 1, scale: 0 },
     visible: {
       opacity: 1,
       scale: 1,
       transition: {
-        delayChildren: .1, //this is overall delay for whole children
-        // staggerChildren: 0.16
+        delayChildren: .2, //this is overall delay for whole children
+        staggerChildren: 0.65
       }
     }
   };
-  // const item = {
-  //   hidden: { x: -80, y: 80, opacity: 0, scale: 0 },
-  //   visible: { y: 0, x: 0, scale: 1, opacity: 1 }
-  // };
+
   const item = {
-    hidden: { x: '-150%' },
-    visible: {
-      x: 0,
-      transition: {
-        type: 'spring',
-        stiffness: 300, //these are by default value, work without using it
-        damping: 20
-      }
-    }
+    hidden: { x: -80, y: 80, opacity: 0, scale: 0 },
+    visible: { y: 0, x: 0, scale: 1, opacity: 1 },
   };
 
   return (
     <>
       <motion.div
-        initial={{ opacity: 0, x: '100%' }}  // Initial state
-        animate={{ opacity: 1, x: 0 }}  // Animation state
+        // initial={{ opacity: 0, x: '100%' }}  // Initial state
+        // animate={{ opacity: 1, x: 0 }}  // Animation state
         exit={{ opacity: 0, x: '-100%' }}  // Exit animation
         transition={{ duration: 0.2, ease: "easeInOut" }}
         className={isModalOpen || isLedgerUpdate ? 'exp ismodal' : 'exp'}>
         <div className="add">
           <Button size='large' className='btne' title='Add Expense' onClick={() => setIsModalOpen(true)} startIcon={<AddBoxIcon />} variant="contained">Add Expense</Button>
+          {/* <i title="Add Expense" className="fa fa-plus" onClick={() => setIsModalOpen(true)} aria-hidden="true" id="addexp"></i> */}
         </div>
         <div className="head">
           <span>Expense List </span>
@@ -349,54 +337,69 @@ const AddExpenses = () => {
           </span>
         </div>
         <div className="table">
-          <div className="header">
-            <span>S.NO</span>
-            <span onClick={() => sortPosts('ledger')}>Ledger <i><KeyboardArrowDownIcon /> </i></span>
-            <span onClick={() => sortPosts('amount')}>Amt. <i><KeyboardArrowDownIcon /> </i></span>
-            <span>Narration</span>
-            <span onClick={() => sortPosts('date')}>Date <i><KeyboardArrowDownIcon /> </i></span>
-            <span>Actions</span>
-            <span><input type="checkbox" onClick={selectAllCheckbox} id="allcheck" /></span>
-          </div>
-          <motion.div
-            variants={container}
-            initial="hidden"
-            animate="visible"
-            className="body"
-            id="tablecontent"
-          >
+          <table cellSpacing="15">
+            <thead>
+              <tr>
+                <th><span> S.no </span></th>
+                <th onClick={() => sortPosts('ledger')}>
+                  <span>Ledger <i><KeyboardArrowDownIcon /> </i> </span>
+                </th>
+                <th onClick={() => sortPosts('amount')}>
+                  <span>Amt. <i ><KeyboardArrowDownIcon /> </i> </span>
+                </th>
+                <th>Narration</th>
+                <th onClick={() => sortPosts('date')}>
+                  <span>Date <i ><KeyboardArrowDownIcon /> </i> </span>
+                </th>
+                <th>Actions</th>
+                <th title="Select All">
+                  <input type="checkbox" onClick={selectAllCheckbox} id="allcheck" />
+                </th>
+              </tr>
+            </thead>
             <AnimatePresence>
-              {(sortedList ? sortedList : currentPosts)?.filter((item) => {
-                return (
-                  finalsearch === '' ||
-                  item.narration.toLowerCase().includes(finalsearch) ||
-                  item.ledger.ledger.toLowerCase().includes(finalsearch) ||
-                  item.amount.toString().includes(finalsearch)
-                );
-              }).map((expense, index) => {
-                return <motion.div
-                  variants={item}
-                  // exit={{ opacity: 1, x: '-150%', transition: { duration: 0.3 } }}
-                  exit={isAnimatingRef.current ? { opacity: 1, x: '-150%', transition: { duration: 0.5 } } : {}}
-                  key={expense._id} // Ensure each item has a unique key
-                >
-                  <span>{firstPostIndex + index + 1}</span>
-                  <span className='caps'>{expense.ledger.ledger}</span>
-                  <span>{expense.amount}</span>
-                  <span>{expense.narration}</span>
-                  <span>{dayjs(expense.date).format('DD MMM, YYYY')}</span>
-                  <span>
-                    <i title="Edit" onClick={() => setDataForEdit(expense)} className="fa fa-pencil-square-o" aria-hidden="true"></i>
-                    {/* <i title="print" onClick={() => voucherpage(expense._id)} className="fa fa-print" aria-hidden="true"></i> */}
-                    <i title="Delete" onClick={() => deleteExpense(expense._id)} className="fa fa-trash-o" aria-hidden="true"></i>
-                  </span>
-                  <span> <input type="checkbox" title='select' onClick={highlight} id={expense._id} /></span>
-                </motion.div>
-              })}
-              <div id="foot">
-                <span></span>
-                <span style={{ fontWeight: 700 }} >Total</span>
-                <span style={{ fontWeight: 700 }} id="totalhere">
+              <motion.tbody
+                variants={container}
+                initial="hidden"
+                animate="visible"
+                layout
+                id="tablecontent">
+                {(sortedList ? sortedList : currentPosts)?.filter((item) => {
+                  return (
+                    finalsearch === '' ||
+                    item.narration.toLowerCase().includes(finalsearch) ||
+                    item.ledger.ledger.toLowerCase().includes(finalsearch) ||
+                    item.amount.toString().includes(finalsearch)
+                  );
+                })
+                  .map((expense, index) => {
+                    return (
+                      <motion.tr key={expense._id} variants={item}
+                        exit={{ opacity: 0, x: '-100%', transition: { duration: 8.5 } }}
+                      >
+                        <td>{firstPostIndex + index + 1}</td>
+                        <td className='caps'>{expense.ledger.ledger}</td>
+                        <td>{expense.amount}</td>
+                        <td>{expense.narration}</td>
+                        <td>{dayjs(expense.date).format('DD MMM, YYYY')}</td>
+                        <td>
+                          <i title="Edit" onClick={() => setDataForEdit(expense)} className="fa fa-pencil-square-o" aria-hidden="true"></i>
+                          <i title="Delete" onClick={() => deleteExpense(expense._id)} className="fa fa-trash-o" aria-hidden="true"></i>
+                          {/* <i title="print" onClick={() => voucherpage(expense._id)} className="fa fa-print" aria-hidden="true"></i> */}
+                        </td>
+                        <td>
+                          <input type="checkbox" title='select' onClick={highlight} id={expense._id} />
+                        </td>
+                      </motion.tr>
+                    );
+                  })}
+              </motion.tbody>
+            </AnimatePresence>
+            <tfoot>
+              <tr id="foot">
+                <th colSpan="1"></th>
+                <th colSpan="1">Total</th>
+                <th colSpan="1" id="totalhere">
                   {currentPosts?.filter((item) => {
                     return (
                       finalsearch === '' ||
@@ -408,16 +411,15 @@ const AddExpenses = () => {
                     .reduce((accumulator, expense) => {
                       return (accumulator += expense.amount);
                     }, 0)}
-                </span>
-                <span></span>
-                <span></span>
-                <span colSpan="1" id="alldelete" title="Delete Selected Item">
+                </th>
+                <th colSpan="2"></th>
+                <th colSpan="1" id="alldelete" title="Delete Selected Item">
                   <i onClick={deletemanyExpense} className="fa fa-trash" aria-hidden="true"></i>
-                </span>
-                <span></span>
-              </div>
-            </AnimatePresence>
-          </motion.div>
+                </th>
+                <th colSpan="1"></th>
+              </tr>
+            </tfoot>
+          </table>
         </div>
         <div className="foot">
           <span>

@@ -347,7 +347,7 @@ const AddExpenses = () => {
             <span onClick={() => sortPosts('amount')}>Amt. <i><KeyboardArrowDownIcon /> </i></span>
             <span>Narration</span>
             <span onClick={() => sortPosts('date')}>Date <i><KeyboardArrowDownIcon /> </i></span>
-            <span>Actions</span>
+            <span>Action</span>
             <span><input type="checkbox" onClick={selectAllCheckbox} id="allcheck" /></span>
           </div>
           <motion.div

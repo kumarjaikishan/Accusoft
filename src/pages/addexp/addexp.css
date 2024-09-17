@@ -180,24 +180,22 @@
         .body {
 
             div {
-                border: 0.5px solid var(--tableborder);
-                /* border-top: none; */
+                border-bottom: 0.5px solid var(--tableborder);
                 display: flex;
                 justify-content: space-between;
-            }
 
-            span {
-                padding: 5px 0;
-                /* border: 1px solid red; */
-                /* border: 1px solid var(--tableborder); */
-                text-align: center;
-                font-size: 14px;
-                color: var(--color);
-
-                &:nth-child(6) {
-                    border-right: 1px solid rgb(183, 182, 182);
-                    border-left: 1px solid rgb(183, 182, 182);
-
+                span {
+                    padding: 5px 0;
+                    /* border: 1px solid red; */
+                    /* border: 1px solid var(--tableborder); */
+                    text-align: center;
+                    font-size: 14px;
+                    color: var(--color);
+    
+                    &:nth-child(6) {
+                        border-right: 1px solid rgb(183, 182, 182);
+                        border-left: 1px solid rgb(183, 182, 182);
+                    }
                 }
             }
         }
@@ -314,11 +312,6 @@
 
             .header,
             .body {
-
-                & span {
-                    font-size: 9px;
-                }
-
                 & span:nth-child(1) {
                     min-width: 30px;
                     /* border: 1px solid red; */
@@ -345,7 +338,7 @@
                 }
 
                 & span:nth-child(6) {
-                    min-width: 35px;
+                    min-width: 38px;
                     /* border: 1px solid red; */
                 }
 
@@ -360,9 +353,11 @@
             }
 
             .header {
-                span {
+                >span {
                     display: flex;
                     justify-content: space-around;
+                    font-size: 10px;
+                    padding: 0 0px;
 
                     i {
                         * {
@@ -371,6 +366,14 @@
                     }
                 }
 
+            }
+
+            .body {
+                div {
+                    span {
+                        font-size: 9px;
+                    }
+                }
             }
         }
 

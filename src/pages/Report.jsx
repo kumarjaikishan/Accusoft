@@ -89,7 +89,7 @@ const Report = () => {
         })
     }
     const print = () => {
-        dispatch(setnarrow(false))
+        // dispatch(setnarrow(false))
         setTimeout(() => {
             window.print()
         }, 1);
@@ -147,18 +147,18 @@ const Report = () => {
                             </Select>
                         </FormControl>
 
-                        <Button className='mui' disabled={!issearch} title='Clear search' variant="contained" onClick={clearsearch} startIcon={<RestartAltIcon />}>
+                        <Button className='muibtn' disabled={!issearch} title='Clear search' variant="contained" onClick={clearsearch} startIcon={<RestartAltIcon />}>
                             Clear
                         </Button>
                     </span>
                     <span>
                         <CSVLink data={pious} headers={header} filename={`${username}-Expense Record`}>
                             {/* <button title='Download'>Download csv</button> */}
-                            <Button title='Download' size='small' variant="contained" startIcon={<DownloadIcon />}>
+                            <Button className='muibtn' title='Download' size='small' variant="contained" startIcon={<DownloadIcon />}>
                                 Csv
                             </Button>
                         </CSVLink>
-                        <Button title='print' size='small' variant="contained" onClick={print} startIcon={<PrintIcon />}>
+                        <Button className='muibtn' title='print' size='small' variant="contained" onClick={print} startIcon={<PrintIcon />}>
                             Print
                         </Button>
                     </span>

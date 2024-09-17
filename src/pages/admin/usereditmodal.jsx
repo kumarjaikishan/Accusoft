@@ -7,8 +7,11 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import Button from '@mui/material/Button';
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
+import SaveIcon from '@mui/icons-material/Save';
 
-const Useredit = ({ inp, modal, setmodal, handler,fetche }) => {
+const Useredit = ({ inp, modal, setmodal, handler, fetche }) => {
     const useralldetail = useSelector((state) => state.userexplist);
     const dispatch = useDispatch();
 
@@ -65,53 +68,60 @@ const Useredit = ({ inp, modal, setmodal, handler,fetche }) => {
         <div className="modal" style={{ display: modal ? "block" : "none" }}>
             <div className="box">
                 <h1>User Detail</h1>
-
-                <TextField sx={{ width: '90%', mt: 2, mb: 2 }} id="outlined-basic" label="Name"
-                    name="name" value={inp.name} type="text" onChange={handler}
-                    variant="outlined" />
-                <TextField sx={{ width: '90%', mt: 2, mb: 2 }} id="outlined-basic" label="Phone" name="phone"
-                    onKeyPress={(event) => { if (!/[0-9]/.test(event.key)) { event.preventDefault(); } }}
-                    type="tel" value={inp.phone}
-                    onChange={handler}
-                    variant="outlined" />
-
-                <TextField disabled sx={{ width: '90%', mt: 2, mb: 2 }} id="outlined-basic" label="Name"
-                    name="email" value={inp.email} type="text" onChange={handler}
-                    variant="outlined" />
-
-                <FormControl className='caps' sx={{ width: '90%', mt: 2, mb: 2 }}>
-                    <InputLabel id="demo-simple-select-label">Admin</InputLabel>
-                    <Select
-                        name="admin"
-                        labelId="demo-simple-select-label"
+                <span className="wrapper">
+                    <TextField sx={{ width: '90%', mt: 3, mb: 1 }} id="outlined-basic" label="Name"
+                        name="name" value={inp.name} type="text" onChange={handler}
+                        variant="outlined" />
+                    <TextField sx={{ width: '90%', mt: 1, mb: 1 }} id="outlined-basic" label="Phone" name="phone"
+                        onKeyPress={(event) => { if (!/[0-9]/.test(event.key)) { event.preventDefault(); } }}
+                        type="tel" value={inp.phone}
                         onChange={handler}
-                        value={inp.admin}
-                        id="demo-simple-select"
-                        label="admin"
-                    >
-                        <MenuItem className='caps' value={true}>True</MenuItem>
-                        <MenuItem className='caps' value={false}>False</MenuItem>
-                    </Select>
-                </FormControl>
-                {inp.verified}
-                <FormControl className='caps' sx={{ width: '90%', mt: 2, mb: 2 }}>
-                    <InputLabel id="demo-simple-select-label">Verified</InputLabel>
-                    <Select
-                        name="verified"
-                        labelId="demo-simple-select-label"
-                        onChange={handler}
-                        value={inp.verified}
-                        id="demo-simple-select"
-                        label="verified"
-                    >
-                        <MenuItem className='caps' value={true}>True</MenuItem>
-                        <MenuItem className='caps' value={false}>False</MenuItem>
-                    </Select>
-                </FormControl>
-                <div className='btn'>
-                    <button onClick={editdetail}>submit</button>
-                    <button onClick={() => setmodal(false)}>Cancel</button>
-                </div>
+                        variant="outlined" />
+
+                    <TextField disabled sx={{ width: '90%', mt: 1, mb: 1 }} id="outlined-basic" label="Email"
+                        name="email" value={inp.email} type="text" onChange={handler}
+                        variant="outlined" />
+
+                    <FormControl className='caps' sx={{ width: '90%', mt: 1, mb: 1 }}>
+                        <InputLabel id="demo-simple-select-label">Admin</InputLabel>
+                        <Select
+                            name="admin"
+                            labelId="demo-simple-select-label"
+                            onChange={handler}
+                            value={inp.admin}
+                            id="demo-simple-select"
+                            label="admin"
+                        >
+                            <MenuItem className='caps' value={true}>True</MenuItem>
+                            <MenuItem className='caps' value={false}>False</MenuItem>
+                        </Select>
+                    </FormControl>
+                    {inp.verified}
+                    <FormControl className='caps' sx={{ width: '90%', mt: 1, mb: 2 }}>
+                        <InputLabel id="demo-simple-select-label">Verified</InputLabel>
+                        <Select
+                            name="verified"
+                            labelId="demo-simple-select-label"
+                            onChange={handler}
+                            value={inp.verified}
+                            id="demo-simple-select"
+                            label="verified"
+                        >
+                            <MenuItem className='caps' value={true}>True</MenuItem>
+                            <MenuItem className='caps' value={false}>False</MenuItem>
+                        </Select>
+                    </FormControl>
+                    <div className='btn'>
+                    <Button className='muibtn' onClick={editdetail} variant="contained" startIcon={<SaveIcon />}>
+                            Submit
+                        </Button>
+                        <Button
+                           onClick={() => setmodal(false)}
+                            className='muibtn outlined' title='Cancel' variant="outlined" startIcon={<RestartAltIcon />}>
+                            Cancel
+                        </Button>
+                    </div>
+                </span>
             </div>
         </div>
     )

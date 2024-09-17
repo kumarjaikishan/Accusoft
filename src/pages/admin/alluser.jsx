@@ -12,11 +12,11 @@ import Useredit from './usereditmodal';
 const Alluser = () => {
     const dispatch = useDispatch();
     const useralldetail = useSelector((state) => state.userexplist);
-   
+
     const [users, setusers] = useState([]);
     useEffect(() => {
         // dispatch(setloader(true));
-         fetche();
+        fetche();
     }, [])
 
     const fetche = async () => {
@@ -63,7 +63,7 @@ const Alluser = () => {
         phone: "",
         email: "",
         admin: "",
-        verified:""
+        verified: ""
     }
     const [inp, setinp] = useState(init);
     const [currentpage, setcurrentpage] = useState(1);
@@ -74,7 +74,7 @@ const Alluser = () => {
     const handler = (e) => {
         let name = e.target.name;
         let value = e.target.value;
-        console.log(name , " : ",value);
+        console.log(name, " : ", value);
         setinp({
             ...inp, [name]: value
         })
@@ -89,7 +89,7 @@ const Alluser = () => {
             phone: val.phone,
             email: val.email,
             admin: val.isadmin,
-            verified:val.isverified
+            verified: val.isverified
         })
         setmodal(true);
         // console.log(val);
@@ -245,42 +245,39 @@ const Alluser = () => {
                     <span><input type="text" onChange={sear} value={serinp} placeholder='Type to search...' /></span>
                 </div>
                 <div className="table">
-                    <table cellSpacing="15">
-                        <thead >
-                            <tr>
-                                <th>S.no</th>
-                                <th>Name</th>
-                                <th>Phone</th>
-                                <th>Email</th>
-                                <th>Admin</th>
-                                <th>Verified</th>
-                                <th>Actions</th>
-                                <th>Date</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tablecontent">
-                            {
-                                currentpost && currentpost.map((val, ind) => {
-                                    const expenseDate = new Date(val.createdAt);
-                                    const formattedDate = `${expenseDate.getUTCDate().toString().padStart(2, '0')} ${expenseDate.toLocaleString('default', { month: 'short' })
-                                        }, ${expenseDate.getFullYear().toString().substr(-2)}`;
-                                    return <tr key={ind}>
-                                        <td>{ind + 1}</td>
-                                        <td>{val.name}</td>
-                                        <td>{val.phone}</td>
-                                        <td>{val.email}</td>
-                                        <td>{val.isadmin ? "Yes" : "No"}</td>
-                                        <td>{val.isverified ? "Yes" : "No"}</td>
-                                        <td >
-                                            <i title='Edit' onClick={() => setinputfield(val)} className="fa fa-pencil-square-o" aria-hidden="true"></i>
-                                            <i title='Delete' onClick={() => delet(val._id)} className="fa fa-trash-o" aria-hidden="true"></i>
-                                        </td>
-                                        <td>{formattedDate ? formattedDate :""}</td>
-                                    </tr>
-                                })
-                            }
-                        </tbody>
-                    </table>
+
+                    <div className="header">
+                        <span>S.no</span>
+                        <span>Name </span>
+                        <span>Phone</span>
+                        <span>Email</span>
+                        <span>Admin </span>
+                        <span>Verified </span>
+                        <span>Action</span>
+                        <span>Date</span>
+                    </div>
+                    <div className="body" id="tablecontent"   >
+
+                        {currentpost && currentpost.map((val, ind) => {
+                            const expenseDate = new Date(val.createdAt);
+                            const formattedDate = `${expenseDate.getUTCDate().toString().padStart(2, '0')} ${expenseDate.toLocaleString('default', { month: 'short' })
+                                }, ${expenseDate.getFullYear().toString().substr(-2)}`;
+                            return <div key={ind} // Ensure each item has a unique key
+                            >
+                                <span>{ind + 1}</span>
+                                <span>{val.name}</span>
+                                <span>{val.phone}</span>
+                                <span>{val.email}</span>
+                                <span>{val.isadmin ? "Yes" : "No"}</span>
+                                <span>{val.isverified ? "Yes" : "No"}</span>
+                                <span>
+                                    <i title='Edit' onClick={() => setinputfield(val)} className="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                    <i title='Delete' onClick={() => delet(val._id)} className="fa fa-trash-o" aria-hidden="true"></i>
+                                </span>
+                                <span>{formattedDate ? formattedDate : ""}</span>
+                            </div>
+                        })}
+                    </div>
                 </div>
                 <div className="foot">
                     <span>Showing Result From {firstpostindex + 1} To {lastpostindex >= users.length ? lastpostindex = users.length : lastpostindex} of  {users.length} Results</span>

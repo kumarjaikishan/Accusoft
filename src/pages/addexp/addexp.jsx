@@ -225,7 +225,7 @@ const AddExpenses = () => {
       const parentRow = tableRows[index];
 
       if (checkbox.checked) {
-        parentRow.style.background = 'rgb(16 135 129)';
+        parentRow.style.background = 'rgba(201, 200, 200, 0.6)';
         // parentRow.style.background = 'rgb(3, 73, 114)';
         parentRow.style.color = 'white';
       } else {

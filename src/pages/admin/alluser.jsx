@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setloader } from '../../store/login';
 import { toast } from 'react-toastify';
 import Useredit from './usereditmodal';
+import VerifiedIcon from '@mui/icons-material/Verified';
 
 
 const Alluser = () => {
@@ -251,8 +252,7 @@ const Alluser = () => {
                         <span>Name </span>
                         <span>Phone</span>
                         <span>Email</span>
-                        <span>Admin </span>
-                        <span>Verified </span>
+                        <span><VerifiedIcon/> </span>
                         <span>Action</span>
                         <span>Date</span>
                     </div>
@@ -268,8 +268,7 @@ const Alluser = () => {
                                 <span>{val.name}</span>
                                 <span>{val.phone}</span>
                                 <span>{val.email}</span>
-                                <span>{val.isadmin ? "Yes" : "No"}</span>
-                                <span>{val.isverified ? "Yes" : "No"}</span>
+                                <span className={val.isverified ? 'status done' : 'status'}>{val.isverified ? "Yes" : "No"}</span>
                                 <span>
                                     <i title='Edit' onClick={() => setinputfield(val)} className="fa fa-pencil-square-o" aria-hidden="true"></i>
                                     <i title='Delete' onClick={() => delet(val._id)} className="fa fa-trash-o" aria-hidden="true"></i>

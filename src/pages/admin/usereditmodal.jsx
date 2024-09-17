@@ -83,17 +83,17 @@ const Useredit = ({ inp, modal, setmodal, handler, fetche }) => {
                         variant="outlined" />
 
                     <FormControl className='caps' sx={{ width: '90%', mt: 1, mb: 1 }}>
-                        <InputLabel id="demo-simple-select-label">Admin</InputLabel>
+                        <InputLabel id="demo-simple-select-label">Type</InputLabel>
                         <Select
                             name="admin"
                             labelId="demo-simple-select-label"
                             onChange={handler}
                             value={inp.admin}
                             id="demo-simple-select"
-                            label="admin"
+                            label="Type"
                         >
-                            <MenuItem className='caps' value={true}>True</MenuItem>
-                            <MenuItem className='caps' value={false}>False</MenuItem>
+                            <MenuItem className='caps' value={false}>User</MenuItem>
+                            <MenuItem className='caps' value={true}>Admin</MenuItem>
                         </Select>
                     </FormControl>
                     {inp.verified}
@@ -107,8 +107,8 @@ const Useredit = ({ inp, modal, setmodal, handler, fetche }) => {
                             id="demo-simple-select"
                             label="verified"
                         >
-                            <MenuItem className='caps' value={true}>True</MenuItem>
-                            <MenuItem className='caps' value={false}>False</MenuItem>
+                            <MenuItem className='caps' value={true}>Verified</MenuItem>
+                            <MenuItem className='caps' value={false}>Unverified</MenuItem>
                         </Select>
                     </FormControl>
                     <div className='btn'>

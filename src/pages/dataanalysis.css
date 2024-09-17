@@ -151,6 +151,7 @@
     align-items: center;
     justify-content: center;
 }
+
 .dark-theme .datanalysis .card .icon .per {
     background: var(--background);
 }
@@ -177,6 +178,27 @@
         /* border: 1px solid red; */
     }
 
+    .datanalysis .cont {
+        width: 90vw;
+        margin-bottom: 8px;
+        height: 50px;
+        border: 1.5px solid var(--maincolor);
+        border-radius: 7px;
+    }
+
+    .datanalysis .cont input,
+    .datanalysis .cont select {
+        width: 90px;
+        height: 30px;
+        margin-left: 3px;
+        padding: 0 5px;
+        border-radius: 5px;
+        border: 1.5px solid var(--maincolor);
+    }
+    .datanalysis .cont i {
+        border-radius: 3px;
+    }
+
     .datanalysis .cards {
         max-width: 100%;
         overflow-x: hidden;
@@ -194,23 +216,9 @@
         width: 95%;
     }
 
-    .datanalysis .cont {
-        width: 90vw;
-        margin-bottom: 8px;
-        /* border: 2px solid yellow; */
-    }
-
     .datanalysis .cont span {
         /* border: 1px solid red; */
         display: inline-block;
         height: 30px;
-    }
-
-    .datanalysis .cont input,
-    .datanalysis .cont select {
-        width: 90px;
-        height: 30px;
-        margin-left: 3px;
-        padding: 0 5px;
     }
 }

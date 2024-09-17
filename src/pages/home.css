@@ -63,6 +63,7 @@
 .home .card .icon i {
     font-size: 3.7em;
     color: rgb(83, 80, 80);
+    /* color: var(--maincolor); */
 }
 
 @media only screen and (max-width:1200px) {

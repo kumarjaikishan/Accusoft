@@ -34,21 +34,13 @@ const AddExpenses = () => {
       // console.log("called");
       
       setfinalserach(searchInput.toLowerCase());
-    }, 2000);
+    }, 1300);
 
     return () => {
       // console.log("unmount");
       clearTimeout(timerId);
     };
   }, [searchInput]);
-
-  useEffect(() => {
-    if (finalsearch) {
-      // console.log('Serach for:', finalsearch);
-    }
-
-  }, [finalsearch]);
-
 
 
   let itemIds = [];
@@ -192,7 +184,7 @@ const AddExpenses = () => {
 
         await apiWrapper(url, method, body, dispatch, successAction, loaderAction, navigate);
       } else {
-        swal('Your data is safe!');
+        // swal('Your data is safe!');
       }
     });
   };
@@ -296,8 +288,8 @@ const AddExpenses = () => {
   }
   const container = {
     visible: {
-      opacity: 1,
-      scale: 1,
+      // opacity: 1,
+      // scale: 1,
       transition: {
         delayChildren: .1, //this is overall delay for whole children
         // staggerChildren: 0.16
@@ -350,7 +342,7 @@ const AddExpenses = () => {
         </div>
         <div className="table">
           <div className="header">
-            <span>S.NO</span>
+            <span>S.no</span>
             <span onClick={() => sortPosts('ledger')}>Ledger <i><KeyboardArrowDownIcon /> </i></span>
             <span onClick={() => sortPosts('amount')}>Amt. <i><KeyboardArrowDownIcon /> </i></span>
             <span>Narration</span>
@@ -375,9 +367,9 @@ const AddExpenses = () => {
                 );
               }).map((expense, index) => {
                 return <motion.div
-                  variants={item}
+                  // variants={item}
                   // exit={{ opacity: 1, x: '-150%', transition: { duration: 0.3 } }}
-                  exit={isAnimatingRef.current ? { opacity: 1, x: '-150%', transition: { duration: 0.5 } } : {}}
+                  exit={isAnimatingRef.current ? { opacity: 1, x: '-102%', transition: { duration: 0.6 } } : {}}
                   key={expense._id} // Ensure each item has a unique key
                 >
                   <span>{firstPostIndex + index + 1}</span>

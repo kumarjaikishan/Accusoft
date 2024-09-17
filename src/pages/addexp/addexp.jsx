@@ -343,7 +343,7 @@ const AddExpenses = () => {
         <div className="table">
           <div className="header">
             <span>S.no</span>
-            <span onClick={() => sortPosts('ledger')}>Ledger <i><KeyboardArrowDownIcon /> </i></span>
+            <span onClick={() => sortPosts('ledger')}> Ledger <i><KeyboardArrowDownIcon /> </i></span>
             <span onClick={() => sortPosts('amount')}>Amt. <i><KeyboardArrowDownIcon /> </i></span>
             <span>Narration</span>
             <span onClick={() => sortPosts('date')}>Date <i><KeyboardArrowDownIcon /> </i></span>

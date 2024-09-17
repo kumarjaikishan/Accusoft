@@ -84,8 +84,6 @@
         position: relative;
         /* border: 1px solid red; */
 
-
-
         .header {
             width: 100%;
             height: 40px;
@@ -95,34 +93,30 @@
             text-transform: capitalize;
             letter-spacing: 0.5px;
             display: flex;
-            justify-content: space-between;
             font-weight: 700;
-        }
 
-        .body {
-            width: 100%;
-            text-align: start;
-
-            div {
-                border: 0.5px solid var(--tableborder);
-                border-top: none;
+            >span {
                 display: flex;
+                padding: 0 2px;
+                font-size: 15px;
                 justify-content: space-between;
-                padding: 4px 0px;
+                align-items: center;
+                border-right: 1px solid grey;
+                border-left: 1px solid grey;
+                /* border: 1px solid red; */
+
+                i {
+                    /* border: 1px solid red; */
+                    display: flex;
+                    align-items: center;
+                }
             }
         }
 
         .header,
         .body {
-
-            & span {
-                display: inline-block;
-                text-align: start;
-                padding: 2px 0px;
+            >span {
                 /* border: 1px solid red; */
-                border-right: 1px solid transparent;
-                text-align: center;
-
             }
 
             & span:nth-child(1) {
@@ -131,23 +125,24 @@
             }
 
             & span:nth-child(2) {
-                width: 135px;
-                text-align: start;
+                width: 125px;
+                /* text-align: start; */
                 /* border: 1px solid red; */
             }
 
             & span:nth-child(3) {
                 width: 90px;
+                /* border: 1px solid black; */
             }
 
             & span:nth-child(4) {
-                width: 850px;
+                width: 980px;
                 /* border: 1px solid red; */
             }
 
             & span:nth-child(5) {
                 width: 105px;
-                /* border: 1px solid red; */
+                /* border: 1px solid black; */
             }
 
             & span:nth-child(6) {
@@ -155,6 +150,7 @@
                 display: flex;
                 justify-content: space-around;
                 align-items: center;
+                /* border: 1px solid red; */
 
                 i {
                     cursor: pointer;
@@ -177,36 +173,24 @@
                 display: flex;
                 justify-content: space-around;
                 align-items: center;
-                /* border: 1px solid red; */
+                /* border: 1px solid black; */
             }
-        }
-
-        .header {
-            display: flex;
-            align-items: center;
-
-            span {
-                display: flex;
-                height: 100%;
-                width: 100%;
-                font-size: 15px;
-                justify-content: space-between;
-                align-items: center;
-                /* border: none !important; */
-                border-right: 1px solid grey !important;
-                padding: 0 5px;
-
-                i {
-                    height: 100%;
-                    display: flex;
-                    align-items: center;
-                }
-            }
-
         }
 
         .body {
+
+            div {
+                border: 0.5px solid var(--tableborder);
+                /* border-top: none; */
+                display: flex;
+                justify-content: space-between;
+            }
+
             span {
+                padding: 5px 0;
+                /* border: 1px solid red; */
+                /* border: 1px solid var(--tableborder); */
+                text-align: center;
                 font-size: 14px;
                 color: var(--color);
 
@@ -379,7 +363,6 @@
                 span {
                     display: flex;
                     justify-content: space-around;
-                    padding: 0 2px;
 
                     i {
                         * {

@@ -208,9 +208,11 @@
     .footer {
         display: none;
     }
+    
 
     .main {
         position: absolute;
+        border: 1px solid red;
         height: auto;
         width: 100%;
         left: 0;
@@ -222,6 +224,7 @@
     .nav,
     .report .cont,
     .scrol {
+        border: 1px solid red;
         display: none;
     }
 
@@ -236,7 +239,7 @@
 
         & .table {
             overflow: visible;
-
+           
             & div {
                 display: block;
             }
@@ -268,10 +271,12 @@
     .report .table table th:nth-child(5) {
         width: 70px;
     }
+
     .dark-theme .report table tbody td {
         color: #212529;
     }
-    .dark-theme .report table tbody tr#foot td{
+
+    .dark-theme .report table tbody tr#foot td {
         color: white;
     }
 }
@@ -322,11 +327,13 @@
         background: var(--maincolor) !important;
         font-size: 1rem;
     }
-    .report .cont>span:nth-child(1) > span{
+
+    .report .cont>span:nth-child(1)>span {
         width: 48%;
         /* border: 1px solid red; */
     }
-    .report .cont>span:nth-child(1) > span input{
+
+    .report .cont>span:nth-child(1)>span input {
         width: 80%;
         /* border: 1px solid red; */
     }

@@ -89,7 +89,7 @@ const Report = () => {
         })
     }
     const print = () => {
-        dispatch(setnarrow(false))
+        dispatch(setnarrow(true))
         setTimeout(() => {
             window.print()
         }, 1);

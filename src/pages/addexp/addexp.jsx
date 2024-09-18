@@ -27,6 +27,7 @@ const AddExpenses = () => {
 
   useEffect(() => {
     dispatch(setloader(false))
+    console.log('expcheck', userAllDetails.explist)
   }, [])
 
   useEffect(() => {
@@ -357,10 +358,10 @@ const AddExpenses = () => {
             className="body"
             id="tablecontent"
           >
-            <AnimatePresence>
-            {!sortedList && <div style={{width:'100%',margin:'5px auto'}}>
-              No Expense Added
+            {userAllDetails?.explist.length < 1 && <div style={{width:'100%',display:'flex', justifyContent:'center', margin:'8px 0'}}>
+             <b>No Expense Added</b> 
             </div> }
+            <AnimatePresence>
               {(sortedList ? sortedList : currentPosts)?.filter((item) => {
                 return (
                   finalsearch === '' ||

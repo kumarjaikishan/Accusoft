@@ -129,7 +129,7 @@ const Report = () => {
                             To: <input value={inp.to} onChange={handler} type="date" name="to" id="" />
                         </span>
                         <FormControl className='ledger caps mui' size='small'>
-                            <InputLabel  id="demo-simple-select-label">Ledger</InputLabel>
+                            <InputLabel id="demo-simple-select-label">Ledger</InputLabel>
                             <Select
                                 name="ledger"
                                 labelId="demo-simple-select-label"
@@ -176,6 +176,7 @@ const Report = () => {
                             </tr>
                         </thead>
                         <tbody>
+                            {pious.length < 1 && <tr><td colSpan={5}><b>No Record Found</b></td></tr>}
                             {pious?.map((val, ind) => {
                                 let daten = new Date(val.date);
 

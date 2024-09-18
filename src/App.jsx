@@ -60,7 +60,7 @@ function App() {
                 <Route path="/addexpense" element={<Addexp />} />
                 <Route path="/photo" element={<Photo />} />
                 <Route path="/print/:expId" element={<Officeexp />} />
-                
+
                 {/* Lazy loaded routes inside Suspense with proper structure */}
                 <Route
                   path="/datanalysis"
@@ -76,17 +76,29 @@ function App() {
                     <Suspense fallback={<Preloader />}>
                       <Report />
                     </Suspense>
-                  }
-                />
+                  } />
               </Route>
 
-              <Route element={<AdminRoute />}>
+              <Route
+                path="/admin"
+                element={
+                  <Suspense fallback={<Preloader />}>
+                    <AdminRoute />
+                  </Suspense>
+                }
+              >
+                <Route path="dashboard" element={<Admin_Dashboard />} />
+                <Route path="users" element={<Alluser />} />
+                <Route path="expense" element={<Allexpense />} />
+              </Route>
+
+              {/* <Route element={<AdminRoute />}>
                 <Route path="/admin">
                   <Route path="dashboard" element={<Admin_Dashboard />} />
                   <Route path="users" element={<Alluser />} />
                   <Route path="expense" element={<Allexpense />} />
                 </Route>
-              </Route>
+              </Route> */}
 
               <Route path="/resetpassword/:token" element={<PasswordReset />} />
               <Route path="/slow" element={<SlowPage />} />

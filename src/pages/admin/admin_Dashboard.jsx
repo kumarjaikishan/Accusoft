@@ -15,7 +15,7 @@ const Admin_Dashboard = () => {
     const [leng, setleng] = useState({})
 
     const feteche = async () => {
-        const url = `${userAllDetails.apiadress}/admindash`;
+        const url = `${import.meta.env.VITE_API_ADDRESS}admindash`;
         const method = 'GET';
         const body = null;
 

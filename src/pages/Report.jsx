@@ -89,11 +89,7 @@ const Report = () => {
         })
     }
     const print = () => {
-<<<<<<< HEAD
         dispatch(setnarrow(true))
-=======
-        // dispatch(setnarrow(false))
->>>>>>> b4000b5dc40f070800e98b98cabc2e4b7f93cced
         setTimeout(() => {
             window.print()
         }, 1);

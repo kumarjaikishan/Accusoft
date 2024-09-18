@@ -97,7 +97,7 @@
 
             >span {
                 display: flex;
-                padding: 0 2px;
+                padding-left: 4px;
                 font-size: 15px;
                 justify-content: space-between;
                 align-items: center;
@@ -115,6 +115,9 @@
 
         .header,
         .body {
+            div{
+                display: flex;
+            }
             >span {
                 /* border: 1px solid red; */
             }
@@ -136,7 +139,8 @@
             }
 
             & span:nth-child(4) {
-                width: 980px;
+                /* width: 980px; */
+                flex-grow: 1;
                 /* border: 1px solid red; */
             }
 
@@ -221,7 +225,7 @@
         align-items: center;
         flex-wrap: wrap;
         background: var(--background);
-        border: 1px solid var(--color);
+        border: 1px dotted var(--color);
 
         & .pages {
             display: inline-block;
@@ -357,7 +361,7 @@
                     display: flex;
                     justify-content: space-around;
                     font-size: 10px;
-                    padding: 0 0px;
+                    padding-left: 0px;
 
                     i {
                         * {

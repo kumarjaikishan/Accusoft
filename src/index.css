@@ -196,6 +196,24 @@ button,
   transition: 0.2s;
 }
 
+.muibtn {
+  background: var(--maincolor) !important;
+
+  &:hover{
+    background: var(--hovercolor) !important;
+  }
+}
+
+.muibtn.outlined {
+  color: var(--maincolor);
+  border: 0.5px solid var(--maincolor) !important;
+  background: transparent !important;
+
+  &:hover{
+      box-shadow: inset 0 0 0 0.5px var(--maincolor) !important;
+  }
+}
+
 button:disabled {
   background: grey !important;
 }

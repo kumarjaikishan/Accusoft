@@ -73,24 +73,13 @@
     border: 2px solid var(--maincolor);
 }
 
-.report .cont>span:nth-child(1) button {
-    background: var(--maincolor);
-}
-
 
 .report .cont>span:nth-child(2) button {
-    border: none;
-    outline: none;
-    background: var(--maincolor);
     font-size: 0.9em;
     margin: 0 10px;
     transition: 0.1s;
 }
 
-.report .cont>span:nth-child(2) button:hover,
-.report .cont>span:nth-child(1) span i:hover {
-    background: var(--hovercolor);
-}
 
 .report .table {
     width: 100%;
@@ -214,8 +203,9 @@
         position: absolute;
         border: 1px solid red;
         height: auto;
-        width: 100%;
-        left: 0;
+        width: 100vw !important;
+        left: 0 !important;
+        padding: 0 !important;
         top: 0;
         overflow: visible;
     }
@@ -226,6 +216,10 @@
     .scrol {
         border: 1px solid red;
         display: none;
+
+        *{
+            display: none;
+        }
     }
 
     .report {

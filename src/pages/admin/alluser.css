@@ -1,26 +1,169 @@
-.allusers.admin{
+.allusers.admin {
     position: relative;
     margin-top: 10px;
+
+    .table {
+
+        .header,
+        .body {
+            /* display: flex;  */
+            >span {
+                /* border: 1px solid red; */
+            }
+
+            & span:nth-child(1) {
+                width: 50px;
+                /* border: 1px solid red; */
+            }
+
+            & span:nth-child(2) {
+                width: 195px;
+                /* text-align: start; */
+                /* border: 1px solid red; */
+            }
+
+            & span:nth-child(3) {
+                width: 170px;
+                /* border: 1px solid black; */
+            }
+
+            & span:nth-child(4) {
+                width: 740px;
+                /* flex-grow: 1; */
+                /* border: 1px solid red; */
+            }
+
+            & span:nth-child(5) {
+                width: 105px;
+                /* border: 1px solid black; */
+            }
+
+            & span:nth-child(6) {
+                width: 90px;
+                display: flex;
+                justify-content: space-around;
+                align-items: center;
+                /* border: 1px solid red; */
+
+                i {
+                    cursor: pointer;
+                    text-align: center;
+                    transition: 0.1s;
+                    color: var(--contrast);
+
+                    &:last-child {
+                        color: red;
+                    }
+
+                    &:hover {
+                        transform: scale(1.1);
+                    }
+                }
+            }
+
+            & span:nth-child(7) {
+                width: 95px;
+                display: flex;
+                justify-content: space-around;
+                align-items: center;
+                /* border: 1px solid black; */
+
+                i {
+                    cursor: pointer;
+                    text-align: center;
+                    transition: 0.1s;
+                    color: var(--contrast);
+
+                    &:last-child {
+                        color: red;
+                    }
+
+                    &:hover {
+                        transform: scale(1.1);
+                    }
+                }
+            }
+
+           
+        }
+
+        .header {
+            >span {
+                justify-content: center;
+            }
+        }
+
+        .body {
+
+          span.status {
+            font-weight: 500;
+        }
+
+        span.status {
+            background: rgba(221, 179, 100, 0.486);
+            color: rgb(86, 56, 2);
+            /* border-right: 4px solid rgb(86, 56, 2); */
+        }
+
+        .status.done {
+            background-color: rgba(118, 234, 118, 0.504);
+            color: rgb(1, 59, 1);
+            /* border-right: 4px solid rgb(1, 59, 1); */
+        }
+        }
+    }
 }
-.allusers tr td:nth-child(7) {
-    padding: 0px 1px;
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-}
-.allusers .table table th:nth-child(1),
-.allusers .table table th:nth-child(5),
-.allusers .table table th:nth-child(6) {
-    width: 50px !important;
-}
-.allusers .table table th:nth-child(2)
-{
-    width: 100px;
-}
-.allusers .table table th:nth-child(3)
-{
-    width: 120px !important;
-}
-.allusers .table table th:nth-child(8){
-    width: 90px !important;
+
+@media only screen and (max-width: 600px) {
+    .allusers.admin {
+
+        & .table {
+
+            .header,
+            .body {
+                & span:nth-child(1) {
+                    min-width: 28px;
+                    /* border: 1px solid red; */
+                }
+
+                & span:nth-child(2) {
+                    min-width: 65px;
+                    /* border: 1px solid red; */
+                }
+
+                & span:nth-child(3) {
+                    min-width: 55px;
+                    /* border: 1px solid red; */
+                }
+
+                & span:nth-child(4) {
+                    width: 550px;
+                    /* border: 1px solid red; */
+                }
+
+                & span:nth-child(5)
+                 {
+                    min-width: 30px;
+                    /* border: 1px solid red; */
+                }
+
+                & span:nth-child(7) {
+                    min-width: 40px;
+                    /* border: 1px solid red; */
+                }
+                & span:nth-child(7) {
+                    min-width: 45px;
+                    /* border: 1px solid red; */
+                }
+            }
+
+            .body {
+                div {
+                    span {
+                        font-size: 8px;
+                    }
+                }
+            }
+        }
+    }
 }

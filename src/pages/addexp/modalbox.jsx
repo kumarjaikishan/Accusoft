@@ -14,6 +14,10 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
+import Button from '@mui/material/Button';
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
+import SaveIcon from '@mui/icons-material/Save';
+import UpgradeIcon from '@mui/icons-material/Upgrade';
 
 const Modalbox = ({ setisledupdate, modal, navigate, disable, setdisable, init, handler, inp, isupdate, sub, setmodal, setisupdate, setinp }) => {
     const useralldetail = useSelector((state) => state.userexplist);
@@ -113,12 +117,21 @@ const Modalbox = ({ setisledupdate, modal, navigate, disable, setdisable, init, 
                         onChange={(e) => handler(e, 'narration')}
                         variant="outlined" />
                     <div className='btn'>
-                        {isupdate ? <button disabled={disable} onClick={() => updatee(inp._id)}>Update</button> : <button disabled={disable} onClick={sub}>Submit</button>}
-                        <button onClick={() => {
-                            setmodal(false);
-                            setisupdate(false);
-                            setinp(init);
-                        }}>Cancel</button>
+                        {isupdate ? <Button className='muibtn' disabled={disable} onClick={() => updatee(inp._id)} variant="contained" startIcon={<UpgradeIcon />}>
+                            Update
+                        </Button> : <Button className='muibtn' disabled={disable} onClick={sub} variant="contained" startIcon={<SaveIcon />}>
+                            Submit
+                        </Button>}
+
+                        <Button
+                            onClick={() => {
+                                setmodal(false);
+                                setisupdate(false);
+                                setinp(init);
+                            }}
+                            className='muibtn outlined' title='Cancel' variant="outlined" startIcon={<RestartAltIcon />}>
+                            Cancel
+                        </Button>
                     </div>
                 </span>
             </div>

@@ -358,6 +358,9 @@ const AddExpenses = () => {
             id="tablecontent"
           >
             <AnimatePresence>
+            {!sortedList && <div style={{width:'100%',margin:'5px auto'}}>
+              No Expense Added
+            </div> }
               {(sortedList ? sortedList : currentPosts)?.filter((item) => {
                 return (
                   finalsearch === '' ||

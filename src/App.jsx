@@ -16,10 +16,10 @@ import Officeexp from './pages/voucher';
 import Test from './pages/test';
 import { userdata } from './store/api';
 import { Errorpage } from './pages/Errorpage';
-import Allexpense from './pages/admin/Allexpenses';
-import Alluser from './pages/admin/alluser';
 import PasswordReset from './pages/password/password';
-import Admin_Dashboard from './pages/admin/admin_Dashboard';
+// import Allexpense from './pages/admin/Allexpenses';
+// import Alluser from './pages/admin/alluser';
+// import Admin_Dashboard from './pages/admin/admin_Dashboard';
 import ProtectedRoutes from './utils/protectedRoute';
 import AdminRoute from './utils/adminRoute';
 import SlowPage from './pages/serverTest/slow';
@@ -29,6 +29,9 @@ import { useLocation } from 'react-router-dom';
 
 const Datanalysis = lazy(() => import('./pages/dataanalysis'));
 const Report = lazy(() => import('./pages/Report'));
+const Admin_Dashboard = lazy(() => import('./pages/admin/admin_Dashboard'));
+const Alluser = lazy(() => import('./pages/admin/alluser'));
+const Allexpense = lazy(() => import('./pages/admin/Allexpenses'));
 
 function App() {
   const dispatch = useDispatch();
@@ -91,14 +94,6 @@ function App() {
                 <Route path="users" element={<Alluser />} />
                 <Route path="expense" element={<Allexpense />} />
               </Route>
-
-              {/* <Route element={<AdminRoute />}>
-                <Route path="/admin">
-                  <Route path="dashboard" element={<Admin_Dashboard />} />
-                  <Route path="users" element={<Alluser />} />
-                  <Route path="expense" element={<Allexpense />} />
-                </Route>
-              </Route> */}
 
               <Route path="/resetpassword/:token" element={<PasswordReset />} />
               <Route path="/slow" element={<SlowPage />} />

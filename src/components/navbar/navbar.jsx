@@ -49,7 +49,7 @@ const Navbar = () => {
     <>
       <nav className={log.narrow ? "nav narrow" : "nav"}>
         <div className="cont">
-          <IoMenu onClick={fun} className='navicon' titleAccess='menu' />
+          <IoMenu onClick={fun} className='navicon' title='menu' />
           <span>{log.head} </span>
         </div>
         <span className='mode'>

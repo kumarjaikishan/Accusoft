@@ -103,7 +103,7 @@ const Report = () => {
 
     useEffect(() => {
         search();
-        console.log(inp.ledger)
+        // console.log(inp.ledger)
         // console.log(yesterday);
     }, [inp])
 
@@ -162,7 +162,7 @@ const Report = () => {
                         </Button>
                     </span>
                 </div>
-                <div className="table"  >
+                <div className="table" id='printarea'  >
                     <div className='head'> <b>Accusoft - {useralldetail?.user?.name}</b> (Report from {formatDate(inp.from)} to {formatDate(inp.to)})</div>
                     <table id='tavlecontent' >
                         <thead id='table'>

@@ -195,8 +195,8 @@ const Ledpage = ({ setmodal, setdisable, disable, navigate, isledupdate, setisle
                   return (
                     <tr key={ind}>
                       <td>{val.ledger}</td>
-                      <td> <HiPencilSquare style={{fontSize:'18px', color:'rgb(7, 120, 182)'}} onClick={() => setledgerininput(val._id, val.ledger)}/> </td>
-                      <td> <RiDeleteBin6Line style={{fontSize:'18px', color:'rgb(220, 7, 25)'}} onClick={() => deletee(val._id)} /> </td>
+                      <td> <HiPencilSquare className='editicon ico' title='Edit'  onClick={() => setledgerininput(val._id, val.ledger)}/> </td>
+                      <td> <RiDeleteBin6Line className='deleteicon ico' title='Delete'  onClick={() => deletee(val._id)} /> </td>
                     </tr>
                   )
                 })}

@@ -141,21 +141,44 @@
                     th:nth-child(3) {
                         width: 10%;
                     }
-
-                    .fa {
-                        font-size: 1em;
-                        padding: 2px 10px;
-
+                 
+                    .ico {
+                        padding: 2px 5px;
+                        box-sizing: content-box;
+                        width: 15px;
+                        height: 15px;
+                        border-radius: .2rem;
+                        cursor: pointer;
+                    }
+        
+                    .ico.editicon {
+                        color: var(--editicon);
+                        background: rgba(7, 121, 182, 0.116);
+        
                         &:hover {
-                            transform: scale(1.2);
-                            cursor: pointer;
+                            background: var(--editicon);
+                            color: var(--background);
                         }
                     }
-
-                    .fa-trash {
-                        color: #eb4d4b;
-                        width: 100%;
-                        padding: 2px 10px;
+        
+                    .ico.deleteicon {
+                        color: var(--deleteicon);
+                        background: rgba(182, 7, 16, 0.116);
+        
+                        &:hover {
+                            background: var(--deleteicon);
+                            color: white;
+                        }
+                    }
+        
+                    .ico.printicon {
+                        color: rgb(16, 16, 149);
+                        background: rgba(29, 10, 198, 0.116);
+        
+                        &:hover {
+                            background: rgb(16, 16, 149);
+                            color: white;
+                        }
                     }
                 }
             }

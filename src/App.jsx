@@ -46,12 +46,14 @@ function App() {
     width < 600 ? dispatch(setnarrow(true)) : null;
   };
 
+
   return (
     <>
       <ToastContainer closeOnClick={true} pauseOnFocusLoss={true} />
       <div className={log.loader ? 'App loader' : 'App'}>
         <Navbar />
         <main className={log.narrow ? "main narrow" : "main"} onClick={sidebarclose}>
+          {log.loader && <Preloader />}
           <AnimatePresence mode='wait'>
             <Routes key={location.pathname} location={location}>
               <Route element={<ProtectedRoutes />}>
@@ -104,7 +106,7 @@ function App() {
               )}
             </Routes>
           </AnimatePresence>
-          {log.loader && <Preloader />}
+
         </main>
         <footer className={log.narrow ? "footer narrow" : "footer"}>
           <p>&copy; 2024 Accusoft. All rights reserved. Designed and developed by Jai Kishan</p>

@@ -28,7 +28,7 @@ const AddExpenses = () => {
   useEffect(() => {
     dispatch(setloader(false))
     // console.log('expcheck', userAllDetails.explist)
-    console.log("date-",dayjs())
+    // console.log("date-",dayjs())
   }, [])
 
   useEffect(() => {

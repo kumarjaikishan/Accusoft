@@ -8,8 +8,8 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Button from '@mui/material/Button';
-import RestartAltIcon from '@mui/icons-material/RestartAlt';
-import SaveIcon from '@mui/icons-material/Save';
+import { VscDebugRestart } from "react-icons/vsc";
+import { IoIosSave } from "react-icons/io";
 
 const Useredit = ({ inp, modal, setmodal, handler, fetche }) => {
     const useralldetail = useSelector((state) => state.userexplist);
@@ -112,12 +112,12 @@ const Useredit = ({ inp, modal, setmodal, handler, fetche }) => {
                         </Select>
                     </FormControl>
                     <div className='btn'>
-                    <Button className='muibtn' onClick={editdetail} variant="contained" startIcon={<SaveIcon />}>
+                    <Button className='muibtn' onClick={editdetail} variant="contained" startIcon={<IoIosSave />}>
                             Submit
                         </Button>
                         <Button
                            onClick={() => setmodal(false)}
-                            className='muibtn outlined' title='Cancel' variant="outlined" startIcon={<RestartAltIcon />}>
+                            className='muibtn outlined' title='Cancel' variant="outlined" startIcon={<VscDebugRestart />}>
                             Cancel
                         </Button>
                     </div>

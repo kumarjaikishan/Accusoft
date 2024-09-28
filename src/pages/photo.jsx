@@ -6,7 +6,7 @@ import { header } from '../store/login';
 import { profilepicupdtae, profiledetailupdtae } from '../store/api';
 import { toast } from 'react-toastify';
 import Button from '@mui/material/Button';
-import SentimentDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied';
+import { TbMoodSad } from "react-icons/tb";
 import TextField from '@mui/material/TextField';
 
 
@@ -277,7 +277,7 @@ const Photo = () => {
 
 
                             {!editable && <div>  <Button fullWidth disabled={disable} variant='contained' onClick={updatedetails}>Update Deatils</Button> </div>}
-                            <Button disabled={disable} onClick={resetpassword} title='Password Reset' variant="contained" className='splbtn' startIcon={<SentimentDissatisfiedIcon />}>
+                            <Button disabled={disable} onClick={resetpassword} title='Password Reset' variant="contained" className='splbtn' startIcon={<TbMoodSad />}>
                                 Send Password Reset Link
                             </Button>
                             {messagesent && <span style={{ fontSize: '12px', color: 'green' }}>{messagesent}</span>}

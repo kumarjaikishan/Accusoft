@@ -7,7 +7,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setloader } from '../../store/login';
 import dayjs from 'dayjs';
 import { toast } from 'react-toastify';
-import Userexpedit from './expeditmodal';
 
 const Allexpense = () => {
     const dispatch = useDispatch();
@@ -300,7 +299,6 @@ const Allexpense = () => {
                         <Pagination currentpage={currentpage} changepageno={changepageno} totalpost={adminexpdata.length} postperpage={postperpage} />
                     </span>
                 </div>
-                <Userexpedit handler={handler} inp={inp} setinp={setinp} modal={modal} setmodal={setmodal} />
             </div>
 
         </>

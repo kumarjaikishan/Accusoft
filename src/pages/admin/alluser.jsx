@@ -7,7 +7,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setloader } from '../../store/login';
 import { toast } from 'react-toastify';
 import Useredit from './usereditmodal';
-import VerifiedIcon from '@mui/icons-material/Verified';
+import { MdVerified } from "react-icons/md";
+import { MdOutlineVerified } from "react-icons/md";
 
 
 const Alluser = () => {
@@ -252,7 +253,7 @@ const Alluser = () => {
                         <span>Name </span>
                         <span>Phone</span>
                         <span>Email</span>
-                        <span><VerifiedIcon/> </span>
+                        <span><MdVerified style={{fontSize:'22px'}}/> </span>
                         <span>Action</span>
                         <span>Date</span>
                     </div>

@@ -15,7 +15,7 @@
         place-items: center;
         height: 520px;
 
-        img {
+        :is(img) {
             border-radius: 10px;
         }
     }
@@ -32,6 +32,10 @@
             5px 5px 10px #a7aaaf,
             -5px -5px 10px #fff;
         overflow: hidden;
+
+        svg{
+            font-size: 22px;
+        }
     }
 }
 

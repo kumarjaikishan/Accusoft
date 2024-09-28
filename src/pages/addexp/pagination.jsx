@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 
 const Pagination = ({ totalpost, postperpage, changepageno, currentpage }) => {
   let pages = [];

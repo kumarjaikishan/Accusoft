@@ -1,21 +1,18 @@
 import React, { useState } from 'react'
 import { useEffect, useRef } from 'react';
 import './report.css';
-import { Navigate } from "react-router-dom";
 import { CSVLink } from 'react-csv';
 import { useSelector, useDispatch } from 'react-redux';
 import { setloader, setnarrow } from '../store/login';
-import { toast } from 'react-toastify';
-import DownloadIcon from '@mui/icons-material/Download';
-import PrintIcon from '@mui/icons-material/Print';
+import { GoDownload } from "react-icons/go";
+import { IoMdPrint } from "react-icons/io";
+import { VscDebugRestart } from "react-icons/vsc";
 import Button from '@mui/material/Button';
 import { motion } from 'framer-motion';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import RestartAltIcon from '@mui/icons-material/RestartAlt';
-import { useReactToPrint } from 'react-to-print';
 
 const Report = () => {
     const dispatch = useDispatch();
@@ -95,10 +92,7 @@ const Report = () => {
             window.print()
         }, 1);
     }
-    const componentRef = useRef();
-    const handlePrint = useReactToPrint({
-        content: () => componentRef.current,
-    });
+
     const formatDate = (date) => {
         let daten = new Date(date);
 
@@ -152,23 +146,23 @@ const Report = () => {
                             </Select>
                         </FormControl>
 
-                        <Button className='muibtn' disabled={!issearch} title='Clear search' variant="contained" onClick={clearsearch} startIcon={<RestartAltIcon />}>
+                        <Button className='muibtn' disabled={!issearch} title='Clear search' variant="contained" onClick={clearsearch} startIcon={<VscDebugRestart />}>
                             Clear
                         </Button>
                     </span>
                     <span>
                         <CSVLink data={pious} headers={header} filename={`${username}-Expense Record`}>
                             {/* <button title='Download'>Download csv</button> */}
-                            <Button className='muibtn' title='Download' size='small' variant="contained" startIcon={<DownloadIcon />}>
+                            <Button className='muibtn' title='Download' size='small' variant="contained" startIcon={<GoDownload />}>
                                 Csv
                             </Button>
                         </CSVLink>
-                        <Button className='muibtn' title='print' size='small' variant="contained" onClick={print} startIcon={<PrintIcon />}>
+                        <Button className='muibtn' title='print' size='small' variant="contained" onClick={print} startIcon={<IoMdPrint />}>
                             Print
                         </Button>
                     </span>
                 </div>
-                <div className="table" ref={componentRef} >
+                <div className="table"  >
                     <div className='head'> <b>Accusoft - {useralldetail?.user?.name}</b> (Report from {formatDate(inp.from)} to {formatDate(inp.to)})</div>
                     <table id='tavlecontent' >
                         <thead id='table'>
@@ -208,7 +202,6 @@ const Report = () => {
                             </tr>
                         </tbody>
                     </table>
-                    {/* <button onClick={handlePrint}>Print this out!</button> */}
                 </div>
             </motion.div>
         </>

@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import './navbar.css';
-import MenuIcon from '@mui/icons-material/Menu';
 import { NavLink } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { setnarrow } from '../../store/login';
-import LightModeIcon from '@mui/icons-material/LightMode';
-import BedtimeIcon from '@mui/icons-material/Bedtime';
+import { IoMenu } from "react-icons/io5";
+import { MdLightMode } from "react-icons/md";
+import { MdBedtime } from "react-icons/md";
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -49,14 +49,14 @@ const Navbar = () => {
     <>
       <nav className={log.narrow ? "nav narrow" : "nav"}>
         <div className="cont">
-          <MenuIcon onClick={fun} className='navicon' titleAccess='menu' />
+          <IoMenu onClick={fun} className='navicon' titleAccess='menu' />
           <span>{log.head} </span>
         </div>
         <span className='mode'>
           <input onChange={handle} id='checkbox' name='checkbox' checked={darkmode} type="checkbox" className="checkbox" />
           {darkmode == true ?
-            <label htmlFor="checkbox"> <LightModeIcon /> Light </label> :
-            <label htmlFor="checkbox"> <BedtimeIcon /> Dark </label>}
+            <label htmlFor="checkbox"> <MdLightMode /> Light </label> :
+            <label htmlFor="checkbox"> <MdBedtime /> Dark </label>}
         </span>
 
         {log.islogin ?

@@ -3,7 +3,7 @@ import './slow.css';
 import { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import LoadingButton from '@mui/lab/LoadingButton';
-import SendIcon from '@mui/icons-material/Send';
+import { IoMdSend } from "react-icons/io";
 import { toast } from 'react-toastify';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -61,7 +61,7 @@ const SlowWorkerPage = () => {
                      <LoadingButton
                         loading={disable}
                         type='submit'
-                        startIcon={<SendIcon />}
+                        startIcon={<IoMdSend />}
                         loadingPosition="start"
                         variant="contained"
                     >

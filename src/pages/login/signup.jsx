@@ -1,14 +1,14 @@
 import React, { useState } from 'react'
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
-import MailOutlineIcon from '@mui/icons-material/MailOutline';
-import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
-import Person4Icon from '@mui/icons-material/Person4';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import VpnKeyIcon from '@mui/icons-material/VpnKey';
+import { IoMailOutline } from "react-icons/io5";
+import { IoEyeOutline } from "react-icons/io5";
+import { IoEyeOffOutline } from "react-icons/io5";
+import { MdKey } from "react-icons/md";
+import { MdLocalPhone } from "react-icons/md";
+import { FaUserAstronaut } from "react-icons/fa";
 import { setloader, setlogin } from '../../store/login';
 import { useSelector, useDispatch } from 'react-redux';
-import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
 import { toast } from 'react-toastify';
 
 const Signup = ({ setlog }) => {
@@ -103,7 +103,7 @@ const Signup = ({ setlog }) => {
                         value={signinp.name}
                         InputProps={{
                             startAdornment: <InputAdornment position="start">
-                                <Person4Icon />
+                                <FaUserAstronaut />
                             </InputAdornment>,
                         }}
                     />
@@ -117,7 +117,7 @@ const Signup = ({ setlog }) => {
                         value={signinp.email}
                         InputProps={{
                             startAdornment: <InputAdornment position="start">
-                                <MailOutlineIcon />
+                                <IoMailOutline />
                             </InputAdornment>,
                         }}
                     />
@@ -134,7 +134,7 @@ const Signup = ({ setlog }) => {
                         value={signinp.phone}
                         InputProps={{
                             startAdornment: <InputAdornment position="start">
-                                <LocalPhoneIcon />
+                                <MdLocalPhone />
                             </InputAdornment>,
                         }}
                     />
@@ -148,10 +148,10 @@ const Signup = ({ setlog }) => {
                         value={signinp.password}
                         InputProps={{
                             startAdornment: <InputAdornment position="start">
-                                <VpnKeyIcon />
+                                <MdKey />
                             </InputAdornment>,
                             endAdornment: <InputAdornment position="end" style={{ cursor: "pointer" }} onClick={() => signuppass ? setsignuppass(false) : setsignuppass(true)}>
-                                {signuppass ? <RemoveRedEyeIcon /> : <VisibilityOffIcon />}
+                                {signuppass ? <IoEyeOutline /> : <IoEyeOffOutline />}
                             </InputAdornment>
                         }}
                     />
@@ -165,7 +165,7 @@ const Signup = ({ setlog }) => {
                         value={signinp.cpassword}
                         InputProps={{
                             startAdornment: <InputAdornment position="start">
-                                <VpnKeyIcon />
+                                <MdKey />
                             </InputAdornment>,
                         }}
                     />

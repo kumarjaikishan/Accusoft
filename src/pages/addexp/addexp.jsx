@@ -12,9 +12,9 @@ import { toast } from 'react-toastify';
 import apiWrapper from './apiWrapper';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useNavigate } from "react-router-dom";
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import Button from '@mui/material/Button';
-import AddBoxIcon from '@mui/icons-material/AddBox';
+import { MdKeyboardArrowDown } from "react-icons/md";
+import { MdAddBox } from "react-icons/md";
 
 const AddExpenses = () => {
   const dispatch = useDispatch();
@@ -27,7 +27,8 @@ const AddExpenses = () => {
 
   useEffect(() => {
     dispatch(setloader(false))
-    console.log('expcheck', userAllDetails.explist)
+    // console.log('expcheck', userAllDetails.explist)
+    console.log("date-",dayjs())
   }, [])
 
   useEffect(() => {
@@ -53,7 +54,7 @@ const AddExpenses = () => {
   const init = {
     _id: '',
     ledger: '',
-    date: dayjs(),
+    date: dayjs().format('YYYY-MM-DD'),
     amount: '',
     narration: '',
   }
@@ -81,8 +82,7 @@ const AddExpenses = () => {
   const submitExpense = async () => {
     const token = localStorage.getItem('token');
     let { ledger, date, amount, narration } = expenseInput;
-    date = dayjs(date).format("YYYY-MM-DD");
-    // console.log(date);
+    // console.log("final date",date);
     // return
 
     if (!ledger || !date || !amount || !narration) {
@@ -322,7 +322,7 @@ const AddExpenses = () => {
         transition={{ duration: 0.2, ease: "easeInOut" }}
         className={isModalOpen || isLedgerUpdate ? 'exp ismodal' : 'exp'}>
         <div className="add">
-          <Button size='large' className='btne' title='Add Expense' onClick={() => setIsModalOpen(true)} startIcon={<AddBoxIcon />} variant="contained">Add Expense</Button>
+          <Button size='large' className='btne' title='Add Expense' onClick={() => setIsModalOpen(true)} startIcon={<MdAddBox />} variant="contained">Add Expense</Button>
         </div>
         <div className="head">
           <span>Expense List </span>
@@ -344,10 +344,10 @@ const AddExpenses = () => {
         <div className="table">
           <div className="header">
             <span>S.no</span>
-            <span onClick={() => sortPosts('ledger')}> Ledger <i><KeyboardArrowDownIcon /> </i></span>
-            <span onClick={() => sortPosts('amount')}>Amt. <i><KeyboardArrowDownIcon /> </i></span>
+            <span onClick={() => sortPosts('ledger')}> Ledger <i><MdKeyboardArrowDown /> </i></span>
+            <span onClick={() => sortPosts('amount')}>Amt. <i><MdKeyboardArrowDown /> </i></span>
             <span>Narration</span>
-            <span onClick={() => sortPosts('date')}>Date <i><KeyboardArrowDownIcon /> </i></span>
+            <span onClick={() => sortPosts('date')}>Date <i><MdKeyboardArrowDown /> </i></span>
             <span>Action</span>
             <span><input type="checkbox" onClick={selectAllCheckbox} id="allcheck" /></span>
           </div>

@@ -10,14 +10,10 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import dayjs from 'dayjs';
 import Button from '@mui/material/Button';
-import RestartAltIcon from '@mui/icons-material/RestartAlt';
-import SaveIcon from '@mui/icons-material/Save';
-import UpgradeIcon from '@mui/icons-material/Upgrade';
+import { VscDebugRestart } from "react-icons/vsc";
+import { IoIosSave } from "react-icons/io";
+import { MdOutlineUpdate } from "react-icons/md";
 
 const Modalbox = ({ setisledupdate, modal, navigate, disable, setdisable, init, handler, inp, isupdate, sub, setmodal, setisupdate, setinp }) => {
     const useralldetail = useSelector((state) => state.userexplist);
@@ -27,7 +23,7 @@ const Modalbox = ({ setisledupdate, modal, navigate, disable, setdisable, init, 
     const updatee = async (_id) => {
         let { ledger, date, amount, narration } = inp;
         setdisable(true);
-        date = dayjs(date).format("YYYY-MM-DD");
+        // date = dayjs(date).format("YYYY-MM-DD");
         //   console.log(date);
 
         const url = `${import.meta.env.VITE_API_ADDRESS}updateexp`;
@@ -66,12 +62,6 @@ const Modalbox = ({ setisledupdate, modal, navigate, disable, setdisable, init, 
             setmodal(false);
         }
     }
-    const setValue = (val) => {
-        let now = dayjs(val);
-        setinp({
-            ...inp, date: now
-        })
-    }
     return (
         <div className="modal" onClick={sdef} style={{ display: modal ? "block" : "none" }}>
             <div className="box">
@@ -95,16 +85,12 @@ const Modalbox = ({ setisledupdate, modal, navigate, disable, setdisable, init, 
                         </Select>
                     </FormControl>
 
-                    <LocalizationProvider onChange={(e) => handler(e, 'date')} dateAdapter={AdapterDayjs}>
-                        <DatePicker
-                            label="Date"
-                            value={inp.date}
-                            onChange={(newValue) => setValue(newValue)}
-                            sx={{ width: '90%', mt: 2, mb: 2 }}
-                            format="DD-MM-YYYY"
-                        />
-                    </LocalizationProvider>
-
+                    <TextField
+                        type='date'
+                        label="Date"
+                        value={inp.date}
+                        onChange={(e) => handler(e, 'date')}
+                        sx={{ width: '90%', mt: 2, mb: 2 }} />
 
                     <TextField sx={{ width: '90%', mt: 2, mb: 2 }} id="outlined-basic" label="Amount" name="amount"
                         onKeyPress={(event) => { if (!/[0-9]/.test(event.key)) { event.preventDefault(); } }}
@@ -117,9 +103,9 @@ const Modalbox = ({ setisledupdate, modal, navigate, disable, setdisable, init, 
                         onChange={(e) => handler(e, 'narration')}
                         variant="outlined" />
                     <div className='btn'>
-                        {isupdate ? <Button className='muibtn' disabled={disable} onClick={() => updatee(inp._id)} variant="contained" startIcon={<UpgradeIcon />}>
+                        {isupdate ? <Button className='muibtn' disabled={disable} onClick={() => updatee(inp._id)} variant="contained" startIcon={<MdOutlineUpdate />}>
                             Update
-                        </Button> : <Button className='muibtn' disabled={disable} onClick={sub} variant="contained" startIcon={<SaveIcon />}>
+                        </Button> : <Button className='muibtn' disabled={disable} onClick={sub} variant="contained" startIcon={<IoIosSave />}>
                             Submit
                         </Button>}
 
@@ -129,7 +115,7 @@ const Modalbox = ({ setisledupdate, modal, navigate, disable, setdisable, init, 
                                 setisupdate(false);
                                 setinp(init);
                             }}
-                            className='muibtn outlined' title='Cancel' variant="outlined" startIcon={<RestartAltIcon />}>
+                            className='muibtn outlined' title='Cancel' variant="outlined" startIcon={<VscDebugRestart />}>
                             Cancel
                         </Button>
                     </div>

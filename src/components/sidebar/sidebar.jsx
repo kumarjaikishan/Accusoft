@@ -3,13 +3,13 @@ import './sidebar.css';
 import { NavLink } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import swal from 'sweetalert';
-import GrassIcon from '@mui/icons-material/Grass';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { header } from '../../store/login';
 import { useSelector, useDispatch } from 'react-redux';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import { MdOutlineGrass } from "react-icons/md";
+import { MdKeyboardArrowDown } from "react-icons/md";
+import { MdKeyboardArrowUp } from "react-icons/md";
 
 const Sidebar = () => {
     let navigate = useNavigate();
@@ -82,7 +82,7 @@ const Sidebar = () => {
                     >
                         <span className="li">
                             <span className="logo">
-                                <GrassIcon className="company" />
+                                <MdOutlineGrass className="company" />
                             </span>
                             <span className="name">Accusoft</span>
                         </span>
@@ -116,7 +116,7 @@ const Sidebar = () => {
                                 </span>
                                 <span className="name">Admin</span>
                                 {/* {!log.narrow &&  <span><i className={adminSubMenuVisible ? "fa fa-arrow-up":"fa fa-arrow-down"} aria-hidden="true"></i></span> }   */}
-                                {!log.narrow && <span> {adminSubMenuVisible ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}</span>}
+                                {!log.narrow && <span> {adminSubMenuVisible ? <MdKeyboardArrowUp /> : <MdKeyboardArrowDown />}</span>}
                             </span>
                             {adminSubMenuVisible && (
                                 <div className="sub-menu">
@@ -169,7 +169,7 @@ const Sidebar = () => {
                                 </span>
                                 <span className="name">Server Test</span>
                                 {/* {!log.narrow &&  <span><i className={testSubMenuVisible ? "fa fa-arrow-up":"fa fa-arrow-down"} aria-hidden="true"></i></span> }   */}
-                                {!log.narrow && <span> {testSubMenuVisible ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}</span>}    </span>
+                                {!log.narrow && <span> {testSubMenuVisible ? <MdKeyboardArrowUp /> : <MdKeyboardArrowDown />}</span>}    </span>
                             {testSubMenuVisible && (
                                 <div className="sub-menu">
                                     <NavLink

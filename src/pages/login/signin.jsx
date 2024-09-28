@@ -2,16 +2,16 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from "react-router-dom";
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
-import MailOutlineIcon from '@mui/icons-material/MailOutline';
-import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import { IoMailOutline } from "react-icons/io5";
+import { IoEyeOutline } from "react-icons/io5";
+import { IoEyeOffOutline } from "react-icons/io5";
+import { MdKey } from "react-icons/md";
+import { MdLogin } from "react-icons/md";
 import { setloader, setlogin } from '../../store/login';
 import { useSelector, useDispatch } from 'react-redux';
-import VpnKeyIcon from '@mui/icons-material/VpnKey';
 import { userdata } from '../../store/api'
 import { toast } from 'react-toastify';
 import LoadingButton from '@mui/lab/LoadingButton';
-import LoginIcon from '@mui/icons-material/Login';
 
 const Signin = () => {
     let navigate = useNavigate();
@@ -137,12 +137,12 @@ const Signin = () => {
                         value={signinp.email}
                         InputProps={{
                             startAdornment: <InputAdornment position="start">
-                                <MailOutlineIcon />
+                                <IoMailOutline />
                             </InputAdornment>,
 
                         }}
                     />
-                  {!forget &&  <TextField
+                    {!forget && <TextField
                         label="Password"
                         className='filled'
                         required
@@ -152,26 +152,26 @@ const Signin = () => {
                         value={signinp.password}
                         InputProps={{
                             startAdornment: <InputAdornment position="start">
-                                <VpnKeyIcon />
+                                <MdKey />
                             </InputAdornment>,
                             endAdornment: <InputAdornment position="end" style={{ cursor: "pointer" }} onClick={() => loginpass ? setloginpass(false) : setloginpass(true)}>
-                                {loginpass ? <RemoveRedEyeIcon /> : <VisibilityOffIcon />}
+                                {loginpass ? <IoEyeOutline /> : <IoEyeOffOutline />}
                             </InputAdornment>
                         }}
 
                     />}
-                      {!forget && <div className='forget'>
-                        <span style={{cursor:'pointer'}} onClick={() => setforget(true)}>Forget Password?</span>
+                    {!forget && <div className='forget'>
+                        <span style={{ cursor: 'pointer' }} onClick={() => setforget(true)}>Forget Password?</span>
                     </div>}
 
                     {forget && <div className='forget'>
-                        <span style={{cursor:'pointer'}} onClick={() => setforget(false)}>SignIn?</span>
+                        <span style={{ cursor: 'pointer' }} onClick={() => setforget(false)}>SignIn?</span>
                     </div>}
-                    
+
                     {!forget && <LoadingButton
                         loading={btnclick}
                         type='submit'
-                        startIcon={<LoginIcon />}
+                        startIcon={<MdLogin />}
                         loadingPosition="start"
                         variant="contained"
                     >
@@ -180,14 +180,14 @@ const Signin = () => {
                     {forget && <LoadingButton
                         loading={btnclick}
                         onClick={emailset}
-                        startIcon={<VpnKeyIcon />}
+                        startIcon={<MdKey />}
                         loadingPosition="start"
                         variant="contained"
                     >
                         Email sent
                     </LoadingButton>}
 
-                 </form>
+                </form>
             </div>
         </>
     )

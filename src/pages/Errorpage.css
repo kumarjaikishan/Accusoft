@@ -14,7 +14,7 @@
         justify-content: center;
         flex-direction: column;
 
-        img {
+        :is(img) {
             width: 30vw;
         }
 
@@ -43,7 +43,6 @@
         }
     }
 }
-
 @media only screen and (max-width: 500px) {
 
     .errore {
@@ -51,7 +50,7 @@
 
         .container {
 
-            img {
+            :is(img) {
                 width: 100%;
             }
 

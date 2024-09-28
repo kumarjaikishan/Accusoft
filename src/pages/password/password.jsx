@@ -1,10 +1,10 @@
 import './password.css'
 import { useParams } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
-import SaveIcon from '@mui/icons-material/Save';
+import { FaSave } from "react-icons/fa";
 import LoadingButton from '@mui/lab/LoadingButton';
 import TextField from '@mui/material/TextField';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useState } from 'react';
 import { toast } from "react-toastify";
 
@@ -67,7 +67,7 @@ const PasswordReset = () => {
                         // onClick={() => dispatch(alltourna())}
                         loadingPosition="start"
                         sx={{ width: '75%', mt: 2, mb: 2 }}
-                        startIcon={<SaveIcon />}
+                        startIcon={<FaSave />}
                         variant="outlined"
                         type="submit"
 

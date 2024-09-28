@@ -5,6 +5,7 @@ import './dataanalysis.css';
 import { useSelector, useDispatch } from 'react-redux';
 import { setloader } from '../store/login';
 import { motion } from 'framer-motion';
+import { IoSearch } from "react-icons/io5";
 
 const Datanalysis = () => {
     const dispatch = useDispatch();
@@ -98,8 +99,8 @@ const Datanalysis = () => {
                             <option value="2024">2024</option>
                             <option value="2025">2025</option>
                         </select>
-                        <i className="fa fa-search" aria-hidden="true"></i>
-                    </span>
+                        <IoSearch/>
+                   </span>
                 </div>
                 <div className="cards">
                     {Object.entries(cardarr).map(([ledger, sum]) => (

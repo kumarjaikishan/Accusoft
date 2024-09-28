@@ -22,6 +22,7 @@
     border-radius: 8px;
     margin: 10px;
 }
+
 .dark-theme .admindashboard .card {
     background: var(--background);
     box-shadow: inset -2px -2px 5px rgba(0, 0, 0, 0.5),
@@ -64,8 +65,8 @@
     position: relative;
 }
 
-.admindashboard .card .icon i {
-    font-size: 3.7em;
+.admindashboard .card .icon svg {
+    font-size: 5.5em;
     color: grey;
     /* color: rgb(83, 80, 80); */
 }

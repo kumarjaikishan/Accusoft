@@ -10,6 +10,17 @@ import { useSelector, useDispatch } from 'react-redux';
 import { MdOutlineGrass } from "react-icons/md";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { MdKeyboardArrowUp } from "react-icons/md";
+import { FaLock } from "react-icons/fa6";
+import { FaTachometerAlt } from "react-icons/fa";
+import { CiUser } from "react-icons/ci";
+import { FaShippingFast } from "react-icons/fa";
+import { PiHourglassLowFill } from "react-icons/pi";
+import { FaSignOutAlt } from "react-icons/fa";
+import { FaRegUser } from "react-icons/fa";
+import { FaServer } from "react-icons/fa6";
+import { BsBank2 } from "react-icons/bs";
+import { FaBook } from "react-icons/fa6";
+import { TbReportAnalytics } from "react-icons/tb";
 
 const Sidebar = () => {
     let navigate = useNavigate();
@@ -31,22 +42,22 @@ const Sidebar = () => {
         {
             name: 'Dashboard',
             link: '/',
-            logo: 'fa fa-tachometer',
+            logo: <FaTachometerAlt title='Dashboard' />,
         },
         {
             name: 'Expenses',
             link: '/addexpense',
-            logo: 'fa fa-university',
+            logo: <BsBank2 title='Expense' />,
         },
         {
             name: 'Exp. Analysis',
             link: '/datanalysis',
-            logo: 'fa fa-book',
+            logo: <FaBook title='Exp. Analysis' />,
         },
         {
             name: 'Report',
             link: '/report',
-            logo: 'fa fa-cloud-download',
+            logo: <TbReportAnalytics title='Report' />,
         },
         // {
         //     name: 'Print',
@@ -98,9 +109,9 @@ const Sidebar = () => {
                                     style={{ textDecoration: 'none' }}
                                     to={val.link}
                                 >
-                                    <span className="li" onClick={() => dispatch(header(val.name))}>
+                                    <span className="li aur" onClick={() => dispatch(header(val.name))}>
                                         <span className="logo">
-                                            <i title={val.name} className={val.logo} aria-hidden="true"></i>
+                                            {val.logo}
                                         </span>
                                         <span className="name">{val.name}</span>
                                     </span>
@@ -112,10 +123,9 @@ const Sidebar = () => {
                         <div className="admin-panel">
                             <span className={`li ${adminSubMenuVisible ? 'active' : ''}`} onClick={toggleAdminSubMenu} >
                                 <span className="logo">
-                                    <i title={'Admin'} className="fa fa-lock" aria-hidden="true"></i>
+                                    <FaLock title='Admin' />
                                 </span>
                                 <span className="name">Admin</span>
-                                {/* {!log.narrow &&  <span><i className={adminSubMenuVisible ? "fa fa-arrow-up":"fa fa-arrow-down"} aria-hidden="true"></i></span> }   */}
                                 {!log.narrow && <span> {adminSubMenuVisible ? <MdKeyboardArrowUp /> : <MdKeyboardArrowDown />}</span>}
                             </span>
                             {adminSubMenuVisible && (
@@ -125,9 +135,9 @@ const Sidebar = () => {
                                         style={{ textDecoration: 'none' }}
                                         to="/admin/dashboard"
                                     >
-                                        <span className="li" onClick={() => dispatch(header('Admin/ Dashboard'))}>
+                                        <span className="li undersubmenu" onClick={() => dispatch(header('Admin/ Dashboard'))}>
                                             <span className="logo">
-                                                <i title={'Users'} className="fa fa-tachometer" aria-hidden="true"></i>
+                                                <FaTachometerAlt title='User' />
                                             </span>
                                             <span className="name">Dashboard</span>
                                         </span>
@@ -137,25 +147,14 @@ const Sidebar = () => {
                                         style={{ textDecoration: 'none' }}
                                         to="/admin/users"
                                     >
-                                        <span className="li" onClick={() => dispatch(header('Admin/ Users'))}>
+                                        <span className="li undersubmenu" onClick={() => dispatch(header('Admin/ Users'))}>
                                             <span className="logo">
-                                                <i title={'Users'} className="fa fa-user-o" aria-hidden="true"></i>
+                                                <CiUser title='User' />
                                             </span>
                                             <span className="name">Users</span>
                                         </span>
                                     </NavLink>
-                                    {/* <NavLink
-                                        className={(navData) => (navData.isActive ? 'active' : '')}
-                                        style={{ textDecoration: 'none' }}
-                                        to="/admin/expense"
-                                    >
-                                        <span className="li" onClick={() => dispatch(header('Admin/ Expenses'))}>
-                                            <span className="logo">
-                                                <i title={'Expenses'} className="fa fa-university" aria-hidden="true"></i>
-                                            </span>
-                                            <span className="name">Expenses</span>
-                                        </span>
-                                    </NavLink> */}
+
 
                                 </div>
                             )}
@@ -165,10 +164,9 @@ const Sidebar = () => {
                         <div className="admin-panel">
                             <span className={`li ${testSubMenuVisible ? 'active' : ''}`} onClick={toggletestSubMenu} >
                                 <span className="logo">
-                                    <i title={'Admin'} className="fa fa-server" aria-hidden="true"></i>
+                                    <FaServer title='Server' />
                                 </span>
                                 <span className="name">Server Test</span>
-                                {/* {!log.narrow &&  <span><i className={testSubMenuVisible ? "fa fa-arrow-up":"fa fa-arrow-down"} aria-hidden="true"></i></span> }   */}
                                 {!log.narrow && <span> {testSubMenuVisible ? <MdKeyboardArrowUp /> : <MdKeyboardArrowDown />}</span>}    </span>
                             {testSubMenuVisible && (
                                 <div className="sub-menu">
@@ -177,9 +175,9 @@ const Sidebar = () => {
                                         style={{ textDecoration: 'none' }}
                                         to="/slow"
                                     >
-                                        <span className="li" onClick={() => dispatch(header('Slow Page'))}>
+                                        <span className="li undersubmenu" onClick={() => dispatch(header('Slow Page'))}>
                                             <span className="logo">
-                                                <i title={'Users'} className="fa fa-snowflake-o" aria-hidden="true"></i>
+                                                <PiHourglassLowFill />
                                             </span>
                                             <span className="name">Server Slow</span>
                                         </span>
@@ -189,11 +187,11 @@ const Sidebar = () => {
                                         style={{ textDecoration: 'none' }}
                                         to="/slowworker"
                                     >
-                                        <span className="li" onClick={() => dispatch(header('Slow Worker'))}>
+                                        <span className="li undersubmenu" onClick={() => dispatch(header('Slow Worker'))}>
                                             <span className="logo">
-                                                <i title={'Users'} className="fa fa-shower" aria-hidden="true"></i>
+                                                <FaShippingFast title='worker thread' />
                                             </span>
-                                            <span className="name">Worker Slow</span>
+                                            <span className="name">Worker Fast</span>
                                         </span>
                                     </NavLink>
 
@@ -204,7 +202,7 @@ const Sidebar = () => {
                     {log.islogin ? (
                         <span className="li" onClick={fr}>
                             <span className="logo">
-                                <i title="Sign Out" className="fa fa-sign-out" aria-hidden="true"></i>
+                                <FaSignOutAlt title='Sign Out' />
                             </span>
                             <span className="name">Logout</span>
                         </span>
@@ -214,10 +212,9 @@ const Sidebar = () => {
                             style={{ textDecoration: 'none' }}
                             to="/login"
                         >
-                            {' '}
                             <span className="li" onClick={() => dispatch(header('Login'))}>
                                 <span className="logo">
-                                    <i title="Sign In" className="fa fa-user" aria-hidden="true"></i>
+                                    <FaRegUser title='Sign In' />
                                 </span>
                                 <span className="name">Login</span>
                             </span>

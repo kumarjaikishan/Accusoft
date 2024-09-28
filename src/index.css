@@ -1,11 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Moon+Dance&display=swap');
-
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   scroll-behavior: smooth;
-  /* font-family: "Times New Roman", Times, serif; */
 
   &::-webkit-scrollbar {
     width: 10px;
@@ -40,6 +37,8 @@
   --asbc: #0a3d62;
   --contrast: #151516;
   --tableborder: rgb(190, 185, 185);
+  --editicon:rgb(7, 120, 182);
+  --deleteicon:rgb(220, 7, 25);
 }
 
 .dark-theme {
@@ -51,6 +50,8 @@
   --color: #d1d1d1;
   --contrast: #d1d1d1;
   --tableborder: rgb(73, 72, 72);
+  --editicon:#d1d1d1;
+  --deleteicon:#d1d1d1;
 }
 
 input {
@@ -71,13 +72,8 @@ body {
   height: 100vh;
   overflow-x: hidden;
   user-select: none;
-
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
 :root{
   --default-color-white: #ffffff;
   --default-color-green: #3EB991;

@@ -24,9 +24,10 @@
     display: flex;
 }
 
-.datanalysis .cont i {
+.datanalysis .cont svg {
     position: relative;
     width: 30px;
+    padding: 4px;
     height: 30px;
     text-align: center;
     line-height: 30px;

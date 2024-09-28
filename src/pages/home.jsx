@@ -1,13 +1,15 @@
 import React, { useState } from 'react'
 import { useEffect } from 'react';
 import './home.css';
-import { Navigate } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
 import { header, setloader } from '../store/login';
-import { toast } from 'react-toastify';
-import { userdata } from '../store/api'
 import { motion } from 'framer-motion';
-// import { toast } from 'react-toastify';
+import { FaIndianRupeeSign } from "react-icons/fa6";
+import { MdElectricBolt } from "react-icons/md";
+import { FaShoppingBag } from "react-icons/fa";
+import { FaGoogleWallet } from "react-icons/fa";
+import { FaBalanceScaleRight } from "react-icons/fa";
+import { FaUniversity } from "react-icons/fa";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -92,27 +94,27 @@ const Home = () => {
   const card = [{
     amt: arr.todaysum,
     day: "Today",
-    icon: <i className="fa fa-inr" aria-hidden="true"></i>,
+    icon: <FaIndianRupeeSign/>,
   }, {
     amt: arr.yestersum,
     day: "Yesterday",
-    icon: <i className="fa fa-bolt" aria-hidden="true"></i>,
+    icon: <MdElectricBolt/> ,
   }, {
     amt: arr.weeksum,
     day: "Last Week",
-    icon: <i className="fa fa-shopping-bag" aria-hidden="true"></i>,
+    icon: <FaShoppingBag/> ,
   }, {
     amt: arr.monthsum,
     day: "Last Month",
-    icon: <i className="fa fa-google-wallet" aria-hidden="true"></i>,
+    icon: <FaGoogleWallet/> ,
   }, {
     amt: arr.yearsum,
     day: "Last Year",
-    icon: <i className="fa fa-balance-scale" aria-hidden="true"></i>,
+    icon: <FaBalanceScaleRight/> ,
   }, {
     amt: arr.totalsum,
     day: "Total",
-    icon: <i className="fa fa-university" aria-hidden="true"></i>,
+    icon:<FaUniversity/> ,
   }]
 
   return (

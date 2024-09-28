@@ -8,7 +8,8 @@ import { setloader } from '../../store/login';
 import { toast } from 'react-toastify';
 import Useredit from './usereditmodal';
 import { MdVerified } from "react-icons/md";
-import { MdOutlineVerified } from "react-icons/md";
+import { HiPencilSquare } from "react-icons/hi2";
+import { RiDeleteBin6Line } from "react-icons/ri";
 
 
 const Alluser = () => {
@@ -247,13 +248,12 @@ const Alluser = () => {
                     <span><input type="text" onChange={sear} value={serinp} placeholder='Type to search...' /></span>
                 </div>
                 <div className="table">
-
                     <div className="header">
                         <span>S.no</span>
                         <span>Name </span>
                         <span>Phone</span>
                         <span>Email</span>
-                        <span><MdVerified style={{fontSize:'22px'}}/> </span>
+                        <span><MdVerified style={{ fontSize: '22px' }} /> </span>
                         <span>Action</span>
                         <span>Date</span>
                     </div>
@@ -271,8 +271,8 @@ const Alluser = () => {
                                 <span>{val.email}</span>
                                 <span className={val.isverified ? 'status done' : 'status'}>{val.isverified ? "Yes" : "No"}</span>
                                 <span>
-                                    <i title='Edit' onClick={() => setinputfield(val)} className="fa fa-pencil-square-o" aria-hidden="true"></i>
-                                    <i title='Delete' onClick={() => delet(val._id)} className="fa fa-trash-o" aria-hidden="true"></i>
+                                    <HiPencilSquare className='editicon ico' title='Edit' onClick={() => setinputfield(val)} />
+                                    <RiDeleteBin6Line className='deleteicon ico' title='Delete' onClick={() => delet(val._id)} />
                                 </span>
                                 <span>{formattedDate ? formattedDate : ""}</span>
                             </div>

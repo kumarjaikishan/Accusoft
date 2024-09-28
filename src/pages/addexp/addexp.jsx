@@ -15,6 +15,10 @@ import { useNavigate } from "react-router-dom";
 import Button from '@mui/material/Button';
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { MdAddBox } from "react-icons/md";
+import { HiPencilSquare } from "react-icons/hi2";
+import { RiDeleteBin6Line } from "react-icons/ri";
+import { IoMdPrint } from "react-icons/io";
+import { RiDeleteBin6Fill } from "react-icons/ri";
 
 const AddExpenses = () => {
   const dispatch = useDispatch();
@@ -23,7 +27,7 @@ const AddExpenses = () => {
   const [searchInput, setSearchInput] = useState('');
   const [finalsearch, setfinalserach] = useState('');
   const isAnimatingRef = React.useRef(false);
-  
+
 
   useEffect(() => {
     dispatch(setloader(false))
@@ -34,7 +38,7 @@ const AddExpenses = () => {
   useEffect(() => {
     const timerId = setTimeout(() => {
       // console.log("called");
-      
+
       setfinalserach(searchInput.toLowerCase());
     }, 1300);
 
@@ -178,7 +182,7 @@ const AddExpenses = () => {
           });
           setTimeout(() => {
             isAnimatingRef.current = false;
-          }, 100); 
+          }, 100);
           highlight();
         };
         const loaderAction = (isLoading) => dispatch(setloader(isLoading));
@@ -358,9 +362,9 @@ const AddExpenses = () => {
             className="body"
             id="tablecontent"
           >
-            {userAllDetails?.explist.length < 1 && <div style={{width:'100%',display:'flex', justifyContent:'center', margin:'8px 0'}}>
-             <b>No Expense Added</b> 
-            </div> }
+            {userAllDetails?.explist.length < 1 && <div style={{ width: '100%', display: 'flex', justifyContent: 'center', margin: '8px 0' }}>
+              <b>No Expense Added</b>
+            </div>}
             <AnimatePresence>
               {(sortedList ? sortedList : currentPosts)?.filter((item) => {
                 return (
@@ -382,9 +386,9 @@ const AddExpenses = () => {
                   <span>{expense.narration}</span>
                   <span>{dayjs(expense.date).format('DD MMM, YYYY')}</span>
                   <span>
-                    <i title="Edit" onClick={() => setDataForEdit(expense)} className="fa fa-pencil-square-o" aria-hidden="true"></i>
-                    {/* <i title="print" onClick={() => voucherpage(expense._id)} className="fa fa-print" aria-hidden="true"></i> */}
-                    <i title="Delete" onClick={() => deleteExpense(expense._id)} className="fa fa-trash-o" aria-hidden="true"></i>
+                    <HiPencilSquare title="Edit" onClick={() => setDataForEdit(expense)} className='editicon ico' />
+                    {/* <IoMdPrint title="Print" onClick={() => voucherpage(expense._id)} className='printicon ico' /> */}
+                    <RiDeleteBin6Line title="Delete" onClick={() => deleteExpense(expense._id)} className='deleteicon ico' />
                   </span>
                   <span> <input type="checkbox" title='select' onClick={highlight} id={expense._id} /></span>
                 </motion.div>
@@ -408,7 +412,7 @@ const AddExpenses = () => {
                 <span></span>
                 <span></span>
                 <span colSpan="1" id="alldelete" title="Delete Selected Item">
-                  <i onClick={deletemanyExpense} className="fa fa-trash" aria-hidden="true"></i>
+                  <RiDeleteBin6Fill onClick={deletemanyExpense} />
                 </span>
                 <span></span>
               </div>
@@ -423,7 +427,7 @@ const AddExpenses = () => {
           </span>
           <span>
             Pages :
-            <Pagination currentpage={currentPage} changepageno={changePageNumber} totalpost={userAllDetails.explist?.length} postperpage={postsPerPage} />
+             <Pagination currentpage={currentPage} changepageno={changePageNumber} totalpost={userAllDetails.explist?.length} postperpage={postsPerPage} />
           </span>
         </div>
         <Modalbox

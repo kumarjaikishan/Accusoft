@@ -14,6 +14,7 @@ import Button from '@mui/material/Button';
 import { VscDebugRestart } from "react-icons/vsc";
 import { IoIosSave } from "react-icons/io";
 import { MdOutlineUpdate } from "react-icons/md";
+import { FaPencilAlt } from "react-icons/fa";
 
 const Modalbox = ({ setisledupdate, modal, navigate, disable, setdisable, init, handler, inp, isupdate, sub, setmodal, setisupdate, setinp }) => {
     const useralldetail = useSelector((state) => state.userexplist);
@@ -66,7 +67,9 @@ const Modalbox = ({ setisledupdate, modal, navigate, disable, setdisable, init, 
         <div className="modal" onClick={sdef} style={{ display: modal ? "block" : "none" }}>
             <div className="box">
                 <h1>Add Voucher</h1>
-                <span className="ledgeredit" title='Edit Ledger'><i onClick={jkh} className="fa fa-pencil" aria-hidden="true"></i></span>
+                <span className="ledgeredit" title='Edit Ledger' onClick={jkh}>
+                    <FaPencilAlt />
+                </span>
                 <span className="wrapper">
                     <FormControl className='caps' sx={{ width: '90%', mt: 2, mb: 2 }}>
                         <InputLabel id="demo-simple-select-label">Ledger</InputLabel>

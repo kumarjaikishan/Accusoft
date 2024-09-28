@@ -8,6 +8,9 @@ import { toast } from 'react-toastify';
 import Button from '@mui/material/Button';
 import { TbMoodSad } from "react-icons/tb";
 import TextField from '@mui/material/TextField';
+import { CgUndo } from "react-icons/cg";
+import { FaPencil } from "react-icons/fa6";
+import { IoMdCloudUpload } from "react-icons/io";
 
 
 const Photo = () => {
@@ -19,7 +22,7 @@ const Photo = () => {
     }, [])
     const WIDTH = 200;
     const [isfile, setisfile] = useState(false);
-    const [disable, setdisable]= useState(false);
+    const [disable, setdisable] = useState(false);
     let newimage;
 
     const common = (event) => {
@@ -257,7 +260,9 @@ const Photo = () => {
             <div className="photo">
                 <div className="profile">
                     <h2>User Profile Detail</h2>
-                    <i className="fa fa-pencil" title='Edit Details' aria-hidden="true" onClick={() => seteditable(!editable)}></i>
+                    <i>
+                        <FaPencil style={{ fontSize: '12px' }} title='Edit Details' onClick={() => seteditable(!editable)} />
+                    </i>
                     <div className='upper'>
                         <div className="profile-header">
                             <img src={useralldetail.profilepic ? useralldetail.profilepic : defaultprofile} alt="User Avatar" />
@@ -290,8 +295,10 @@ const Photo = () => {
                         <label htmlFor="dfe">Choose File</label>
                         <div id="wrapper">  </div>
                         <div id='btn'>
-                            <button disabled={!isfile} onClick={sub} className={isfile ? null : "disabled"} ><i className="fa fa-cloud-upload" aria-hidden="true"></i>Upload</button>
-                            {isfile ? <button onClick={reset} style={isfile ? xdfvf : dfvfdv}  ><i className="fa fa-undo" aria-hidden="true"></i>Clear</button> : null}
+                            <button disabled={!isfile} onClick={sub} className={isfile ? null : "disabled"} >
+                            <IoMdCloudUpload/> Upload</button>
+                            {isfile ? <button onClick={reset} style={isfile ? xdfvf : dfvfdv}  >
+                                <CgUndo /> Clear</button> : null}
                         </div>
                     </div>
                 </div>

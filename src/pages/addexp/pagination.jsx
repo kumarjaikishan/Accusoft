@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { MdKeyboardDoubleArrowLeft } from "react-icons/md";
+import { MdKeyboardDoubleArrowRight } from "react-icons/md";
 
 const Pagination = ({ totalpost, postperpage, changepageno, currentpage }) => {
   let pages = [];
@@ -11,14 +13,14 @@ const Pagination = ({ totalpost, postperpage, changepageno, currentpage }) => {
   }
 
   const renderpagination = pages.map((val, ind) => {
-   
+
     if (val < maxpagenumberlimit + 1 && val > minpagenumberlimit) {
       return (
         <span key={ind} onClick={() => changepageno(val)} className={currentpage == val ? "pages active" : "pages"}>{val}</span>
       )
     }
-    
-     // if (val >= (currentpage-2) && val <= (currentpage+2)) {
+
+    // if (val >= (currentpage-2) && val <= (currentpage+2)) {
     //   return (
     //     <span key={ind} onClick={() => changepageno(val)} className={currentpage == val ? "pages active" : "pages"}>{val}</span>
     //   )
@@ -26,18 +28,18 @@ const Pagination = ({ totalpost, postperpage, changepageno, currentpage }) => {
   })
 
   const plus = () => {
-    setmaxpagenumberlimit(maxpagenumberlimit+pagenumberlimit)
-    setminpagenumberlimit(minpagenumberlimit+pagenumberlimit)
-    if(maxpagenumberlimit >= pages.length-1){
+    setmaxpagenumberlimit(maxpagenumberlimit + pagenumberlimit)
+    setminpagenumberlimit(minpagenumberlimit + pagenumberlimit)
+    if (maxpagenumberlimit >= pages.length - 1) {
       setmaxpagenumberlimit(pages.length);
-      setminpagenumberlimit(pages.length-pagenumberlimit)
+      setminpagenumberlimit(pages.length - pagenumberlimit)
     }
   }
-  
+
   const minus = () => {
-    setmaxpagenumberlimit(maxpagenumberlimit-pagenumberlimit)
-    setminpagenumberlimit(minpagenumberlimit-pagenumberlimit)
-    if(minpagenumberlimit <= 1){
+    setmaxpagenumberlimit(maxpagenumberlimit - pagenumberlimit)
+    setminpagenumberlimit(minpagenumberlimit - pagenumberlimit)
+    if (minpagenumberlimit <= 1) {
       setmaxpagenumberlimit(pagenumberlimit);
       setminpagenumberlimit(0)
     }
@@ -45,11 +47,11 @@ const Pagination = ({ totalpost, postperpage, changepageno, currentpage }) => {
   // console.log(currentpage);
   return (
     <>
-      <span><i title='Previous 5 Pages' onClick={minus} className="fa fa-angle-double-left" aria-hidden="true"></i></span>
+      <MdKeyboardDoubleArrowLeft title='Previous 5 Pages' onClick={minus} />
       {
         renderpagination
       }
-      <span><i title='Next 5 Pages' onClick={plus} className="fa fa-angle-double-right" aria-hidden="true"></i></span>
+      <MdKeyboardDoubleArrowRight title='Next 5 Pages' onClick={plus} />
     </>
   )
 }

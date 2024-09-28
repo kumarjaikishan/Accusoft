@@ -8,6 +8,9 @@ import { toast } from 'react-toastify';
 import swal from 'sweetalert';
 import TextField from '@mui/material/TextField';
 import apiWrapper from './apiWrapper';
+import { CgUndo } from "react-icons/cg";
+import { HiPencilSquare } from "react-icons/hi2";
+import { RiDeleteBin6Line } from "react-icons/ri";
 
 const Ledpage = ({ setmodal, setdisable, disable, navigate, isledupdate, setisledupdate }) => {
   const dispatch = useDispatch();
@@ -168,13 +171,14 @@ const Ledpage = ({ setmodal, setdisable, disable, navigate, isledupdate, setisle
   return (
     <div className="ledpage" onClick={sdef} style={{ display: isledupdate ? "block" : "none" }}>
       <div className="box">
-        <h2>Hi, {useralldetail?.user?.name}</h2>  <span className='back' onClick={back}> <i className="fa fa-undo" aria-hidden="true"></i> Back</span>
+        <h2>Hi, {useralldetail?.user?.name}</h2> 
+         <span className='back' onClick={back}> 
+        <CgUndo style={{fontSize:'15px', width:"20px", height:'20px'}}/> Back</span>
 
         <span className='ledwrapper'>
           <div className="cont">
             <TextField id="outlined-basic" label="Enter Ledger" className='inpe' variant="outlined" value={ledinp.val} onChange={handle} />
-            {/* <input type="text" placeholder='Enter Ledger' className='caps' value={ledinp.val} onChange={handle} /> */}
-            {isupda ? <button disabled={disable} onClick={updat}>Update</button> : <button disabled={disable} onClick={add}>Add</button>}
+           {isupda ? <button disabled={disable} onClick={updat}>Update</button> : <button disabled={disable} onClick={add}>Add</button>}
           </div>
 
           <div className="mater">
@@ -191,8 +195,8 @@ const Ledpage = ({ setmodal, setdisable, disable, navigate, isledupdate, setisle
                   return (
                     <tr key={ind}>
                       <td>{val.ledger}</td>
-                      <td><i className="fa fa-pencil-square-o" onClick={() => setledgerininput(val._id, val.ledger)} aria-hidden="true" ></i></td>
-                      <td><i className="fa fa-trash" onClick={() => deletee(val._id)} aria-hidden="true" value={ind} ></i></td>
+                      <td> <HiPencilSquare style={{fontSize:'18px', color:'rgb(7, 120, 182)'}} onClick={() => setledgerininput(val._id, val.ledger)}/> </td>
+                      <td> <RiDeleteBin6Line style={{fontSize:'18px', color:'rgb(220, 7, 25)'}} onClick={() => deletee(val._id)} /> </td>
                     </tr>
                   )
                 })}

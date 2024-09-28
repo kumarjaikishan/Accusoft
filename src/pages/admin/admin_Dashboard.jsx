@@ -4,6 +4,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setloader } from '../../store/login';
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import { FaUsers } from "react-icons/fa";
+import { FaBalanceScale } from "react-icons/fa";
 
 const Admin_Dashboard = () => {
     const dispatch = useDispatch();
@@ -42,14 +44,18 @@ const Admin_Dashboard = () => {
                         <div className="amt"> {leng ? leng.userlen : 0}</div>
                         <div className="day">Total Users</div>
                     </div>
-                    <div className="icon" style={{ color: "white" }}><i className="fa fa-users" aria-hidden="true"></i></div>
+                    <div className="icon" style={{ color: "white" }}>
+                    <FaUsers/>
+                    </div>
                 </div>
                 <div className="card"  >
                     <div className="data">
                         <div className="amt"> {leng ? leng.explen : 0}</div>
                         <div className="day">Total Expense Record</div>
                     </div>
-                    <div className="icon" style={{ color: "white" }}><i className="fa fa-balance-scale" aria-hidden="true"></i></div>
+                    <div className="icon" style={{ color: "white" }}>
+                   <FaBalanceScale/>
+                    </div>
                 </div>
             </motion.div>
         </>

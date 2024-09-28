@@ -45,20 +45,6 @@
                 align-items: center;
                 /* border: 1px solid red; */
 
-                i {
-                    cursor: pointer;
-                    text-align: center;
-                    transition: 0.1s;
-                    color: var(--contrast);
-
-                    &:last-child {
-                        color: red;
-                    }
-
-                    &:hover {
-                        transform: scale(1.1);
-                    }
-                }
             }
 
             & span:nth-child(7) {
@@ -68,23 +54,47 @@
                 align-items: center;
                 /* border: 1px solid black; */
 
-                i {
-                    cursor: pointer;
-                    text-align: center;
-                    transition: 0.1s;
-                    color: var(--contrast);
+               
+            }
+            .ico {
+                padding: 2px 5px;
+                box-sizing: content-box;
+                width: 17px;
+                height: 17px;
+                border-radius: .2rem;
+                cursor: pointer;
+            }
 
-                    &:last-child {
-                        color: red;
-                    }
+            .ico.editicon {
+                color: rgb(7, 120, 182);
+                background: rgba(7, 121, 182, 0.116);
 
-                    &:hover {
-                        transform: scale(1.1);
-                    }
+                &:hover {
+                    background: rgb(7, 120, 182);
+                    color: white;
                 }
             }
 
-           
+            .ico.deleteicon {
+                color: rgb(220, 7, 25);
+                background: rgba(182, 7, 16, 0.116);
+
+                &:hover {
+                    background: rgb(220, 7, 25);
+                    color: white;
+                }
+            }
+
+            .ico.printicon {
+                color: rgb(16, 16, 149);
+                background: rgba(29, 10, 198, 0.116);
+
+                &:hover {
+                    background: rgb(16, 16, 149);
+                    color: white;
+                }
+            }
+
         }
 
         .header {

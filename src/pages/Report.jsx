@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import './report.css';
 import { Navigate } from "react-router-dom";
 import { CSVLink } from 'react-csv';
@@ -15,6 +15,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
+import { useReactToPrint } from 'react-to-print';
 
 const Report = () => {
     const dispatch = useDispatch();
@@ -30,7 +31,7 @@ const Report = () => {
         { label: "date", key: "date" },
         { label: "narration", key: "narration" }
     ]
-    const username = useralldetail.user.name;
+    const username = useralldetail?.user?.name;
     const [issearch, setissearch] = useState(false);
     const [pious, setpious] = useState([]);
     const date = new Date;
@@ -94,6 +95,10 @@ const Report = () => {
             window.print()
         }, 1);
     }
+    const componentRef = useRef();
+    const handlePrint = useReactToPrint({
+        content: () => componentRef.current,
+    });
     const formatDate = (date) => {
         let daten = new Date(date);
 
@@ -163,9 +168,9 @@ const Report = () => {
                         </Button>
                     </span>
                 </div>
-                <div className="table" >
-                    <div className='head'> <b>Accusoft - {useralldetail.user.name}</b> (Report from {formatDate(inp.from)} to {formatDate(inp.to)})</div>
-                    <table id='tavlecontent'>
+                <div className="table" ref={componentRef} >
+                    <div className='head'> <b>Accusoft - {useralldetail?.user?.name}</b> (Report from {formatDate(inp.from)} to {formatDate(inp.to)})</div>
+                    <table id='tavlecontent' >
                         <thead id='table'>
                             <tr>
                                 <th>S.no</th>
@@ -203,6 +208,7 @@ const Report = () => {
                             </tr>
                         </tbody>
                     </table>
+                    {/* <button onClick={handlePrint}>Print this out!</button> */}
                 </div>
             </motion.div>
         </>

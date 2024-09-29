@@ -23,6 +23,7 @@ import SlowPage from './pages/serverTest/slow';
 import SlowWorkerPage from './pages/serverTest/workerSlow';
 import { AnimatePresence } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
+import ImageConverter from './pages/imageconverter';
 
 const Datanalysis = lazy(() => import('./pages/dataanalysis'));
 const Report = lazy(() => import('./pages/Report'));
@@ -61,6 +62,7 @@ function App() {
                 <Route path="/addexpense" element={<Addexp />} />
                 <Route path="/photo" element={<Photo />} />
                 <Route path="/print/:expId" element={<Officeexp />} />
+                <Route path="/image" element={<ImageConverter />} />
 
                 {/* Lazy loaded routes inside Suspense with proper structure */}
                 <Route

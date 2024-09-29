@@ -1,11 +1,11 @@
 const Preloader = () => {
   return (
     <div className='preloder'>
-        <div class="slack">
-          <span class="slack__green"></span>
-          <span class="slack__blue"></span>
-          <span class="slack__orange"></span>
-          <span class="slack__pink"></span>
+        <div className="slack">
+          <span className="slack__green"></span>
+          <span className="slack__blue"></span>
+          <span className="slack__orange"></span>
+          <span className="slack__pink"></span>
         </div>
     </div>
   );

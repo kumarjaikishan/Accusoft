@@ -124,10 +124,11 @@ const AddExpenses = () => {
 
   // setting input data on edit button click
   const setDataForEdit = async (expense) => {
+    // console.log(expense)
     setExpenseInput({
       _id: expense._id,
       ledger: expense.ledger._id,
-      date: dayjs(expense.date),
+      date: expense.date,
       amount: expense.amount,
       narration: expense.narration,
     });

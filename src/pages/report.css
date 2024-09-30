@@ -183,6 +183,9 @@
 }
 
 @media print {
+    @page{
+        margin: 10px 5px;
+    }
     .footer {
         display: none;
     }

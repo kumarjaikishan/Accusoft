@@ -4,7 +4,7 @@ import './report.css';
 import { CSVLink } from 'react-csv';
 import { useSelector, useDispatch } from 'react-redux';
 import { setloader, setnarrow } from '../store/login';
-import { GoDownload } from "react-icons/go";
+import { MdDownload } from "react-icons/md";
 import { IoMdPrint } from "react-icons/io";
 import { VscDebugRestart } from "react-icons/vsc";
 import Button from '@mui/material/Button';
@@ -153,7 +153,7 @@ const Report = () => {
                     <span>
                         <CSVLink data={pious} headers={header} filename={`${username}-Expense Record`}>
                             {/* <button title='Download'>Download csv</button> */}
-                            <Button className='muibtn' title='Download' size='small' variant="contained" startIcon={<GoDownload />}>
+                            <Button className='muibtn' title='Download' size='small' variant="contained" startIcon={<MdDownload />}>
                                 Csv
                             </Button>
                         </CSVLink>

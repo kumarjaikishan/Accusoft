@@ -103,7 +103,7 @@
         }
 
         th,
-         #foot {
+        #foot {
             height: 30px;
             font-size: 1.1em;
             font-weight: 600;
@@ -146,6 +146,7 @@
                 }
             }
         }
+
         #foot {
             font-size: 0.9em;
         }
@@ -194,8 +195,18 @@
 
 @media print {
     @page {
+        /* size: A4 landscape; */
+        /* size: 210mm 297mm landscape; */
         margin: 10px 5px;
     }
+
+    /* @page :first {
+        margin-top: 40mm; 
+    }
+    @page :left {
+        margin-left: 30mm; 
+    } */
+
 
     .footer {
         display: none;
@@ -224,7 +235,7 @@
 
     .report {
         -webkit-print-color-adjust: exact;
-        page-break-inside: avoid;
+        break-inside: avoid;
 
         &::before {
             display: block;

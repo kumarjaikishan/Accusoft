@@ -1,12 +1,22 @@
 const Preloader = () => {
   return (
     <div className='preloder'>
-        <div className="slack">
-          <span className="slack__green"></span>
-          <span className="slack__blue"></span>
-          <span className="slack__orange"></span>
-          <span className="slack__pink"></span>
+      <div class='u-positionAbsolute'>
+        <div class='SlackLoader'>
+          <div class='SlackLoader-item'>
+            <div class='SlackLoader-dot'></div>
+          </div>
+          <div class='SlackLoader-item'>
+            <div class='SlackLoader-dot'></div>
+          </div>
+          <div class='SlackLoader-item'>
+            <div class='SlackLoader-dot'></div>
+          </div>
+          <div class='SlackLoader-item'>
+            <div class='SlackLoader-dot'></div>
+          </div>
         </div>
+      </div>
     </div>
   );
 };

@@ -37,8 +37,8 @@
   --asbc: #0a3d62;
   --contrast: #151516;
   --tableborder: rgb(190, 185, 185);
-  --editicon:rgb(7, 120, 182);
-  --deleteicon:rgb(220, 7, 25);
+  --editicon: rgb(7, 120, 182);
+  --deleteicon: rgb(220, 7, 25);
 }
 
 .dark-theme {
@@ -50,8 +50,8 @@
   --color: #d1d1d1;
   --contrast: #d1d1d1;
   --tableborder: rgb(73, 72, 72);
-  --editicon:#d1d1d1;
-  --deleteicon:#d1d1d1;
+  --editicon: #d1d1d1;
+  --deleteicon: #d1d1d1;
 }
 
 input {
@@ -73,12 +73,12 @@ body {
   overflow-x: hidden;
   user-select: none;
 
-  >#print-container{
+  >#print-container {
     /* border: 2px solid red; */
   }
 }
 
-:root{
+:root {
   --default-color-white: #ffffff;
   --default-color-green: #3EB991;
   --default-color-blue: #6ECADC;
@@ -103,95 +103,100 @@ body {
   align-items: center;
   z-index: 50;
 
-  .slack {
-    width: calc(var(--dot-width) * 5);
-    height: calc(var(--dot-width) * 5);
-    align-self: center;
+  .u-positionAbsolute {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+  }
+
+  .SlackLoader {
     position: relative;
+    transform: rotate(-15deg);
+  }
 
-    .slack__green,
-    .slack__blue,
-    .slack__pink,
-    .slack__orange {
-      position: absolute;
-      width: var(--dot-width);
-      height: var(--dot-width);
-      border-radius: var(--dot-width);
-      display: block;
+  .SlackLoader-item {
+    position: absolute;
+    mix-blend-mode: multiply;
 
-      &::before {
-        right: 0;
-        /* Animation */
-        animation-name: slack-width;
-        animation-iteration-count: infinite;
-        animation-direction: alternate;
-        animation-duration: 2s;
-        width: var(--dot-width);
-        position: absolute;
-        height: var(--dot-width);
-        content: '';
-        display: block;
-        border-radius: var(--dot-width);
-      }
-    }
+  }
 
-    .slack__green {
-      top: 0;
-      left: 0;
-      transform: rotate(70deg);
-    }
+  .SlackLoader-item:nth-child(1) {
+    transform: rotate(0deg) translate(0, -20px) rotateY(1deg);
 
-    .slack__green::before {
-      background-color: rgba(62, 185, 145, var(--dot-opacity));
-    }
+  }
 
-    .slack__blue {
-      top: 0;
-      right: 0;
-      transform: rotate(160deg);
-    }
+  .SlackLoader-item:nth-child(1)>.SlackLoader-dot {
+    background-color: #60cadd;
+  }
 
-    .slack__blue::before {
-      background-color: rgba(110, 202, 220, var(--dot-opacity));
-    }
+  .SlackLoader-item:nth-child(2) {
+    transform: rotate(90deg) translate(0, -20px) rotateY(1deg);
+  }
 
-    .slack__orange {
-      bottom: 0;
-      right: 0;
-      transform: rotate(-110deg);
-    }
+  .SlackLoader-item:nth-child(2)>.SlackLoader-dot {
+    background-color: #eea712;
+  }
 
-    .slack__orange::before {
-      background-color: rgba(233, 168, 32, var(--dot-opacity));
-    }
+  .SlackLoader-item:nth-child(3) {
+    transform: rotate(180deg) translate(0, -20px) rotateY(1deg);
+  }
 
-    .slack__pink {
-      bottom: 0;
-      left: 0;
-      transform: rotate(-20deg);
-    }
+  .SlackLoader-item:nth-child(3)>.SlackLoader-dot {
+    background-color: #e72b61;
+  }
 
-    .slack__pink::before {
-      background-color: rgba(224, 21, 99, var(--dot-opacity));
-    }
+  .SlackLoader-item:nth-child(4) {
+    transform: rotate(270deg) translate(0, -20px) rotateY(1deg);
+  }
+
+  .SlackLoader-item:nth-child(4)>.SlackLoader-dot {
+    background-color: #25b791;
+  }
+
+  .SlackLoader-dot {
+    position: inherit;
+    width: 100px;
+    height: 19px;
+    margin-top: -9.5px;
+    margin-left: -50px;
+    border-radius: 20px;
+    animation: SlackLoader-animation-step 2s ease infinite;
+    will-change: width, transform;
   }
 }
-@keyframes slack-width {
-  0% {
-    width: var(--dot-width);
-    right: 0;
+
+@keyframes SlackLoader-animation-step {
+  28.3% {
+    width: 19px;
+    transform: translateX(0);
   }
 
-  30% {
-    width: calc(var(--dot-width) * 6);
-    right: calc(var(--dot-width) * -5);
+  38.3% {
+    width: 19px;
+    transform: translateX(0);
   }
 
-  60% {
-    width: var(--dot-width);
-    right: calc(var(--dot-width) * -5);
+  62.6% {
+    width: 19px;
+    transform: translateX(80px);
+  }
+
+  71.6% {
+    width: 19px;
+    transform: translateX(80px);
   }
 }
+
+
+
+
+
+
+
+
+
+
+
 
 .dark-theme .preloder {
   background: rgba(0, 0, 0, 0.7);

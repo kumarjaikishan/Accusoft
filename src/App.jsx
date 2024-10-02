@@ -7,7 +7,7 @@ import Addexp from './pages/addexp/addexp';
 import { useEffect, lazy, Suspense } from 'react';
 import Login from './pages/login/login';
 import Logout from './pages/logout';
-import Photo from './pages/photo';
+import Photo from './pages/photos3';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useSelector, useDispatch } from 'react-redux';

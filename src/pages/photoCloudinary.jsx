@@ -123,7 +123,6 @@ const Photo = () => {
                 document.body.style.cursor = 'default';
                 setHide(!hide)
                 reset();
-                setIsUploading(false);
                 dispatch(profilepicupdtae(resuke.url))
                 // toast.success("Photo Updated Successfully", { autoClose: 1300 });
                 toast.update(id, { render: "Photo Updated Successfully", type: "success", isLoading: false, autoClose: 1300 });

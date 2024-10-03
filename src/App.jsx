@@ -7,6 +7,7 @@ import Addexp from './pages/addexp/addexp';
 import { useEffect, lazy, Suspense } from 'react';
 import Login from './pages/login/login';
 import Logout from './pages/logout';
+import Filehandle from './pages/filehandle/filehandle';
 import Photo from './pages/photos3';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -60,6 +61,7 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/addexpense" element={<Addexp />} />
                 <Route path="/photo" element={<Photo />} />
+                <Route path="/filehandle" element={<Filehandle />} />
                 <Route path="/print/:expId" element={<Officeexp />} />
 
                 {/* Lazy loaded routes inside Suspense with proper structure */}

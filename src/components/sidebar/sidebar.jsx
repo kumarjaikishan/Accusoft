@@ -59,6 +59,11 @@ const Sidebar = () => {
             link: '/report',
             logo: <TbReportAnalytics title='Report' />,
         },
+        {
+            name: 'FileHandle',
+            link: '/filehandle',
+            logo: <TbReportAnalytics title='Report' />,
+        },
         // {
         //     name: 'Print',
         //     link: '/print',

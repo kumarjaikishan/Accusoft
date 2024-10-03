@@ -16,6 +16,7 @@ const Filehandle = () => {
     const [modalopen, setmodalopen] = useState(false);
     const [days, setdays] = useState('');
     const [jobs, setjobs] = useState(null);
+    const [messagee, setmessage] = useState('');
     const [disable, setdisable] = useState(false)
 
     useEffect(() => {
@@ -33,6 +34,9 @@ const Filehandle = () => {
 
     const handledayChange = (e) => {
         setdays(e.target.value);
+    };
+    const handlemessageChange = (e) => {
+        setmessage(e.target.value);
     };
 
     const firstfetch = async () => {
@@ -56,12 +60,12 @@ const Filehandle = () => {
 
         // Regular expression for validating email addresses
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    
+
         // Check if all emails are valid
         const invalidEmails = emailRecipientss.filter(email => !emailRegex.test(email));
-    
+
         if (invalidEmails.length > 0) {
-            return  toast.warn(`Invalid email(s): ${invalidEmails.join(', ')}`, { autoClose: 1900 }) ; // Prevent form submission
+            return toast.warn(`Invalid email(s): ${invalidEmails.join(', ')}`, { autoClose: 1900 }); // Prevent form submission
         }
         const id = toast.loading("Please wait...")
 
@@ -105,6 +109,7 @@ const Filehandle = () => {
                         },
                         body: file // The actual file blob
                     });
+                    console.log(uploadRes);
                     if (!uploadRes.ok) throw new Error(`Error uploading file: ${file.name}`);
                 })
             );
@@ -118,6 +123,7 @@ const Filehandle = () => {
                 body: JSON.stringify({
                     emailRecipients,
                     days,
+                    messagee,
                     files: urls.map((urlObj, index) => ({
                         filename: filesen[index].filename,
                         url: urlObj.url.split('?')[0] // Save the S3 URL without query params
@@ -224,6 +230,7 @@ const Filehandle = () => {
     return (
         <div className="filehandle">
             <div style={{ margin: '5px 0px', display: 'flex', justifyContent: 'center' }}>
+
                 <Button className='muibtn' sx={{ mr: 5 }} onClick={() => setmodalopen(true)} disabled={disable} variant="contained" startIcon={<MdOutlineUpdate />}>
                     Create New
                 </Button>
@@ -319,6 +326,16 @@ const Filehandle = () => {
                             type="tel" value={days}
                             onChange={handledayChange}
                             helperText="Number of days you want"
+                            size="small"
+                            variant="outlined" />
+                    </div>
+                    <div>
+                        <TextField fullWidth id="outlined-basic" label="Message" name="message"
+                            multiline
+                            rows={4}
+                            value={messagee}
+                            onChange={handlemessageChange}
+                            helperText="Message For Your relatives"
                             size="small"
                             variant="outlined" />
                     </div>

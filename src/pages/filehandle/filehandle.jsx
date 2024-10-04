@@ -150,6 +150,7 @@ const Filehandle = () => {
         setmessage('')
         setfiles([])
         seture([])
+        setisupdate(false)
     }
 
     const deleteJob = async (jobid) => {
@@ -176,6 +177,7 @@ const Filehandle = () => {
                     const data = await jobdelete.json();
                     if (!jobdelete.ok) return toast.warn(data.message, { autoClose: 1900 });
                     firstfetch();
+                    reset();
                     toast.success(data.message, { autoClose: 1500 });
                 } catch (error) {
                     console.log(error)
@@ -317,32 +319,44 @@ const Filehandle = () => {
             toast.error(error.message, { autoClose: 2300 });
         }
     }
-    const assetdelete=async(url,index)=>{
-      try {
-        const token = localStorage.getItem("token");
-        const updatequery = await fetch(`${import.meta.env.VITE_API_ADDRESS}deleteasset`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-                url: url.url,
-                index, jobid
-            })
-        });
-        const data = await updatequery.json();
-        setmodalopen(false)
-        reset()
-        if (!updatequery.ok) return toast.warn(data.message, { autoClose: 1900 });
-        firstfetch();
-        toast.success(data.message, { autoClose: 1500 });
-    } catch (error) {
-        reset()
-        setmodalopen(false)
-        console.log(error)
-        toast.error(error.message, { autoClose: 2300 });
-    }
+    const assetdelete = async (url, index) => {
+        swal({
+            title: 'Are you sure?',
+            text: 'Once deleted, you will not be able to recover this Data!',
+            icon: 'warning',
+            buttons: true,
+            dangerMode: true,
+        }).then(async (willDelete) => {
+            if (willDelete) {
+                try {
+                    const token = localStorage.getItem("token");
+                    const updatequery = await fetch(`${import.meta.env.VITE_API_ADDRESS}deleteasset`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${token}`,
+                        },
+                        body: JSON.stringify({
+                            url: url.url,
+                            index, jobid
+                        })
+                    });
+                    const data = await updatequery.json();
+                    setmodalopen(false)
+                    reset()
+                    if (!updatequery.ok) return toast.warn(data.message, { autoClose: 1900 });
+                    firstfetch();
+                    toast.success(data.message, { autoClose: 1500 });
+                } catch (error) {
+                    reset()
+                    setmodalopen(false)
+                    console.log(error)
+                    toast.error(error.message, { autoClose: 2300 });
+                }
+            } else {
+
+            }
+        })
     }
 
     return (
@@ -392,12 +406,15 @@ const Filehandle = () => {
                                         {daysRemaining} days
                                     </td>
                                     <td>
-                                        <ul>
-                                            {job.fileUrls?.map((file, fileIndex) => (
-                                                <li key={fileIndex}>{fileIndex + 1}. {file.filename.split('flname')[0]}.{file.filename.split('flname')[1].split('.')[1]}
-                                                </li>
-                                            ))}
-                                        </ul>
+                                        {job.fileUrls?.map((file, fileIndex) => (
+                                            <div className="teste" key={fileIndex}>
+                                                <span key={fileIndex}>{fileIndex + 1}. {file.filename.split('flname')[0]}.{file.filename.split('flname')[1].split('.')[1]}
+                                                </span>
+                                                <span>
+                                                    <RiDeleteBin6Line title={`Delete ${file.filename.split('flname')[0]}`} onClick={() => assetdelete(file, fileIndex)} className='deleteicon ico' />
+                                                </span>
+                                            </div>
+                                        ))}
                                     </td>
                                     <td>
                                         <ul>
@@ -429,19 +446,7 @@ const Filehandle = () => {
                         <br />
                         <input type="file" multiple onChange={handleFileChange} />
                     </div>
-                    {isupdate && <div className="assetlist">
-                        {ure?.map((url, ind) => {
-                            return <div key={ind}>
-                                <span>{url.filename.split('flname')[0]}.{url.filename.split('.')[1]}</span>
-                                <span>
-                                    <HiPencilSquare title="Edit"  className='editicon ico' />
-                                    <RiDeleteBin6Line title="Delete" onClick={()=> assetdelete(url,ind)} className='deleteicon ico' />
-                                </span>
-                            </div>
-                        })}
-                    </div>}
-
-
+                
                     <div>
                         <TextField fullWidth id="outlined-basic" label="Email Recipients" name="email"
                             value={emails}

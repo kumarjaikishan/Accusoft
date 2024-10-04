@@ -5,7 +5,8 @@
     position: relative;
     padding: 5px;
 
-    .table, .modale {
+    .table,
+    .modale {
         width: 100%;
 
         table {
@@ -34,6 +35,23 @@
         .header {
             background: black;
             color: white;
+        }
+
+        .teste {
+           /* border: 1px solid blue ; */
+           display: flex;
+           justify-content: space-between;
+           align-items: center;
+
+           span:nth-child(1){
+            width: calc(100% - 42px);
+            /* border: 1px solid pink; */
+           }
+           span:nth-child(2){
+            width: 40px;
+            text-align: center;
+           }
+           
         }
 
         .ico {
@@ -93,7 +111,7 @@
             border-radius: 10px;
             overflow: hidden;
             background: white;
-            box-shadow: 10px 10px 25px 5px rgba(0,0,0,0.3);
+            box-shadow: 10px 10px 25px 5px rgba(0, 0, 0, 0.3);
             width: 400px;
 
             h2 {
@@ -103,35 +121,8 @@
                 color: white;
                 padding: 5px 0;
             }
-            .assetlist{
-                /* border: 1px solid red; */
 
-                div{
-                    width: 100%;
-                    display: flex;
-                    justify-content: space-between;
-
-                    span{
-                        display: inline-block;
-                        /* border: 1px solid green; */
-                        margin: 2px 0;
-
-                        &:nth-child(1){
-                            width: 75%;
-                            text-align: start;
-                            white-space: nowrap;
-                            overflow: hidden;
-                            text-overflow: ellipsis;
-                        }
-                        &:nth-child(2){
-                            width: 22%;
-                            display: flex;
-                            justify-content: space-around;
-                            align-items: center;
-                        }
-                    }
-                }
-            }
+            
 
             >div {
                 padding: 5px 10px;

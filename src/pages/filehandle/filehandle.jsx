@@ -12,12 +12,15 @@ import TextField from '@mui/material/TextField';
 
 const Filehandle = () => {
     const [files, setfiles] = useState([]);
+    const [ure, seture] = useState([])
     const [emails, setEmails] = useState('');
     const [modalopen, setmodalopen] = useState(false);
     const [days, setdays] = useState('');
     const [jobs, setjobs] = useState(null);
     const [messagee, setmessage] = useState('');
-    const [disable, setdisable] = useState(false)
+    const [disable, setdisable] = useState(false);
+    const [isupdate, setisupdate] = useState(false);
+    const [jobid, setjobid] = useState('')
 
     useEffect(() => {
         firstfetch()
@@ -50,7 +53,6 @@ const Filehandle = () => {
         });
         const data = await res.json();
         setjobs(data?.filejobs)
-        // console.log(data)
     }
 
     const handleSubmit = async (e) => {
@@ -68,8 +70,6 @@ const Filehandle = () => {
             return toast.warn(`Invalid email(s): ${invalidEmails.join(', ')}`, { autoClose: 1900 }); // Prevent form submission
         }
         const id = toast.loading("Please wait...")
-
-
 
         const emailRecipients = emails.split(',').map(email => email.trim());
         try {
@@ -109,7 +109,6 @@ const Filehandle = () => {
                         },
                         body: file // The actual file blob
                     });
-                    console.log(uploadRes);
                     if (!uploadRes.ok) throw new Error(`Error uploading file: ${file.name}`);
                 })
             );
@@ -133,13 +132,10 @@ const Filehandle = () => {
 
 
             setdisable(false)
-            setmodalopen(false);
             if (!fileJobRes.ok) throw new Error("Error occurred while creating the file job");
             const { message } = await fileJobRes.json();
             firstfetch();
-            setEmails('')
-            setdays('')
-            setfiles([])
+            reset();
             toast.update(id, { render: message, type: "success", isLoading: false, autoClose: 1300 });
         } catch (error) {
             setdisable(false)
@@ -147,6 +143,14 @@ const Filehandle = () => {
             toast.update(id, { render: error.message, type: "warning", isLoading: false, autoClose: 2600 });
         }
     };
+    const reset = () => {
+        setmodalopen(false);
+        setEmails('')
+        setdays('')
+        setmessage('')
+        setfiles([])
+        seture([])
+    }
 
     const deleteJob = async (jobid) => {
         swal({
@@ -182,6 +186,93 @@ const Filehandle = () => {
             }
         });
     }
+
+    const setedit = (job) => {
+        setjobid(job._id)
+        setEmails(job.emailRecipients)
+        setdays(job.days)
+        setmessage(job.message)
+        setisupdate(true)
+        setmodalopen(true)
+        seture(job.fileUrls);
+    }
+
+    const update = async () => {
+        const token = localStorage.getItem("token");
+        const apiUrl = import.meta.env.VITE_API_ADDRESS;
+
+        try {
+            // If there are files to upload
+            if (files.length) {
+                const filesen = files.map(file => {
+                    const fileExtension = file.name.split('.').pop();
+                    const fileNameWithoutExt = file.name.replace(/\.[^/.]+$/, "");
+                    return {
+                        filename: `${fileNameWithoutExt}flname${Date.now()}.${fileExtension}`,
+                        contentType: file.type
+                    };
+                });
+
+                const res = await fetch(`${apiUrl}createFileurl`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({ files: filesen })
+                });
+
+                if (!res.ok) throw new Error("Error occurred while creating presigned URLs");
+
+                const { urls } = await res.json();
+
+                await Promise.all(
+                    urls.map((urlObj, index) =>
+                        fetch(urlObj.url, {
+                            method: "PUT",
+                            headers: { "Content-Type": files[index].type },
+                            body: files[index]
+                        })
+                    )
+                );
+
+                await updateJob(urls.map((urlObj, index) => ({
+                    filename: filesen[index].filename,
+                    url: urlObj.url.split('?')[0]
+                })));
+            } else {
+                await updateJob();
+            }
+
+            firstfetch();
+            setisupdate(false)
+            reset();
+            toast.success("Update successful", { autoClose: 1500 });
+        } catch (error) {
+            setisupdate(false)
+            console.error(error);
+            toast.error(error.message, { autoClose: 2300 });
+        }
+    };
+
+    // Helper function to handle job update
+    const updateJob = async (fileData = []) => {
+        const token = localStorage.getItem("token");
+        const res = await fetch(`${import.meta.env.VITE_API_ADDRESS}updateJob`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+                jobid, emails, days, messagee, files: fileData
+            })
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message);
+    };
+
     const updateTimerall = async () => {
         try {
             const token = localStorage.getItem("token");
@@ -226,11 +317,37 @@ const Filehandle = () => {
             toast.error(error.message, { autoClose: 2300 });
         }
     }
+    const assetdelete=async(url,index)=>{
+      try {
+        const token = localStorage.getItem("token");
+        const updatequery = await fetch(`${import.meta.env.VITE_API_ADDRESS}deleteasset`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+                url: url.url,
+                index, jobid
+            })
+        });
+        const data = await updatequery.json();
+        setmodalopen(false)
+        reset()
+        if (!updatequery.ok) return toast.warn(data.message, { autoClose: 1900 });
+        firstfetch();
+        toast.success(data.message, { autoClose: 1500 });
+    } catch (error) {
+        reset()
+        setmodalopen(false)
+        console.log(error)
+        toast.error(error.message, { autoClose: 2300 });
+    }
+    }
 
     return (
         <div className="filehandle">
             <div style={{ margin: '5px 0px', display: 'flex', justifyContent: 'center' }}>
-
                 <Button className='muibtn' sx={{ mr: 5 }} onClick={() => setmodalopen(true)} disabled={disable} variant="contained" startIcon={<MdOutlineUpdate />}>
                     Create New
                 </Button>
@@ -277,7 +394,8 @@ const Filehandle = () => {
                                     <td>
                                         <ul>
                                             {job.fileUrls?.map((file, fileIndex) => (
-                                                <li key={fileIndex}>{fileIndex + 1}. {file.filename.split('flname')[0]}.{file.filename.split('flname')[1].split('.')[1]}</li>
+                                                <li key={fileIndex}>{fileIndex + 1}. {file.filename.split('flname')[0]}.{file.filename.split('flname')[1].split('.')[1]}
+                                                </li>
                                             ))}
                                         </ul>
                                     </td>
@@ -289,7 +407,7 @@ const Filehandle = () => {
                                         </ul>
                                     </td>
                                     <td>
-                                        <HiPencilSquare title="Edit" className='editicon ico' />
+                                        <HiPencilSquare title="Edit" onClick={() => setedit(job)} className='editicon ico' />
                                         <MdOutlineUpdate title="Refresh" onClick={() => updateTimerone(job._id)} className='refresh ico' />
                                         <RiDeleteBin6Line title="Delete" onClick={() => deleteJob(job._id)} className='deleteicon ico' />
                                     </td>
@@ -306,9 +424,22 @@ const Filehandle = () => {
 
                     {/* File Upload */}
                     <div>
-                        <label>Upload Files:</label> <br />
+                        {isupdate ? <label>Add New Files:</label> :
+                            <label>Upload Files:</label>}
+                        <br />
                         <input type="file" multiple onChange={handleFileChange} />
                     </div>
+                    {isupdate && <div className="assetlist">
+                        {ure?.map((url, ind) => {
+                            return <div key={ind}>
+                                <span>{url.filename.split('flname')[0]}.{url.filename.split('.')[1]}</span>
+                                <span>
+                                    <HiPencilSquare title="Edit"  className='editicon ico' />
+                                    <RiDeleteBin6Line title="Delete" onClick={()=> assetdelete(url,ind)} className='deleteicon ico' />
+                                </span>
+                            </div>
+                        })}
+                    </div>}
 
 
                     <div>
@@ -342,10 +473,13 @@ const Filehandle = () => {
 
                     {/* Submit Button */}
                     <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-                        <Button className='muibtn' disabled={disable} type="submit" variant="contained" startIcon={<MdOutlineUpdate />}>
+                        {isupdate ? <Button className='muibtn' disabled={disable} onClick={update} variant="contained" startIcon={<MdOutlineUpdate />}>
+                            Update
+                        </Button> : <Button className='muibtn' disabled={disable} type="submit" variant="contained" startIcon={<MdOutlineUpdate />}>
                             Create Job
-                        </Button>
-                        <Button className='muibtn outlined' onClick={() => setmodalopen(false)} variant="outlined" startIcon={<IoIosSave />}>
+                        </Button>}
+
+                        <Button className='muibtn outlined' onClick={reset} variant="outlined" startIcon={<IoIosSave />}>
                             Cancel
                         </Button>
                     </div>

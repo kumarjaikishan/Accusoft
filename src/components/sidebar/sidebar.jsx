@@ -59,11 +59,6 @@ const Sidebar = () => {
             link: '/report',
             logo: <TbReportAnalytics title='Report' />,
         },
-        {
-            name: 'FileHandle',
-            link: '/filehandle',
-            logo: <TbReportAnalytics title='Report' />,
-        },
         // {
         //     name: 'Print',
         //     link: '/print',
@@ -159,8 +154,18 @@ const Sidebar = () => {
                                             <span className="name">Users</span>
                                         </span>
                                     </NavLink>
-
-
+                                    <NavLink
+                                        className={(navData) => (navData.isActive ? 'active' : '')}
+                                        style={{ textDecoration: 'none' }}
+                                        to="/admin/filehandle"
+                                    >
+                                        <span className="li undersubmenu" onClick={() => dispatch(header('Admin/ File Handle'))}>
+                                            <span className="logo">
+                                                <CiUser title='User' />
+                                            </span>
+                                            <span className="name">File handle</span>
+                                        </span>
+                                    </NavLink>
                                 </div>
                             )}
                         </div>

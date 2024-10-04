@@ -61,7 +61,6 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/addexpense" element={<Addexp />} />
                 <Route path="/photo" element={<Photo />} />
-                <Route path="/filehandle" element={<Filehandle />} />
                 <Route path="/print/:expId" element={<Officeexp />} />
 
                 {/* Lazy loaded routes inside Suspense with proper structure */}
@@ -92,6 +91,7 @@ function App() {
               >
                 <Route path="dashboard" element={<Admin_Dashboard />} />
                 <Route path="users" element={<Alluser />} />
+                <Route path="filehandle" element={<Filehandle />} />
               </Route>
 
               <Route path="/resetpassword/:token" element={<PasswordReset />} />

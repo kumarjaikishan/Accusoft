@@ -34,7 +34,7 @@ const Photo = () => {
     const [disable, setDisable] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
     const [hide, setHide] = useState(true);
-    const [editable, setEditable] = useState(true);
+    const [editable, seteditable] = useState(true);
     const maxWidth = 350;
     const [input, setInput] = useState({
         name: useralldetail.user?.name || "",
@@ -176,7 +176,7 @@ const Photo = () => {
             if (response.ok) {
                 dispatch(profiledetailupdtae(input));
                 toast.update(toastId, { render: 'Updated Successfully', type: "success", isLoading: false, autoClose: 1600 });
-                setEditable(!editable);
+                seteditable(!editable);
             }
         } catch (error) {
             toast.update(toastId, { render: error.message, type: "warning", isLoading: false, autoClose: 2600 });
@@ -219,8 +219,8 @@ const Photo = () => {
         <div className="photopage">
             <div className="profile">
                 <h2>User Profile Detail</h2>
-                <i>
-                    <FaPencil style={{ fontSize: '12px' }} title='Edit Details' onClick={() => seteditable(!editable)} />
+                <i onClick={() => seteditable(!editable)}>
+                    <FaPencil style={{ fontSize: '12px' }} title='Edit Details'  />
                 </i>
                 <div className="upper">
                     <div className="profile-header">
@@ -230,7 +230,7 @@ const Photo = () => {
                     <div className="profile-bio">
                         <TextField label="Name" name="name" fullWidth size="small" value={input.name} onChange={handleInputChange} InputProps={{ readOnly: editable }} />
                         <TextField label="Phone" name="phone" fullWidth size="small" value={input.phone} onChange={handleInputChange} InputProps={{ readOnly: editable }} inputProps={{ maxLength: 10, pattern: "[0-9]*" }} />
-                        <TextField label="Email" name="email" fullWidth size="small" value={input.email} InputProps={{ readOnly: editable }} />
+                        <TextField label="Email" name="email" fullWidth size="small" value={input.email} disabled />
 
                         {!editable && <Button onClick={updateDetails} fullWidth disabled={disable} variant="contained">Update Details</Button>}
                         <Button onClick={resetPassword} disabled={disable} variant="contained" startIcon={<TbMoodSad />}>Send Password Reset Link</Button>

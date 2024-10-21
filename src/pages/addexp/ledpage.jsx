@@ -8,6 +8,8 @@ import { toast } from 'react-toastify';
 import swal from 'sweetalert';
 import TextField from '@mui/material/TextField';
 import apiWrapper from './apiWrapper';
+import { MdAddBox } from "react-icons/md";
+import Button from '@mui/material/Button';
 import { CgUndo } from "react-icons/cg";
 import { HiPencilSquare } from "react-icons/hi2";
 import { RiDeleteBin6Line } from "react-icons/ri";
@@ -178,7 +180,10 @@ const Ledpage = ({ setmodal, setdisable, disable, navigate, isledupdate, setisle
         <span className='ledwrapper'>
           <div className="cont">
             <TextField id="outlined-basic" label="Enter Ledger" className='inpe' variant="outlined" value={ledinp.val} onChange={handle} />
-           {isupda ? <button disabled={disable} onClick={updat}>Update</button> : <button disabled={disable} onClick={add}>Add</button>}
+           {isupda ? <button disabled={disable} onClick={updat}>Update</button> :
+            <Button size='small' className='btne' disabled={disable} title='Add' onClick={add} startIcon={<MdAddBox />} variant="contained">Add</Button>
+       
+            }
           </div>
 
           <div className="mater">

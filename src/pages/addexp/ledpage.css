@@ -49,13 +49,14 @@
             & .back {
                 position: absolute;
                 top: 20px;
-                transform: translate(-50%, -50%);
-                right: 2px;
+                right: 50px;
+                transform: translate(50%, -50%);
                 cursor: pointer;
                 outline: none;
                 padding: 3px 12px;
-                color: whitesmoke;
-                font-size: 1em;
+                color: white;
+                font-size: 0.8em;
+                display: flex;
                 font-weight: 600;
                 border-radius: 20px;
                 border: 2px solid white;
@@ -63,7 +64,7 @@
                 transition: 0.1s;
 
                 &:hover {
-                    transform: translate(-50%, -50%) scale(1.06);
+                    transform: translate(50%, -50%) scale(1.06);
                 }
             }
 
@@ -82,21 +83,9 @@
                 }
 
                 & button {
-                    width: 90px;
-                    border: none;
-                    cursor: pointer;
-                    outline: none;
-                    padding: 5px 12px;
                     color: white;
-                    font-size: 1.2em;
                     font-weight: 600;
-                    border-radius: 20px;
                     background: var(--maincolor);
-                    transition: 0.1s;
-
-                    &:hover {
-                        background: #048ef8;
-                    }
                 }
             }
 
@@ -104,7 +93,7 @@
                 width: 95%;
                 height: 270px;
                 border-radius: 20px;
-                border: 1px solid var(--color);
+                border: 1px dotted var(--color);
                 overflow-y: auto;
                 overflow-x: hidden;
 

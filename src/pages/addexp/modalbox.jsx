@@ -106,9 +106,9 @@ const Modalbox = ({ setisledupdate, modal, navigate, disable, setdisable, init, 
                         onChange={(e) => handler(e, 'narration')}
                         variant="outlined" />
                     <div className='btn'>
-                        {isupdate ? <Button className='muibtn' disabled={disable} onClick={() => updatee(inp._id)} variant="contained" startIcon={<MdOutlineUpdate />}>
+                        {isupdate ? <Button disabled={disable} onClick={() => updatee(inp._id)} variant="contained" startIcon={<MdOutlineUpdate />}>
                             Update
-                        </Button> : <Button className='muibtn' disabled={disable} onClick={sub} variant="contained" startIcon={<IoIosSave />}>
+                        </Button> : <Button disabled={disable} onClick={sub} variant="contained" startIcon={<IoIosSave />}>
                             Submit
                         </Button>}
 

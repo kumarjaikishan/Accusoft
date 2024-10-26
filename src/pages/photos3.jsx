@@ -225,7 +225,7 @@ const Photo = () => {
                 <div className="upper">
                     <div className="profile-header">
                         <img src={useralldetail.profilepic || defaultProfile} alt="User Avatar" />
-                        <button onClick={() => setHide(!hide)}>Update profile</button>
+                        <Button onClick={() => setHide(!hide)}>Update profile</Button>
                     </div>
                     <div className="profile-bio">
                         <TextField label="Name" name="name" fullWidth size="small" value={input.name} onChange={handleInputChange} InputProps={{ readOnly: editable }} />

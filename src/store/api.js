@@ -11,8 +11,8 @@ export const userdata = createAsyncThunk("userdata", async () => {
             }
         })
         const data = await res.json();
-        // console.log("from redux api", data);
-        // console.log(data);
+        console.log("from redux api", data);
+        
         if (!res.ok && data.message == 'jwt expired') {
             toast.warn('Session expired. Please log in again.', { autoClose: 1700 });
         }

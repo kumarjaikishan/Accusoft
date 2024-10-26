@@ -27,14 +27,6 @@
         justify-content: end;
         margin-top: 5px;
         margin-bottom: 2px;
-        /* .btne {
-            background: var(--maincolor);
-            color: white;
-
-            &:hover {
-                background: var(--hovercolor);
-            }
-        } */
     }
 
     & .head {
@@ -229,7 +221,7 @@
                 }
             }
 
-            >div:nth-child(even) {
+            >div:nth-child(2n) {
                 background: var(--tableevenbackground);
             }
         }
@@ -307,9 +299,6 @@
             margin: 5px 0;
             justify-content: center;
 
-            .btne {
-                width: 50vw;
-            }
         }
 
         & .head {

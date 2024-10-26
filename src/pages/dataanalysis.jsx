@@ -6,6 +6,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setloader } from '../store/login';
 import { motion } from 'framer-motion';
 import { IoSearch } from "react-icons/io5";
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 
 const Datanalysis = () => {
     const dispatch = useDispatch();
@@ -85,22 +89,42 @@ const Datanalysis = () => {
                 className="datanalysis" >
                 <div className="cont">
                     <span>
-                        Month :  <select onChange={handle} name="month" value={inp.month} id="">
-                            {monname.map((val, ind) => {
-                                return <option key={ind} value={ind}>{val}</option>
-                            })}
-                        </select>
+                        <FormControl size='small' className=' select caps' >
+                            <InputLabel id="demo-simple-select-label">Month</InputLabel>
+                            <Select
+                                name="month"
+                                labelId="demo-simple-select-label"
+                                onChange={handle}
+                                value={inp.month}
+                                id="demo-simple-select"
+                                label="Month"
+                            >
+                                {monname.map((val, ind) => {
+                                    return <MenuItem sx={{ textTransform: "capitalize" }} key={ind} value={ind}>{val}</MenuItem>
+                                })}
+
+                            </Select>
+                        </FormControl>
                     </span>
                     <span>
-                        Year :  <select onChange={handle} name="year" value={inp.year} id="">
-                            <option value="2021">2021</option>
-                            <option value="2022">2022</option>
-                            <option value="2023">2023</option>
-                            <option value="2024">2024</option>
-                            <option value="2025">2025</option>
-                        </select>
-                        <IoSearch/>
-                   </span>
+                        <FormControl size='small' className='select caps' >
+                            <InputLabel id="demo-simple-select-label">Year</InputLabel>
+                            <Select
+                                name="year"
+                                labelId="demo-simple-select-label"
+                                onChange={handle}
+                                value={inp.year}
+                                id="demo-simple-select"
+                                label="Year"
+                            >
+                                <MenuItem value="2021">2021</MenuItem>
+                                <MenuItem value="2022">2022</MenuItem>
+                                <MenuItem value="2023">2023</MenuItem>
+                                <MenuItem value="2024">2024</MenuItem>
+                                <MenuItem value="2025">2025</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </span>
                 </div>
                 <div className="cards">
                     {Object.entries(cardarr).map(([ledger, sum]) => (

@@ -3,6 +3,8 @@ import { createTheme } from '@mui/material/styles';
 
 const customButtonPrimaryColor = '#0a3d62';
 const customButtonPrimaryHoverColor = '#012336';
+const customDarkButtonPrimaryColor = '#121212';
+const customDarkButtonPrimaryHoverColor = '#012336';
 // Light theme configuration
 export const lightTheme = createTheme({
   palette: {
@@ -46,6 +48,19 @@ export const darkTheme = createTheme({
     },
     text: {
       primary: '#fff',
+    },
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          // Default button color override
+          // backgroundColor: customDarkButtonPrimaryColor,
+          '&:hover': {
+            backgroundColor: customDarkButtonPrimaryHoverColor, // Slightly darker shade for hover
+          },
+        },
+      },
     },
   },
 });

@@ -11,8 +11,7 @@
     width: 60%;
     margin: 0 auto;
     height: 60px;
-    border: 2px solid var(--maincolor);
-    background: var(--sbc);
+    /* border: 2px solid var(--asbc); */
     color: var(--maincolor);
     border-radius: 10px;
     display: flex;
@@ -20,38 +19,23 @@
     align-items: center;
 }
 
-.datanalysis .cont span {
-    display: flex;
-}
 
-.datanalysis .cont svg {
+.datanalysis .cont .searIcon {
     position: relative;
     width: 30px;
     padding: 4px;
     height: 30px;
     text-align: center;
     line-height: 30px;
-    /* border: 2px solid rgb(9, 180, 242); */
     background: var(--maincolor);
     color: white;
     border-radius: 10px;
     margin-left: 10px;
 }
 
-.datanalysis .cont input,
-.datanalysis .cont select {
-    border: none;
-    width: 160px;
-    background: none;
-    text-align: center;
+.datanalysis .cont .select {
     height: 30px;
-    margin-left: 10px;
-    padding: 0 10px;
-    border-radius: 10px;
-    border: 2px solid var(--maincolor);
-}
-
-.datanalysis .cont select {
+    width: 220px;
     text-transform: capitalize;
 }
 
@@ -182,22 +166,14 @@
     .datanalysis .cont {
         width: 90vw;
         margin-bottom: 8px;
-        height: 50px;
-        border: 1.5px solid var(--maincolor);
+        height: 60px;
         border-radius: 7px;
     }
 
-    .datanalysis .cont input,
-    .datanalysis .cont select {
-        width: 90px;
+    .datanalysis .cont .select {
         height: 30px;
-        margin-left: 3px;
-        padding: 0 5px;
-        border-radius: 5px;
-        border: 1.5px solid var(--maincolor);
-    }
-    .datanalysis .cont i {
-        border-radius: 3px;
+        width: 120px;
+        text-transform: capitalize;
     }
 
     .datanalysis .cards {

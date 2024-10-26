@@ -282,14 +282,14 @@ footer.narrow {
 
 
 
-/* .muibtn {
-  background: var(--maincolor);
+.dark-theme .MuiButton-contained {
+  background: var(--maincolor) !important;
   color: white !important;
 
   &:hover {
-    background: var(--hovercolor);
+    background: var(--hovercolor) !important;
   }
-}*/
+}
 
 .muibtn.outlined {
   color: var(--asbc) !important;
@@ -300,6 +300,11 @@ footer.narrow {
     box-shadow: inset 0 0 0 0.5px var(--maincolor) !important;
   }
 } 
+.dark-theme .muibtn.outlined{
+  &:hover {
+    box-shadow: inset 0 0 0 0.5px white !important;
+  }
+}
 
 button:disabled {
   background: grey !important;

@@ -4,6 +4,7 @@ import swal from 'sweetalert';
 import Pagination from './pagination';
 import Modalbox from './modalbox';
 import Ledpage from './ledpage';
+import TextField from '@mui/material/TextField';
 import { useSelector, useDispatch } from 'react-redux';
 import { setloader } from '../../store/login';
 import { userdata } from '../../store/api'
@@ -318,9 +319,6 @@ const AddExpenses = () => {
       }
     }
   };
-useEffect(()=>{
- console.log(sortedList)
-},[])
   return (
     <>
       <motion.div
@@ -330,7 +328,7 @@ useEffect(()=>{
         transition={{ duration: 0.2, ease: "easeInOut" }}
         className={isModalOpen || isLedgerUpdate ? 'exp ismodal' : 'exp'}>
         <div className="add">
-          <Button size='large' className='btne' title='Add Expense' onClick={() => setIsModalOpen(true)} startIcon={<MdAddBox />} variant="contained">Add Expense</Button>
+          <Button size='large' title='Add Expense' onClick={() => setIsModalOpen(true)} startIcon={<MdAddBox />} variant="contained">Add Expense</Button>
         </div>
         <div className="head">
           <span>Expense List </span>
@@ -347,6 +345,10 @@ useEffect(()=>{
           </span>
           <span>
             <input type="text" title='Search' onChange={(e) => setSearchInput(e.target.value)} value={searchInput} placeholder="Type to search..." />
+            {/* <TextField size='small' id="outlined-basic" label="Type to search..."
+                         value={searchInput} type="text"
+                        onChange={(e) => setSearchInput(e.target.value)}
+                        variant="outlined" /> */}
           </span>
         </div>
         <div className="table">

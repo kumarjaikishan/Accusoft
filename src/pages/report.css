@@ -7,11 +7,9 @@
 
     & .cont {
         width: 100%;
-        /* border: 1px solid blue; */
         display: flex;
         justify-content: space-between;
         align-items: center;
-        /* height: 80px; */
         padding: 10px;
         color: #212529;
 
@@ -24,13 +22,13 @@
         }
 
         >span:nth-child(1) {
-            background: #f0f0f0;
+            /* background: #f0f0f0; */
             width: 60%;
             box-shadow: 0 0 5px #fff,
                 5px 5px 10px #a7aaaf,
                 -5px -5px 10px #fff;
             border-radius: 10px;
-            border: 2px solid var(--maincolor);
+            border: 2px solid var(--asbc);
 
             .ledger {
                 width: 190px;
@@ -152,8 +150,12 @@
 }
 
 .dark-theme .report .cont>span:nth-child(1) {
-    color: #212529;
+    color: white;
     box-shadow: none;
+
+    input{
+        color: white;
+    }
 }
 
 

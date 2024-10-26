@@ -300,18 +300,13 @@ const AddExpenses = () => {
   }
   const container = {
     visible: {
-      // opacity: 1,
-      // scale: 1,
+     
       transition: {
-        delayChildren: .1, //this is overall delay for whole children
-        // staggerChildren: 0.16
+        delayChildren: .1, 
       }
     }
   };
-  // const item = {
-  //   hidden: { x: -80, y: 80, opacity: 0, scale: 0 },
-  //   visible: { y: 0, x: 0, scale: 1, opacity: 1 }
-  // };
+  
   const item = {
     hidden: { x: '-150%' },
     visible: {
@@ -323,7 +318,9 @@ const AddExpenses = () => {
       }
     }
   };
-
+useEffect(()=>{
+ console.log(sortedList)
+},[])
   return (
     <>
       <motion.div
@@ -373,7 +370,8 @@ const AddExpenses = () => {
               <b>No Expense Added</b>
             </div>}
             <AnimatePresence>
-              {(sortedList ? sortedList : currentPosts)?.filter((item) => {
+              {/* {(sortedList ? sortedList : currentPosts)?.filter((item) => { */}
+              {currentPosts?.filter((item) => {
                 return (
                   finalsearch === '' ||
                   item.narration.toLowerCase().includes(finalsearch) ||
@@ -382,10 +380,8 @@ const AddExpenses = () => {
                 );
               }).map((expense, index) => {
                 return <motion.div
-                  // variants={item}
-                  // exit={{ opacity: 1, x: '-150%', transition: { duration: 0.3 } }}
                   exit={isAnimatingRef.current ? { opacity: 1, x: '-102%', transition: { duration: 0.6 } } : {}}
-                  key={expense._id} // Ensure each item has a unique key
+                  key={expense._id} 
                 >
                   <span>{firstPostIndex + index + 1}</span>
                   <span className='caps'>{expense.ledger.ledger}</span>

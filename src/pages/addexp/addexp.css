@@ -181,7 +181,7 @@
 
                 &:hover {
                     background: var(--editicon);
-                    color: var(--editiconbackground);
+                    color: #f0f0f0;
                 }
             }
            
@@ -192,7 +192,7 @@
 
                 &:hover {
                     background: var(--deleteicon);
-                    color: var(--deleteiconbackground);
+                    color: #f0f0f0;
                 }
             }
 
@@ -202,7 +202,7 @@
 
                 &:hover {
                     background: var(--printicon);
-                    color: var(--background);
+                    color: #f0f0f0;
                 }
             }
         }

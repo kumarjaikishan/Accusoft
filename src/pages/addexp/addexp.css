@@ -27,14 +27,14 @@
         justify-content: end;
         margin-top: 5px;
         margin-bottom: 2px;
-
-        .btne {
+        /* .btne {
             background: var(--maincolor);
+            color: white;
 
             &:hover {
                 background: var(--hovercolor);
             }
-        }
+        } */
     }
 
     & .head {

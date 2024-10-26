@@ -61,9 +61,6 @@
   --tableevenbackground: #3737378f;
 }
 
-input {
-  color: #212529 !important;
-}
 
 body {
   margin: 0;
@@ -194,17 +191,6 @@ body {
   }
 }
 
-
-
-
-
-
-
-
-
-
-
-
 .dark-theme .preloder {
   background: rgba(0, 0, 0, 0.7);
 }
@@ -294,47 +280,35 @@ footer.narrow {
   width: calc(var(--sidebarwide) - var(--sidebarnarrow));
 }
 
-button,
-.splbtn {
-  border: none;
-  cursor: pointer;
-  outline: none;
-  padding: 5px 12px;
-  color: white;
-  font-size: 1.1em;
-  font-weight: 500;
-  letter-spacing: 1px;
-  border-radius: 5px;
-  background: var(--maincolor);
-  transition: 0.2s;
-}
 
-.muibtn {
-  background: var(--maincolor) !important;
+
+/* .muibtn {
+  background: var(--maincolor);
+  color: white !important;
 
   &:hover {
-    background: var(--hovercolor) !important;
+    background: var(--hovercolor);
   }
-}
+}*/
 
 .muibtn.outlined {
-  color: var(--maincolor);
-  border: 0.5px solid var(--maincolor) !important;
+  color: var(--asbc) !important;
+  border: 0.5px solid var(--asbc) !important;
   background: transparent !important;
 
   &:hover {
     box-shadow: inset 0 0 0 0.5px var(--maincolor) !important;
   }
-}
+} 
 
 button:disabled {
   background: grey !important;
 }
 
-button:active,
+/* button:active,
 button:hover {
   background: rgb(1, 35, 54);
-}
+} */
 
 input {
   text-align: start !important;

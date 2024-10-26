@@ -4,7 +4,7 @@ import Sidebar from './components/sidebar/sidebar';
 import Home from './pages/home';
 import Preloader from './preloader';
 import Addexp from './pages/addexp/addexp';
-import { useEffect, lazy, Suspense } from 'react';
+import { useEffect, lazy, Suspense, useState } from 'react';
 import Login from './pages/login/login';
 import Logout from './pages/logout';
 import Filehandle from './pages/filehandle/filehandle';
@@ -25,6 +25,8 @@ import SlowPage from './pages/serverTest/slow';
 import SlowWorkerPage from './pages/serverTest/workerSlow';
 import { AnimatePresence } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
+import { lightTheme, darkTheme } from './themes';
+import { ThemeProvider } from '@mui/material/styles';
 
 const Datanalysis = lazy(() => import('./pages/dataanalysis'));
 const Report = lazy(() => import('./pages/Report'));
@@ -47,75 +49,77 @@ function App() {
     const width = window.innerWidth;
     width < 600 ? dispatch(setnarrow(true)) : null;
   };
-
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   return (
     <>
       <ToastContainer closeOnClick={true} pauseOnFocusLoss={true} />
-      <div className={log.loader ? 'App loader' : 'App'}>
-        <Navbar />
-        <main className={log.narrow ? "main narrow" : "main"} onClick={sidebarclose}>
-          {log.loader && <Preloader />}
-          <AnimatePresence mode='wait'>
-            <Routes key={location.pathname} location={location}>
-              <Route element={<ProtectedRoutes />}>
-                <Route path="/" element={<Home />} />
-                <Route path="/addexpense" element={<Addexp />} />
-                <Route path="/photo" element={<Photo />} />
-                <Route path="/print/:expId" element={<Officeexp />} />
+      <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
+        <div className={log.loader ? 'App loader' : 'App'}>
+          <Navbar setIsDarkMode={setIsDarkMode} />
+          <main className={log.narrow ? "main narrow" : "main"} onClick={sidebarclose}>
+            {log.loader && <Preloader />}
+            <AnimatePresence mode='wait'>
+              <Routes key={location.pathname} location={location}>
+                <Route element={<ProtectedRoutes />}>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/addexpense" element={<Addexp />} />
+                  <Route path="/photo" element={<Photo />} />
+                  <Route path="/print/:expId" element={<Officeexp />} />
 
-                {/* Lazy loaded routes inside Suspense with proper structure */}
+                  {/* Lazy loaded routes inside Suspense with proper structure */}
+                  <Route
+                    path="/datanalysis"
+                    element={
+                      <Suspense fallback={<Preloader />}>
+                        <Datanalysis />
+                      </Suspense>
+                    }
+                  />
+                  <Route
+                    path="/report"
+                    element={
+                      <Suspense fallback={<Preloader />}>
+                        <Report />
+                      </Suspense>
+                    } />
+                </Route>
+
                 <Route
-                  path="/datanalysis"
+                  path="/admin"
                   element={
                     <Suspense fallback={<Preloader />}>
-                      <Datanalysis />
+                      <AdminRoute />
                     </Suspense>
                   }
-                />
-                <Route
-                  path="/report"
-                  element={
-                    <Suspense fallback={<Preloader />}>
-                      <Report />
-                    </Suspense>
-                  } />
-              </Route>
+                >
+                  <Route path="dashboard" element={<Admin_Dashboard />} />
+                  <Route path="users" element={<Alluser />} />
+                  <Route path="filehandle" element={<Filehandle />} />
+                </Route>
 
-              <Route
-                path="/admin"
-                element={
-                  <Suspense fallback={<Preloader />}>
-                    <AdminRoute />
-                  </Suspense>
-                }
-              >
-                <Route path="dashboard" element={<Admin_Dashboard />} />
-                <Route path="users" element={<Alluser />} />
-                <Route path="filehandle" element={<Filehandle />} />
-              </Route>
+                <Route path="/resetpassword/:token" element={<PasswordReset />} />
+                <Route path="/slow" element={<SlowPage />} />
+                <Route path="/slowworker" element={<SlowWorkerPage />} />
+                <Route path="/logout" element={<Logout />} />
+                <Route path="/test" element={<Test />} />
+                <Route path="*" element={<Errorpage />} />
 
-              <Route path="/resetpassword/:token" element={<PasswordReset />} />
-              <Route path="/slow" element={<SlowPage />} />
-              <Route path="/slowworker" element={<SlowWorkerPage />} />
-              <Route path="/logout" element={<Logout />} />
-              <Route path="/test" element={<Test />} />
-              <Route path="*" element={<Errorpage />} />
+                {log.islogin ? (
+                  <Route path="/login" element={<Navigate to="/" />} />
+                ) : (
+                  <Route path="/login" element={<Login />} />
+                )}
+              </Routes>
+            </AnimatePresence>
 
-              {log.islogin ? (
-                <Route path="/login" element={<Navigate to="/" />} />
-              ) : (
-                <Route path="/login" element={<Login />} />
-              )}
-            </Routes>
-          </AnimatePresence>
-
-        </main>
-        <footer className={log.narrow ? "footer narrow" : "footer"}>
-          <p>&copy; 2024 Accusoft. All rights reserved. Designed and developed by Jai Kishan</p>
-        </footer>
-        <Sidebar />
-      </div>
+          </main>
+          <footer className={log.narrow ? "footer narrow" : "footer"}>
+            <p>&copy; 2024 Accusoft. All rights reserved. Designed and developed by Jai Kishan</p>
+          </footer>
+          <Sidebar />
+        </div>
+      </ThemeProvider>
     </>
   );
 }

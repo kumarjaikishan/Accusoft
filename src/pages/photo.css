@@ -160,24 +160,6 @@
   }
 }
 
-.dark-theme {
-  .photopage {
-    .MuiFormLabel-root {
-      border-color: #d1d1d1 !important;
-    }
-
-    label.MuiFormLabel-root {
-      color: #d1d1d1 !important;
-    }
-
-    & input {
-      color: #d1d1d1 !important;
-    }
-    .MuiFormControl-root.MuiFormControl-fullWidth.MuiTextField-root.css-wb57ya-MuiFormControl-root-MuiTextField-root{
-      /* border:1px solid white !important; */
-    }
-  }
-}
 
 .profile i:hover,
 .profile i:active {

@@ -7,7 +7,7 @@ import { IoMenu } from "react-icons/io5";
 import { MdLightMode } from "react-icons/md";
 import { MdBedtime } from "react-icons/md";
 
-const Navbar = () => {
+const Navbar = ({setIsDarkMode}) => {
   const dispatch = useDispatch();
   const [darkmode, setdarkmode] = useState(true)
   const log = useSelector((state) => state.login);
@@ -23,9 +23,11 @@ const Navbar = () => {
   useEffect(() => {
     let modee = localStorage.getItem('mode');
     if (modee == 'true') {
+      setIsDarkMode(true)
       setdarkmode(true)
       document.body.className = 'dark-theme';
     } else {
+      setIsDarkMode(false)
       setdarkmode(false)
       document.body.className = 'light-theme';
     }
@@ -34,11 +36,13 @@ const Navbar = () => {
   const handle = (e) => {
     if (e.target.checked) {
       setdarkmode(true)
+      setIsDarkMode(true)
       document.body.className = 'dark-theme';
       localStorage.setItem('mode', true)
     } else {
       document.body.className = 'light-theme';
       setdarkmode(false)
+      setIsDarkMode(false)
       localStorage.setItem('mode', false)
     }
   }

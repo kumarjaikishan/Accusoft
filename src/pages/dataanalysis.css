@@ -185,6 +185,7 @@
         height: 50px;
         border: 1.5px solid var(--maincolor);
         border-radius: 7px;
+        /* border: 1px solid red; */
     }
 
     .datanalysis .cont input,
@@ -216,10 +217,5 @@
     .datanalysis .card {
         width: 95%;
     }
-
-    .datanalysis .cont span {
-        /* border: 1px solid red; */
-        display: inline-block;
-        height: 30px;
-    }
+  
 }

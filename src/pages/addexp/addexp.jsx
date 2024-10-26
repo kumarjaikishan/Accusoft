@@ -111,16 +111,18 @@ const AddExpenses = () => {
     const successAction = (data) => {
       toast.success(data.message, { autoClose: 1300 });
       dispatch(userdata());
-      dispatch(setloader(false));
       setIsModalOpen(false);
       setExpenseInput(init);
     };
 
+    const notsuccessAction = (data) => {
+      toast.warn(data.message, { autoClose: 1800 });
+    };
+
     const loaderAction = (isLoading) => dispatch(setloader(isLoading));
 
-    await apiWrapper(url, method, body, dispatch, successAction, loaderAction, navigate);
+    await apiWrapper({url, method, body, dispatch, successAction, loaderAction, notsuccessAction,navigate});
   };
-  // adding new expense ends here
 
   // setting input data on edit button click
   const setDataForEdit = async (expense) => {
@@ -173,7 +175,6 @@ const AddExpenses = () => {
 
         const successAction = (data) => {
           toast.success(data.message, { autoClose: 1300 });
-          dispatch(setloader(false));
           dispatch(userdata());
 
           const selectedItems = document.querySelectorAll('#tablecontent input:checked');
@@ -186,9 +187,14 @@ const AddExpenses = () => {
           }, 100);
           highlight();
         };
+
+        const notsuccessAction = (data) => {
+          toast.warn(data.message, { autoClose: 1800 });
+        };
+
         const loaderAction = (isLoading) => dispatch(setloader(isLoading));
 
-        await apiWrapper(url, method, body, dispatch, successAction, loaderAction, navigate);
+        await apiWrapper({url, method, body, dispatch, successAction, loaderAction, navigate,notsuccessAction});
       } else {
         // swal('Your data is safe!');
       }
@@ -428,7 +434,7 @@ const AddExpenses = () => {
           </span>
           <span>
             Pages :
-             <Pagination currentpage={currentPage} changepageno={changePageNumber} totalpost={userAllDetails.explist?.length} postperpage={postsPerPage} />
+            <Pagination currentpage={currentPage} changepageno={changePageNumber} totalpost={userAllDetails.explist?.length} postperpage={postsPerPage} />
           </span>
         </div>
         <Modalbox

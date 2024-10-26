@@ -35,9 +35,11 @@ const Ledpage = ({ setmodal, setdisable, disable, navigate, isledupdate, setisle
     if (!ledinp.val) {
       return toast.warn("Ledger Can't be Blank", { autoClose: 1300 });
     }
-    const url = `${useralldetail.apiadress}/addledger`;
+    const url = `${import.meta.env.VITE_API_ADDRESS}/addledger`;
     const method = 'POST';
     const body = { ledger: ledinp.val };
+
+    setdisable(true);
 
     const successAction = (data) => {
       toast.success(data.message, { autoClose: 1300 });
@@ -46,9 +48,14 @@ const Ledpage = ({ setmodal, setdisable, disable, navigate, isledupdate, setisle
       setdisable(false);
     };
 
+    const notsuccessAction = (data) => {
+      toast.warn(data.message, { autoClose: 1800 });
+      setdisable(false);
+    };
+
     const loaderAction = (isLoading) => dispatch(setloader(isLoading));
 
-    await apiWrapper(url, method, body, dispatch, successAction, loaderAction, navigate);
+    await apiWrapper({url, method, body, dispatch, successAction, loaderAction, navigate,notsuccessAction});
   };
 
   const deletee = async (id) => {
@@ -60,19 +67,24 @@ const Ledpage = ({ setmodal, setdisable, disable, navigate, isledupdate, setisle
       dangerMode: true,
     }).then(async (willDelete) => {
       if (willDelete) {
-        const url = `${useralldetail.apiadress}/deleteledger`;
+        const url = `${import.meta.env.VITE_API_ADDRESS}/deleteledger`;
         const method = 'POST';
         const body = { ledgerid: id };
+        setdisable(true);
 
         const successAction = (data) => {
           toast.success(data.message, { autoClose: 1300 });
           dispatch(userdata());
           setdisable(false);
         };
+        const notsuccessAction = (data) => {
+          toast.warn(data.message, { autoClose: 1800 });
+          setdisable(false);
+        };
 
         const loaderAction = (isLoading) => dispatch(setloader(isLoading));
 
-        await apiWrapper(url, method, body, dispatch, successAction, loaderAction, navigate);
+        await apiWrapper({url, method, body, dispatch, successAction, loaderAction, navigate, notsuccessAction});
       }
     });
   };
@@ -168,7 +180,7 @@ const Ledpage = ({ setmodal, setdisable, disable, navigate, isledupdate, setisle
     })
     setinsupdat(true);
   }
-  // Other functions using the apiWrapper...
+
 
   return (
     <div className="ledpage" onClick={sdef} style={{ display: isledupdate ? "block" : "none" }}>

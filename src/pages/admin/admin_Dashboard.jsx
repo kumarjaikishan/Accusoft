@@ -22,13 +22,12 @@ const Admin_Dashboard = () => {
         const body = null;
 
         const successAction = (data) => {
-            // console.log(data);
             setleng(data)
         };
 
         const loaderAction = (isLoading) => dispatch(setloader(isLoading));
 
-        await apiWrapper(url, method, body, dispatch, successAction, loaderAction);
+        await apiWrapper({url, method, body, dispatch, successAction, loaderAction});
     }
 
     return (

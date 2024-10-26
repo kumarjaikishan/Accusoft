@@ -25,7 +25,7 @@ export const Errorpage = () => {
         <div className="errore">
             <div className="container">
                 <div className="img">
-                    <img src="https://res.cloudinary.com/dusxlxlvm/image/upload/v1720767933/accusoft/assets/404_page_1_kjlifa.svg" alt="" />
+                    <img src="https://res.cloudinary.com/dusxlxlvm/image/upload/v1720767933/accusoft/assets/404_page_1_kjlifa.svg" alt="404_page_Image" />
                     {/* <img src='https://cdn.dribbble.com/users/722246/screenshots/3066818/404-page.gif' alt="" /> */}
                 </div>
                 {/* <h1>404 </h1>

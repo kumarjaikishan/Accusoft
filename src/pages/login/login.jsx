@@ -2,10 +2,8 @@ import React, { useEffect } from 'react'
 import './login.css';
 import { useState } from 'react';
 import { MdOutlineGrass } from "react-icons/md";
-import { useSelector } from 'react-redux';
 import Signin from './signin';
 import Signup from './signup';
-import { Navigate } from 'react-router-dom';
 
 const Login = () => {
     const [log, setlog] = useState(true);

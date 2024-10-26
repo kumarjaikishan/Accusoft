@@ -177,31 +177,32 @@
 
             .ico.editicon {
                 color: var(--editicon);
-                background: rgba(7, 121, 182, 0.116);
+                background: var(--editiconbackground);
 
                 &:hover {
                     background: var(--editicon);
-                    color: var(--background);
+                    color: var(--editiconbackground);
                 }
             }
+           
 
             .ico.deleteicon {
                 color: var(--deleteicon);
-                background: rgba(182, 7, 16, 0.116);
+                background: var(--deleteiconbackground);
 
                 &:hover {
                     background: var(--deleteicon);
-                    color: white;
+                    color: var(--deleteiconbackground);
                 }
             }
 
             .ico.printicon {
-                color: rgb(16, 16, 149);
-                background: rgba(29, 10, 198, 0.116);
+                color: var(--printicon);
+                background: var(--printiconbackground);
 
                 &:hover {
-                    background: rgb(16, 16, 149);
-                    color: white;
+                    background: var(--printicon);
+                    color: var(--background);
                 }
             }
         }
@@ -209,7 +210,7 @@
         .body {
 
             div {
-                border-bottom: 0.5px solid var(--tableborder);
+                /* border-bottom: 0.5px solid var(--tableborder); */
                 display: flex;
                 justify-content: space-between;
 
@@ -227,8 +228,9 @@
                     }
                 }
             }
-            >div:nth-child(even){
-                background: #1775b91f;
+
+            >div:nth-child(even) {
+                background: var(--tableevenbackground);
             }
         }
 
@@ -277,11 +279,12 @@
                 font-weight: 700;
             }
         }
-        >span:nth-child(2){
+
+        >span:nth-child(2) {
             display: flex;
             align-items: center;
 
-            svg{
+            svg {
                 color: white;
                 height: 28px;
                 width: 30px;
@@ -289,8 +292,8 @@
                 border-radius: 5px;
                 cursor: pointer;
                 transition: 0.1s;
-    
-              
+
+
             }
         }
     }
@@ -427,7 +430,7 @@
                 font-size: 1.2em;
                 width: 35px;
                 text-align: center;
-                
+
                 /* line-height: 20px; */
             }
 

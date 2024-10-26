@@ -38,8 +38,12 @@
   --contrast: #151516;
   --tableborder: rgb(190, 185, 185);
   --editicon: rgb(7, 120, 182);
-  --printicon:rgb(7, 153, 83);
+  --editiconbackground: rgba(7, 121, 182, 0.15);
+  --printicon:rgb(16, 16, 149);
+  --printiconbackground:rgba(38, 38, 201, 0.223);
   --deleteicon: rgb(220, 7, 25);
+  --deleteiconbackground: rgba(220, 7, 25, 0.15);
+  --tableevenbackground: #428dc339;
 }
 
 .dark-theme {
@@ -51,8 +55,10 @@
   --color: #d1d1d1;
   --contrast: #d1d1d1;
   --tableborder: rgb(73, 72, 72);
-  --editicon: #d1d1d1;
-  --deleteicon: #d1d1d1;
+  --editicon: rgb(7, 120, 182);
+  --deleteicon: rgb(220, 7, 25);
+  --printicon:rgb(9, 234, 152);
+  --tableevenbackground: #3737378f;
 }
 
 input {

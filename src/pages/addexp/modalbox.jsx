@@ -43,7 +43,7 @@ const Modalbox = ({ setisledupdate, modal, navigate, disable, setdisable, init, 
 
         const loaderAction = (isLoading) => dispatch(setloader(isLoading));
 
-        await apiWrapper(url, method, body, dispatch, successAction, loaderAction, navigate);
+        await apiWrapper({url, method, body, dispatch, successAction, loaderAction, navigate});
     }
     // for updating data ends here
 

@@ -49,7 +49,7 @@ const Signin = () => {
             return;
         }
         try {
-            dispatch(setloader(true));
+            // dispatch(setloader(true));
             const res = await fetch(`${import.meta.env.VITE_API_ADDRESS}login`, {
                 method: "POST",
                 headers: {
@@ -61,8 +61,8 @@ const Signin = () => {
             })
             // console.log(res);
             const data = await res.json();
+            dispatch(setloader(false));
             if (res.ok && res.status == 200) {
-                dispatch(setlogin(true));
                 // console.log(data);
                 toast.success(data.message, { autoClose: 1300 });
                 setbtnclick(false);
@@ -72,14 +72,12 @@ const Signin = () => {
                 return navigate('/');
 
             } else if (res.ok && res.status == 201) {
-                dispatch(setloader(false));
                 setbtnclick(false);
                 toast.warn("Kindly Verify Email First", { autoClose: 3300 });
             } else {
                 console.log(data);
                 toast.warn(data.message ? data.message : "Error Occured", { autoClose: 1500 });
                 setbtnclick(false);
-                dispatch(setloader(false));
             }
 
         } catch (error) {
@@ -130,6 +128,7 @@ const Signin = () => {
                         label="Email"
                         required
                         type='email'
+                        size='small'
                         className='filled'
                         onChange={signhandle}
                         name="email"
@@ -145,6 +144,7 @@ const Signin = () => {
                         label="Password"
                         className='filled'
                         required
+                         size='small'
                         type={loginpass ? "password" : null}
                         onChange={signhandle}
                         name="password"
@@ -170,6 +170,7 @@ const Signin = () => {
                     {!forget && <LoadingButton
                         loading={btnclick}
                         type='submit'
+                        size='small'
                         startIcon={<MdLogin />}
                         loadingPosition="start"
                         variant="contained"

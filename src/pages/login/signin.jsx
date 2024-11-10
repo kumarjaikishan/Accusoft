@@ -66,9 +66,9 @@ const Signin = () => {
                 // console.log(data);
                 toast.success(data.message, { autoClose: 1300 });
                 setbtnclick(false);
-                dispatch(setloader(true));
                 localStorage.setItem("token", data.token);
                 dispatch(userdata());
+                dispatch(setlogin(true));
                 return navigate('/');
 
             } else if (res.ok && res.status == 201) {

@@ -224,6 +224,12 @@
             >div:nth-child(2n) {
                 background: var(--tableevenbackground);
             }
+            /* div.even{
+                background: var(--tableevenbackground);
+            } */
+            div.checked{
+                background:rgba(201, 200, 200, 0.6) ;
+            }
         }
 
         #foot {

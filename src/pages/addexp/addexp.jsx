@@ -122,7 +122,7 @@ const AddExpenses = () => {
 
     const loaderAction = (isLoading) => dispatch(setloader(isLoading));
 
-    await apiWrapper({url, method, body, dispatch, successAction, loaderAction, notsuccessAction,navigate});
+    await apiWrapper({ url, method, body, dispatch, successAction, loaderAction, notsuccessAction, navigate });
   };
 
   // setting input data on edit button click
@@ -195,7 +195,7 @@ const AddExpenses = () => {
 
         const loaderAction = (isLoading) => dispatch(setloader(isLoading));
 
-        await apiWrapper({url, method, body, dispatch, successAction, loaderAction, navigate,notsuccessAction});
+        await apiWrapper({ url, method, body, dispatch, successAction, loaderAction, navigate, notsuccessAction });
       } else {
         // swal('Your data is safe!');
       }
@@ -238,12 +238,9 @@ const AddExpenses = () => {
       const parentRow = tableRows[index];
 
       if (checkbox.checked) {
-        parentRow.style.background = 'rgba(201, 200, 200, 0.6)';
-        // parentRow.style.background = 'rgb(3, 73, 114)';
-        parentRow.style.color = 'white';
+        parentRow.classList.add('checked')
       } else {
-        parentRow.style.background = 'transparent';
-        parentRow.style.color = 'black';
+        parentRow.classList.remove('checked')
       }
     });
   };
@@ -301,13 +298,13 @@ const AddExpenses = () => {
   }
   const container = {
     visible: {
-     
+
       transition: {
-        delayChildren: .1, 
+        delayChildren: .1,
       }
     }
   };
-  
+
   const item = {
     hidden: { x: '-150%' },
     visible: {
@@ -383,7 +380,8 @@ const AddExpenses = () => {
               }).map((expense, index) => {
                 return <motion.div
                   exit={isAnimatingRef.current ? { opacity: 1, x: '-102%', transition: { duration: 0.6 } } : {}}
-                  key={expense._id} 
+                  key={expense._id}
+                  // className={index % 2 ? 'even' : 'odd'}
                 >
                   <span>{firstPostIndex + index + 1}</span>
                   <span className='caps'>{expense.ledger.ledger}</span>

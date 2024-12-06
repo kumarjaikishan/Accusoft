@@ -158,7 +158,7 @@ const AddExpenses = () => {
   };
 
   const sendDeleteRequest = async (itemIds) => {
-    if (itemIds.length < 1) {
+    if (itemIds?.length < 1) {
       return toast.warn('Kindly Select Atlest 1 Entry', { autoClose: 1700 });
     }
     const token = localStorage.getItem('token');
@@ -365,7 +365,7 @@ const AddExpenses = () => {
             className="body"
             id="tablecontent"
           >
-            {userAllDetails?.explist.length < 1 && <div style={{ width: '100%', display: 'flex', justifyContent: 'center', margin: '8px 0' }}>
+            {userAllDetails?.explist?.length < 1 && <div style={{ width: '100%', display: 'flex', justifyContent: 'center', margin: '8px 0' }}>
               <b>No Expense Added</b>
             </div>}
             <AnimatePresence>
@@ -425,7 +425,7 @@ const AddExpenses = () => {
         <div className="foot">
           <span>
             Showing Result From {firstPostIndex + 1} To{' '}
-            {lastPostIndex >= userAllDetails.explist?.length ? (lastPostIndex = userAllDetails.explist.length) : lastPostIndex} of{' '}
+            {lastPostIndex >= userAllDetails?.explist?.length ? (lastPostIndex = userAllDetails.explist.length) : lastPostIndex} of{' '}
             {userAllDetails.explist?.length} Results
           </span>
           <span>

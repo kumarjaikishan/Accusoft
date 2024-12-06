@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate,useNavigate } from 'react-router-dom';
 import Navbar from './components/navbar/navbar';
 import Sidebar from './components/sidebar/sidebar';
 import Home from './pages/home';
@@ -35,12 +35,14 @@ const Alluser = lazy(() => import('./pages/admin/alluser'));
 
 function App() {
   const dispatch = useDispatch();
+  let navigate = useNavigate();
   const log = useSelector((state) => state.login);
   let location = useLocation();
   console.log(import.meta.env.VITE_API_ADDRESS);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+    jwtcheck()
     token && dispatch(userdata());
   }, []);
 
@@ -50,6 +52,48 @@ function App() {
     width < 600 ? dispatch(setnarrow(true)) : null;
   };
   const [isDarkMode, setIsDarkMode] = useState(false);
+
+  const jwtcheck = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const responsee = await fetch(`${import.meta.env.VITE_API_ADDRESS}jwtcheck`, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      // console.log(responsee)
+      const data = await responsee.json();
+      console.log("jwt check", data);
+
+      if (data.message === 'jwt expired' ) {
+        swal({
+          title: 'Session Expired',
+          text: 'Your session has expired. Please log in again.',
+          icon: 'warning',
+          button: {
+            text: 'OK',
+          },
+        }).then(() => {
+          return navigate('/logout');
+        });
+      }
+      if (data.message === 'Invalid Token') {
+        swal({
+          title: 'Invalid Token',
+          text: 'You need to log in again.',
+          icon: 'warning',
+          button: {
+            text: 'OK',
+          },
+        }).then(() => {
+          return navigate('/logout');
+        });
+      }
+    } catch (error) {
+      console.log("catch part", error);
+    }
+  }
 
   return (
     <>

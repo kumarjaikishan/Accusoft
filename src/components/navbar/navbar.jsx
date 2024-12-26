@@ -67,7 +67,7 @@ const Navbar = ({setIsDarkMode}) => {
           <div className="info">
             <div className="userinfo">
               <div>{useralldetail?.user?.name} </div>
-              <div>{useralldetail?.user?.isadmin ? "Admin" : "User"}</div>
+              {/* <div>{useralldetail?.user?.isadmin ? "Admin" : "User"}</div> */}
             </div>
             <NavLink to='/photo' > <div className="photo" ><img src={useralldetail.profilepic ? useralldetail.profilepic : defaultprofile} alt="Profile Pic" /> </div> </NavLink>
           </div> : null}

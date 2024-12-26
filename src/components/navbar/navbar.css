@@ -52,16 +52,16 @@
         }
 
         .userinfo {
-            max-width: 220px;
+            max-width: 110px;
             padding: 0 5px;
             /* outline: auto; */
             height: 100%;
 
             div {
                 width: 100%;
-                white-space: nowrap;
+                /* white-space: nowrap;
                 overflow: hidden;
-                text-overflow: ellipsis;
+                text-overflow: ellipsis; */
                 text-transform: capitalize;
                 font-weight: 500;
                 padding-left: 5px;
@@ -136,12 +136,12 @@
             }
 
             .userinfo {
-                max-width: 120px;
+                max-width: 60px;
                 padding: 0 4px;
                 /* outline: auto; */
 
                 div {
-                    font-size: 11px;
+                    font-size: 10px;
                     padding-left: 0px;
                 }
             }

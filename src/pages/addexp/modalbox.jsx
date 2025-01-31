@@ -43,7 +43,7 @@ const Modalbox = ({ setisledupdate, modal, navigate, disable, setdisable, init, 
 
         const loaderAction = (isLoading) => dispatch(setloader(isLoading));
 
-        await apiWrapper({url, method, body, dispatch, successAction, loaderAction, navigate});
+        await apiWrapper({ url, method, body, dispatch, successAction, loaderAction, navigate });
     }
     // for updating data ends here
 
@@ -121,6 +121,8 @@ const Modalbox = ({ setisledupdate, modal, navigate, disable, setdisable, init, 
                             className='muibtn outlined' title='Cancel' variant="outlined" startIcon={<VscDebugRestart />}>
                             Cancel
                         </Button>
+                        {/* <Button endIcon={<CircularProgress size={15} color="inherit" />} title="Create New Tournament"
+                            onClick={() => dispatch(setcreatenewmodal(true))} sx={{ width: '48%' }} variant="contained">New</Button> */}
                     </div>
                 </span>
             </div>

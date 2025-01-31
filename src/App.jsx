@@ -159,7 +159,7 @@ function App() {
 
           </main>
           <footer className={log.narrow ? "footer narrow" : "footer"}>
-            <p>&copy; 2024 Accusoft. All rights reserved. Designed and developed by Jai Kishan</p>
+            <p>&copy;{new Date().getFullYear()} Accusoft. All rights reserved. Designed and developed by Jai Kishan</p>
           </footer>
           <Sidebar />
         </div>

@@ -337,7 +337,7 @@ const AddExpenses = () => {
               <option value="50">50</option>
               <option value="100">100</option>
               <option value="500">500</option>
-              <option value="5000">ALL</option>
+              {/* <option value="5000">ALL</option> */}
             </select>
           </span>
           <span>

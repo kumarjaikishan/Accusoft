@@ -42,9 +42,12 @@ function App() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    jwtcheck()
     token && dispatch(userdata());
   }, []);
+
+  useEffect(() => {
+    log.islogin && jwtcheck();
+  }, [log.islogin]);
 
   // Autoclose sidebar when screen size is below 600px
   const sidebarclose = () => {

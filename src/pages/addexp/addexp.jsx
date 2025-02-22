@@ -7,7 +7,7 @@ import Ledpage from './ledpage';
 import TextField from '@mui/material/TextField';
 import { useSelector, useDispatch } from 'react-redux';
 import { setloader } from '../../store/login';
-import { userdata } from '../../store/api'
+import { userdata,addexpense } from '../../store/api'
 import dayjs from 'dayjs';
 import { toast } from 'react-toastify';
 import apiWrapper from './apiWrapper';
@@ -109,7 +109,19 @@ const AddExpenses = () => {
       narration: capitalize(narration)
     };
 
+    // for optimistic update in expense
+    let ledgername = userAllDetails.ledgerlist.find(item => item._id===ledger)
+    // console.log(ledgername)
+    const newExpense = {
+      _id: `temp-${Date.now()}`, // Temporary ID
+      ledger: { _id: ledger, ledger:ledgername.ledger }, // Ledger should be an object
+      date,
+      amount,
+      narration: capitalize(narration),
+    };
+
     const successAction = (data) => {
+      dispatch(addexpense(newExpense))
       toast.success(data.message, { autoClose: 1300 });
       dispatch(userdata());
       setIsModalOpen(false);

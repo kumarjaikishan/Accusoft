@@ -11,7 +11,7 @@ export const userdata = createAsyncThunk("userdata", async () => {
             }
         })
         const data = await res.json();
-        console.log("from redux api", data);
+        // console.log("from redux api", data);
         
         if (!res.ok && data.message == 'jwt expired') {
             toast.warn('Session expired. Please log in again.', { autoClose: 1700 });
@@ -49,6 +49,9 @@ const userexplist = createSlice({
         profiledetailupdtae(state, action) {
             state.user.name = action.payload.name;
             state.user.phone = action.payload.phone;
+        },
+        addexpense(state,action){
+            state.explist = [action.payload, ...state.explist];
         }
     },
     extraReducers: (builder) => {
@@ -69,5 +72,5 @@ const userexplist = createSlice({
         })
     }
 })
-export const { userlogout, profilepicupdtae, profiledetailupdtae } = userexplist.actions;
+export const { userlogout, profilepicupdtae, profiledetailupdtae,addexpense } = userexplist.actions;
 export default userexplist.reducer;

@@ -62,14 +62,51 @@
         border-right: 1px solid #828181;
         width: 35%;
         padding: 20px 0px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
 
-        img {
+        .img {
           width: 150px;
           height: 150px;
-          border-radius: 50%;
-          object-fit: cover;
-          margin-bottom: 10px;
+          position: relative;
+
+          img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 10px;
+          }
+
+          span {
+            cursor: pointer;
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            background: #fff;
+            border: 2px dotted var(--maincolor);
+            display: inline-block;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            svg {
+              width: 50%;
+              height: 50%;
+              transition: 0.2s ease;
+            }
+          }
+          span:hover svg{
+            width: 60%;
+            height: 60px;
+          }
         }
+
+
       }
 
       .profile-bio {

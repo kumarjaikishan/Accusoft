@@ -100,7 +100,7 @@ const Photo = () => {
     }
 
     const handleUpload1 = async () => {
-      
+
         document.body.style.cursor = 'wait';
         const token = localStorage.getItem("token");
 
@@ -127,13 +127,13 @@ const Photo = () => {
                         const percentage = Math.round(
                             (progressEvent.loaded * 100) / progressEvent.total
                         );
-                        console.log("uploading prcentage:",percentage)
+                        // console.log("uploading prcentage:",percentage)
                         setProgress(percentage);
-                        toast.update(id, { render: `Uploading... ${percentage}%`, isLoading: true });
+                        toast.update(id, { render: "Uploading...", isLoading: true });
                     }
                 }
             );
-           console.log(response)
+            console.log(response)
             document.body.style.cursor = 'default';
             setHide(true)
             reset();
@@ -222,8 +222,12 @@ const Photo = () => {
                 </i>
                 <div className="upper">
                     <div className="profile-header">
-                        <img src={useralldetail.profilepic || defaultProfile} alt="User Avatar" />
-                        <Button  variant="outlined" onClick={() => setHide(!hide)}>Update profile</Button>
+                        <div className="img">
+                            <img src={useralldetail.profilepic || defaultProfile} alt="User Avatar" />
+                            <span title='Edit Profile Picture'>
+                                <FaPencil onClick={() => setHide(!hide)} style={{ fontSize: '12px' }}  />
+                            </span>
+                        </div>
                     </div>
                     <div className="profile-bio">
                         <TextField label="Name" name="name" fullWidth size="small" value={input.name} onChange={handleInputChange} InputProps={{ readOnly: editable }} />
@@ -235,7 +239,7 @@ const Photo = () => {
                         {messageSent && <span style={{ fontSize: '12px', color: 'green' }}>{messageSent}</span>}
                     </div>
                 </div>
-               
+
                 <div className={hide ? "lower hide" : "lower"}>
                     {!selectedFile &&
                         <div className="chooseFile" onClick={() => inputref.current.click()}>
@@ -251,7 +255,7 @@ const Photo = () => {
                         </div>
                         <div>
                             <Button color='error' onClick={resetForm} startIcon={<CgUndo />} variant="outlined">Reset</Button>
-                            <Button  onClick={handleUpload1}  startIcon={<BsUpload />} variant="contained">Upload</Button>
+                            <Button onClick={handleUpload1} startIcon={<BsUpload />} variant="contained">Upload</Button>
                         </div>
                     </div>}
                 </div>

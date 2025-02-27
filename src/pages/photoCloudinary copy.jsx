@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Navigate } from "react-router-dom";
 import './photo.css';
 import { useSelector, useDispatch } from 'react-redux';
@@ -10,8 +10,7 @@ import { TbMoodSad } from "react-icons/tb";
 import TextField from '@mui/material/TextField';
 import { CgUndo } from "react-icons/cg";
 import { FaPencil } from "react-icons/fa6";
-import { BsUpload } from "react-icons/bs";
-import axios from 'axios';
+import { IoMdCloudUpload } from "react-icons/io";
 
 // Helper function to convert image URL to File
 const urlToFile = (url, filename) => {
@@ -36,8 +35,6 @@ const Photo = () => {
     const [isUploading, setIsUploading] = useState(false);
     const [hide, setHide] = useState(true);
     const [editable, seteditable] = useState(true);
-    const [selectedFile, setSelectedFile] = useState(null);
-    const [progress, setProgress] = useState(0)
     const maxWidth = 250;
     const [input, setInput] = useState({
         name: useralldetail.user?.name || "",
@@ -50,11 +47,10 @@ const Photo = () => {
     useEffect(() => {
         dispatch(header("Profile Update"));
     }, []);
-    const handleImageUpload1 = (e) => {
-        if (e.target.files && e.target.files.length > 0) {
-            const file = event.target.files[0];
-            setSelectedFile(e.target.files[0])
 
+    const handleImageUpload = (event) => {
+        const file = event.target.files[0];
+        if (file) {
             const reader = new FileReader();
             reader.onload = function (e) {
                 const img = new Image();
@@ -88,71 +84,60 @@ const Photo = () => {
             };
             reader.readAsDataURL(file); // Read file as Data URL
         }
-    }
-
-    const inputref = useRef(null);
+    };
     const reset = () => {
         document.querySelector("input").value = "";
         setIsFile(false);
         setWebpImage(null)
-        setWebpImage(null)
-        setSelectedFile(null)
+        // console.log(newimage)
     }
 
-    const handleUpload1 = async () => {
-      
+
+    const handleUpload = async () => {
         document.body.style.cursor = 'wait';
         const token = localStorage.getItem("token");
 
         let name = Date.now() + 'kishan.webp';
-        let newimage = await urlToFile(webpImage, name); // Ensure urlToFile returns a valid File object
+        // console.log(name);
 
+        let newimage = urlToFile(webpImage, name);
+        // return console.log(newimage)
         let data = new FormData();
-        data.append('image', newimage);
-        data.append('oldimage', useralldetail.profilepic);
-
-        const id = toast.loading("Uploading... 0%");
-        setIsFile(false);
-
+        data.append('image', newimage)
+        data.append('oldimage', useralldetail.profilepic)
+        // console.log(newimage);
+        const id = toast.loading("Please wait...")
+        setIsFile(false)
         try {
-
-            const response = await axios.post(
-                `${import.meta.env.VITE_API_ADDRESS}photo`,
-                data,
-                {
-                    headers: {
-                        "Authorization": `Bearer ${token}`,
-                    },
-                    onUploadProgress: (progressEvent) => {
-                        const percentage = Math.round(
-                            (progressEvent.loaded * 100) / progressEvent.total
-                        );
-                        console.log("uploading prcentage:",percentage)
-                        setProgress(percentage);
-                        toast.update(id, { render: `Uploading... ${percentage}%`, isLoading: true });
-                    }
-                }
-            );
-           console.log(response)
-            document.body.style.cursor = 'default';
-            setHide(true)
-            reset();
+            const rese = await fetch(`${import.meta.env.VITE_API_ADDRESS}photo`, {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                },
+                body: data
+            })
+            const resuke = await rese.json();
             setIsFile(true);
-            setProgress(0)
-            dispatch(profilepicupdtae(response.data.url))
-            toast.update(id, { render: "Photo Updated Successfully", type: "success", isLoading: false, autoClose: 1300 });
-
+            console.log(resuke);
+            if (rese.ok) {
+                document.body.style.cursor = 'default';
+                setHide(!hide)
+                reset();
+                dispatch(profilepicupdtae(resuke.url))
+                // toast.success("Photo Updated Successfully", { autoClose: 1300 });
+                toast.update(id, { render: "Photo Updated Successfully", type: "success", isLoading: false, autoClose: 1300 });
+                // <Navigate to='/' />
+            }
         } catch (error) {
-            setIsFile(true);
-            setProgress(0)
+            setIsFile(true)
             console.log(error);
-            toast.update(id, { render: "Error Occurred", type: "error", isLoading: false, autoClose: 1500 });
+            toast.warn("Error Occured", 1500);
         }
     };
 
     const resetForm = () => {
-        setProgress(0)
-        setSelectedFile(null)
+        document.querySelector("#wrapper").innerHTML = "";
+        document.querySelector("input").value = "";
         setIsFile(false);
     };
 
@@ -218,12 +203,12 @@ const Photo = () => {
             <div className="profile">
                 <h2>User Profile Detail</h2>
                 <i onClick={() => seteditable(!editable)}>
-                    <FaPencil style={{ fontSize: '12px' }} title='Edit Details' />
+                    <FaPencil style={{ fontSize: '12px' }} title='Edit Details'  />
                 </i>
                 <div className="upper">
                     <div className="profile-header">
                         <img src={useralldetail.profilepic || defaultProfile} alt="User Avatar" />
-                        <Button  variant="outlined" onClick={() => setHide(!hide)}>Update profile</Button>
+                        <Button onClick={() => setHide(!hide)}>Update profile</Button>
                     </div>
                     <div className="profile-bio">
                         <TextField label="Name" name="name" fullWidth size="small" value={input.name} onChange={handleInputChange} InputProps={{ readOnly: editable }} />
@@ -235,25 +220,16 @@ const Photo = () => {
                         {messageSent && <span style={{ fontSize: '12px', color: 'green' }}>{messageSent}</span>}
                     </div>
                 </div>
-               
                 <div className={hide ? "lower hide" : "lower"}>
-                    {!selectedFile &&
-                        <div className="chooseFile" onClick={() => inputref.current.click()}>
-                            <input type="file" onChange={handleImageUpload1} ref={inputref} accept="image/*" name="" id="fileInput" />
-                            <BsUpload />
-                            Upload
-                        </div>}
-                    {selectedFile && <div className='imagedisplay'>
-                        <span>{selectedFile.name}</span>
-                        {webpImage && <img src={webpImage} alt="selected Image" />}
-                        <div className="progressbg">
-                            <div className="progress" style={{ width: `${progress}%` }}></div>
-                        </div>
-                        <div>
-                            <Button color='error' onClick={resetForm} startIcon={<CgUndo />} variant="outlined">Reset</Button>
-                            <Button  onClick={handleUpload1}  startIcon={<BsUpload />} variant="contained">Upload</Button>
-                        </div>
-                    </div>}
+                    <input type="file" id='dfe' accept="image/*" onChange={handleImageUpload} />
+                    <label htmlFor="dfe">Choose File</label>
+                    <div id="wrapper">
+                        {webpImage && <img src={webpImage} alt="Image format" />}
+                    </div>
+                    <div id="btn">
+                        {isFile && <Button color='error' onClick={resetForm} disabled={!isFile} startIcon={<CgUndo />} variant="outlined">Undo</Button>}
+                        <Button className={isFile ? null : "disabled"} onClick={handleUpload} disabled={!isFile} startIcon={<IoMdCloudUpload />} variant="contained">Upload</Button>
+                    </div>
                 </div>
             </div>
         </div>

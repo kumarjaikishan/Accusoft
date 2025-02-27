@@ -224,8 +224,8 @@ const Photo = () => {
                     <div className="profile-header">
                         <div className="img">
                             <img src={useralldetail.profilepic || defaultProfile} alt="User Avatar" />
-                            <span title='Edit Profile Picture'>
-                                <FaPencil onClick={() => setHide(!hide)} style={{ fontSize: '12px' }}  />
+                            <span onClick={() => setHide(!hide)} title='Edit Profile Picture'>
+                                <FaPencil  style={{ fontSize: '12px' }}  />
                             </span>
                         </div>
                     </div>

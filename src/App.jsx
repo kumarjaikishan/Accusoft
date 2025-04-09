@@ -8,7 +8,7 @@ import { useEffect, lazy, Suspense, useState } from 'react';
 import Login from './pages/login/login';
 import Logout from './pages/logout';
 import Filehandle from './pages/filehandle/filehandle';
-// import Photo from './pages/photoS3';
+// import Photo from './pages/photos3';
 import Photo from './pages/photoCloudinary';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';

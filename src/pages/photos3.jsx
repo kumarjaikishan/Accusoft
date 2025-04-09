@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Navigate } from "react-router-dom";
 import './photo.css';
 import { useSelector, useDispatch } from 'react-redux';
 import { header } from '../store/login';

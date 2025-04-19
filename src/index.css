@@ -6,7 +6,7 @@
 
   &::-webkit-scrollbar {
     width: 4px;
-      height: 4px;
+    height: 4px;
   }
 
   &::-webkit-scrollbar-track {
@@ -56,8 +56,8 @@
   --tableborder: rgb(190, 185, 185);
   --editicon: rgb(7, 120, 182);
   --editiconbackground: rgba(7, 121, 182, 0.15);
-  --printicon:rgb(16, 16, 149);
-  --printiconbackground:rgba(38, 38, 201, 0.223);
+  --printicon: rgb(16, 16, 149);
+  --printiconbackground: rgba(38, 38, 201, 0.223);
   --deleteicon: rgb(220, 7, 25);
   --deleteiconbackground: rgba(220, 7, 25, 0.15);
   --tableevenbackground: #428dc339;
@@ -74,7 +74,7 @@
   --tableborder: rgb(73, 72, 72);
   --editicon: rgb(7, 120, 182);
   --deleteicon: rgb(220, 7, 25);
-  --printicon:rgb(9, 234, 152);
+  --printicon: rgb(9, 234, 152);
   --tableevenbackground: #3737378f;
 }
 
@@ -316,8 +316,9 @@ footer.narrow {
   &:hover {
     box-shadow: inset 0 0 0 0.5px var(--maincolor) !important;
   }
-} 
-.dark-theme .muibtn.outlined{
+}
+
+.dark-theme .muibtn.outlined {
   &:hover {
     box-shadow: inset 0 0 0 0.5px white !important;
   }

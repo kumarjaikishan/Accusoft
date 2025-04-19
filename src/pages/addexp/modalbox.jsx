@@ -81,7 +81,7 @@ const Modalbox = ({ setisledupdate, modal, navigate, disable, setdisable, init, 
                             id="demo-simple-select"
                             label="Ledger"
                         >
-                            {useralldetail.ledgerlist.map((val, ind) => {
+                            {useralldetail?.ledgerlist?.map((val, ind) => {
                                 return <MenuItem sx={{ textTransform: "capitalize" }} key={ind} value={val._id}>{val.ledger}</MenuItem>
                             })}
 

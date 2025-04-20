@@ -365,7 +365,7 @@ input {
   }
 
   .main {
-    height: calc(100vh - var(--navheightmobile));
+    min-height: calc(100vh - var(--navheightmobile));
     height: fit-content;
     top: var(--navheightmobile);
     width: 100%;

@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate,useNavigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import Navbar from './components/navbar/navbar';
 import Sidebar from './components/sidebar/sidebar';
 import Home from './pages/home';
@@ -69,7 +69,7 @@ function App() {
       const data = await responsee.json();
       console.log("jwt check", data);
 
-      if (data.message === 'jwt expired' ) {
+      if (data.message === 'jwt expired') {
         swal({
           title: 'Session Expired',
           text: 'Your session has expired. Please log in again.',
@@ -159,7 +159,6 @@ function App() {
                 )}
               </Routes>
             </AnimatePresence>
-
           </main>
           <footer className={log.narrow ? "footer narrow" : "footer"}>
             <p>&copy;{new Date().getFullYear()} Accusoft. All rights reserved. Designed and developed by Jai Kishan</p>

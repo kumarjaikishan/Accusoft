@@ -14,23 +14,7 @@
   }
 
   &::-webkit-scrollbar-thumb {
-    background-color: transparent;
-  }
-
-  &:hover {
-    &::-webkit-scrollbar {
-      width: 4px;
-      height: 4px;
-    }
-
-    &::-webkit-scrollbar-track {
-      background-color: transparent;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background-color: var(--maincolor);
-      border-radius: 15px;
-    }
+    background-color: var(--maincolor);
   }
 }
 
@@ -242,7 +226,8 @@ body {
 
 .main {
   position: relative;
-  height: calc(100vh - var(--navheight) - var(--footerheight));
+  min-height: calc(100vh - var(--navheight) - var(--footerheight));
+  height: fit-content;
   width: calc(100% - var(--sidebarwide));
   left: var(--sidebarwide);
   top: var(--navheight);
@@ -250,6 +235,7 @@ body {
   overflow-y: auto;
   transition: 0.2s;
   background: var(--background);
+  padding-bottom: 5px;
 }
 
 .main.narrow {

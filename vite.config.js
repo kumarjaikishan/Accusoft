@@ -11,15 +11,14 @@ export default defineConfig({
   },
   plugins: [
     reactRefresh(),
-    visualizer({
-      filename: './stats.html',
-      open: true,
-    }),
+    // visualizer({
+    //   filename: './stats.html',
+    //   open: true,
+    // }),
     svgrPlugin({
       svgrOptions: {
         icon: true,
-        // ...svgr options (https://react-svgr.com/docs/options/)
-      },
+     },
     }),
   ],
   

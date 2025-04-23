@@ -63,6 +63,8 @@ const Modalbox = ({ setisledupdate, modal, navigate, disable, setdisable, init, 
             setmodal(false);
         }
     }
+    
+
     return (
         <div className="modal" onClick={sdef} style={{ display: modal ? "block" : "none" }}>
             <div className="box">

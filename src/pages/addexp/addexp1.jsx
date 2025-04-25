@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import './addexp.css';
+import './addexp1.css';
 import swal from 'sweetalert';
 import Pagination from './pagination';
 import Modalbox from './modalbox';
@@ -7,11 +7,11 @@ import Ledpage from './ledpage';
 import TextField from '@mui/material/TextField';
 import { useSelector, useDispatch } from 'react-redux';
 import { setloader } from '../../store/login';
-import { userdata, addexpense } from '../../store/api'
+import { userdata,addexpense } from '../../store/api'
 import dayjs from 'dayjs';
 import { toast } from 'react-toastify';
 import apiWrapper from './apiWrapper';
-import { AnimatePresence, color, motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useNavigate } from "react-router-dom";
 import Button from '@mui/material/Button';
 import { MdKeyboardArrowDown } from "react-icons/md";
@@ -20,8 +20,6 @@ import { HiPencilSquare } from "react-icons/hi2";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { IoMdPrint } from "react-icons/io";
 import { RiDeleteBin6Fill } from "react-icons/ri";
-import DataTable from 'react-data-table-component';
-import useMediaQuery from '@mui/material/useMediaQuery';
 
 const AddExpenses = () => {
   const dispatch = useDispatch();
@@ -30,14 +28,12 @@ const AddExpenses = () => {
   const [searchInput, setSearchInput] = useState('');
   const [finalsearch, setfinalserach] = useState('');
   const isAnimatingRef = React.useRef(false);
-  const isMobile = useMediaQuery('(max-width:600px)');
 
 
   useEffect(() => {
     dispatch(setloader(false))
     // console.log('expcheck', userAllDetails.explist)
     // console.log("date-",dayjs())
-    console.log(isMobile)
   }, [])
 
   useEffect(() => {
@@ -114,11 +110,11 @@ const AddExpenses = () => {
     };
 
     // for optimistic update in expense
-    let ledgername = userAllDetails.ledgerlist.find(item => item._id === ledger)
+    let ledgername = userAllDetails.ledgerlist.find(item => item._id===ledger)
     // console.log(ledgername)
     const newExpense = {
       _id: `temp-${Date.now()}`, // Temporary ID
-      ledger: { _id: ledger, ledger: ledgername.ledger }, // Ledger should be an object
+      ledger: { _id: ledger, ledger:ledgername.ledger }, // Ledger should be an object
       date,
       amount,
       narration: capitalize(narration),
@@ -165,7 +161,7 @@ const AddExpenses = () => {
 
   const deletemanyExpense = async () => {
     itemIds = []
-    const selectedItems = document.querySelectorAll('.rowcheckbox:checked');
+    const selectedItems = document.querySelectorAll('#tablecontent input:checked');
     selectedItems.forEach((item) => {
       itemIds.push(item.id);
     });
@@ -220,7 +216,7 @@ const AddExpenses = () => {
 
   const selectAllCheckbox = () => {
     const selectAllCheckbox = document.querySelector('#allcheck');
-    const checkboxes = document.querySelectorAll('.rowcheckbox');
+    const checkboxes = document.querySelectorAll('#tablecontent input');
 
     if (selectAllCheckbox.checked) {
       checkboxes.forEach((checkbox) => {
@@ -235,11 +231,20 @@ const AddExpenses = () => {
     highlight();
   };
 
-  const highlight = () => {
-    const checkboxes = document.querySelectorAll('.rowcheckbox');
-    const tableRows = document.querySelectorAll('.rdt_TableRow');
+  const handlePageSizeChange = (e) => {
+    setPostsPerPage(e.target.value);
+    setCurrentPage(1);
+    setSortedList();
+  };
 
-    // console.log("from hightlighter", tableRows)
+  const changePageNumber = (pageNumber) => {
+    setSortedList();
+    setCurrentPage(pageNumber);
+  };
+
+  const highlight = () => {
+    const checkboxes = document.querySelectorAll('#tablecontent input');
+    const tableRows = document.querySelectorAll('#tablecontent div');
 
     checkboxes.forEach((checkbox, index) => {
       const parentRow = tableRows[index];
@@ -255,12 +260,57 @@ const AddExpenses = () => {
   let lastPostIndex = currentPage * postsPerPage;
   const firstPostIndex = lastPostIndex - postsPerPage;
 
+  const currentPosts = userAllDetails.explist?.slice(firstPostIndex, lastPostIndex);
+  const [sortedList, setSortedList] = useState();
+  const [sortOrder, setSortOrder] = useState('ASC');
 
+  const sortPosts = (column) => {
+    if (sortOrder === 'ASC') {
+      if (column === 'amount') {
+        const sorted = [...currentPosts].sort((a, b) => a[column] - b[column]);
+        setSortedList(sorted);
+        setSortOrder('DSC');
+      } else if (column === 'ledger') {
+        const sorted = [...currentPosts].sort((a, b) =>
+          a[column].ledger.toLowerCase() > b[column].ledger.toLowerCase() ? 1 : -1
+        );
+        setSortedList(sorted);
+        setSortOrder('DSC');
+      } else {
+        const sorted = [...currentPosts].sort((a, b) =>
+          a[column].toLowerCase() > b[column].toLowerCase() ? 1 : -1
+        );
+        setSortedList(sorted);
+        setSortOrder('DSC');
+      }
+    }
+
+    if (sortOrder === 'DSC') {
+      if (column === 'amount') {
+        const sorted = [...currentPosts].sort((a, b) => b[column] - a[column]);
+        setSortedList(sorted);
+        setSortOrder('ASC');
+      } else if (column === 'ledger') {
+        const sorted = [...currentPosts].sort((a, b) =>
+          b[column].ledger.toLowerCase() > a[column].ledger.toLowerCase() ? 1 : -1
+        );
+        setSortedList(sorted);
+        setSortOrder('ASC');
+      } else {
+        const sorted = [...currentPosts].sort((a, b) =>
+          a[column].toLowerCase() < b[column].toLowerCase() ? 1 : -1
+        );
+        setSortedList(sorted);
+        setSortOrder('ASC');
+      }
+    }
+  };
   const voucherpage = (expid) => {
     navigate(`/print/${expid}`);
   }
   const container = {
     visible: {
+
       transition: {
         delayChildren: .1,
       }
@@ -278,196 +328,6 @@ const AddExpenses = () => {
       }
     }
   };
-
-  const columns = isMobile ? [
-    {
-      name: 'S.No',
-      cell: (row, index) => firstPostIndex + index + 1,
-      width: '43px',
-    },
-    {
-      name: 'Ledger',
-      selector: row => row.ledger.ledger,
-      sortable: true,
-      width: '70px',
-      cell: row => <span className="caps">{row.ledger.ledger}</span>
-    },
-    {
-      name: 'Amt',
-      width: '60px',
-      selector: row => row.amount,
-      sortable: true,
-    },
-    {
-      name: 'Narration',
-      selector: row => row.narration,
-      // width: '295px',
-
-    },
-    {
-      name: 'Date',
-      selector: row => dayjs(row.date).format('DD MMM, YYYY'),
-      sortable: true,
-      width: '100px',
-    },
-    {
-      name: 'Action',
-      cell: row => (
-        <>
-          <HiPencilSquare title="Edit" onClick={() => setDataForEdit(row)} className='editicon ico' />
-          <RiDeleteBin6Line title="Delete" onClick={() => deleteExpense(row._id)} className='deleteicon ico' />
-        </>
-      ),
-      ignoreRowClick: true,
-      allowOverflow: true,
-      width: '60px',
-      button: true,
-      style: {
-        display: 'flex',
-        justifyContent: 'space-around',
-      }
-    },
-    {
-      name: (
-        <input
-          type="checkbox"
-          onClick={selectAllCheckbox}
-          id="allcheck"
-          title="Select All"
-        />
-      ),
-      cell: row => (
-        <input
-          type="checkbox"
-          title="select"
-          id={row._id}
-          className="rowcheckbox"
-          onClick={highlight}
-        />
-      ),
-      ignoreRowClick: true,
-      allowOverflow: true,
-      button: true,
-      width: '35px',
-    },
-  ] : [
-    {
-      name: 'S.No',
-      cell: (row, index) => firstPostIndex + index + 1,
-      width: '43px',
-    },
-    {
-      name: 'Ledger',
-      selector: row => row.ledger.ledger,
-      sortable: true,
-      width: '110px',
-      cell: row => <span className="caps">{row.ledger.ledger}</span>
-    },
-    {
-      name: 'Amount',
-      width: '80px',
-      selector: row => row.amount,
-      sortable: true,
-    },
-    {
-      name: 'Narration',
-      selector: row => row.narration,
-    },
-    {
-      name: 'Date',
-      selector: row => dayjs(row.date).format('DD MMM, YYYY'),
-      sortable: true,
-      width: '110px',
-    },
-    {
-      name: 'Action',
-      cell: row => (
-        <>
-          <HiPencilSquare title="Edit" onClick={() => setDataForEdit(row)} className='editicon ico' />
-          <RiDeleteBin6Line title="Delete" onClick={() => deleteExpense(row._id)} className='deleteicon ico' />
-        </>
-      ),
-      ignoreRowClick: true,
-      allowOverflow: true,
-      width: '65px',
-      button: true,
-      style: {
-        display: 'flex',
-        justifyContent: 'space-around',
-      }
-    },
-    {
-      name: (
-        <input
-          type="checkbox"
-          onClick={selectAllCheckbox}
-          id="allcheck"
-          title="Select All"
-        />
-      ),
-      cell: row => (
-        <input
-          type="checkbox"
-          title="select"
-          id={row._id}
-          className="rowcheckbox"
-          onClick={highlight}
-        />
-      ),
-      ignoreRowClick: true,
-      allowOverflow: true,
-      button: true,
-      width: '40px',
-    },
-  ];
-
-  const filteredExpenses = userAllDetails.explist?.filter(item => {
-    return (
-      finalsearch === '' ||
-      item.narration.toLowerCase().includes(finalsearch) ||
-      item.ledger.ledger.toLowerCase().includes(finalsearch) ||
-      item.amount.toString().includes(finalsearch)
-    );
-  });
-
-  // Total amount
-  const totalAmount = filteredExpenses.slice(firstPostIndex, lastPostIndex).reduce((sum, item) => sum + item.amount, 0);
-
-
-
-  const customStyles = {
-    rows: {
-      style: {
-        minHeight: '35px', // or whatever height you need
-      },
-    },
-    headCells: {
-      style: {
-        backgroundColor: '#0a3d62',
-        color: '#fff',
-        // border:'0.5px solid #d6d8d985',
-        padding: '5px'
-      },
-    },
-    cells: {
-      style: {
-        padding: '5px', // 👈 This is body cell padding
-
-      },
-    },
-    headRow: {
-      style: {
-        borderBottom: '2px solid #ddd',
-        borderTop: '2px solid #ddd',
-        position: 'sticky',
-        top: 0,
-        backgroundColor: '#999', // Sticky needs background
-
-      },
-    },
-  };
-
-
   return (
     <>
       <motion.div
@@ -482,6 +342,17 @@ const AddExpenses = () => {
         <div className="head">
           <span>Expense List </span>
           <span>
+            Record :{' '}
+            <select title='Items Per Page' name="" id="" value={postsPerPage} onChange={handlePageSizeChange}>
+              <option value="10">10</option>
+              <option value="20">20</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+              <option value="500">500</option>
+              {/* <option value="5000">ALL</option> */}
+            </select>
+          </span>
+          <span>
             <input type="text" title='Search' onChange={(e) => setSearchInput(e.target.value)} value={searchInput} placeholder="Type to search..." />
             {/* <TextField size='small' id="outlined-basic" label="Type to search..."
                          value={searchInput} type="text"
@@ -490,52 +361,89 @@ const AddExpenses = () => {
           </span>
         </div>
         <div className="table">
-          <DataTable
-            columns={columns}
-            data={filteredExpenses.slice(firstPostIndex, lastPostIndex)}
-            pagination
-            paginationServer
-            paginationTotalRows={filteredExpenses.length}
-            paginationPerPage={parseInt(postsPerPage)}
-            onChangeRowsPerPage={(newPerPage) => {
-              setPostsPerPage(newPerPage);
-              setCurrentPage(1);
-            }}
-            onChangePage={setCurrentPage}
-            highlightOnHover
-            customStyles={customStyles}
-            selectableRows={false}
-            persistTableHead
-          // fixedHeader
-          />
-
-          <div style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            padding: '2px 16px',
-            paddingBottom: 0,
-            borderTop: '1px solid #e0e0e0',
-            fontWeight: 'bold',
-            background: '#f9f9f9',
-          }}
-          >
-            {/* Left side under checkbox column */}
-            <div style={{ width: '120px', marginLeft: '120px' }}>
-              ₹ {totalAmount}
-            </div>
-
-            {/* Spacer columns */}
-            <div style={{ flex: 1 }}></div>
-
-            {/* Total aligned under Amount column */}
-            <div className='maindelete'>
-              <RiDeleteBin6Fill
-                onClick={deletemanyExpense}
-                title="Delete Selected"
-                style={{ cursor: 'pointer' }}
-              />
-            </div>
+          <div className="header">
+            <span>S.no</span>
+            <span onClick={() => sortPosts('ledger')}> Ledger <i><MdKeyboardArrowDown /> </i></span>
+            <span onClick={() => sortPosts('amount')}>Amt. <i><MdKeyboardArrowDown /> </i></span>
+            <span>Narration</span>
+            <span onClick={() => sortPosts('date')}>Date <i><MdKeyboardArrowDown /> </i></span>
+            <span>Action</span>
+            <span><input type="checkbox" onClick={selectAllCheckbox} id="allcheck" /></span>
           </div>
+          <motion.div
+            variants={container}
+            initial="hidden"
+            animate="visible"
+            className="body"
+            id="tablecontent"
+          >
+            {userAllDetails?.explist?.length < 1 && <div style={{ width: '100%', display: 'flex', justifyContent: 'center', margin: '8px 0' }}>
+              <b>No Expense Added</b>
+            </div>}
+            <AnimatePresence>
+              {/* {(sortedList ? sortedList : currentPosts)?.filter((item) => { */}
+              {currentPosts?.filter((item) => {
+                return (
+                  finalsearch === '' ||
+                  item.narration.toLowerCase().includes(finalsearch) ||
+                  item.ledger.ledger.toLowerCase().includes(finalsearch) ||
+                  item.amount.toString().includes(finalsearch)
+                );
+              }).map((expense, index) => {
+                return <motion.div
+                  exit={isAnimatingRef.current ? { opacity: 1, x: '-102%', transition: { duration: 0.6 } } : {}}
+                  key={expense._id}
+                  // className={index % 2 ? 'even' : 'odd'}
+                >
+                  <span>{firstPostIndex + index + 1}</span>
+                  <span className='caps'>{expense.ledger.ledger}</span>
+                  <span>{expense.amount}</span>
+                  <span>{expense.narration}</span>
+                  <span>{dayjs(expense.date).format('DD MMM, YYYY')}</span>
+                  <span>
+                    <HiPencilSquare title="Edit" onClick={() => setDataForEdit(expense)} className='editicon ico' />
+                    {/* <IoMdPrint title="Print" onClick={() => voucherpage(expense._id)} className='printicon ico' /> */}
+                    <RiDeleteBin6Line title="Delete" onClick={() => deleteExpense(expense._id)} className='deleteicon ico' />
+                  </span>
+                  <span> <input type="checkbox" title='select' onClick={highlight} id={expense._id} /></span>
+                </motion.div>
+              })}
+              <div id="foot">
+                <span></span>
+                <span style={{ fontWeight: 700 }} >Total</span>
+                <span style={{ fontWeight: 700 }} id="totalhere">
+                  {currentPosts?.filter((item) => {
+                    return (
+                      finalsearch === '' ||
+                      item.narration.toLowerCase().includes(finalsearch) ||
+                      item.ledger.ledger.toLowerCase().includes(finalsearch) ||
+                      item.amount.toString().includes(finalsearch)
+                    );
+                  })
+                    .reduce((accumulator, expense) => {
+                      return (accumulator += expense.amount);
+                    }, 0)}
+                </span>
+                <span></span>
+                <span></span>
+                <span colSpan="1" id="alldelete" title="Delete Selected Item">
+                  <RiDeleteBin6Fill onClick={deletemanyExpense} />
+                </span>
+                <span></span>
+              </div>
+            </AnimatePresence>
+          </motion.div>
+        </div>
+        <div className="foot">
+          <span>
+            Showing Result From {firstPostIndex + 1} To{' '}
+            {lastPostIndex >= userAllDetails?.explist?.length ? (lastPostIndex = userAllDetails.explist.length) : lastPostIndex} of{' '}
+            {userAllDetails.explist?.length} Results
+          </span>
+          <span>
+            Pages :
+            <Pagination currentpage={currentPage} changepageno={changePageNumber} totalpost={userAllDetails.explist?.length} postperpage={postsPerPage} />
+          </span>
         </div>
         <Modalbox
           setisledupdate={setIsLedgerUpdate}

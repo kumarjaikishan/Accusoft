@@ -79,6 +79,7 @@ body {
   user-select: none;
 
   >#print-container {
+    /* color: #d6d8d985; */
     /* border: 2px solid red; */
   }
 }

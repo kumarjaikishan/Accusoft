@@ -18,6 +18,7 @@
     "framer-motion": "^11.3.30",
     "react": "^18.2.0",
     "react-csv": "^2.2.2",
+    "react-data-table-component": "^7.7.0",
     "react-dom": "^18.2.0",
     "react-icons": "^5.3.0",
     "react-redux": "^8.1.1",

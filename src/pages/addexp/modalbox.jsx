@@ -15,6 +15,7 @@ import { VscDebugRestart } from "react-icons/vsc";
 import { IoIosSave } from "react-icons/io";
 import { MdOutlineUpdate } from "react-icons/md";
 import { FaPencilAlt } from "react-icons/fa";
+import InputAdornment from '@mui/material/InputAdornment';
 
 const Modalbox = ({ setisledupdate, modal, navigate, disable, setdisable, init, handler, inp, isupdate, sub, setmodal, setisupdate, setinp }) => {
     const useralldetail = useSelector((state) => state.userexplist);
@@ -63,7 +64,7 @@ const Modalbox = ({ setisledupdate, modal, navigate, disable, setdisable, init, 
             setmodal(false);
         }
     }
-    
+
 
     return (
         <div className="modal" onClick={sdef} style={{ display: modal ? "block" : "none" }}>
@@ -101,6 +102,9 @@ const Modalbox = ({ setisledupdate, modal, navigate, disable, setdisable, init, 
                         onKeyPress={(event) => { if (!/[0-9]/.test(event.key)) { event.preventDefault(); } }}
                         type="tel" value={inp.amount}
                         onChange={(e) => handler(e, 'amount')}
+                        InputProps={{
+                            startAdornment: <InputAdornment position="start">₹</InputAdornment>,
+                        }}
                         variant="outlined" />
 
                     <TextField multiline rows={2} sx={{ width: '90%', mt: 2, mb: 2 }} id="outlined-basic" label="Narration"

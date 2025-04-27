@@ -51,19 +51,17 @@ const AddExpenses = () => {
     setCurrentPage(page);
     const loadedPages = Math.ceil(data.length / perPage);
     const maxpageno = Math.ceil(totalRows / perPage);
+    // console.log("maxpageno", maxpageno)
+    // console.log("handlePageChange page", page)
+    // console.log("handlePageChange loadedpage", loadedPages)
     if (page == maxpageno) {
-      const nextPage = Math.floor(totalRows / 100) + 1;
-      console.log("nectpage", nextPage)
-      return fetchData(nextPage, 100);
+      console.log(maxpageno)
+      fetchData(nextPage, 100);
     }
-
-    if (data[((page + 1) * 10) + 1] == undefined) {
-      const nextPage = Math.floor((((page + 1) * 10) + 1 + 99) / 100);
-      console.log("next page info:", nextPage)
-      return fetchData(nextPage, 100);
+    if (page >= loadedPages) {
+      const nextPage = Math.ceil(data.length / 100) + 1;
+      fetchData(nextPage, 100);
     }
-
-
   };
   const handlePerRowsChange = async (newPerPage, page) => {
     setPerPage(newPerPage);
@@ -85,7 +83,7 @@ const AddExpenses = () => {
   }, [searchInput]);
 
   const fetchData = async (page, size = perPage) => {
-    // console.log("this fetchdat is called with", page, size);
+    console.log("this fetchdat is called with", page, size);
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
@@ -97,36 +95,17 @@ const AddExpenses = () => {
         },
       });
       const result = await res.json();
-      console.log(result)
       if (result.items.length) {
         if (page === 1) {
-          let creatarray = new Array(result.total);
-          let toindex = (page * 100) - 1;
-          let fromindex = toindex - 99;
-          // console.log("from & to ", fromindex,toindex)
-          for (let i = fromindex; i <= toindex; i++) {
-            creatarray[i] = result.items[i];
-          }
-          setData(creatarray);
+          setData(result.items);
           setTotalRows(result.total);
         } else {
-          let toindex = Math.min((page * 100) - 1, totalRows);
-          let fromindex = ((page * 100) - 1) - 99;
-          console.log("second time fetch  to & from", fromindex, toindex)
-          let temp = data;
-          console.log(temp)
-          let fordataindex = 0;
-          for (let i = fromindex; i < toindex; i++) {
-            temp[i] = result.items[fordataindex];
-            // console.log(object)
-            fordataindex++;
-          }
-          console.log(temp)
-          setData(temp);
+          setData(prev => [...prev, ...result.items]);
         }
+
       }
       setLoading(false);
-
+      // console.log(result)
     } catch (error) {
       setLoading(false);
       console.log(error)
@@ -344,7 +323,7 @@ const AddExpenses = () => {
   const firstIndex = (currentPage - 1) * perPage;
   const lastIndex = firstIndex + perPage;
   const currentRecords = filteredData.slice(firstIndex, lastIndex);
-  const totalAmount = currentRecords.reduce((sum, item) => sum + Number(item?.amount), 0);
+  const totalAmount = currentRecords.reduce((sum, item) => sum + Number(item.amount), 0);
 
 
   const voucherpage = (expid) => {
@@ -573,7 +552,7 @@ const AddExpenses = () => {
             data={currentRecords}
             pagination
             paginationServer
-            progressPending={loading}
+            // progressPending={loading}
             paginationTotalRows={totalRows}
             paginationPerPage={parseInt(postsPerPage)}
             onChangeRowsPerPage={handlePerRowsChange}

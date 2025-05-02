@@ -7,7 +7,7 @@ import Ledpage from './ledpage';
 import TextField from '@mui/material/TextField';
 import { useSelector, useDispatch } from 'react-redux';
 import { setloader } from '../../store/login';
-import { userdata,addexpense } from '../../store/api'
+import { userdata, addexpense } from '../../store/api'
 import dayjs from 'dayjs';
 import { toast } from 'react-toastify';
 import apiWrapper from './apiWrapper';
@@ -20,6 +20,7 @@ import { HiPencilSquare } from "react-icons/hi2";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { IoMdPrint } from "react-icons/io";
 import { RiDeleteBin6Fill } from "react-icons/ri";
+import { IoCloseSharp } from "react-icons/io5";
 
 const AddExpenses = () => {
   const dispatch = useDispatch();
@@ -110,11 +111,11 @@ const AddExpenses = () => {
     };
 
     // for optimistic update in expense
-    let ledgername = userAllDetails.ledgerlist.find(item => item._id===ledger)
+    let ledgername = userAllDetails.ledgerlist.find(item => item._id === ledger)
     // console.log(ledgername)
     const newExpense = {
       _id: `temp-${Date.now()}`, // Temporary ID
-      ledger: { _id: ledger, ledger:ledgername.ledger }, // Ledger should be an object
+      ledger: { _id: ledger, ledger: ledgername.ledger }, // Ledger should be an object
       date,
       amount,
       narration: capitalize(narration),
@@ -354,6 +355,7 @@ const AddExpenses = () => {
           </span>
           <span>
             <input type="text" title='Search' onChange={(e) => setSearchInput(e.target.value)} value={searchInput} placeholder="Type to search..." />
+            <span title='clear' onClick={()=>setSearchInput('')}><IoCloseSharp /></span>
             {/* <TextField size='small' id="outlined-basic" label="Type to search..."
                          value={searchInput} type="text"
                         onChange={(e) => setSearchInput(e.target.value)}
@@ -393,7 +395,7 @@ const AddExpenses = () => {
                 return <motion.div
                   exit={isAnimatingRef.current ? { opacity: 1, x: '-102%', transition: { duration: 0.6 } } : {}}
                   key={expense._id}
-                  // className={index % 2 ? 'even' : 'odd'}
+                // className={index % 2 ? 'even' : 'odd'}
                 >
                   <span>{firstPostIndex + index + 1}</span>
                   <span className='caps'>{expense.ledger.ledger}</span>

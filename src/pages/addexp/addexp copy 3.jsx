@@ -22,6 +22,7 @@ import { IoMdPrint } from "react-icons/io";
 import { RiDeleteBin6Fill } from "react-icons/ri";
 import DataTable from 'react-data-table-component';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { IoCloseSharp } from "react-icons/io5";
 
 const AddExpenses = () => {
   const dispatch = useDispatch();
@@ -51,17 +52,19 @@ const AddExpenses = () => {
     setCurrentPage(page);
     const loadedPages = Math.ceil(data.length / perPage);
     const maxpageno = Math.ceil(totalRows / perPage);
-    // console.log("maxpageno", maxpageno)
-    // console.log("handlePageChange page", page)
-    // console.log("handlePageChange loadedpage", loadedPages)
     if (page == maxpageno) {
-      console.log(maxpageno)
-      fetchData(nextPage, 100);
+      const nextPage = Math.floor(totalRows / 100) + 1;
+      console.log("nectpage", nextPage)
+      return fetchData(nextPage, 100);
     }
-    if (page >= loadedPages) {
-      const nextPage = Math.ceil(data.length / 100) + 1;
-      fetchData(nextPage, 100);
+
+    if (data[((page + 1) * 10) + 1] == undefined) {
+      const nextPage = Math.floor((((page + 1) * 10) + 1 + 99) / 100);
+      console.log("next page info:", nextPage)
+      return fetchData(nextPage, 100);
     }
+
+
   };
   const handlePerRowsChange = async (newPerPage, page) => {
     setPerPage(newPerPage);
@@ -83,7 +86,7 @@ const AddExpenses = () => {
   }, [searchInput]);
 
   const fetchData = async (page, size = perPage) => {
-    console.log("this fetchdat is called with", page, size);
+    // console.log("this fetchdat is called with", page, size);
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
@@ -95,17 +98,18 @@ const AddExpenses = () => {
         },
       });
       const result = await res.json();
+      console.log(result)
       if (result.items.length) {
         if (page === 1) {
           setData(result.items);
           setTotalRows(result.total);
         } else {
-          setData(prev => [...prev, ...result.items]);
+          setData((prev)=> [...prev,...result.items])
         }
 
+
+        console.log(result.items)
       }
-      setLoading(false);
-      // console.log(result)
     } catch (error) {
       setLoading(false);
       console.log(error)
@@ -323,7 +327,7 @@ const AddExpenses = () => {
   const firstIndex = (currentPage - 1) * perPage;
   const lastIndex = firstIndex + perPage;
   const currentRecords = filteredData.slice(firstIndex, lastIndex);
-  const totalAmount = currentRecords.reduce((sum, item) => sum + Number(item.amount), 0);
+  const totalAmount = currentRecords.reduce((sum, item) => sum + Number(item?.amount), 0);
 
 
   const voucherpage = (expid) => {
@@ -430,7 +434,7 @@ const AddExpenses = () => {
       name: 'Ledger',
       selector: row => row.ledger.ledger,
       sortable: true,
-      width: '110px',
+      width: '130px',
       cell: row => <span className="caps">{row.ledger.ledger}</span>
     },
     {
@@ -539,10 +543,8 @@ const AddExpenses = () => {
           <span>Expense List </span>
           <span>
             <input type="text" title='Search' onChange={(e) => setSearchInput(e.target.value)} value={searchInput} placeholder="Type to search..." />
-            {/* <TextField size='small' id="outlined-basic" label="Type to search..."
-                         value={searchInput} type="text"
-                        onChange={(e) => setSearchInput(e.target.value)}
-                        variant="outlined" /> */}
+            <span title='clear' onClick={() => setSearchInput('')}><IoCloseSharp /></span>
+
           </span>
         </div>
         <div className="table">
@@ -553,13 +555,13 @@ const AddExpenses = () => {
             pagination
             paginationServer
             // progressPending={loading}
+            // selectableRows={true}
             paginationTotalRows={totalRows}
             paginationPerPage={parseInt(postsPerPage)}
             onChangeRowsPerPage={handlePerRowsChange}
             onChangePage={handlePageChange}
             highlightOnHover
             customStyles={customStyles}
-            selectableRows={false}
             persistTableHead
             noDataComponent={<div>No records found</div>}
           />

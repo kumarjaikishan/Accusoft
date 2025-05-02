@@ -10,7 +10,6 @@
     padding: 0 1rem;
     color: var(--color);
 
-
     &.caps {
         text-transform: capitalize !important;
     }
@@ -20,12 +19,12 @@
         top: 0;
         left: 0;
         width: 100%;
-        height: 60px;
+        height: 50px;
         /* border: 1px solid red; */
         display: flex;
         align-items: center;
         justify-content: end;
-        margin-top: 5px;
+        margin-top: 3px;
         margin-bottom: 2px;
     }
 
@@ -40,24 +39,56 @@
         justify-content: space-between;
         align-items: center;
         background: var(--maincolor);
+        padding: 0 5px;
 
         & span {
             /* border: 1px solid red; */
             color: rgb(39, 34, 34);
             color: white;
             display: inline-block;
-            padding: 5px;
             font-weight: 700;
 
-            &:nth-child(2) input {
-                width: 210px;
-                outline: none;
-                border: none;
-                height: 30px;
-                border-radius: 7px;
-                text-align: center;
-                /* padding-left: 5px; */
-                padding: 0 5px;
+
+            &:nth-child(2) {
+                display: flex;
+                align-items: center;
+                background: #f0f0f0;
+                /* border: 1px solid red; */
+                color: #777;
+                padding: 0;
+                height: 35px;
+                border-radius: 5px;
+                overflow: hidden;
+
+                input {
+                    background: transparent;
+                    outline: none;
+                    border: none;
+                    width: 180px;
+                    padding-left: 5px;
+                }
+
+                span {
+                    color: #777;
+                    width: 35px;
+                    height: inherit;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+
+                    &:hover {
+                        background: rgb(200, 198, 198);
+
+                    }
+
+                    svg {
+                        font-size: 26px;
+                        text-align: center;
+                        /* border: 1px solid red; */
+                    }
+                }
+
             }
         }
     }
@@ -252,19 +283,22 @@
             width: 100%;
             height: 55px;
             font-size: 14px;
+            padding: 0 5px;
 
-            span:nth-child(1) {
-                display: none;
-            }
 
-            span:nth-child(2) select,
-            span:nth-child(3) input {
-                width: 110px;
+            span:nth-child(2) {
                 height: 28px;
-            }
+                border-radius: 5px;
 
-            span:nth-child(3) input {
-                width: 170px;
+                input {
+                    width: 130px;
+                    font-size: 12px;
+                }
+
+                span {
+                    width: 25px;
+                }
+
             }
         }
 

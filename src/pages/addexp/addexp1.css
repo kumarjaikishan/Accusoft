@@ -34,6 +34,7 @@
         border-top-right-radius: 11px;
         position: relative;
         /* border: 1px solid red; */
+        padding: 0 5px;
         width: 100%;
         height: 55px;
         display: flex;
@@ -61,8 +62,42 @@
                 padding: 0 5px;
             }
 
-            &:nth-child(3) input {
-                width: 210px;
+            &:nth-child(3) {
+                display: flex;
+                align-items: center;
+                background: #f0f0f0;
+                /* border: 1px solid red; */
+                color: #777;
+                padding: 0;
+                height: 35px;
+                border-radius: 5px;
+                overflow: hidden;
+
+                input {
+                    width: 180px;
+                }
+
+                span {
+                    color: #777;
+                    width: 35px;
+                    height: inherit;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+
+                    &:hover {
+                        background: rgb(200, 198, 198);
+
+                    }
+
+                    svg {
+                        font-size: 26px;
+                        text-align: center;
+                        /* border: 1px solid red; */
+                    }
+                }
+
             }
         }
     }
@@ -176,7 +211,7 @@
                     color: #f0f0f0;
                 }
             }
-           
+
 
             .ico.deleteicon {
                 color: var(--deleteicon);
@@ -224,11 +259,12 @@
             >div:nth-child(2n) {
                 background: var(--tableevenbackground);
             }
+
             /* div.even{
                 background: var(--tableevenbackground);
             } */
-            div.checked{
-                background:rgba(201, 200, 200, 0.6) ;
+            div.checked {
+                background: rgba(201, 200, 200, 0.6);
             }
         }
 
@@ -316,14 +352,25 @@
                 display: none;
             }
 
-            span:nth-child(2) select,
-            span:nth-child(3) input {
-                width: 110px;
-                height: 28px;
+            span:nth-child(2) select{
+                width: 80px;
+                font-size: 12px;
+                height: 25px;
             }
 
-            span:nth-child(3) input {
-                width: 170px;
+            span:nth-child(3) {
+                height: 28px;
+                border-radius: 5px;
+
+                input {
+                    width: 130px;
+                    font-size: 12px;
+                }
+
+                span {
+                    width: 25px;
+                }
+
             }
         }
 

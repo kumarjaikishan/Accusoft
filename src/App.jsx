@@ -94,7 +94,7 @@ function App() {
         });
       }
     } catch (error) {
-      console.log("catch part", error);
+      console.log("Token check:", error);
     }
   }
 

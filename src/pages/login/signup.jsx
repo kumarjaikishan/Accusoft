@@ -69,15 +69,25 @@ const Signup = ({ setlog }) => {
             const datae = await res.json();
             // console.log(datae);
             if (res.ok) {
-                // setsigninp(init);
-                toast.success("Signup Successful,verify your Email", { autoClose: 3300 })
-                setbtnclick(false);
-                setlog(true)
+                setsigninp(init);
+                // toast.success("Signup Successful,verify your Email", { autoClose: 3300 })
+                swal({
+                    title: 'Signup Successful',
+                    text: 'Please verify your email to proceed. Check your spam/junk folder if you don’t see the email.',
+                    icon: 'success',
+                    button: {
+                        text: 'OK',
+                    },
+                }).then(() => {
+                    setbtnclick(false);
+                    setlog(true)
+                });
+
                 dispatch(setloader(false));
             } else {
                 dispatch(setloader(false));
                 setbtnclick(false);
-                toast.warn(datae.message, { autoClose: 8300 })
+                toast.warn(datae.message, { autoClose: 3300 })
             }
 
             // console.log(datae);
@@ -97,7 +107,7 @@ const Signup = ({ setlog }) => {
                     <TextField
                         label="Name"
                         required
-                         size='small'
+                        size='small'
                         className='filled'
                         onChange={signhandle}
                         name="name"
@@ -111,7 +121,7 @@ const Signup = ({ setlog }) => {
                     <TextField
                         label="Email"
                         required
-                         size='small'
+                        size='small'
                         className='filled'
                         onChange={signhandle}
                         name="email"
@@ -126,7 +136,7 @@ const Signup = ({ setlog }) => {
                     <TextField
                         label="Phone"
                         required
-                         size='small'
+                        size='small'
                         color={signinp.phone.length == 10 ? "primary" : "warning"}
                         className='filled'
                         onChange={signhandle}
@@ -145,7 +155,7 @@ const Signup = ({ setlog }) => {
                         label="Password"
                         className='filled'
                         required
-                         size='small'
+                        size='small'
                         onChange={signhandle}
                         name="password"
                         type={signuppass ? "password" : null}
@@ -162,7 +172,7 @@ const Signup = ({ setlog }) => {
                     <TextField
                         label="Confirm Password"
                         className='filled'
-                         size='small'
+                        size='small'
                         color={signinp.password == signinp.cpassword ? "primary" : "warning"}
                         required
                         onChange={signhandle}

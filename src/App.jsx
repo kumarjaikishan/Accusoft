@@ -56,6 +56,11 @@ function App() {
   };
   const [isDarkMode, setIsDarkMode] = useState(false);
 
+  const tokenErrors = {
+    "jwt expired": ['Session Expired', 'Your session has expired. Please log in again.'],
+    "Invalid Token": ['Invalid Token', 'You need to log in again.']
+  }
+
   const jwtcheck = async () => {
     try {
       const token = localStorage.getItem('token');
@@ -69,22 +74,13 @@ function App() {
       const data = await responsee.json();
       console.log("jwt check", data);
 
-      if (data.message === 'jwt expired') {
+      if (tokenErrors[data.message]) {
+        const title = tokenErrors[data.message][0];
+        const text = tokenErrors[data.message][1];
+
         swal({
-          title: 'Session Expired',
-          text: 'Your session has expired. Please log in again.',
-          icon: 'warning',
-          button: {
-            text: 'OK',
-          },
-        }).then(() => {
-          return navigate('/logout');
-        });
-      }
-      if (data.message === 'Invalid Token') {
-        swal({
-          title: 'Invalid Token',
-          text: 'You need to log in again.',
+          title,
+          text,
           icon: 'warning',
           button: {
             text: 'OK',

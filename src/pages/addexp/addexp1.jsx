@@ -4,7 +4,6 @@ import swal from 'sweetalert';
 import Pagination from './pagination';
 import Modalbox from './modalbox';
 import Ledpage from './ledpage';
-import TextField from '@mui/material/TextField';
 import { useSelector, useDispatch } from 'react-redux';
 import { setloader } from '../../store/login';
 import { userdata, addexpense } from '../../store/api'
@@ -356,10 +355,6 @@ const AddExpenses = () => {
           <span>
             <input type="text" title='Search' onChange={(e) => setSearchInput(e.target.value)} value={searchInput} placeholder="Type to search..." />
             <span title='clear' onClick={()=>setSearchInput('')}><IoCloseSharp /></span>
-            {/* <TextField size='small' id="outlined-basic" label="Type to search..."
-                         value={searchInput} type="text"
-                        onChange={(e) => setSearchInput(e.target.value)}
-                        variant="outlined" /> */}
           </span>
         </div>
         <div className="table">

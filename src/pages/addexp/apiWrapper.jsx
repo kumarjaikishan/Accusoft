@@ -16,7 +16,7 @@ const apiWrapper = async ({ url, method = 'GET', body = null, dispatch, successA
 
         const response = await fetch(url, options);
         const responseData = await response.json();
-        // console.log("apiwrapper response", responseData);
+        console.log("apiwrapper response", responseData);
          
         if (response.status === 401 || response.status === 403) {
             toast.warn(responseData.message, { autoClose: 2100 });

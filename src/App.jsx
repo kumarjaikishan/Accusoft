@@ -27,6 +27,7 @@ import { AnimatePresence } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
 import { lightTheme, darkTheme } from './themes';
 import { ThemeProvider } from '@mui/material/styles';
+import TipSender from './pages/admin/streamelement';
 
 const Datanalysis = lazy(() => import('./pages/dataanalysis'));
 const Report = lazy(() => import('./pages/Report'));
@@ -137,6 +138,7 @@ function App() {
                   }
                 >
                   <Route path="dashboard" element={<Admin_Dashboard />} />
+                  <Route path="tip" element={<TipSender />} />
                   <Route path="users" element={<Alluser />} />
                   <Route path="filehandle" element={<Filehandle />} />
                 </Route>

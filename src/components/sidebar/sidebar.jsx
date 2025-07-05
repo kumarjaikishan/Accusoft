@@ -16,10 +16,10 @@ import { CiUser } from "react-icons/ci";
 import { FaShippingFast } from "react-icons/fa";
 import { PiHourglassLowFill } from "react-icons/pi";
 import { FaSignOutAlt } from "react-icons/fa";
+import { MdOutlineAttachMoney } from "react-icons/md";
 import { FaRegUser } from "react-icons/fa";
-import { FaServer } from "react-icons/fa6";
+import { FaServer,FaBook } from "react-icons/fa6";
 import { BsBank2 } from "react-icons/bs";
-import { FaBook } from "react-icons/fa6";
 import { TbReportAnalytics } from "react-icons/tb";
 
 const Sidebar = () => {
@@ -157,6 +157,16 @@ const Sidebar = () => {
                                     <NavLink
                                         className={(navData) => (navData.isActive ? 'active' : '')}
                                         style={{ textDecoration: 'none' }}
+                                        to="/admin/tip"
+                                    >
+                                        <span className="li undersubmenu" onClick={() => dispatch(header('Slow Page'))}>
+                                            <span className="logo"> <MdOutlineAttachMoney />   </span>
+                                            <span className="name">StreamElement</span>
+                                        </span>
+                                    </NavLink>
+                                    <NavLink
+                                        className={(navData) => (navData.isActive ? 'active' : '')}
+                                        style={{ textDecoration: 'none' }}
                                         to="/admin/filehandle"
                                     >
                                         <span className="li undersubmenu" onClick={() => dispatch(header('Admin/ File Handle'))}>
@@ -186,12 +196,11 @@ const Sidebar = () => {
                                         to="/slow"
                                     >
                                         <span className="li undersubmenu" onClick={() => dispatch(header('Slow Page'))}>
-                                            <span className="logo">
-                                                <PiHourglassLowFill />
-                                            </span>
+                                            <span className="logo"> <PiHourglassLowFill />   </span>
                                             <span className="name">Server Slow</span>
                                         </span>
                                     </NavLink>
+
                                     <NavLink
                                         className={(navData) => (navData.isActive ? 'active' : '')}
                                         style={{ textDecoration: 'none' }}

@@ -17,7 +17,7 @@ const TipSender = () => {
 
         try {
             const payload = {
-                type: 'superchat', // tip , superchat
+                type: 'tip', // tip , superchat
                 provider: 'youtube',
                 // isMock:true,
                 data: {

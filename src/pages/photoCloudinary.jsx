@@ -50,6 +50,7 @@ const Photo = () => {
     useEffect(() => {
         dispatch(header("Profile Update"));
     }, []);
+    
     const handleImageUpload1 = (e) => {
         if (e.target.files && e.target.files.length > 0) {
             const file = event.target.files[0];

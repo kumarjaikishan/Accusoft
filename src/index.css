@@ -227,8 +227,8 @@ body {
 
 .main {
   position: relative;
-  min-height: calc(100vh - var(--navheight) - var(--footerheight));
   height: fit-content;
+  min-height: calc(100vh - var(--navheight) - var(--footerheight));
   width: calc(100% - var(--sidebarwide));
   left: var(--sidebarwide);
   top: var(--navheight);

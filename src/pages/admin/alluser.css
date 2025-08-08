@@ -1,11 +1,14 @@
 .allusers.admin {
     position: relative;
-    margin-top: 10px;
+    padding-top: 10px;
+    min-height: calc(100vh - var(--navheight) - var(--footerheight));
+    /* border: 2px solid blue; */
 
     .table {
 
         .header,
         .body {
+
             /* display: flex;  */
             >span {
                 /* border: 1px solid red; */
@@ -54,8 +57,9 @@
                 align-items: center;
                 /* border: 1px solid black; */
 
-               
+
             }
+
             .ico {
                 padding: 2px 5px;
                 box-sizing: content-box;
@@ -105,21 +109,21 @@
 
         .body {
 
-          span.status {
-            font-weight: 500;
-        }
+            span.status {
+                font-weight: 500;
+            }
 
-        span.status {
-            background: rgba(221, 179, 100, 0.486);
-            color: rgb(86, 56, 2);
-            /* border-right: 4px solid rgb(86, 56, 2); */
-        }
+            span.status {
+                background: rgba(221, 179, 100, 0.486);
+                color: rgb(86, 56, 2);
+                /* border-right: 4px solid rgb(86, 56, 2); */
+            }
 
-        .status.done {
-            background-color: rgba(118, 234, 118, 0.504);
-            color: rgb(1, 59, 1);
-            /* border-right: 4px solid rgb(1, 59, 1); */
-        }
+            .status.done {
+                background-color: rgba(118, 234, 118, 0.504);
+                color: rgb(1, 59, 1);
+                /* border-right: 4px solid rgb(1, 59, 1); */
+            }
         }
     }
 }
@@ -151,8 +155,7 @@
                     /* border: 1px solid red; */
                 }
 
-                & span:nth-child(5)
-                 {
+                & span:nth-child(5) {
                     min-width: 30px;
                     /* border: 1px solid red; */
                 }
@@ -161,6 +164,7 @@
                     min-width: 40px;
                     /* border: 1px solid red; */
                 }
+
                 & span:nth-child(7) {
                     min-width: 45px;
                     /* border: 1px solid red; */

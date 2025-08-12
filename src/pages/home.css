@@ -1,13 +1,22 @@
 .home {
     max-width: 100%;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-gap: 2.5rem;
     padding: 2em;
 }
 
-.home .card {
-    height: 120px;
+.home .cards {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-gap: 2.5rem;
+}
+
+.home .chart {
+    margin-top: 40px;
+    border: 1px solid red;
+}
+
+.home .cards .card {
+    height: 110px;
     display: flex;
     overflow: hidden;
     border-radius: 8px;

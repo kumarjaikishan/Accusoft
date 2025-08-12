@@ -10,6 +10,8 @@ import { FaShoppingBag } from "react-icons/fa";
 import { FaGoogleWallet } from "react-icons/fa";
 import { FaBalanceScaleRight } from "react-icons/fa";
 import { FaUniversity } from "react-icons/fa";
+import { Chart as ChartJS } from 'chart.js/auto';
+import { Bar } from 'react-chartjs-2';
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -56,7 +58,7 @@ const Home = () => {
   let weeksum = 0;
   let monthsum = 0;
   let yearsum = 0;
-  let totalsum = 0;
+  // let totalsum = 0;
 
   const load = () => {
     // console.log(useralldetail.explist);
@@ -77,7 +79,7 @@ const Home = () => {
         yearsum = yearsum + val.amount
       }
 
-      totalsum = totalsum + val.amount
+      // totalsum = totalsum + val.amount
     })
     setarr({
       todaysum: todaysum,
@@ -85,7 +87,7 @@ const Home = () => {
       weeksum: weeksum,
       monthsum: monthsum,
       yearsum: yearsum,
-      totalsum: totalsum
+      // totalsum: totalsum
     })
     // console.log(totalsum);
     // dispatch(setloader(false));
@@ -94,28 +96,30 @@ const Home = () => {
   const card = [{
     amt: arr.todaysum,
     day: "Today",
-    icon: <FaIndianRupeeSign/>,
+    icon: <FaIndianRupeeSign />,
   }, {
     amt: arr.yestersum,
     day: "Yesterday",
-    icon: <MdElectricBolt/> ,
+    icon: <MdElectricBolt />,
   }, {
     amt: arr.weeksum,
     day: "Last Week",
-    icon: <FaShoppingBag/> ,
+    icon: <FaShoppingBag />,
   }, {
     amt: arr.monthsum,
     day: "Last Month",
-    icon: <FaGoogleWallet/> ,
+    icon: <FaGoogleWallet />,
   }, {
     amt: arr.yearsum,
     day: "Last Year",
-    icon: <FaBalanceScaleRight/> ,
-  }, {
-    amt: arr.totalsum,
-    day: "Total",
-    icon:<FaUniversity/> ,
-  }]
+    icon: <FaBalanceScaleRight />,
+  },
+    //  {
+    //   amt: arr.totalsum,
+    //   day: "Total",
+    //   icon:<FaUniversity/> ,
+    // }
+  ]
 
   return (
     <>
@@ -126,17 +130,32 @@ const Home = () => {
         transition={{ duration: 0.2, ease: "easeInOut" }}
         className="home">
 
-        {card && card.map((val, ind) => {
-          return (
-            <div className="card" key={ind} >
-              <div className="data">
-                <div className="amt">{val.amt}</div>
-                <div className="day">{val.day}</div>
+        <div className='cards'>
+          {card && card.map((val, ind) => {
+            return (
+              <div className="card" key={ind} >
+                <div className="data">
+                  <div className="amt">{val.amt}</div>
+                  <div className="day">{val.day}</div>
+                </div>
+                <div className="icon" style={{ color: "white" }}>{val.icon}</div>
               </div>
-              <div className="icon" style={{ color: "white" }}>{val.icon}</div>
-            </div>
-          )
-        })}
+            )
+          })}
+        </div>
+
+
+        <div className='chart'>
+          <Bar
+            data={{
+              labels: ['a', 'b'],
+              datasets: [{
+                label: 'Expenses',
+                data: [200, 500]
+              }]
+            }}
+          />
+        </div>
 
       </motion.div>
     </>

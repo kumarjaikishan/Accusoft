@@ -1,5 +1,5 @@
 .nav {
-    position: absolute;
+    position: fixed;
     top: 0;
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
     transition: 0.2s;

@@ -1,165 +1,221 @@
-import React, { useState } from 'react'
-import { useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import './home.css';
 import { useSelector, useDispatch } from 'react-redux';
 import { header, setloader } from '../store/login';
 import { motion } from 'framer-motion';
 import { FaIndianRupeeSign } from "react-icons/fa6";
 import { MdElectricBolt } from "react-icons/md";
-import { FaShoppingBag } from "react-icons/fa";
-import { FaGoogleWallet } from "react-icons/fa";
-import { FaBalanceScaleRight } from "react-icons/fa";
-import { FaUniversity } from "react-icons/fa";
+import { FaShoppingBag, FaGoogleWallet, FaBalanceScaleRight } from "react-icons/fa";
 import { Chart as ChartJS } from 'chart.js/auto';
 import { Bar } from 'react-chartjs-2';
+import dayjs from 'dayjs';
+import isBetween from 'dayjs/plugin/isBetween';
+import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+
+dayjs.extend(isBetween);
 
 const Home = () => {
   const dispatch = useDispatch();
   const useralldetail = useSelector((state) => state.userexplist);
+  const [monthsToShow, setMonthsToShow] = useState(12);
+
   useEffect(() => {
-    dispatch(header("Dashboard"))
+    dispatch(header("Dashboard"));
     dispatch(setloader(true));
-    useralldetail.explist && load();
-    !useralldetail.loading && dispatch(setloader(false));
+    if (!useralldetail.loading) dispatch(setloader(false));
+  }, [useralldetail]);
 
-  }, [useralldetail])
+  useEffect(() => {
+    // console.log(window.innerWidth)
+    if (window.innerWidth < 600) {
+      setMonthsToShow(5)
+    }
+  }, [window.innerWidth]);
 
+  const { sums, monthlyData } = useMemo(() => {
+    if (!useralldetail?.explist) {
+      return {
+        sums: { todaysum: 0, yestersum: 0, weeksum: 0, monthsum: 0, yearsum: 0 },
+        monthlyData: []
+      };
+    }
+    // console.log(useralldetail?.explist)
 
-  const a = new Date();
+    let todaysum = 0, yestersum = 0, weeksum = 0, monthsum = 0, yearsum = 0;
+    const today = dayjs();
+    const yesterday = today.subtract(1, 'day');
 
-  const lastday = () => {
-    const date = new Date();
-    return new Date(date.setDate(date.getDate() - 1));
-  }
-  const endOfWeek = () => {
-    const date = new Date();
-    var lastday = date.getDate() - (date.getDay() - 1) - 6;
-    // console.log("mine last week",new Date(date.setDate(lastday)) );
-    return new Date(date.setDate(lastday));
-  }
-  const endOfMonth = () => {
-    const date = new Date();
-    return new Date(date.setMonth(date.getMonth() - 1));
-  }
-  const endOfyear = () => {
-    const date = new Date();
-    return new Date(date.setYear(date.getFullYear() - 1));
-  }
+    // Ranges
+    const lastWeekStart = yesterday.subtract(6, 'day');
+    const lastWeekEnd = yesterday;
 
-  const today = (a.getFullYear() + "-" + String(a.getMonth() + 1).padStart(2, '0') + "-" + String(a.getDate()).padStart(2, '0'));
-  const yesterday = (lastday().getFullYear() + "-" + String(lastday().getMonth() + 1).padStart(2, '0') + "-" + String(lastday().getDate()).padStart(2, '0'));
-  const lastweek = (endOfWeek().getFullYear() + "-" + String(endOfWeek().getMonth() + 1).padStart(2, '0') + "-" + String(endOfWeek().getDate()).padStart(2, '0'));
-  const lastmonth = (endOfMonth().getFullYear() + "-" + String(endOfMonth().getMonth() + 1).padStart(2, '0') + "-" + String(endOfMonth().getDate()).padStart(2, '0'));
-  const lastyear = ((endOfyear().getFullYear()) + "-" + String(endOfyear().getMonth() + 1).padStart(2, '0') + "-" + String(endOfyear().getDate()).padStart(2, '0'));
+    const lastMonthStart = yesterday.subtract(1, 'month').add(1, 'day');
+    const lastMonthEnd = yesterday;
 
-  const [arr, setarr] = useState([]);
-  let todaysum = 0;
-  let yestersum = 0;
-  let weeksum = 0;
-  let monthsum = 0;
-  let yearsum = 0;
-  // let totalsum = 0;
+    const lastYearStart = yesterday.subtract(1, 'year').add(1, 'day');
+    const lastYearEnd = yesterday;
 
-  const load = () => {
-    // console.log(useralldetail.explist);
-    useralldetail.explist.map((val, ind) => {
-      if (val.date == today) {
-        todaysum = todaysum + val.amount
+    // Prepare monthly data
+    let monthlyTotals = {};
+    for (let i = 0; i < 12; i++) {
+      const monthKey = today.subtract(i, 'month').format('YYYY-MM');
+      monthlyTotals[monthKey] = 0;
+    }
+
+    useralldetail?.explist.forEach((val) => {
+      const date = dayjs(val.date, "YYYY-MM-DD");
+
+      if (date.isSame(today, 'day')) todaysum += val.amount;
+      if (date.isSame(yesterday, 'day')) yestersum += val.amount;
+      if (date.isBetween(lastWeekStart, lastWeekEnd, 'day', '[]')) weeksum += val.amount;
+      if (date.isBetween(lastMonthStart, lastMonthEnd, 'day', '[]')) monthsum += val.amount;
+      if (date.isBetween(lastYearStart, lastYearEnd, 'day', '[]')) yearsum += val.amount;
+
+      const monthKey = date.format('YYYY-MM');
+      if (monthlyTotals.hasOwnProperty(monthKey)) {
+        monthlyTotals[monthKey] += val.amount;
       }
-      if (val.date == yesterday) {
-        yestersum = yestersum + val.amount
-      }
-      if (val.date >= lastweek && val.date <= today) {
-        weeksum = weeksum + val.amount
-      }
-      if (val.date >= lastmonth && val.date <= today) {
-        monthsum = monthsum + val.amount
-      }
-      if (val.date >= lastyear && val.date <= today) {
-        yearsum = yearsum + val.amount
-      }
+    });
 
-      // totalsum = totalsum + val.amount
-    })
-    setarr({
-      todaysum: todaysum,
-      yestersum: yestersum,
-      weeksum: weeksum,
-      monthsum: monthsum,
-      yearsum: yearsum,
-      // totalsum: totalsum
-    })
-    // console.log(totalsum);
-    // dispatch(setloader(false));
-    // console.timeEnd('mine home')
-  }
-  const card = [{
-    amt: arr.todaysum,
-    day: "Today",
-    icon: <FaIndianRupeeSign />,
-  }, {
-    amt: arr.yestersum,
-    day: "Yesterday",
-    icon: <MdElectricBolt />,
-  }, {
-    amt: arr.weeksum,
-    day: "Last Week",
-    icon: <FaShoppingBag />,
-  }, {
-    amt: arr.monthsum,
-    day: "Last Month",
-    icon: <FaGoogleWallet />,
-  }, {
-    amt: arr.yearsum,
-    day: "Last Year",
-    icon: <FaBalanceScaleRight />,
-  },
-    //  {
-    //   amt: arr.totalsum,
-    //   day: "Total",
-    //   icon:<FaUniversity/> ,
-    // }
-  ]
+    // Convert monthlyTotals to array sorted by date
+    const monthlyDataArr = Object.entries(monthlyTotals)
+      .sort(([a], [b]) => dayjs(a).diff(dayjs(b)))
+      .map(([month, total]) => ({
+        month: dayjs(month).format('MMM-YY'),
+        total
+      }));
+
+    // console.log(monthlyDataArr)
+    return {
+      sums: { todaysum, yestersum, weeksum, monthsum, yearsum },
+      monthlyData: monthlyDataArr
+    };
+  }, [useralldetail?.explist]);
+
+  const card = [
+    { amt: sums.todaysum, day: "Today", icon: <FaIndianRupeeSign /> },
+    { amt: sums.yestersum, day: "Yesterday", icon: <MdElectricBolt /> },
+    { amt: sums.weeksum, day: "Last Week", icon: <FaShoppingBag /> },
+    { amt: sums.monthsum, day: "Last Month", icon: <FaGoogleWallet /> },
+    { amt: sums.yearsum, day: "Last Year", icon: <FaBalanceScaleRight /> },
+  ];
+
+  const filteredMonths = monthlyData.slice(-monthsToShow);
+  // Inside component, before return
+  const chartData = useMemo(() => {
+    return {
+      labels: filteredMonths.map(m => m.month),
+      datasets: [{
+        label: 'Expenses',
+        data: filteredMonths.map(m => m.total),
+        borderRadius: 5,
+        backgroundColor: (context) => {
+          const chart = context.chart;
+          const { ctx, chartArea } = chart;
+
+          // Prevent crash before chartArea is ready
+          if (!chartArea) return '#ccc';
+
+          const colors = [
+            ['#ff7eb3', '#ff758c'],
+            ['#86a8e7', '#91eae4'],
+            ['#f7971e', '#ffd200'],
+            ['#00c6ff', '#0072ff'],
+            ['#f54ea2', '#ff7676'],
+            ['#43cea2', '#185a9d'],
+            ['#30cfd0', '#330867'],
+            ['#667db6', '#0082c8'],
+            ['#ff6a00', '#ee0979'],
+            ['#56ab2f', '#a8e063'],
+            ['#614385', '#516395'],
+            ['#eecda3', '#ef629f']
+          ];
+
+          const index = context.dataIndex % colors.length;
+          const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+          gradient.addColorStop(0, colors[index][0]);
+          gradient.addColorStop(1, colors[index][1]);
+          return gradient;
+        }
+      }]
+    };
+  }, [filteredMonths]);
+
+
+
 
   return (
-    <>
-      <motion.div
-        initial={{ opacity: 0, x: '100%' }}  // Initial state
-        animate={{ opacity: 1, x: 0 }}  // Animation state
-        exit={{ opacity: 0, x: '-100%' }}  // Exit animation
-        transition={{ duration: 0.2, ease: "easeInOut" }}
-        className="home">
+    <motion.div
+      initial={{ opacity: 0, x: '100%' }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: '-100%' }}
+      transition={{ duration: 0.2, ease: "easeInOut" }}
+      className="home"
+    >
+      {/* Cards */}
+      <div className='cards'>
+        {card.map((val, ind) => (
+          <div className="card" key={ind}>
+            <div className="data">
+              <div className="amt">{val.amt}</div>
+              <div className="day">{val.day}</div>
+            </div>
+            <div className="icon" style={{ color: "white" }}>{val.icon}</div>
+          </div>
+        ))}
+      </div>
 
-        <div className='cards'>
-          {card && card.map((val, ind) => {
-            return (
-              <div className="card" key={ind} >
-                <div className="data">
-                  <div className="amt">{val.amt}</div>
-                  <div className="day">{val.day}</div>
-                </div>
-                <div className="icon" style={{ color: "white" }}>{val.icon}</div>
-              </div>
-            )
-          })}
+      {/* Chart with Dropdown */}
+      <div className='chart'>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '10px' }}>
+          {/* <FormControl size='small' sx={{ minWidth: 140, backgroundColor: "white", borderRadius: 1 }}>
+            <InputLabel id="months-label">Months</InputLabel>
+            <Select
+              labelId="months-label"
+              value={monthsToShow}
+              onChange={(e) => setMonthsToShow(Number(e.target.value))}
+              size='small'
+              label='months'
+            >
+              <MenuItem value={5}>Last 5 months</MenuItem>
+              <MenuItem value={12}>Last 12 months</MenuItem>
+            </Select>
+          </FormControl> */}
+          <select
+            className="custom-select"
+            value={monthsToShow}
+            onChange={(e) => setMonthsToShow(Number(e.target.value))}
+          >
+            <option value={5}>Last 5 months</option>
+            <option value={12}>Last 12 months</option>
+          </select>
+
         </div>
 
+        <Bar
+          data={chartData}
+          options={{
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              // legend: { labels: { color: '#fff' } }, // optional styling
+            },
+            scales: {
+              x: {
+                // ticks: { color: '#fff' }, // optional styling
+                grid: { color: 'rgba(255,255,255,0.1)' }
+              },
+              y: {
+                // ticks: { color: '#fff' },
+                grid: { color: 'rgba(255,255,255,0.1)' }
+              }
+            },
+            backgroundColor: 'transparent'
+          }}
+        />
+      </div>
+    </motion.div>
+  );
+};
 
-        <div className='chart'>
-          <Bar
-            data={{
-              labels: ['a', 'b'],
-              datasets: [{
-                label: 'Expenses',
-                data: [200, 500]
-              }]
-            }}
-          />
-        </div>
-
-      </motion.div>
-    </>
-  )
-}
-
-export default Home
+export default Home;

@@ -227,16 +227,20 @@ body {
 
 .main {
   position: relative;
-  height: fit-content;
   min-height: calc(100vh - var(--navheight) - var(--footerheight));
+  height: fit-content;
   width: calc(100% - var(--sidebarwide));
   left: var(--sidebarwide);
   top: var(--navheight);
+  /* padding-top: var(--navheight); */
+  /* margin-top: var(--navheight); */
   overflow-x: hidden;
   overflow-y: auto;
   transition: 0.2s;
   background: var(--background);
   padding-bottom: 5px;
+  /* border: 3px solid red; */
+  /* padding: 20px; */
 }
 
 .main.narrow {
@@ -315,11 +319,6 @@ button:disabled {
   background: grey !important;
 }
 
-/* button:active,
-button:hover {
-  background: rgb(1, 35, 54);
-} */
-
 input {
   text-align: start !important;
 }
@@ -352,13 +351,14 @@ input {
   }
 
   .main {
-    min-height: calc(100vh - var(--navheightmobile));
-    height: fit-content;
+    /* min-height: calc(100vh - var(--navheightmobile));
+    height: fit-content; */
     top: var(--navheightmobile);
+    /* padding-top: var(--navheightmobile); */
+    /* margin-top: var(--navheightmobile); */
     width: 100%;
     left: 0px;
     /* border: 3px solid red; */
-
   }
 
   .main.narrow {

@@ -1,6 +1,6 @@
 .home {
     max-width: 100%;
-    padding: 2em;
+    padding: 1.5em;
 }
 
 .home .cards {
@@ -8,12 +8,38 @@
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     grid-gap: 2.5rem;
+    /* border: 2px solid red; */
 }
 
 .home .chart {
     margin-top: 40px;
-    border: 1px solid red;
+    background: white;
+    background: #dbe1e6;
+    border-radius: 10px;
+    padding: 10px;
+    width: 100%;
+    height: 380px;
+    /* padding: 20px; */
+    padding-bottom: 30px;
+    /* border: 2px solid red; */
 }
+
+.home .chart .custom-select {
+    padding: 5px 8px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    background: white;
+    font-size: 14px;
+    outline: none;
+    cursor: pointer;
+    transition: border 0.2s ease;
+}
+
+.home .chart .custom-select:focus {
+    border-color: #3f51b5;
+    box-shadow: 0 0 4px rgba(63, 81, 181, 0.3);
+}
+
 
 .home .cards .card {
     height: 110px;
@@ -76,20 +102,52 @@
 }
 
 @media only screen and (max-width:1200px) {
-    .home {
+
+    .home .cards {
         grid-template-columns: repeat(3, 1fr);
+        grid-gap: 1rem;
     }
 }
 
 @media only screen and (max-width:960px) {
-    .home {
+    .home .cards {
         grid-template-columns: repeat(2, 1fr);
+        grid-gap: 1.5rem;
     }
 }
 
 @media only screen and (max-width:600px) {
     .home {
-        grid-template-columns: repeat(1, 1fr);
+        padding: 0.6em;
+        padding-top: 0.8em;
+    }
+
+    .home .cards {
+        grid-template-columns: repeat(2, 1fr);
         grid-gap: 1.5rem;
+    }
+
+    .home .cards .card {
+        height: 90px;
+    }
+
+    .home .card .data .amt {
+        font-size: 1.5em;
+        padding-left: 6px;
+    }
+
+    .home .card .data .day {
+        padding-left: 6px;
+    }
+
+    .home .card .icon svg {
+        font-size: 3.2em;
+    }
+
+    .home .chart {
+        margin-top: 25px;
+        padding: 10px;
+        height: 300px;
+        padding-bottom: 30px;
     }
 }

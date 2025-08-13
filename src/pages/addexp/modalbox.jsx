@@ -16,6 +16,7 @@ import { IoIosSave } from "react-icons/io";
 import { MdOutlineUpdate } from "react-icons/md";
 import { FaPencilAlt } from "react-icons/fa";
 import InputAdornment from '@mui/material/InputAdornment';
+import dayjs from 'dayjs';
 
 const Modalbox = ({ setisledupdate, modal, navigate, disable, setdisable, init, handler, inp, isupdate, sub, setmodal, setisupdate, setinp }) => {
     const useralldetail = useSelector((state) => state.userexplist);
@@ -31,7 +32,7 @@ const Modalbox = ({ setisledupdate, modal, navigate, disable, setdisable, init, 
         const url = `${import.meta.env.VITE_API_ADDRESS}updateexp`;
         const method = 'POST';
         const body = {
-            _id, ledger, date, amount, narration: capitalize(narration)
+            _id, ledger, date:dayjs(date).format(), amount, narration: capitalize(narration)
         };
         const successAction = (data) => {
             toast.success(data.message, { autoClose: 1300 });

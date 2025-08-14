@@ -26,7 +26,6 @@ const Home = () => {
   }, [useralldetail]);
 
   useEffect(() => {
-    // console.log(window.innerWidth)
     if (window.innerWidth < 600) {
       setMonthsToShow(5)
     }
@@ -121,14 +120,14 @@ const Home = () => {
             ['#86a8e7', '#91eae4'],
             ['#f7971e', '#ffd200'],
             ['#00c6ff', '#0072ff'],
-            ['#f54ea2', '#ff7676'],
             ['#43cea2', '#185a9d'],
+            ['#f54ea2', '#ff7676'],
             ['#30cfd0', '#330867'],
             ['#667db6', '#0082c8'],
             ['#ff6a00', '#ee0979'],
             ['#56ab2f', '#a8e063'],
             ['#614385', '#516395'],
-            ['#eecda3', '#ef629f']
+            ['#ff7eb3', '#0072ff']
           ];
 
           const index = context.dataIndex % colors.length;
@@ -165,22 +164,8 @@ const Home = () => {
         ))}
       </div>
 
-      {/* Chart with Dropdown */}
       <div className='chart'>
         <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '10px' }}>
-          {/* <FormControl size='small' sx={{ minWidth: 140, backgroundColor: "white", borderRadius: 1 }}>
-            <InputLabel id="months-label">Months</InputLabel>
-            <Select
-              labelId="months-label"
-              value={monthsToShow}
-              onChange={(e) => setMonthsToShow(Number(e.target.value))}
-              size='small'
-              label='months'
-            >
-              <MenuItem value={5}>Last 5 months</MenuItem>
-              <MenuItem value={12}>Last 12 months</MenuItem>
-            </Select>
-          </FormControl> */}
           <select
             className="custom-select"
             value={monthsToShow}

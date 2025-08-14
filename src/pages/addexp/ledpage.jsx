@@ -161,10 +161,6 @@ const Ledpage = ({ setmodal, setdisable, disable, navigate, isledupdate, setisle
     }
   }
 
-  const back = () => {
-    setmodal(true)
-    setisledupdate(false)
-  }
 
   var ledpage = document.querySelector(".ledpage");
 
@@ -186,9 +182,7 @@ const Ledpage = ({ setmodal, setdisable, disable, navigate, isledupdate, setisle
     <div className="ledpage" onClick={sdef} style={{ display: isledupdate ? "block" : "none" }}>
       <div className="box">
         <h2>Hi, {useralldetail?.user?.name}</h2> 
-         <span className='back' onClick={back}> 
-        <CgUndo style={{fontSize:'15px', width:"20px", height:'20px'}}/> Back</span>
-
+      
         <span className='ledwrapper'>
           <div className="cont">
             <TextField id="outlined-basic" label="Enter Ledger" className='inpe' variant="outlined" value={ledinp.val} onChange={handle} />

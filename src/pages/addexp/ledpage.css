@@ -178,7 +178,7 @@
         & .ledpage {
 
             & .box {
-                top: 35%;
+                /* top: 45%; */
                 left: 50%;
                 width: 95vw;
                 height: 520px;

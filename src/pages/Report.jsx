@@ -1,8 +1,7 @@
-import React, { useState } from 'react'
-import { useEffect, useRef } from 'react';
-import './report.css';
-import { CSVLink } from 'react-csv';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { CSVLink } from 'react-csv';
+import './report.css';
 import { setloader, setnarrow } from '../store/login';
 import { MdDownload } from "react-icons/md";
 import { IoMdPrint } from "react-icons/io";
@@ -13,199 +12,157 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import dayjs from 'dayjs';
 
 const Report = () => {
     const dispatch = useDispatch();
-    const useralldetail = useSelector((state) => state.userexplist);
-    useEffect(() => {
-        dispatch(setloader(false));
-        // console.log(useralldetail.user.name);
-    }, [])
+    const { user, explist, ledgerlist } = useSelector(state => state.userexplist);
 
-    const header = [
-        { label: "ledger", key: "ledger.ledger" },
-        { label: "amount", key: "amount" },
-        { label: "date", key: "date" },
-        { label: "narration", key: "narration" }
-    ]
-    const username = useralldetail?.user?.name;
-    const [issearch, setissearch] = useState(false);
-    const [pious, setpious] = useState([]);
-    const date = new Date;
-
-    const lastday = () => {
-        const date = new Date();
-        return new Date(date.setDate(date.getDate() - 1));
-    }
-
-    var monthIn2Digit = String(date.getMonth() + 1).padStart(2, '0');
-    var dateIn2Digit = String(date.getDate()).padStart(2, '0');
-
-    const today = date.getFullYear() + "-" + monthIn2Digit + "-" + dateIn2Digit;
-    const prevMonth = (lastday().getFullYear() + "-" + String(lastday().getMonth()).padStart(2, '0') + "-" + String(lastday().getDate()).padStart(2, '0'));
-    const [inp, setinp] = useState({
-        from: prevMonth,
-        to: today,
-        ledger: "all"
+    const [isSearch, setIsSearch] = useState(false);
+    const [filteredData, setFilteredData] = useState([]);
+    const [inputs, setInputs] = useState({
+        from: dayjs().subtract(1, 'month').format('YYYY-MM-DD'),
+        to: dayjs().format('YYYY-MM-DD'),
+        ledger: 'all'
     });
 
-    const handler = (e) => {
-        let name = e.target.name;
-        let value = e.target.value;
-        setinp((prev) => {
-            return {
-                ...prev, [name]: value
-            }
-        })
-    }
+    useEffect(() => {
+        dispatch(setloader(false));
+        handleSearch();
+    }, []);
 
-    // for handling search
-    const search = () => {
-        setissearch(true);
-        let searchitem;
-        if (inp.ledger == "all") {
-            searchitem = useralldetail.explist.filter((val, ind) => {
-                if (val.date >= inp.from && val.date <= inp.to) {
-                    return val;
-                }
-            })
-        } else {
-            searchitem = useralldetail.explist.filter((val, ind) => {
-                if (val.date >= inp.from && val.date <= inp.to && val.ledger.ledger == inp.ledger) {
-                    return val;
-                }
-            })
-        }
-        setpious(searchitem);
-    }
-    const clearsearch = () => {
-        setissearch(false);
-        setinp({
-            from: prevMonth,
-            to: today,
-            ledger: "all"
-        })
-    }
-    const print = () => {
-        dispatch(setnarrow(true))
-        setTimeout(() => {
-            window.print()
-        }, 1);
-    }
+    const header = [
+        { label: "Ledger", key: "ledger.ledger" },
+        { label: "Amount", key: "amount" },
+        { label: "Date", key: "date" },
+        { label: "Narration", key: "narration" }
+    ];
 
-    const formatDate = (date) => {
-        let daten = new Date(date);
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setInputs(prev => ({ ...prev, [name]: value }));
+    };
 
-        var dateIn2Digit2 = String(daten.getDate()).padStart(2, '0');
-        let formatted = dateIn2Digit2 + "-" + daten.toLocaleString('default', { month: 'short' }) + "-" + daten.getFullYear().toString().substr(-2);
-        return formatted;
-    }
+    const handleSearch = () => {
+        setIsSearch(true);
+        const { from, to, ledger } = inputs;
+
+        const filtered = explist.filter(item => {
+            const itemDate = dayjs(item.date);
+            const inRange = itemDate.isBetween(dayjs(from).startOf('day'), dayjs(to).endOf('day'), null, '[]');
+            return ledger === 'all' ? inRange : inRange && item.ledger.ledger === ledger;
+        });
+
+        setFilteredData(filtered);
+    };
+
+    const clearSearch = () => {
+        setIsSearch(false);
+        setInputs({
+            from: dayjs().subtract(1, 'month').format('YYYY-MM-DD'),
+            to: dayjs().format('YYYY-MM-DD'),
+            ledger: 'all'
+        });
+        setFilteredData([]);
+    };
+
+    const handlePrint = () => {
+        dispatch(setnarrow(true));
+        setTimeout(() => window.print(), 1);
+    };
+
+    const formatDate = (date) => dayjs(date).format('DD-MMM-YY');
 
     useEffect(() => {
-        search();
-        // console.log(inp.ledger)
-        // console.log(yesterday);
-    }, [inp])
+        handleSearch();
+    }, [inputs]);
 
     return (
-        <>
-            <motion.div
-                initial={{ opacity: 0, x: '100%' }}  // Initial state
-                animate={{ opacity: 1, x: 0 }}  // Animation state
-                exit={{ opacity: 0, x: '-100%' }}  // Exit animation
-                transition={{ duration: 0.2, ease: "easeInOut" }}
-                className="report">
-                {/* {useralldetail.explist.length > 25 ? <span className='scrol'>
-                    <span id="bottom"><a href="#foot"><i title='Go to Bottom' className="fa fa-arrow-down" aria-hidden="true"></i></a></span>
-                    <span id="top"><a href="#tavlecontent"><i title='Go to Top' className="fa fa-arrow-up" aria-hidden="true"></i></a></span>
-                </span> : null} */}
-                <div className="cont">
+        <motion.div
+            initial={{ opacity: 0, x: '100%' }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: '-100%' }}
+            transition={{ duration: 0.2, ease: "easeInOut" }}
+            className="report"
+        >
+            <div className="cont">
+                <span>
                     <span>
-                        <span>
-                            From: <input value={inp.from} onChange={handler} type="date" name="from" id="" />
-                        </span>
-                        <span>
-                            To: <input value={inp.to} onChange={handler} type="date" name="to" id="" />
-                        </span>
-                        <FormControl className='ledger caps mui' size='small'>
-                            <InputLabel id="demo-simple-select-label">Ledger</InputLabel>
-                            <Select
-                                name="ledger"
-                                labelId="demo-simple-select-label"
-                                onChange={handler}
-                                value={inp.ledger}
-                                defaultValue={inp.ledger[1]}
-                                id="demo-simple-select"
-                                label="Ledger"
-                            >
-                                <MenuItem value="all">All</MenuItem>
-                                {useralldetail.ledgerlist.map((val, ind) => {
-                                    return <MenuItem sx={{ textTransform: "capitalize" }} key={ind} value={val.ledger}>{val.ledger}</MenuItem>
-                                })}
-
-                            </Select>
-                        </FormControl>
-
-                        <Button className='muibtn' disabled={!issearch} title='Clear search' variant="contained" onClick={clearsearch} startIcon={<VscDebugRestart />}>
-                            Clear
-                        </Button>
+                        From: <input type="date" name="from" value={inputs.from} onChange={handleInputChange} />
                     </span>
                     <span>
-                        <CSVLink data={pious} headers={header} filename={`${username}-Expense Record`}>
-                            {/* <button title='Download'>Download csv</button> */}
-                            <Button className='muibtn' title='Download' size='small' variant="contained" startIcon={<MdDownload />}>
-                                Csv
-                            </Button>
-                        </CSVLink>
-                        <Button className='muibtn' title='print' size='small' variant="contained" onClick={print} startIcon={<IoMdPrint />}>
-                            Print
-                        </Button>
+                        To: <input type="date" name="to" value={inputs.to} onChange={handleInputChange} />
                     </span>
-                </div>
-                <div className="table" id='printarea'  >
-                    <div className='head'> <b>Accusoft - {useralldetail?.user?.name}</b> (Report from {formatDate(inp.from)} to {formatDate(inp.to)})</div>
-                    <table id='tavlecontent' >
-                        <thead id='table'>
+                    <FormControl className='ledger caps mui' size='small'>
+                        <InputLabel>Ledger</InputLabel>
+                        <Select name="ledger" label="Ledger" value={inputs.ledger} onChange={handleInputChange}>
+                            <MenuItem value="all">All</MenuItem>
+                            {ledgerlist.map((val, idx) => (
+                                <MenuItem key={idx} value={val.ledger}>{val.ledger}</MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                    <Button
+                        className='muibtn'
+                        disabled={!isSearch}
+                        variant="contained"
+                        onClick={clearSearch}
+                        startIcon={<VscDebugRestart />}
+                    >
+                        Clear
+                    </Button>
+                </span>
+
+                <span>
+                    <CSVLink data={filteredData} headers={header} filename={`${user?.name}-Expense-Record`}>
+                        <Button className='muibtn' size='small' variant="contained" startIcon={<MdDownload />}>
+                            CSV
+                        </Button>
+                    </CSVLink>
+                    <Button className='muibtn' size='small' variant="contained" onClick={handlePrint} startIcon={<IoMdPrint />}>
+                        Print
+                    </Button>
+                </span>
+            </div>
+
+            <div className="table" id='printarea'>
+                <div className='head'><b>Accusoft - {user?.name}</b> (Report from {formatDate(inputs.from)} to {formatDate(inputs.to)})</div>
+                <table id='tavlecontent'>
+                    <thead>
+                        <tr>
+                            <th>S.no</th>
+                            <th>Ledger</th>
+                            <th>Amount</th>
+                            <th>Narration</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {filteredData.length === 0 ? (
+                            <tr><td colSpan={5}><b>No Record Found</b></td></tr>
+                        ) : (
+                            filteredData.map((val, idx) => (
+                                <tr key={idx}>
+                                    <td>{idx + 1}</td>
+                                    <td>{val.ledger.ledger}</td>
+                                    <td>{val.amount}</td>
+                                    <td>{val.narration}</td>
+                                    <td>{formatDate(val.date)}</td>
+                                </tr>
+                            ))
+                        )}
+                        {filteredData.length > 0 && (
                             <tr>
-                                <th>S.no</th>
-                                <th>Ledger</th>
-                                <th>Amount</th>
-                                <th>Narration</th>
-                                <th>Date</th>
+                                <td colSpan={2}><b>Total</b></td>
+                                <td>{filteredData.reduce((acc, val) => acc + val.amount, 0)}</td>
+                                <td colSpan={2}></td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            {pious.length < 1 && <tr><td colSpan={5}><b>No Record Found</b></td></tr>}
-                            {pious?.map((val, ind) => {
-                                let daten = new Date(val.date);
-
-                                var dateIn2Digit2 = String(daten.getDate()).padStart(2, '0');
-                                let fde = dateIn2Digit2 + " " + daten.toLocaleString('default', { month: 'short' }) + ", " + daten.getFullYear().toString().substr(-2);
-                                return (
-                                    <tr key={ind}>
-                                        <td>{ind + 1}</td>
-                                        <td>{val.ledger.ledger}</td>
-                                        <td>{val.amount}</td>
-                                        <td>{val.narration}</td>
-                                        <td>{fde}</td>
-                                    </tr>
-                                )
-                            })}
-                            <tr id='foot'>
-                                <td colSpan={2}>Total</td>
-                                <td colSpan={1} >
-                                    {pious?.reduce((accu, val) => {
-                                        return accu = accu + val.amount
-                                    }, 0)}
-                                </td>
-                                <td colSpan={2} ></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </motion.div>
-        </>
-    )
-}
+                        )}
+                    </tbody>
+                </table>
+            </div>
+        </motion.div>
+    );
+};
 
 export default Report;

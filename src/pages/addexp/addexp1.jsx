@@ -17,6 +17,7 @@ import { MdKeyboardArrowDown, MdAddBox } from "react-icons/md";
 import { HiPencilSquare } from "react-icons/hi2";
 import { RiDeleteBin6Line, RiDeleteBin6Fill } from "react-icons/ri";
 import { IoCloseSharp } from "react-icons/io5";
+import { FaBook } from 'react-icons/fa6';
 
 const AddExpenses = () => {
   const dispatch = useDispatch();
@@ -70,6 +71,10 @@ const AddExpenses = () => {
   // Add expense
   const submitExpense = async () => {
     let { ledger, date, amount, narration } = expenseInput;
+    // console.log(dayjs(date))
+    // console.log(dayjs(date).format())
+    // console.log(dayjs(date).toISOString())
+    // return
 
     if (!ledger || !date || !amount || !narration) {
       const shakeElement = document.querySelector('.box');
@@ -83,7 +88,7 @@ const AddExpenses = () => {
     const method = 'POST';
     const body = {
       ledger,
-      date: dayjs(date).format(),
+      date: dayjs(date),
       amount,
       narration: capitalize(narration)
     };
@@ -99,7 +104,9 @@ const AddExpenses = () => {
 
     const successAction = (data) => {
       toast.success(data.message, { autoClose: 1300 });
-      dispatch(addexpense(newExpense));
+      dispatch(userdata());
+      setIsModalOpen(false);
+      setExpenseInput(init);
     };
 
     const notsuccessAction = (data) => toast.warn(data.message, { autoClose: 1800 });
@@ -242,7 +249,8 @@ const AddExpenses = () => {
         className={isModalOpen || isLedgerUpdate ? 'exp ismodal' : 'exp'}
       >
         <div className="add">
-          <Button size='large' title='Add Expense' onClick={() => setIsModalOpen(true)} startIcon={<MdAddBox />} variant="contained">Add Expense</Button>
+          <Button  title='Add Expense' onClick={() => setIsModalOpen(true)} startIcon={<MdAddBox />} variant="contained">Add Expense</Button>
+          <Button  title='Ledger' onClick={() => setIsLedgerUpdate(true)} startIcon={<FaBook  />} variant="outlined">Ledger</Button>
         </div>
         <div className="head">
           <span>Expense List </span>
@@ -323,7 +331,6 @@ const AddExpenses = () => {
           </span>
         </div>
         <Modalbox
-          setisledupdate={setIsLedgerUpdate}
           init={init}
           setdisable={setdisable}
           disable={disable}

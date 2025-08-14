@@ -18,7 +18,7 @@ import { FaPencilAlt } from "react-icons/fa";
 import InputAdornment from '@mui/material/InputAdornment';
 import dayjs from 'dayjs';
 
-const Modalbox = ({ setisledupdate, modal, navigate, disable, setdisable, init, handler, inp, isupdate, sub, setmodal, setisupdate, setinp }) => {
+const Modalbox = ({ modal, navigate, disable, setdisable, init, handler, inp, isupdate, sub, setmodal, setisupdate, setinp }) => {
     const useralldetail = useSelector((state) => state.userexplist);
     const dispatch = useDispatch();
 
@@ -26,13 +26,11 @@ const Modalbox = ({ setisledupdate, modal, navigate, disable, setdisable, init, 
     const updatee = async (_id) => {
         let { ledger, date, amount, narration } = inp;
         setdisable(true);
-        // date = dayjs(date).format("YYYY-MM-DD");
-        //   console.log(date);
 
         const url = `${import.meta.env.VITE_API_ADDRESS}updateexp`;
         const method = 'POST';
         const body = {
-            _id, ledger, date:dayjs(date).format(), amount, narration: capitalize(narration)
+            _id, ledger, date:dayjs(date), amount, narration: capitalize(narration)
         };
         const successAction = (data) => {
             toast.success(data.message, { autoClose: 1300 });
@@ -55,10 +53,6 @@ const Modalbox = ({ setisledupdate, modal, navigate, disable, setdisable, init, 
         return capitalizedWords.join(' ');
     };
 
-    const jkh = () => {
-        setisledupdate(true);
-        setmodal(false)
-    }
     var modale = document.querySelector(".modal");
     const sdef = function (event) {
         if (event.target == modale) {
@@ -71,9 +65,7 @@ const Modalbox = ({ setisledupdate, modal, navigate, disable, setdisable, init, 
         <div className="modal" onClick={sdef} style={{ display: modal ? "block" : "none" }}>
             <div className="box">
                 <h1>Add Voucher</h1>
-                <span className="ledgeredit" title='Edit Ledger' onClick={jkh}>
-                    <FaPencilAlt />
-                </span>
+               
                 <span className="wrapper">
                     <FormControl className='caps' sx={{ width: '90%', mt: 2, mb: 2 }}>
                         <InputLabel id="demo-simple-select-label">Ledger</InputLabel>

@@ -37,11 +37,15 @@
             }
 
             & span:nth-child(5) {
-                width: 105px;
+                width: 75px;
+                /* border: 1px solid black; */
+            }
+            & span:nth-child(6) {
+                width: 85px;
                 /* border: 1px solid black; */
             }
 
-            & span:nth-child(6) {
+            & span:nth-child(7) {
                 width: 90px;
                 display: flex;
                 justify-content: space-around;
@@ -50,7 +54,7 @@
 
             }
 
-            & span:nth-child(7) {
+            & span:nth-child(8) {
                 width: 95px;
                 display: flex;
                 justify-content: space-around;

@@ -23,11 +23,12 @@ const Admin_Dashboard = () => {
 
         const successAction = (data) => {
             setleng(data)
+            // console.log(data)
         };
 
         const loaderAction = (isLoading) => dispatch(setloader(isLoading));
 
-        await apiWrapper({url, method, body, dispatch, successAction, loaderAction});
+        await apiWrapper({ url, method, body, dispatch, successAction, loaderAction });
     }
 
     return (
@@ -44,7 +45,7 @@ const Admin_Dashboard = () => {
                         <div className="day">Total Users</div>
                     </div>
                     <div className="icon" style={{ color: "white" }}>
-                    <FaUsers/>
+                        <FaUsers />
                     </div>
                 </div>
                 <div className="card"  >
@@ -53,7 +54,7 @@ const Admin_Dashboard = () => {
                         <div className="day">Total Expense Record</div>
                     </div>
                     <div className="icon" style={{ color: "white" }}>
-                   <FaBalanceScale/>
+                        <FaBalanceScale />
                     </div>
                 </div>
             </motion.div>

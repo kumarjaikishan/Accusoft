@@ -39,9 +39,10 @@ function App() {
   let navigate = useNavigate();
   const log = useSelector((state) => state.login);
   let location = useLocation();
-  console.log(import.meta.env.VITE_API_ADDRESS);
+ 
 
   useEffect(() => {
+     console.log(import.meta.env.VITE_API_ADDRESS);
     const token = localStorage.getItem("token");
     token && dispatch(userdata());
   }, []);

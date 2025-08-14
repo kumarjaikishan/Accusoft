@@ -34,7 +34,7 @@ const Alluser = () => {
                 }
             })
             const data = await result.json();
-            // console.log("admin all users", data);
+            console.log("admin all users", data);
             if (result.ok) {
                 setusers(data.users);
                 // dispatch(setloader(false));
@@ -253,6 +253,7 @@ const Alluser = () => {
                         <span>Name </span>
                         <span>Phone</span>
                         <span>Email</span>
+                        <span>Nos</span>
                         <span><MdVerified style={{ fontSize: '22px' }} /> </span>
                         <span>Action</span>
                         <span>Date</span>
@@ -269,6 +270,7 @@ const Alluser = () => {
                                 <span>{val.name}</span>
                                 <span>{val.phone}</span>
                                 <span>{val.email}</span>
+                                <span>{val.totalExpenses}</span>
                                 <span className={val.isverified ? 'status done' : 'status'}>{val.isverified ? "Yes" : "No"}</span>
                                 <span>
                                     <HiPencilSquare className='editicon ico' title='Edit' onClick={() => setinputfield(val)} />

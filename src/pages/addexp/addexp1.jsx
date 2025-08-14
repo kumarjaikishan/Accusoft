@@ -7,7 +7,6 @@ import Ledpage from './ledpage';
 import { useSelector, useDispatch } from 'react-redux';
 import { setloader } from '../../store/login';
 import { userdata, addexpense } from '../../store/api'
-import dayjs from 'dayjs';
 import { toast } from 'react-toastify';
 import apiWrapper from './apiWrapper';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -18,6 +17,13 @@ import { HiPencilSquare } from "react-icons/hi2";
 import { RiDeleteBin6Line, RiDeleteBin6Fill } from "react-icons/ri";
 import { IoCloseSharp } from "react-icons/io5";
 import { FaBook } from 'react-icons/fa6';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc.js';
+import timezone from 'dayjs/plugin/timezone.js';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
 
 const AddExpenses = () => {
   const dispatch = useDispatch();
@@ -83,12 +89,13 @@ const AddExpenses = () => {
       dispatch(setloader(false));
       return toast.warn('Kindly Fill all Fields', { autoClose: 1700 });
     }
-
+    // console.log(date)
+    // console.log(dayjs(date).startOf("day").toDate())
     const url = `${import.meta.env.VITE_API_ADDRESS}addexpense`;
     const method = 'POST';
     const body = {
       ledger,
-      date: dayjs(date),
+      date,
       amount,
       narration: capitalize(narration)
     };
@@ -249,8 +256,8 @@ const AddExpenses = () => {
         className={isModalOpen || isLedgerUpdate ? 'exp ismodal' : 'exp'}
       >
         <div className="add">
-          <Button  title='Add Expense' onClick={() => setIsModalOpen(true)} startIcon={<MdAddBox />} variant="contained">Add Expense</Button>
-          <Button  title='Ledger' onClick={() => setIsLedgerUpdate(true)} startIcon={<FaBook  />} variant="outlined">Ledger</Button>
+          <Button title='Add Expense' onClick={() => setIsModalOpen(true)} startIcon={<MdAddBox />} variant="contained">Add Expense</Button>
+          <Button title='Ledger' onClick={() => setIsLedgerUpdate(true)} startIcon={<FaBook />} variant="outlined">Ledger</Button>
         </div>
         <div className="head">
           <span>Expense List </span>

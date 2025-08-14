@@ -32,9 +32,7 @@ const userexplist = createSlice({
         loading: false,
         error: null,
         profilepic: "",
-        // apiadress: "/api",
         apiadress: "https://backend-exp-man.vercel.app/api",
-        // apiadress: "http://localhost:5000/api",
     },
     reducers: {
         userlogout(state, action) {

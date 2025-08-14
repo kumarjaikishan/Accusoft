@@ -183,15 +183,15 @@ const Home = () => {
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
-              // legend: { labels: { color: '#fff' } }, // optional styling
+              legend: { labels: { color: '#222' } }, // optional styling
             },
             scales: {
               x: {
-                // ticks: { color: '#fff' }, // optional styling
+                ticks: { color: '#222' }, // optional styling
                 grid: { color: 'rgba(255,255,255,0.1)' }
               },
               y: {
-                // ticks: { color: '#fff' },
+                ticks: { color: '#222' },
                 grid: { color: 'rgba(255,255,255,0.1)' }
               }
             },

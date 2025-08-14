@@ -39,17 +39,17 @@ function App() {
   let navigate = useNavigate();
   const log = useSelector((state) => state.login);
   let location = useLocation();
- 
+
 
   useEffect(() => {
-     console.log(import.meta.env.VITE_API_ADDRESS);
+    console.log(import.meta.env.VITE_API_ADDRESS);
     const token = localStorage.getItem("token");
     token && dispatch(userdata());
   }, []);
 
   useEffect(() => {
     log.islogin && jwtcheck();
-  }, [log.islogin]);
+  }, [log?.islogin]);
 
   // Autoclose sidebar when screen size is below 600px
   const sidebarclose = () => {

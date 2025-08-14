@@ -26,11 +26,12 @@ const Modalbox = ({ modal, navigate, disable, setdisable, init, handler, inp, is
     const updatee = async (_id) => {
         let { ledger, date, amount, narration } = inp;
         setdisable(true);
+        // console.log(date)
 
         const url = `${import.meta.env.VITE_API_ADDRESS}updateexp`;
         const method = 'POST';
         const body = {
-            _id, ledger, date:dayjs(date), amount, narration: capitalize(narration)
+            _id, ledger, date, amount, narration: capitalize(narration)
         };
         const successAction = (data) => {
             toast.success(data.message, { autoClose: 1300 });

@@ -24,6 +24,7 @@
   --navheight: 70px;
   --navheightmobile: 60px;
   --sidebarwide: 210px;
+  --sidebarwidemobile: 160px;
   --sidebarnarrow: 75px;
   --mobilelogowidth: 45px;
   --footerheight: 25px;
@@ -344,8 +345,8 @@ input {
 
   .nav {
     height: var(--navheightmobile);
-    left: 200px;
-    width: calc(100% - 200px);
+    left: var(--sidebarwidemobile);
+    width: calc(100% - var(--sidebarwidemobile));
   }
 
   .nav.narrow {

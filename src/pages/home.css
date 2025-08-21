@@ -7,7 +7,7 @@
     width: 100%;
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    grid-gap: 2.5rem;
+    grid-gap: 1.5rem;
     /* border: 2px solid red; */
 }
 
@@ -42,7 +42,7 @@
 
 
 .home .cards .card {
-    height: 110px;
+    height: 100px;
     display: flex;
     overflow: hidden;
     border-radius: 8px;
@@ -71,7 +71,7 @@
     width: 100%;
     /* border: 1px solid red; */
     height: 50%;
-    font-size: 1.8em;
+    font-size: 1.7em;
     font-weight: 700;
     padding-left: 10px;
     line-height: 60px;
@@ -96,7 +96,7 @@
 }
 
 .home .card .icon svg {
-    font-size: 4.2em;
+    font-size: 3.6em;
     color: rgb(83, 80, 80);
     /* color: var(--maincolor); */
 }

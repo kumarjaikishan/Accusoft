@@ -101,10 +101,8 @@
     width: 110px;
     /* height: 100%; */
     text-align: center;
-    /* border: 1px solid rgb(12, 61, 238); */
     position: relative;
     padding: 2rem;
-    /* border-radius: 50%; */
     /* background: conic-gradient(rgb(252, 92, 101) 10.8deg, rgb(127, 143, 166) 10.8deg); */
 }
 
@@ -182,15 +180,28 @@
         overflow-y: auto;
         padding: 3px;
         padding-bottom: 15px;
-        display: grid;
         place-items: center;
         grid-template-columns: repeat(1, 1fr);
-        grid-gap: 1.4rem;
+        grid-gap: 1.1rem;
         /* border: 3px solid black; */
     }
 
     .datanalysis .card {
-        width: 95%;
+        width: 98%;
+        height: 90px;
     }
 
+    .datanalysis .card .icon {
+        padding: 1rem;
+        /* border: 1px solid red; */
+    }
+
+    .datanalysis .card .icon .cir {
+        width: 70px;
+        height: 70px;
+    }
+
+    .datanalysis .card .icon .per {
+        font-size: 1.3em;
+    }
 }

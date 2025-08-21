@@ -25,6 +25,7 @@
   --navheightmobile: 60px;
   --sidebarwide: 210px;
   --sidebarnarrow: 75px;
+  --mobilelogowidth: 45px;
   --footerheight: 25px;
   --footerheightmobile: 20px;
 }
@@ -288,8 +289,6 @@ footer.narrow {
   width: calc(var(--sidebarwide) - var(--sidebarnarrow));
 }
 
-
-
 .dark-theme .MuiButton-contained {
   background: var(--maincolor) !important;
   color: white !important;
@@ -336,6 +335,11 @@ input {
 
   .sidebar.narrow {
     width: 0px;
+  }
+
+  .sidebar .link .li .name {
+    left: var(--mobilelogowidth);
+    width: calc(var(--sidebarwide) - var(--mobilelogowidth));
   }
 
   .nav {

@@ -160,7 +160,7 @@ const Signin = () => {
 
                     />}
                     {!forget && <div className='forget'>
-                        <span style={{ cursor: 'pointer' }} onClick={() => setforget(true)}>Forget Password?</span>
+                        <span style={{ cursor: 'pointer' }} onClick={() => setforget(true)}>Forgot Password?</span>
                     </div>}
 
                     {forget && <div className='forget'>

@@ -13,7 +13,7 @@
 
 .home .chart {
     margin-top: 40px;
-    background: white;
+    /* background: white; */
     /* background: #dbe1e6; */
     border-radius: 10px;
     padding: 10px;
@@ -124,30 +124,31 @@
 
     .home .cards {
         grid-template-columns: repeat(2, 1fr);
-        grid-gap: 1.5rem;
+        grid-gap: 1rem;
     }
 
     .home .cards .card {
-        height: 90px;
+        height: 80px;
     }
 
     .home .card .data .amt {
-        font-size: 1.5em;
+        font-size: 1.3em;
         padding-left: 6px;
     }
 
     .home .card .data .day {
         padding-left: 6px;
+        font-size: 14px;
     }
 
     .home .card .icon svg {
-        font-size: 3.2em;
+        font-size: 2.7em;
     }
 
     .home .chart {
         margin-top: 25px;
         padding: 10px;
         height: 300px;
-        padding-bottom: 30px;
+        padding-bottom: 40px;
     }
 }

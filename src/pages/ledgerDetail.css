@@ -15,6 +15,13 @@
             font-weight: 500;
         }
     }
+    .head{
+         .title {
+            color: grey;
+            margin-left: 10px;
+            font-weight: 500;
+        }
+    }
 }
 
 .ledgerdetail .table {
@@ -142,6 +149,10 @@
         &::before {
             display: block;
             background-position: 50% 50%;
+        }
+
+        & .header{
+            display: none;
         }
 
         & .table {

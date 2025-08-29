@@ -12,7 +12,7 @@ const VoucherDetail = () => {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate()
 
-    console.log(id)
+    // console.log(id)
 
     const ledgerName = searchParams.get("ledgerName");
     const month = searchParams.get("month");
@@ -60,7 +60,11 @@ const VoucherDetail = () => {
 
                 </div>
                 <div className="table" id='printarea'>
-                    <div className='head'>{ledgerName}</div>
+                    <div className='head'>
+                        <span className='title'>Ledger:</span> {ledgerName}
+                        <span className='title'>Month:</span> {displayMonth}
+                        <span className='title'>Year:</span> {dayjs(year).format('YYYY')}
+                    </div>
                     <table id='tavlecontent'>
                         <thead>
                             <tr>

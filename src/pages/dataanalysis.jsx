@@ -87,9 +87,9 @@ const Datanalysis = () => {
         const ledgerItem = useralldetail?.ledgerlist?.find(e => e.ledger === ledger);
         const ledgerId = ledgerItem?._id;
         if (ledgerId) {
-            navigate(`/ledgerDetail/${ledgerId}?&ledgerName=${ledgerItem.ledger}&month=${inp.month}&year=${inp.year}`);
+            navigate(`/datanalysis/ledgerDetail/${ledgerId}?&ledgerName=${ledgerItem.ledger}&month=${inp.month}&year=${inp.year}`);
         } else {
-            navigate(`/ledgerDetail/all?&ledgerName=All Ledger&month=${inp.month}&year=${inp.year}`);
+            navigate(`/datanalysis/ledgerDetail/all?&ledgerName=All Ledger&month=${inp.month}&year=${inp.year}`);
 
         }
     };

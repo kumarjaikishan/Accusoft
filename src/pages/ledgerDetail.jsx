@@ -12,6 +12,8 @@ const VoucherDetail = () => {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate()
 
+    console.log(id)
+
     const ledgerName = searchParams.get("ledgerName");
     const month = searchParams.get("month");
     const hey = (Number(month) + 1).toString();
@@ -21,15 +23,25 @@ const VoucherDetail = () => {
 
     useEffect(() => {
         if (explist) {
+            let filtered;
+            if (id == 'all') {
+                filtered = explist.filter(e => {
+                    const d = dayjs(e.date); // parse expense date
+                    return (d.month() === Number(month)
+                        && d.year() === Number(year)
+                    );
+                });
+            } else {
+                filtered = explist.filter(e => {
+                    const d = dayjs(e.date); // parse expense date
+                    return (
+                        e.ledger._id === id
+                        && d.month() === Number(month)
+                        && d.year() === Number(year)
+                    );
+                });
+            }
 
-            const filtered = explist.filter(e => {
-                const d = dayjs(e.date); // parse expense date
-                return (
-                    e.ledger._id === id
-                    && d.month() === Number(month)
-                    && d.year() === Number(year)
-                );
-            });
             setexp(filtered);
         }
     }, [explist, id, month, year]);

@@ -14,85 +14,85 @@ import { useNavigate } from 'react-router-dom';
 
 const Datanalysis = () => {
     const dispatch = useDispatch();
-  const useralldetail = useSelector((state) => state.userexplist);
-  const navigate = useNavigate();
+    const useralldetail = useSelector((state) => state.userexplist);
+    const navigate = useNavigate();
 
-  const date = new Date();
+    const date = new Date();
 
-  // 🔹 Load month/year from localStorage OR fallback to current
-  const storedMonth = localStorage.getItem("month");
-  const storedYear = localStorage.getItem("year");
+    // 🔹 Load month/year from localStorage OR fallback to current
+    const storedMonth = localStorage.getItem("month");
+    const storedYear = localStorage.getItem("year");
 
-  const [inp, setinp] = useState({
-    date: date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getUTCDate(),
-    month: storedMonth ? parseInt(storedMonth, 10) : date.getMonth(),
-    year: storedYear ? parseInt(storedYear, 10) : date.getFullYear(),
-  });
-
-  const [cardarr, setcardarr] = useState({});
-
-  useEffect(() => {
-    cal();
-    dispatch(setloader(false));
-
-    // 🔹 Save month/year to localStorage whenever it changes
-    localStorage.setItem("month", inp.month);
-    localStorage.setItem("year", inp.year);
-  }, [inp]);
-
-  let ledgerSum = {};
-
-  const cal = () => {
-    useralldetail.ledgerlist.forEach(element => {
-      ledgerSum[element.ledger] = 0;
+    const [inp, setinp] = useState({
+        date: date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getUTCDate(),
+        month: storedMonth ? parseInt(storedMonth, 10) : date.getMonth(),
+        year: storedYear ? parseInt(storedYear, 10) : date.getFullYear(),
     });
-    ledgerSum["total"] = 0;
 
-    let monthIn2Digit = String(parseInt(inp.month) + 1).padStart(2, "0");
-    const startdate = inp.year + "-" + monthIn2Digit + "-01";
-    const enddate = inp.year + "-" + monthIn2Digit + "-31";
+    const [cardarr, setcardarr] = useState({});
 
-    useralldetail.explist.forEach(entry => {
-      let { ledger, amount, date } = entry;
-      ledger = ledger.ledger; // ledger here in object form
-      const amountValue = parseFloat(amount);
+    useEffect(() => {
+        cal();
+        dispatch(setloader(false));
 
-      if (!isNaN(amountValue)) {
-        if (date >= startdate && date <= enddate) {
-          ledgerSum["total"] += amountValue;
-          if (ledgerSum.hasOwnProperty(ledger)) {
-            ledgerSum[ledger] += amountValue;
-          } else {
-            ledgerSum[ledger] = amountValue;
-          }
+        // 🔹 Save month/year to localStorage whenever it changes
+        localStorage.setItem("month", inp.month);
+        localStorage.setItem("year", inp.year);
+    }, [inp]);
+
+    let ledgerSum = {};
+
+    const cal = () => {
+        useralldetail.ledgerlist.forEach(element => {
+            ledgerSum[element.ledger] = 0;
+        });
+        ledgerSum["total"] = 0;
+
+        let monthIn2Digit = String(parseInt(inp.month) + 1).padStart(2, "0");
+        const startdate = inp.year + "-" + monthIn2Digit + "-01";
+        const enddate = inp.year + "-" + monthIn2Digit + "-31";
+
+        useralldetail.explist.forEach(entry => {
+            let { ledger, amount, date } = entry;
+            ledger = ledger.ledger; // ledger here in object form
+            const amountValue = parseFloat(amount);
+
+            if (!isNaN(amountValue)) {
+                if (date >= startdate && date <= enddate) {
+                    ledgerSum["total"] += amountValue;
+                    if (ledgerSum.hasOwnProperty(ledger)) {
+                        ledgerSum[ledger] += amountValue;
+                    } else {
+                        ledgerSum[ledger] = amountValue;
+                    }
+                }
+            }
+        });
+
+        setcardarr(ledgerSum);
+    };
+
+    const monname = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+    const handle = (e) => {
+        let name = e.target.name;
+        let value = e.target.value;
+        setinp(prev => ({
+            ...prev,
+            [name]: value,
+        }));
+    };
+
+    const detail = (ledger) => {
+        const ledgerItem = useralldetail?.ledgerlist?.find(e => e.ledger === ledger);
+        const ledgerId = ledgerItem?._id;
+        if (ledgerId) {
+            navigate(`/ledgerDetail/${ledgerId}?&ledgerName=${ledgerItem.ledger}&month=${inp.month}&year=${inp.year}`);
+        } else {
+            navigate(`/ledgerDetail/all?&ledgerName=All Ledger&month=${inp.month}&year=${inp.year}`);
+
         }
-      }
-    });
-
-    setcardarr(ledgerSum);
-  };
-
-  const monname = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
-  const handle = (e) => {
-    let name = e.target.name;
-    let value = e.target.value;
-    setinp(prev => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const detail = (ledger) => {
-    const ledgerItem = useralldetail?.ledgerlist?.find(e => e.ledger === ledger);
-    const ledgerId = ledgerItem?._id;
-
-    if (ledgerId) {
-      navigate(
-        `/ledgerDetail/${ledgerId}?&ledgerName=${ledgerItem.ledger}&month=${inp.month}&year=${inp.year}`
-      );
-    }
-  };
+    };
 
     return (
         <>

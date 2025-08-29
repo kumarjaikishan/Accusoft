@@ -1,0 +1,253 @@
+.ledgerdetail {
+
+    .header {
+        font-weight: 700;
+        text-align: center;
+        text-transform: capitalize;
+        margin: 10px 0;
+        display: flex;
+        justify-content: space-between;
+        padding: 0 10px;
+
+        .title {
+            color: grey;
+            margin-left: 10px;
+            font-weight: 500;
+        }
+    }
+}
+
+.ledgerdetail .table {
+    width: 100%;
+    margin-top: 10px;
+    padding: 5px 20px;
+    height: calc(100% - 80px);
+    overflow: auto;
+    position: relative;
+
+    & div {
+        text-align: center;
+        text-transform: capitalize;
+        color: var(--maincolor);
+        display: none;
+        margin-bottom: 5px;
+    }
+
+    table {
+        width: 100%;
+
+        border-collapse: collapse;
+
+        tr td:nth-child(2) {
+            text-transform: capitalize;
+            letter-spacing: .5px;
+        }
+
+        th,
+        #foot {
+            height: 30px;
+            font-size: 1.1em;
+            font-weight: 600;
+            color: white;
+            background: var(--maincolor);
+        }
+
+        thead {
+            position: sticky;
+            top: -7px;
+            box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.4);
+
+            th:nth-child(1) {
+                width: 60px;
+            }
+
+            th:nth-child(2) {
+                width: 120px;
+            }
+
+            th:nth-child(3) {
+                width: 100px;
+            }
+
+            th:nth-child(5) {
+                width: 90px;
+            }
+        }
+
+        tbody {
+            tr {
+                height: 25px;
+                color: var(--contrast);
+
+                td {
+                    border: 1px solid var(--tableborder);
+                    text-align: center;
+                    font-size: 13px;
+                    line-height: 20px;
+                }
+            }
+        }
+
+        #foot {
+            font-size: 0.9em;
+        }
+    }
+}
+
+
+@media print {
+    @page {
+        /* size: A4 landscape; */
+        /* size: 210mm 297mm landscape; */
+        margin: 10px 5px;
+    }
+
+    /* @page :first {
+        margin-top: 40mm; 
+    }
+    @page :left {
+        margin-left: 30mm; 
+    } */
+
+
+    .footer {
+        display: none;
+    }
+
+    .main {
+        position: absolute;
+        height: auto;
+        width: 100vw !important;
+        left: 0 !important;
+        top: 0;
+        padding: 0 !important;
+        overflow: visible;
+    }
+
+    .sidebar,
+    .nav,
+    .report .cont,
+    .scrol {
+        display: none;
+
+        * {
+            display: none;
+        }
+    }
+
+    .ledgerdetail {
+        -webkit-print-color-adjust: exact;
+        break-inside: avoid;
+
+        &::before {
+            display: block;
+            background-position: 50% 50%;
+        }
+
+        & .table {
+            overflow: visible;
+            /* border: 1px solid red; */
+            padding: 2px;
+
+            & div {
+                display: block;
+            }
+
+            & table {
+
+
+                thead {
+                    th {
+                        font-size: 15px;
+                    }
+
+                    th:nth-child(1) {
+                        width: 50px;
+                    }
+
+                    th:nth-child(2) {
+                        width: 100px;
+                    }
+
+                    th:nth-child(3) {
+                        width: 70px;
+                    }
+
+                    th:nth-child(5) {
+                        width: 70px;
+                    }
+                }
+
+                & tbody {
+
+                    & tr {
+                        height: 25px;
+                    }
+                }
+            }
+        }
+    }
+
+
+    .dark-theme .report table tbody td {
+        color: #212529;
+    }
+
+    .dark-theme .report table tbody tr#foot td {
+        color: white;
+    }
+}
+
+
+@media only screen and (max-width: 600px) {
+
+    .ledgerdetail {
+
+        .header {
+            margin-bottom: 20px;
+            flex-wrap: wrap-reverse;
+
+            .title {
+                margin-left: 15px;
+            }
+
+            button {
+                width: 100%;
+                margin-bottom: 5px;
+            }
+        }
+    }
+
+    .ledgerdetail .table {
+        padding: 5px 8px;
+    }
+
+    .ledgerdetail .table #table th {
+        font-size: 12px;
+    }
+
+    .ledgerdetail .table td {
+        font-size: 11px !important;
+        line-height: 18px;
+    }
+
+    .ledgerdetail .table table th:nth-child(1) {
+        width: 20px;
+    }
+
+    .ledgerdetail .table table th:nth-child(2) {
+        width: 70px;
+    }
+
+    .ledgerdetail .table table th:nth-child(3) {
+        width: 40px;
+    }
+
+    /* .report .table table th:nth-child(4) {
+        width: 180px;
+    } */
+
+    .ledgerdetail .table table th:nth-child(5) {
+        width: 60px;
+    }
+}

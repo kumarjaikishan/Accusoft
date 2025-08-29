@@ -28,6 +28,7 @@ import { useLocation } from 'react-router-dom';
 import { lightTheme, darkTheme } from './themes';
 import { ThemeProvider } from '@mui/material/styles';
 import TipSender from './pages/admin/streamelement';
+import VoucherDetail from './pages/ledgerDetail';
 
 const Datanalysis = lazy(() => import('./pages/dataanalysis'));
 const Report = lazy(() => import('./pages/Report'));
@@ -111,7 +112,7 @@ function App() {
                   <Route path="/addexpense" element={<Addexp />} />
                   <Route path="/photo" element={<Photo />} />
                   <Route path="/print/:expId" element={<Officeexp />} />
-
+                  <Route path="/ledgerDetail/:id" element={<VoucherDetail />} />
                   {/* Lazy loaded routes inside Suspense with proper structure */}
                   <Route
                     path="/datanalysis"

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import './voucher.css';
 import Expprint from './office exp/expprint';
 import { useParams } from 'react-router-dom';
@@ -7,7 +7,6 @@ import { toast } from 'react-toastify';
 import { setloader } from '../store/login';
 
 const Voucher = () => {
-    const [led, setled] = useState([]);
     const [exp, setexp] = useState([]);
     const { expId } = useParams();
     const dispatch = useDispatch();

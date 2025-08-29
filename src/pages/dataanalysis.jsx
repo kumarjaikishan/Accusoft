@@ -10,10 +10,12 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import { useNavigate } from 'react-router-dom';
 
 const Datanalysis = () => {
     const dispatch = useDispatch();
     const useralldetail = useSelector((state) => state.userexplist);
+    const navigate = useNavigate();
 
     const date = new Date;
     const today = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getUTCDate();
@@ -29,7 +31,7 @@ const Datanalysis = () => {
     useEffect(() => {
         cal();
         dispatch(setloader(false))
-        // repeat(10000);
+        // console.log(useralldetail.ledgerlist)
     }, [inp])
 
 
@@ -78,6 +80,16 @@ const Datanalysis = () => {
             }
         })
     }
+
+    const detail = (ledger) => {
+        const ledgerItem = useralldetail?.ledgerlist?.find(e => e.ledger === ledger);
+        const ledgerId = ledgerItem?._id;
+
+        if (ledgerId) {
+           navigate(`/ledgerDetail/${ledgerId}?&ledgerName=${ledgerItem.ledger}&month=${inp.month}&year=${inp.year}`);
+
+        }
+    };
 
     return (
         <>
@@ -128,8 +140,7 @@ const Datanalysis = () => {
                 </div>
                 <div className="cards">
                     {Object.entries(cardarr).map(([ledger, sum]) => (
-
-                        <div className="card" key={ledger} id={ledger}>
+                        <div onClick={() => detail(ledger)} className="card" key={ledger} id={ledger}>
                             <div className="data">
                                 <div className="amt" >{sum}</div>
                                 <div className="day">{ledger}</div>

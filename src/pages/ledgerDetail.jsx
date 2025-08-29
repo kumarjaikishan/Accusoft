@@ -10,10 +10,12 @@ const VoucherDetail = () => {
     const [exp, setexp] = useState([]);
     const { id } = useParams();
     const [searchParams] = useSearchParams();
-    const navigate =  useNavigate()
+    const navigate = useNavigate()
 
     const ledgerName = searchParams.get("ledgerName");
     const month = searchParams.get("month");
+    const hey = (Number(month) + 1).toString();
+    const displayMonth = dayjs(hey).format('MMMM');
     const year = searchParams.get("year");
     const { explist } = useSelector((state) => state.userexplist);
 
@@ -39,10 +41,10 @@ const VoucherDetail = () => {
                 <div className='header'>
                     <div>
                         <span className='title'>Ledger:</span> {ledgerName}
-                        <span className='title'>Month:</span> {dayjs(month).format('MMMM')}
+                        <span className='title'>Month:</span> {displayMonth}
                         <span className='title'>Year:</span> {dayjs(year).format('YYYY')}
                     </div>
-                    <Button size='small' onClick={() => navigate('/datanalysis')}  variant="contained">Return</Button>
+                    <Button size='small' onClick={() => navigate('/datanalysis')} variant="contained">Return</Button>
 
                 </div>
                 <div className="table" id='printarea'>

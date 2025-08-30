@@ -38,7 +38,6 @@ const Home = () => {
         monthlyData: []
       };
     }
-    // console.log(useralldetail?.explist)
 
     let todaysum = 0, yestersum = 0, weeksum = 0, monthsum = 0, yearsum = 0;
     const today = dayjs();
@@ -61,6 +60,13 @@ const Home = () => {
       monthlyTotals[monthKey] = 0;
     }
 
+    // Track min/max date for daily span
+    let minDate = null;
+    let maxDate = null;
+
+    // Track distinct months
+    const uniqueMonths = new Set();
+
     useralldetail?.explist.forEach((val) => {
       const date = dayjs(val.date, "YYYY-MM-DD");
 
@@ -74,7 +80,29 @@ const Home = () => {
       if (monthlyTotals.hasOwnProperty(monthKey)) {
         monthlyTotals[monthKey] += val.amount;
       }
+
+      // Track span for daily avg
+      if (!minDate || date.isBefore(minDate)) minDate = date;
+      if (!maxDate || date.isAfter(maxDate)) maxDate = date;
+
+      // Track unique months
+      uniqueMonths.add(monthKey);
     });
+
+    // ✅ Calculate day span (inclusive)
+    let daySpan = 0;
+    if (minDate && maxDate) {
+      daySpan = maxDate.diff(minDate, 'day') + 1;
+    }
+    const dayCount = Math.min(daySpan, 30) || 1;
+
+    // ✅ Calculate month span
+    const monthCount = Math.min(uniqueMonths.size, 12) || 1;
+
+    const dailyAvg = Math.floor(monthsum / dayCount);
+    const monthlyAvg = Math.floor(yearsum / monthCount);
+
+    // console.log(dailyAvg, monthlyAvg)
 
     // Convert monthlyTotals to array sorted by date
     const monthlyDataArr = Object.entries(monthlyTotals)
@@ -86,7 +114,7 @@ const Home = () => {
 
     // console.log(monthlyDataArr)
     return {
-      sums: { todaysum, yestersum, weeksum, monthsum, yearsum },
+      sums: { todaysum, yestersum, weeksum, monthsum, yearsum, dailyAvg, monthlyAvg },
       monthlyData: monthlyDataArr
     };
   }, [useralldetail?.explist]);
@@ -95,8 +123,8 @@ const Home = () => {
     { amt: sums.todaysum, day: "Today", icon: <FaIndianRupeeSign /> },
     { amt: sums.yestersum, day: "Yesterday", icon: <MdElectricBolt /> },
     { amt: sums.weeksum, day: "Last Week", icon: <FaShoppingBag /> },
-    { amt: sums.monthsum, day: "Last Month", icon: <FaGoogleWallet /> },
-    { amt: sums.yearsum, day: "Last Year", icon: <FaBalanceScaleRight /> },
+    { amt: sums.monthsum, day: "Last Month", avg: sums.dailyAvg, icon: <FaGoogleWallet /> },
+    { amt: sums.yearsum, day: "Last Year", avg: sums.monthlyAvg, icon: <FaBalanceScaleRight /> },
   ];
 
   const filteredMonths = monthlyData.slice(-monthsToShow);
@@ -141,8 +169,6 @@ const Home = () => {
   }, [filteredMonths]);
 
 
-
-
   return (
     <motion.div
       initial={{ opacity: 0, x: '100%' }}
@@ -158,7 +184,17 @@ const Home = () => {
             <div className="data">
               <div className="amt">{val.amt}</div>
               <div className="day">{val.day}</div>
+              {val?.avg && (
+                <div className="avg">
+                  {val.day.includes('Month')
+                    ? 'Daily'
+                    : val.day.includes('Year')
+                      ? 'Monthly'
+                      : ''} Avg - {val.avg}
+                </div>
+              )}
             </div>
+
             <div className="icon" style={{ color: "white" }}>{val.icon}</div>
           </div>
         ))}

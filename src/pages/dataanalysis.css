@@ -8,6 +8,7 @@
 
 .datanalysis .cont {
     position: relative;
+    /* top: 10px; */
     width: 60%;
     margin: 0 auto;
     height: 60px;
@@ -17,26 +18,25 @@
     display: flex;
     justify-content: space-around;
     align-items: center;
-}
 
+    .searIcon {
+        position: relative;
+        width: 30px;
+        padding: 4px;
+        height: 30px;
+        text-align: center;
+        line-height: 30px;
+        background: var(--maincolor);
+        color: white;
+        border-radius: 10px;
+        margin-left: 10px;
+    }
 
-.datanalysis .cont .searIcon {
-    position: relative;
-    width: 30px;
-    padding: 4px;
-    height: 30px;
-    text-align: center;
-    line-height: 30px;
-    background: var(--maincolor);
-    color: white;
-    border-radius: 10px;
-    margin-left: 10px;
-}
-
-.datanalysis .cont .select {
-    height: 30px;
-    width: 220px;
-    text-transform: capitalize;
+    .select {
+        height: 30px;
+        width: 220px;
+        text-transform: capitalize;
+    }
 }
 
 .datanalysis .cards {
@@ -47,20 +47,21 @@
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     grid-gap: 1.5rem;
+
+    .card {
+        height: 120px;
+        display: flex;
+        justify-content: space-between;
+        background: #dbe1e6;
+        box-shadow: 0 0 5px #fff,
+            5px 5px 10px #a7aaaf,
+            -5px -5px 10px #fff;
+        color: var(--color);
+        padding: 0.5em;
+        border-radius: 10px;
+    }
 }
 
-.datanalysis .card {
-    height: 120px;
-    display: flex;
-    justify-content: space-between;
-    background: #dbe1e6;
-    box-shadow: 0 0 5px #fff,
-        5px 5px 10px #a7aaaf,
-        -5px -5px 10px #fff;
-    color: var(--color);
-    padding: 0.5em;
-    border-radius: 10px;
-}
 
 .dark-theme .datanalysis .card {
     background: var(--background);

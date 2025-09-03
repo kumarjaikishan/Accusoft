@@ -3,7 +3,7 @@ import Navbar from './components/navbar/navbar';
 import Sidebar from './components/sidebar/sidebar';
 import Home from './pages/home';
 import Preloader from './preloader';
-import Addexp from './pages/addexp/addexp1';
+import Addexp from './pages/addexp/addexp';
 import { useEffect, lazy, Suspense, useState } from 'react';
 import Login from './pages/login/login';
 import Logout from './pages/logout';

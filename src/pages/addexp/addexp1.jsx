@@ -12,7 +12,7 @@ import apiWrapper from './apiWrapper';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useNavigate } from "react-router-dom";
 import Button from '@mui/material/Button';
-import { MdKeyboardArrowDown, MdAddBox } from "react-icons/md";
+import { MdKeyboardArrowDown, MdAddBox, MdOutlineDelete } from "react-icons/md";
 import { HiPencilSquare } from "react-icons/hi2";
 import { RiDeleteBin6Line, RiDeleteBin6Fill } from "react-icons/ri";
 import { IoCloseSharp } from "react-icons/io5";
@@ -20,6 +20,8 @@ import { FaBook } from 'react-icons/fa6';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc.js';
 import timezone from 'dayjs/plugin/timezone.js';
+import { useMediaQuery } from '@mui/material';
+import DataTable from 'react-data-table-component';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -33,13 +35,12 @@ const AddExpenses = () => {
   const [searchInput, setSearchInput] = useState('');
   const [finalsearch, setfinalserach] = useState('');
   const isAnimatingRef = React.useRef(false);
-
+  const isMobile = useMediaQuery('(max-width:600px)');
   const [isUpdateMode, setIsUpdateMode] = useState(false);
   const [disable, setdisable] = useState(false);
   const [isLedgerUpdate, setIsLedgerUpdate] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [postsPerPage, setPostsPerPage] = useState(10);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedRowIds, setSelectedRowIds] = useState([]);
 
   const init = {
     _id: '',
@@ -142,9 +143,8 @@ const AddExpenses = () => {
   };
 
   const deletemanyExpense = () => {
-    const selectedItems = document.querySelectorAll('#tablecontent input:checked');
-    const itemIds = Array.from(selectedItems).map((item) => item.id);
-    sendDeleteRequest(itemIds);
+    console.log(selectedRowIds)
+    // sendDeleteRequest(itemIds);
   };
 
   const sendDeleteRequest = async (itemIds) => {
@@ -171,7 +171,6 @@ const AddExpenses = () => {
           setTimeout(() => {
             isAnimatingRef.current = false;
           }, 100);
-          highlight();
         };
 
         const notsuccessAction = (data) => toast.warn(data.message, { autoClose: 1800 });
@@ -179,31 +178,6 @@ const AddExpenses = () => {
 
         await apiWrapper({ url, method, body, dispatch, successAction, loaderAction, navigate, notsuccessAction });
       }
-    });
-  };
-
-  const selectAllCheckbox = () => {
-    const selectAllCheckbox = document.querySelector('#allcheck');
-    const checkboxes = document.querySelectorAll('#tablecontent input');
-    checkboxes.forEach((checkbox) => (checkbox.checked = selectAllCheckbox.checked));
-    highlight();
-  };
-
-  const handlePageSizeChange = (e) => {
-    setPostsPerPage(Number(e.target.value));
-    setCurrentPage(1);
-  };
-
-  const changePageNumber = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
-
-  const highlight = () => {
-    const checkboxes = document.querySelectorAll('#tablecontent input');
-    const tableRows = document.querySelectorAll('#tablecontent div');
-    checkboxes.forEach((checkbox, index) => {
-      const parentRow = tableRows[index];
-      checkbox.checked ? parentRow.classList.add('checked') : parentRow.classList.remove('checked');
     });
   };
 
@@ -217,34 +191,123 @@ const AddExpenses = () => {
     );
   }) || [];
 
-  let lastPostIndex = currentPage * postsPerPage;
-  const firstPostIndex = lastPostIndex - postsPerPage;
-  const currentPosts = filteredExpenses.slice(firstPostIndex, lastPostIndex);
+  const columns = isMobile ? [
+    {
+      name: 'S.No',
+      cell: (row, index) => index + 1,
+      width: '43px',
+    },
+    {
+      name: 'Ledger',
+      selector: row => row.ledger.ledger,
+      sortable: true,
+      width: '70px',
+      cell: row => <span className="caps">{row.ledger.ledger}</span>
+    },
+    {
+      name: 'Amount',
+      selector: row => row.amount,
+      sortable: true,
+      width: '60px',
+    },
+    {
+      name: 'Narration',
+      selector: row => row.narration,
+      width: '280px',
+      wrap: true
+    },
+    {
+      name: 'Date',
+      selector: row => dayjs(row.date).format('DD MMM, YYYY'),
+      sortable: true,
+      width: '100px',
+    },
+    {
+      name: 'Action',
+      cell: row => (
+        <>
+          <HiPencilSquare title="Edit" onClick={() => setDataForEdit(row)} className='editicon ico' />
+          <RiDeleteBin6Line title="Delete" onClick={() => deleteExpense(row._id)} className='deleteicon ico' />
+        </>
+      ),
+      ignoreRowClick: true,
+      allowOverflow: true,
+      button: true,
+      width: '60px',
+    },
+  ] : [
+    {
+      name: 'S.No',
+      cell: (row, index) => index + 1,
+      width: '43px',
+    },
+    {
+      name: 'Ledger',
+      selector: row => row.ledger.ledger,
+      sortable: true,
+      width: '120px',
+      cell: row => <span className="caps">{row.ledger.ledger}</span>
+    },
+    {
+      name: 'Amount',
+      selector: row => row.amount,
+      sortable: true,
+      width: '80px',
+    },
+    {
+      name: 'Narration',
+      selector: row => row.narration,
+      grow: 1,   // take remaining width
+      wrap: true // wrap text to new line
+    },
+    {
+      name: 'Date',
+      selector: row => dayjs(row.date).format('DD MMM, YYYY'),
+      sortable: true,
+      width: '110px',
+    },
+    {
+      name: 'Action',
+      cell: row => (
+        <>
+          <HiPencilSquare title="Edit" onClick={() => setDataForEdit(row)} className='editicon ico' />
+          <RiDeleteBin6Line title="Delete" onClick={() => deleteExpense(row._id)} className='deleteicon ico' />
+        </>
+      ),
+      ignoreRowClick: true,
+      allowOverflow: true,
+      button: true,
+      width: '65px',
+    },
+  ];
 
-  // Sorting logic (optional: still works on current page only)
-  const [sortOrder, setSortOrder] = useState('ASC');
-  const sortPosts = (column) => {
-    let sorted = [];
-    if (column === 'amount') {
-      sorted = [...currentPosts].sort((a, b) => sortOrder === 'ASC' ? a[column] - b[column] : b[column] - a[column]);
-    } else if (column === 'ledger') {
-      sorted = [...currentPosts].sort((a, b) =>
-        sortOrder === 'ASC'
-          ? a[column].ledger.localeCompare(b[column].ledger)
-          : b[column].ledger.localeCompare(a[column].ledger)
-      );
-    } else {
-      sorted = [...currentPosts].sort((a, b) =>
-        sortOrder === 'ASC'
-          ? a[column].toLowerCase().localeCompare(b[column].toLowerCase())
-          : b[column].toLowerCase().localeCompare(a[column].toLowerCase())
-      );
-    }
-    setSortOrder(sortOrder === 'ASC' ? 'DSC' : 'ASC');
-    currentPosts.splice(0, currentPosts.length, ...sorted);
+  const customStyles = {
+    rows: { style: { minHeight: '35px' } },
+    headCells: {
+      style: {
+        backgroundColor: '#0a3d62',
+        color: '#fff',
+        padding: '5px'
+      },
+    },
+    cells: {
+      style: { padding: '5px' },
+    },
+    headRow: {
+      style: {
+        borderBottom: '2px solid #ddd',
+        borderTop: '2px solid #ddd',
+        backgroundColor: '#999',
+      },
+    },
   };
 
-  const container = { visible: { transition: { delayChildren: .1 } } };
+  const handleSelectedRowsChange = ({ selectedRows }) => {
+    // Extract only IDs
+    // console.log(selectedRows)
+    setSelectedRowIds(selectedRows.map(e=> e._id))
+  };
+
 
   return (
     <>
@@ -256,86 +319,31 @@ const AddExpenses = () => {
         className={isModalOpen || isLedgerUpdate ? 'exp ismodal' : 'exp'}
       >
         <div className="add">
+          {selectedRowIds.length > 0 && <Button className="flex-1" variant='contained' onClick={deletemanyExpense} color="error" startIcon={<MdOutlineDelete />} >Delete ({selectedRowIds.length})</Button>}
           <Button title='Add Expense' onClick={() => setIsModalOpen(true)} startIcon={<MdAddBox />} variant="contained">Add Expense</Button>
           <Button title='Ledger' onClick={() => setIsLedgerUpdate(true)} startIcon={<FaBook />} variant="outlined">Ledger</Button>
         </div>
         <div className="head">
           <span>Expense List </span>
           <span>
-            Record :{' '}
-            <select title='Items Per Page' value={postsPerPage} onChange={handlePageSizeChange}>
-              <option value="10">10</option>
-              <option value="20">20</option>
-              <option value="50">50</option>
-              <option value="100">100</option>
-              <option value="500">500</option>
-            </select>
-          </span>
-          <span>
             <input type="text" title='Search' onChange={(e) => setSearchInput(e.target.value)} value={searchInput} placeholder="Type to search..." />
             <span title='clear' onClick={() => setSearchInput('')}><IoCloseSharp /></span>
           </span>
         </div>
         <div className="table">
-          <div className="header">
-            <span>S.no</span>
-            <span onClick={() => sortPosts('ledger')}> Ledger <i><MdKeyboardArrowDown /></i></span>
-            <span onClick={() => sortPosts('amount')}>Amt. <i><MdKeyboardArrowDown /></i></span>
-            <span>Narration</span>
-            <span onClick={() => sortPosts('date')}>Date <i><MdKeyboardArrowDown /></i></span>
-            <span>Action</span>
-            <span><input type="checkbox" onClick={selectAllCheckbox} id="allcheck" /></span>
-          </div>
-          <motion.div variants={container} initial="hidden" animate="visible" className="body" id="tablecontent">
-            {filteredExpenses.length < 1 && (
-              <div style={{ width: '100%', display: 'flex', justifyContent: 'center', margin: '8px 0' }}>
-                <b>No Expense Added</b>
-              </div>
-            )}
-            <AnimatePresence>
-              {currentPosts.map((expense, index) => (
-                <motion.div
-                  exit={isAnimatingRef.current ? { opacity: 1, x: '-102%', transition: { duration: 0.6 } } : {}}
-                  key={expense._id}
-                >
-                  <span>{firstPostIndex + index + 1}</span>
-                  <span className='caps'>{expense.ledger.ledger}</span>
-                  <span>{expense.amount}</span>
-                  <span>{expense.narration}</span>
-                  <span>{dayjs(expense.date).format('DD MMM, YYYY')}</span>
-                  <span>
-                    <HiPencilSquare title="Edit" onClick={() => setDataForEdit(expense)} className='editicon ico' />
-                    <RiDeleteBin6Line title="Delete" onClick={() => deleteExpense(expense._id)} className='deleteicon ico' />
-                  </span>
-                  <span><input type="checkbox" title='select' onClick={highlight} id={expense._id} /></span>
-                </motion.div>
-              ))}
-              <div id="foot">
-                <span></span>
-                <span style={{ fontWeight: 700 }}>Total</span>
-                <span style={{ fontWeight: 700 }} id="totalhere">
-                  {filteredExpenses.reduce((acc, expense) => acc + expense.amount, 0)}
-                </span>
-                <span></span>
-                <span></span>
-                <span colSpan="1" id="alldelete" title="Delete Selected Item">
-                  <RiDeleteBin6Fill onClick={deletemanyExpense} />
-                </span>
-                <span></span>
-              </div>
-            </AnimatePresence>
-          </motion.div>
+          <DataTable
+            columns={columns}
+            data={filteredExpenses}
+            selectableRows
+            onSelectedRowsChange={handleSelectedRowsChange}
+            pagination
+            highlightOnHover
+            customStyles={customStyles}
+            noDataComponent={<div>No records found</div>}
+          />
         </div>
         <div className="foot">
-          <span>
-            Showing Result From {filteredExpenses.length === 0 ? 0 : firstPostIndex + 1} To{' '}
-            {lastPostIndex >= filteredExpenses.length ? filteredExpenses.length : lastPostIndex} of{' '}
-            {filteredExpenses.length} Results
-          </span>
-          <span>
-            Pages :
-            <Pagination currentpage={currentPage} changepageno={changePageNumber} totalpost={filteredExpenses.length} postperpage={postsPerPage} />
-          </span>
+
         </div>
         <Modalbox
           init={init}

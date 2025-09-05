@@ -64,38 +64,86 @@ function App() {
     "Invalid Token": ['Invalid Token', 'You need to log in again.']
   }
 
+  // const jwtcheck = async () => {
+  //   try {
+  //     const token = localStorage.getItem('token');
+  //     const responsee = await fetch(`${import.meta.env.VITE_API_ADDRESS}jwtcheck`, {
+  //       method: 'GET',
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     });
+  //     // console.log(responsee)
+  //     const data = await responsee.json();
+  //     console.log("jwt check", data);
+
+  //     if (tokenErrors[data.message]) {
+  //       const title = tokenErrors[data.message][0];
+  //       const text = tokenErrors[data.message][1];
+
+  //       swal({
+  //         title,
+  //         text,
+  //         icon: 'warning',
+  //         button: {
+  //           text: 'OK',
+  //         },
+  //       }).then(() => {
+  //         return navigate('/logout');
+  //       });
+  //     }
+  //   } catch (error) {
+  //     console.log("Token check:", error);
+  //   }
+  // }
   const jwtcheck = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const responsee = await fetch(`${import.meta.env.VITE_API_ADDRESS}jwtcheck`, {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      // console.log(responsee)
-      const data = await responsee.json();
+      const token = localStorage.getItem("token");
+      if (!token) {
+        console.warn("No token found, redirecting to logout...");
+        return navigate("/logout");
+      }
+
+      const response = await fetch(
+        `${import.meta.env.VITE_API_ADDRESS}jwtcheck`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        console.error("JWT check failed:", response.status);
+        return navigate("/logout");
+      }
+
+      let data;
+      try {
+        data = await response.json();
+      } catch (err) {
+        console.error("Failed to parse JWT check response:", err);
+        return navigate("/logout");
+      }
+
       console.log("jwt check", data);
 
-      if (tokenErrors[data.message]) {
-        const title = tokenErrors[data.message][0];
-        const text = tokenErrors[data.message][1];
-
+      const errorConfig = tokenErrors?.[data?.message];
+      if (errorConfig) {
+        const [title, text] = errorConfig;
         swal({
           title,
           text,
-          icon: 'warning',
-          button: {
-            text: 'OK',
-          },
-        }).then(() => {
-          return navigate('/logout');
-        });
+          icon: "warning",
+          button: { text: "OK" },
+        }).then(() => navigate("/logout"));
       }
     } catch (error) {
-      console.log("Token check:", error);
+      console.error("Token check error:", error);
+      navigate("/logout");
     }
-  }
+  };
 
   return (
     <>

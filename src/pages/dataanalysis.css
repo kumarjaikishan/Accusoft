@@ -59,6 +59,14 @@
         color: var(--color);
         padding: 0.5em;
         border-radius: 10px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+    .card:hover{
+        scale: 1.02;
+         box-shadow: 0 0 5px #fff,
+            10px 10px 15px #a7aaaf,
+            -5px -5px 10px #fff;
     }
 }
 

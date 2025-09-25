@@ -75,6 +75,7 @@
                 height: 60px;
                 align-items: center;
                 justify-content: space-around;
+                gap: 5px;
                 padding: 8px;
                 border-radius: 20px;
                 margin-bottom: 15px;

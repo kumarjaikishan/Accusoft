@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './ledpage.css';
 import { useSelector, useDispatch } from 'react-redux';
 import { setloader } from '../../store/login';
@@ -10,34 +9,51 @@ import TextField from '@mui/material/TextField';
 import apiWrapper from './apiWrapper';
 import { MdAddBox } from "react-icons/md";
 import Button from '@mui/material/Button';
-import { CgUndo } from "react-icons/cg";
 import { HiPencilSquare } from "react-icons/hi2";
 import { RiDeleteBin6Line } from "react-icons/ri";
 
 const Ledpage = ({ setmodal, setdisable, disable, navigate, isledupdate, setisledupdate }) => {
   const dispatch = useDispatch();
   const useralldetail = useSelector((state) => state.userexplist);
+
   const [isupda, setinsupdat] = useState(false);
+
+  useEffect(() => {
+    // console.log(useralldetail.ledgerlist)
+  }, [])
+
   const init = {
     ind: '',
-    val: '',
+    ledger: '',
+    budget: ''
   };
   const [ledinp, setledinp] = useState(init);
 
-  const handle = (e) => {
-    setledinp({
-      ...ledinp,
-      val: e.target.value.toLowerCase(),
-    });
+  // handle ledger and budget input changes
+  const handleLedger = (e) => {
+    setledinp({ ...ledinp, ledger: e.target.value });
   };
 
+  const handleBudget = (e) => {
+    const value = e.target.value;
+    if (!isNaN(value)) {
+      setledinp({ ...ledinp, budget: value });
+    }
+  };
+
+  // Add ledger
   const add = async () => {
-    if (!ledinp.val) {
+    if (!ledinp.ledger) {
       return toast.warn("Ledger Can't be Blank", { autoClose: 1300 });
     }
+
+    if (!ledinp.budget) {
+      return toast.warn("Budget Can't be Blank", { autoClose: 1300 });
+    }
+
     const url = `${import.meta.env.VITE_API_ADDRESS}/addledger`;
     const method = 'POST';
-    const body = { ledger: ledinp.val };
+    const body = { ledger: ledinp.ledger, budget: parseFloat(ledinp.budget) };
 
     setdisable(true);
 
@@ -55,9 +71,57 @@ const Ledpage = ({ setmodal, setdisable, disable, navigate, isledupdate, setisle
 
     const loaderAction = (isLoading) => dispatch(setloader(isLoading));
 
-    await apiWrapper({url, method, body, dispatch, successAction, loaderAction, navigate,notsuccessAction});
+    await apiWrapper({ url, method, body, dispatch, successAction, loaderAction, navigate, notsuccessAction });
   };
 
+  // Update ledger
+  const updat = async () => {
+    if (!ledinp.ledger) return toast.warn("Ledger Can't be Blank", { autoClose: 1300 });
+    if (!ledinp.budget) return toast.warn("Budget Can't be Blank", { autoClose: 1300 });
+
+    const ledger_id = ledinp.ind;
+    const newledger = ledinp.ledger;
+    const newbudget = parseFloat(ledinp.budget);
+
+    const token = localStorage.getItem("token");
+    try {
+      setdisable(true);
+      const res = await fetch(`${import.meta.env.VITE_API_ADDRESS}updateledger`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          ledger_id,
+          newledger,
+          newbudget
+        })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok && data.message === 'jwt expired') {
+        toast.warn('Session expired. Please log in again.', { autoClose: 1700 });
+        return navigate('/logout');
+      }
+
+      if (res.ok && res.status === 200) {
+        toast.success(data.message, { autoClose: 1300 });
+        setledinp(init);
+        setinsupdat(false);
+        dispatch(userdata());
+      } else {
+        toast.warn(data.message, { autoClose: 2300 });
+      }
+      setdisable(false);
+    } catch (error) {
+      console.log(error);
+      setdisable(false);
+    }
+  };
+
+  // Delete ledger
   const deletee = async (id) => {
     swal({
       title: 'Are you sure?',
@@ -84,112 +148,68 @@ const Ledpage = ({ setmodal, setdisable, disable, navigate, isledupdate, setisle
 
         const loaderAction = (isLoading) => dispatch(setloader(isLoading));
 
-        await apiWrapper({url, method, body, dispatch, successAction, loaderAction, navigate, notsuccessAction});
+        await apiWrapper({ url, method, body, dispatch, successAction, loaderAction, navigate, notsuccessAction });
       }
     });
   };
 
-  const updat = async () => {
-    const newledger = ledinp.val;
-    const ledger_id = ledinp.ind;
-
-    const token = localStorage.getItem("token");
-    try {
-      setdisable(true);
-      const res = await fetch(`${import.meta.env.VITE_API_ADDRESS}updateledger`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          ledger_id, newledger
-        })
-      })
-      const data = await res.json();
-      if (!res.ok && data.message === 'jwt expired') {
-        toast.warn('Session expired. Please log in again.', { autoClose: 1700 });
-        return navigate('/logout');
-      }
-
-      if (res.ok && res.status == 200) {
-        toast.success(data.message, { autoClose: 1300 });
-        setledinp(init);
-        setinsupdat(false);
-        dispatch(userdata());
-      } else if (res.status == 421) {
-        toast.warn(data.message, { autoClose: 2300 });
-        swal({
-          title: 'Want to merge Ledger?',
-          text: `If Merge,old Ledger Expenses transferred to ${newledger} Ledger`,
-          icon: 'warning',
-          buttons: true,
-          dangerMode: true,
-        }).then(async (merge) => {
-          if (merge) {
-            try {
-              const res = await fetch(`${import.meta.env.VITE_API_ADDRESS}mergeledger`, {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                  "Authorization": `Bearer ${token}`,
-                },
-                body: JSON.stringify({
-                  ledger_id, newledger
-                })
-              })
-              const datae = await res.json();
-              if (!res.ok) {
-                return toast.warn(datae.message, { autoClose: 2300 });
-              }
-
-              dispatch(userdata());
-              toast.success(datae.message, { autoClose: 1300 });
-
-            } catch (error) {
-              console.log(error);
-            }
-          }
-        });
-      } else {
-        toast.warn(data.message, { autoClose: 2300 });
-      }
-      setdisable(false)
-    } catch (error) {
-      console.log(error);
-      setdisable(false)
-    }
-  }
-
-
-  var ledpage = document.querySelector(".ledpage");
-
-  const sdef = function (event) {
-    if (event.target == ledpage) {
-      setisledupdate(false)
-    }
-  }
-  const setledgerininput = (ind, val) => {
+  // Set ledger data in input for editing
+  const setledgerininput = (id, ledgerName, budget) => {
     setledinp({
-      ind: ind,
-      val: val
-    })
+      ind: id,
+      ledger: ledgerName,
+      budget: budget
+    });
     setinsupdat(true);
-  }
+  };
 
+  // Close modal when clicking outside
+  const sdef = (event) => {
+    if (event.target.classList.contains('ledpage')) {
+      setisledupdate(false);
+    }
+  };
 
   return (
     <div className="ledpage" onClick={sdef} style={{ display: isledupdate ? "block" : "none" }}>
       <div className="box">
-        <h2>Hi, {useralldetail?.user?.name}</h2> 
-      
+        <h2>Hi, {useralldetail?.user?.name}</h2>
+
         <span className='ledwrapper'>
           <div className="cont">
-            <TextField id="outlined-basic" label="Enter Ledger" className='inpe' variant="outlined" value={ledinp.val} onChange={handle} />
-           {isupda ? <button disabled={disable} onClick={updat}>Update</button> :
-            <Button size='small' className='btne' disabled={disable} title='Add' onClick={add} startIcon={<MdAddBox />} variant="contained">Add</Button>
-       
-            }
+            <TextField
+              label="Enter Ledger"
+              size='small'
+              variant="outlined"
+              value={ledinp.ledger}
+              onChange={handleLedger}
+              className="inpe"
+            />
+            <TextField
+              label="Budget"
+              size='small'
+              variant="outlined"
+              value={ledinp.budget}
+              style={{ width: '180px' }}
+              onChange={handleBudget}
+              className="inpe"
+              type="number"
+            />
+            {isupda ? (
+              <button disabled={disable} onClick={updat}>Update</button>
+            ) : (
+              <Button
+                size='small'
+                className='btne'
+                disabled={disable}
+                title='Add'
+                onClick={add}
+                startIcon={<MdAddBox />}
+                variant="contained"
+              >
+                Add
+              </Button>
+            )}
           </div>
 
           <div className="mater">
@@ -197,27 +217,39 @@ const Ledpage = ({ setmodal, setdisable, disable, navigate, isledupdate, setisle
               <thead>
                 <tr>
                   <th>Ledger</th>
+                  <th>Budget</th>
                   <th>Edit</th>
                   <th>Delete</th>
                 </tr>
               </thead>
               <tbody>
-                {useralldetail.ledgerlist && useralldetail.ledgerlist.map((val, ind) => {
-                  return (
-                    <tr key={ind}>
-                      <td>{val.ledger}</td>
-                      <td> <HiPencilSquare className='editicon ico' title='Edit'  onClick={() => setledgerininput(val._id, val.ledger)}/> </td>
-                      <td> <RiDeleteBin6Line className='deleteicon ico' title='Delete'  onClick={() => deletee(val._id)} /> </td>
-                    </tr>
-                  )
-                })}
+                {useralldetail.ledgerlist && useralldetail.ledgerlist.map((val, ind) => (
+                  <tr key={ind}>
+                    <td>{val.ledger}</td>
+                    <td>{val.budget}</td>
+                    <td>
+                      <HiPencilSquare
+                        className='editicon ico'
+                        title='Edit'
+                        onClick={() => setledgerininput(val._id, val.ledger, val.budget)}
+                      />
+                    </td>
+                    <td>
+                      <RiDeleteBin6Line
+                        className='deleteicon ico'
+                        title='Delete'
+                        onClick={() => deletee(val._id)}
+                      />
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
         </span>
       </div>
     </div>
-  )
+  );
 };
 
 export default Ledpage;

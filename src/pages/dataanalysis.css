@@ -1,216 +1,254 @@
 .datanalysis {
     max-width: 100%;
     height: 100%;
-    /* border: 3px solid red; */
     padding: 5px 10px;
     overflow: auto;
-}
 
-.datanalysis .cont {
-    position: relative;
-    /* top: 10px; */
-    width: 60%;
-    margin: 0 auto;
-    height: 60px;
-    /* border: 2px solid var(--asbc); */
-    color: var(--maincolor);
-    border-radius: 10px;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-
-    .searIcon {
+    .cont {
         position: relative;
-        width: 30px;
-        padding: 4px;
-        height: 30px;
-        text-align: center;
-        line-height: 30px;
-        background: var(--maincolor);
-        color: white;
+        width: 60%;
+        margin: 0 auto;
+        height: 60px;
+        color: var(--maincolor);
         border-radius: 10px;
-        margin-left: 10px;
-    }
-
-    .select {
-        height: 30px;
-        width: 220px;
-        text-transform: capitalize;
-    }
-}
-
-.datanalysis .cards {
-    max-width: 100%;
-    overflow-x: hidden;
-    overflow-y: auto;
-    padding: 1rem;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-gap: 1.5rem;
-
-    .card {
-        height: 120px;
         display: flex;
-        justify-content: space-between;
-        background: #dbe1e6;
-        box-shadow: 0 0 5px #fff,
-            5px 5px 10px #a7aaaf,
-            -5px -5px 10px #fff;
-        color: var(--color);
-        padding: 0.5em;
-        border-radius: 10px;
-        cursor: pointer;
-        transition: 0.3s;
+        justify-content: space-around;
+        align-items: center;
+
+        .searIcon {
+            position: relative;
+            width: 30px;
+            height: 30px;
+            padding: 4px;
+            text-align: center;
+            line-height: 30px;
+            background: var(--maincolor);
+            color: white;
+            border-radius: 10px;
+            margin-left: 10px;
+        }
+
+        .select {
+            height: 30px;
+            width: 220px;
+            text-transform: capitalize;
+        }
+
+        .show-budget-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 12px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--maincolor);
+  cursor: pointer;
+  user-select: none;
+
+  input[type="checkbox"] {
+    appearance: none; 
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--maincolor);
+    border-radius: 4px;
+    background: #fff;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:checked {
+      background: var(--maincolor);
+      border-color: var(--maincolor);
+      position: relative;
+
+      &::after {
+        content: "✓";
+        color: #fff;
+        font-size: 12px;
+        font-weight: bold;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -58%);
+      }
     }
-    .card:hover{
-        scale: 1.02;
-         box-shadow: 0 0 5px #fff,
-            10px 10px 15px #a7aaaf,
-            -5px -5px 10px #fff;
+
+    &:hover {
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    }
+  }
+
+  label {
+    cursor: pointer;
+  }
+}
+
+    }
+
+    .cards {
+        max-width: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
+        padding: 1rem;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-gap: 1.5rem;
+
+        .card {
+            display: flex;
+            justify-content: space-between;
+            background: #dbe1e6;
+            box-shadow:
+                0 0 5px #fff,
+                5px 5px 10px #a7aaaf,
+                -5px -5px 10px #fff;
+            color: var(--color);
+            padding: 20px 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+
+            &:hover {
+                scale: 1.02;
+                box-shadow:
+                    0 0 5px #fff,
+                    10px 10px 15px #a7aaaf,
+                    -5px -5px 10px #fff;
+            }
+
+            .data {
+                position: relative;
+                width: 160px;
+                /* padding: 2px; */
+                /* border: 1px solid red; */
+
+                .amt {
+                    /* width: 100%;
+                    height: 40%; */
+                    font-size: 1.3em;
+                    font-weight: 700;
+                    margin-bottom: 4px;
+
+                    /* line-height: 40px; */
+                }
+
+                .day {
+                    /* width: 100%;
+                    height: 60%; */
+                    font-size: 0.95em;
+                    font-weight: 500;
+                    color: #555;
+                    margin-bottom: 4px;
+                    text-transform: capitalize;
+                }
+
+                .budget-info {
+                    font-size: 0.8em;
+                    margin-top: 4px;
+                    /* border: 1px solid black; */
+                }
+            }
+
+            .icon {
+                width: 110px;
+                /* border: 1px solid red; */
+                text-align: center;
+                position: relative;
+                padding: 2rem;
+
+                .cir {
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    width: 100px;
+                    height: 100px;
+                    border-radius: 50%;
+                    transform: translate(-50%, -50%);
+                    transition: 1s;
+                    background: conic-gradient(rgb(252, 92, 101) 2.8deg,
+                            rgb(127, 143, 166) 10.8deg);
+
+                    .per {
+                        position: absolute;
+                        top: 4px;
+                        left: 4px;
+                        right: 4px;
+                        bottom: 4px;
+                        background: #dbe1e6;
+                        border-radius: 50%;
+                        font-size: 1.7em;
+                        font-weight: 600;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                    }
+                }
+            }
+        }
+    }
+
+    /* Dark Theme */
+    .dark-theme & {
+        .card {
+            background: var(--background);
+            box-shadow: inset -2px -2px 5px rgba(0, 0, 0, 0.5),
+                inset 3px 3px 5px rgba(255, 255, 255, 0.07);
+
+            .icon .per {
+                background: var(--background);
+            }
+        }
     }
 }
 
-
-.dark-theme .datanalysis .card {
-    background: var(--background);
-    box-shadow: inset -2px -2px 5px rgba(0, 0, 0, 0.5),
-        inset 3px 3px 5px rgba(255, 255, 255, 0.07);
-}
-
-
-.datanalysis .card .data {
-    position: relative;
-    width: 130px;
-    padding: 2px;
-    /* border: 1px solid red; */
-    /* height: 100%; */
-}
-
-.datanalysis .card .data .amt {
-    position: relative;
-    width: 100%;
-    /* border: 1px solid red; */
-    height: 40%;
-    font-size: 1.3em;
-    font-weight: 700;
-    padding-left: 10px;
-    line-height: 40px;
-}
-
-.datanalysis .card .data .day {
-    position: relative;
-    width: 100%;
-    text-transform: capitalize;
-    /* border: 1px solid red; */
-    height: 60%;
-    padding-left: 10px;
-}
-
-.datanalysis .card .icon {
-    width: 110px;
-    /* height: 100%; */
-    text-align: center;
-    position: relative;
-    padding: 2rem;
-    /* background: conic-gradient(rgb(252, 92, 101) 10.8deg, rgb(127, 143, 166) 10.8deg); */
-}
-
-.datanalysis .card .icon .cir {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    transition: 1s;
-    background: conic-gradient(rgb(252, 92, 101) 2.8deg, rgb(127, 143, 166) 10.8deg);
-    /* border: 1px solid red; */
-}
-
-.datanalysis .card .icon .per {
-    position: absolute;
-    top: 4px;
-    left: 4px;
-    right: 4px;
-    /* border: 1px solid red; */
-    background: #dbe1e6;
-    border-radius: 50%;
-    bottom: 4px;
-    font-size: 1.7em;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.dark-theme .datanalysis .card .icon .per {
-    background: var(--background);
-}
-
-
-@media only screen and (max-width:1200px) {
-    .datanalysis {
-        padding-bottom: 90px;
+/* -------------------- Responsive -------------------- */
+@media only screen and (max-width: 1200px) {
+    .datanalysis .cards {
         grid-template-columns: repeat(3, 1fr);
     }
 }
 
-@media only screen and (max-width:960px) {
-    .datanalysis {
-        padding-bottom: 10px;
+@media only screen and (max-width: 960px) {
+    .datanalysis .cards {
         grid-template-columns: repeat(2, 1fr);
     }
 }
 
-@media only screen and (max-width:600px) {
+@media only screen and (max-width: 600px) {
     .datanalysis {
-        padding-bottom: 0px;
-        grid-template-columns: repeat(1, 1fr);
-        /* border: 1px solid red; */
-    }
+        .cont {
+            width: 90vw;
+            margin-bottom: 8px;
+            height: 60px;
+            border-radius: 7px;
 
-    .datanalysis .cont {
-        width: 90vw;
-        margin-bottom: 8px;
-        height: 60px;
-        border-radius: 7px;
-    }
+            .select {
+                width: 120px;
+            }
+        }
 
-    .datanalysis .cont .select {
-        height: 30px;
-        width: 120px;
-        text-transform: capitalize;
-    }
+        .cards {
+            padding: 3px 3px 15px;
+            place-items: center;
+            grid-template-columns: repeat(1, 1fr);
+            grid-gap: 1.1rem;
 
-    .datanalysis .cards {
-        max-width: 100%;
-        overflow-x: hidden;
-        overflow-y: auto;
-        padding: 3px;
-        padding-bottom: 15px;
-        place-items: center;
-        grid-template-columns: repeat(1, 1fr);
-        grid-gap: 1.1rem;
-        /* border: 3px solid black; */
-    }
+            .card {
+                width: 98%;
+                height: 90px;
 
-    .datanalysis .card {
-        width: 98%;
-        height: 90px;
-    }
+                .icon {
+                    padding: 1rem;
 
-    .datanalysis .card .icon {
-        padding: 1rem;
-        /* border: 1px solid red; */
-    }
+                    .cir {
+                        width: 70px;
+                        height: 70px;
 
-    .datanalysis .card .icon .cir {
-        width: 70px;
-        height: 70px;
-    }
-
-    .datanalysis .card .icon .per {
-        font-size: 1.3em;
+                        .per {
+                            font-size: 1.3em;
+                        }
+                    }
+                }
+            }
+        }
     }
 }

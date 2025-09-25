@@ -10,6 +10,9 @@
     padding: 0 1rem;
     color: var(--color);
 
+    .spin{
+        animation: spin 1s linear infinite;
+    }
 
     &.caps {
         text-transform: capitalize !important;
@@ -499,6 +502,16 @@
             }
         }
     }
+}
+
+@keyframes spin {
+    0%{
+        transform: rotate(0);
+    }
+    100%{
+        transform: rotate(360deg);
+    }
+    
 }
 
 .exp.ismodal {

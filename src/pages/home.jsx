@@ -128,6 +128,7 @@ const Home = () => {
   ];
 
   const filteredMonths = monthlyData.slice(-monthsToShow);
+
   // Inside component, before return
   const chartData = useMemo(() => {
     return {
@@ -158,12 +159,19 @@ const Home = () => {
             ['#ff7eb3', '#0072ff']
           ];
 
-          const index = context.dataIndex % colors.length;
+          const idx = context.dataIndex;
+          if (typeof idx !== "number" || idx < 0) {
+            return '#ccc'; // fallback for legends / tooltips
+          }
+
+          const colorPair = colors[idx % colors.length] || ['#ccc', '#999'];
           const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
-          gradient.addColorStop(0, colors[index][0]);
-          gradient.addColorStop(1, colors[index][1]);
+          gradient.addColorStop(0, colorPair[0]);
+          gradient.addColorStop(1, colorPair[1]);
+
           return gradient;
         }
+
       }]
     };
   }, [filteredMonths]);
@@ -185,17 +193,17 @@ const Home = () => {
               <div className="amt">{val.amt}</div>
               <div className="day">{val.day}</div>
               {val?.avg && (
-                <div className="avg">
+                <div className="avg-badge">
                   {val.day.includes('Month')
                     ? 'Daily'
                     : val.day.includes('Year')
                       ? 'Monthly'
-                      : ''} Avg - {val.avg}
+                      : ''} Avg: <span>{val.avg}</span>
                 </div>
               )}
             </div>
 
-            <div className="icon" style={{ color: "white" }}>{val.icon}</div>
+            <div className="icon">{val.icon}</div>
           </div>
         ))}
       </div>

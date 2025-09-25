@@ -113,19 +113,19 @@ function App() {
           },
         }
       );
-
+      let data = await response.json();
       if (!response.ok) {
-        console.error("JWT check failed:", response.status);
+        console.error("JWT check failed:", data?.message);
         return navigate("/logout");
       }
 
-      let data;
-      try {
-        data = await response.json();
-      } catch (err) {
-        console.error("Failed to parse JWT check response:", err);
-        return navigate("/logout");
-      }
+      // let data;
+      // try {
+      //   data = await response.json();
+      // } catch (err) {
+      //   console.error("Failed to parse JWT check response:", err);
+      //   return navigate("/logout");
+      // }
 
       console.log("jwt check", data);
 

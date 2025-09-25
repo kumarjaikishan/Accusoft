@@ -11,6 +11,12 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import { useNavigate } from 'react-router-dom';
+import dayjs from "dayjs";
+import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
+import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
+
+dayjs.extend(isSameOrAfter);
+dayjs.extend(isSameOrBefore);
 
 const Datanalysis = () => {
     const dispatch = useDispatch();
@@ -43,34 +49,36 @@ const Datanalysis = () => {
     let ledgerSum = {};
 
     const cal = () => {
-        useralldetail.ledgerlist.forEach(element => {
-            ledgerSum[element.ledger] = 0;
+        const newLedgerSum = {};
+        useralldetail.ledgerlist.forEach(el => {
+            newLedgerSum[el.ledger] = 0;
         });
-        ledgerSum["total"] = 0;
+        newLedgerSum["total"] = 0;
 
-        let monthIn2Digit = String(parseInt(inp.month) + 1).padStart(2, "0");
-        const startdate = inp.year + "-" + monthIn2Digit + "-01";
-        const enddate = inp.year + "-" + monthIn2Digit + "-31";
+        const monthIn2Digit = String(parseInt(inp.month) + 1).padStart(2, "0");
+        const startDate = dayjs(`${inp.year}-${monthIn2Digit}-01`);
+        const endDate = startDate.endOf("month");
 
         useralldetail.explist.forEach(entry => {
-            let { ledger, amount, date } = entry;
-            ledger = ledger.ledger; // ledger here in object form
-            const amountValue = parseFloat(amount);
+            const ledgerName = typeof entry.ledger === "object" ? entry.ledger.ledger : entry.ledger;
+            const amountValue = parseFloat(entry.amount);
+            const entryDate = dayjs(entry.date);
 
-            if (!isNaN(amountValue)) {
-                if (date >= startdate && date <= enddate) {
-                    ledgerSum["total"] += amountValue;
-                    if (ledgerSum.hasOwnProperty(ledger)) {
-                        ledgerSum[ledger] += amountValue;
-                    } else {
-                        ledgerSum[ledger] = amountValue;
-                    }
+            if (!isNaN(amountValue) && entryDate.isSameOrAfter(startDate) && entryDate.isSameOrBefore(endDate)) {
+                newLedgerSum["total"] += amountValue;
+                if (newLedgerSum.hasOwnProperty(ledgerName)) {
+                    newLedgerSum[ledgerName] += amountValue;
+                } else {
+                    newLedgerSum[ledgerName] = amountValue;
                 }
             }
         });
 
-        setcardarr(ledgerSum);
+        // console.log(newLedgerSum);
+        setcardarr({ ...newLedgerSum });
     };
+
+
 
     const monname = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 

@@ -20,6 +20,7 @@ import { FaBook } from 'react-icons/fa6';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc.js';
 import timezone from 'dayjs/plugin/timezone.js';
+import { BiLoaderAlt } from "react-icons/bi";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -40,6 +41,7 @@ const AddExpenses = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [postsPerPage, setPostsPerPage] = useState(10);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
 
   const init = {
     _id: '',
@@ -55,8 +57,10 @@ const AddExpenses = () => {
   }, []);
 
   useEffect(() => {
+    setIsSearching(true)
     const timerId = setTimeout(() => {
       setfinalserach(searchInput.toLowerCase());
+      setIsSearching(false)
     }, 1300);
 
     return () => clearTimeout(timerId);
@@ -250,7 +254,9 @@ const AddExpenses = () => {
           </span>
           <span>
             <input type="text" title='Search' onChange={(e) => setSearchInput(e.target.value)} value={searchInput} placeholder="Type to search..." />
-            <span title='clear' onClick={() => setSearchInput('')}><IoCloseSharp /></span>
+            {isSearching ? <span title='Searching' >  <BiLoaderAlt className='spin' /> </span>
+              :
+              <span title='clear' onClick={() => setSearchInput('')}>   <IoCloseSharp /></span>}
           </span>
         </div>
         <div className="table">
@@ -291,7 +297,7 @@ const AddExpenses = () => {
                 <span></span>
                 <span style={{ fontWeight: 700 }}>Total</span>
                 <span style={{ fontWeight: 700 }} id="totalhere">
-                  {filteredExpenses.reduce((acc, expense) => acc + expense.amount, 0)}
+                  {currentPosts.reduce((acc, expense) => acc + expense.amount, 0)}
                 </span>
                 <span></span>
                 <span></span>

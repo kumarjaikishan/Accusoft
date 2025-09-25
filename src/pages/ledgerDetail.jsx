@@ -92,7 +92,7 @@ const VoucherDetail = () => {
                             {exp.length > 0 && (
                                 <tr>
                                     <td colSpan={2}><b>Total</b></td>
-                                    <td>{exp.reduce((acc, val) => acc + val.amount, 0)}</td>
+                                    <td> <b>{exp.reduce((acc, val) => acc + val.amount, 0)} </b></td>
                                     <td colSpan={2}></td>
                                 </tr>
                             )}

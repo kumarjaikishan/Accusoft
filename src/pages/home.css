@@ -186,30 +186,31 @@
 
       .card {
         height: 80px;
+        border-radius: 10px;
 
         .data {
 
           .amt {
             font-size: 1.3em;
-            padding-left: 6px;
+            padding-left: 0px;
           }
 
           .day {
             font-size: 0.9em;
             color: #555;
             margin-top: 4px;
+            padding-left: 0;
           }
 
           .avg-badge {
-            font-size: 9px;
+            font-size: 10px;
             padding: 3px 4px;
+            /* padding-left: 0; */
 
             span {
               font-weight: 700;
             }
           }
-
-
         }
 
         .icon {

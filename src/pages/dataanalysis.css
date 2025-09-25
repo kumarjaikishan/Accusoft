@@ -55,16 +55,18 @@
         justify-content: center;
         padding: 4px 12px;
         border-radius: 20px;
-        background-color: var(--maincolor);
-        color: white;
+        background-color: white;
+        color: var(--maincolor);
+        border: 2px solid var(--maincolor);
         font-weight: 500;
         transition: 0.3s;
     }
 
     .show-budget-toggle input[type="checkbox"]:checked+label {
-        background-color: white;
-        color: var(--maincolor);
-        border: 2px solid var(--maincolor);
+
+        background-color: var(--maincolor);
+        color: white;
+
     }
 
     .cards {
@@ -216,8 +218,8 @@
             }
 
             .show-budget-toggle label {
-                padding: 4px 5px;
-                border-radius: 10px;
+                padding: 4px 6px;
+                border-radius: 4px;
                 font-weight: 400;
             }
         }

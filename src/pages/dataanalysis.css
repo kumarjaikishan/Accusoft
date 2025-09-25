@@ -34,54 +34,37 @@
             text-transform: capitalize;
         }
 
-        .show-budget-toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  margin-left: 12px;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--maincolor);
-  cursor: pointer;
-  user-select: none;
-
-  input[type="checkbox"] {
-    appearance: none; 
-    width: 16px;
-    height: 16px;
-    border: 2px solid var(--maincolor);
-    border-radius: 4px;
-    background: #fff;
-    cursor: pointer;
-    transition: all 0.2s ease;
-
-    &:checked {
-      background: var(--maincolor);
-      border-color: var(--maincolor);
-      position: relative;
-
-      &::after {
-        content: "✓";
-        color: #fff;
-        font-size: 12px;
-        font-weight: bold;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -58%);
-      }
     }
 
-    &:hover {
-      box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    .show-budget-toggle {
+        display: inline-flex;
+        align-items: center;
+        cursor: pointer;
+        user-select: none;
+        font-size: 13px;
     }
-  }
 
-  label {
-    cursor: pointer;
-  }
-}
+    .show-budget-toggle input[type="checkbox"] {
+        display: none;
+        /* hide default checkbox */
+    }
 
+    .show-budget-toggle label {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 4px 12px;
+        border-radius: 20px;
+        background-color: var(--maincolor);
+        color: white;
+        font-weight: 500;
+        transition: 0.3s;
+    }
+
+    .show-budget-toggle input[type="checkbox"]:checked+label {
+        background-color: white;
+        color: var(--maincolor);
+        border: 2px solid var(--maincolor);
     }
 
     .cards {
@@ -144,6 +127,7 @@
                 .budget-info {
                     font-size: 0.8em;
                     margin-top: 4px;
+                    color: #555;
                     /* border: 1px solid black; */
                 }
             }
@@ -215,14 +199,25 @@
 
 @media only screen and (max-width: 600px) {
     .datanalysis {
+        /* border: 1px solid black; */
+        padding: 5px 6px;
+
         .cont {
             width: 90vw;
             margin-bottom: 8px;
-            height: 60px;
+            height: 100px;
             border-radius: 7px;
+            flex-wrap: wrap;
+            /* border: 1px solid red; */
 
             .select {
                 width: 120px;
+            }
+
+            .show-budget-toggle label {
+                padding: 4px 5px;
+                border-radius: 10px;
+                font-weight: 400;
             }
         }
 
@@ -235,6 +230,7 @@
             .card {
                 width: 98%;
                 height: 90px;
+                padding: 10px;
 
                 .icon {
                     padding: 1rem;

@@ -36,17 +36,28 @@ const Datanalysis = () => {
         year: storedYear !== null ? parseInt(storedYear, 10) : today.getFullYear(),
     });
 
+    const BudgetToggle = () => {
+        let now = !showbudget
+        setshowbudget(now)
+        localStorage.setItem("showbudget", JSON.stringify(now));
+    }
+
+    // Save to localStorage whenever it changes
+    useEffect(() => {
+        let saved = localStorage.getItem("showbudget");
+        if (saved) setshowbudget(Boolean(JSON.parse(saved)));
+        console.log(saved)
+        console.log(saved)
+
+    }, []);
+
     const [cardarr, setcardarr] = useState({});
 
-    // Recalculate whenever month/year or useralldetail changes
     useEffect(() => {
         cal();
-        // stop loader if any
         dispatch(setloader(false));
-        // persist selection
         localStorage.setItem("month", String(inp.month));
         localStorage.setItem("year", String(inp.year));
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [inp.month, inp.year, useralldetail]);
 
     // Helper: safe number formatter (optional)
@@ -141,8 +152,6 @@ const Datanalysis = () => {
         }));
     };
 
-    // navigate to ledger detail.
-    // ledgerId will be either a ledger _id or "Total"
     const detail = (ledgerId) => {
         if (ledgerId === "Total") {
             navigate(
@@ -196,6 +205,7 @@ const Datanalysis = () => {
                             <InputLabel id="month-select-label">Month</InputLabel>
                             <Select
                                 name="month"
+                                size="small"
                                 labelId="month-select-label"
                                 onChange={handle}
                                 value={inp.month}
@@ -233,17 +243,15 @@ const Datanalysis = () => {
                     </span>
 
                     {/* You may want a toggle for showbudget */}
-                    <span style={{ marginLeft: 12 }}>
-                        <label style={{ fontSize: 13 }}>
-                            <input
-                                type="checkbox"
-                                checked={showbudget}
-                                onChange={(e) => setshowbudget(e.target.checked)}
-                                style={{ marginRight: 6 }}
-                            />
-                            Show Budget
-                        </label>
-                    </span>
+                    <div className="show-budget-toggle">
+                        <input
+                            type="checkbox"
+                            id="showBudget"
+                            checked={showbudget}
+                            onChange={BudgetToggle}
+                        />
+                        <label htmlFor="showBudget">{showbudget ? "Show Budget: ON" : "Show Budget: OFF"}</label>
+                    </div>
                 </div>
 
                 <div className="cards">

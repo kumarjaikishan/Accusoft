@@ -277,7 +277,7 @@ const Datanalysis = () => {
                                 style={{ cursor: "pointer" }}
                             >
                                 <div className="data">
-                                    <div className="amt">{fmt(total)}</div>
+                                    <div className="amt">₹{fmt(total)}</div>
                                     <div className="day">{data.ledger}</div>
 
                                     {showbudget && ledgerId !== "Total" && (
@@ -288,7 +288,7 @@ const Datanalysis = () => {
                                                 marginTop: 6,
                                             }}
                                         >
-                                            Budget: {fmt(budget)} /
+                                            Budget: ₹{fmt(budget)} /
                                             {isOverBudget
                                                 ? <span style={{
                                                     color: "red",
@@ -313,11 +313,6 @@ const Datanalysis = () => {
                                                 marginTop: 6,
                                             }}
                                         >
-                                            {/* Budget: {fmt(overallBudget)} <br />
-                                            {overallTotal > overallBudget
-                                                ? `Exceeded by ${fmt(overallTotal - overallBudget)}`
-                                                : `Under by ${fmt(overallBudget - overallTotal)}`} */}
-
                                             Budget: {fmt(budget)} /
                                             {overallTotal > overallBudget
                                                 ? <span style={{

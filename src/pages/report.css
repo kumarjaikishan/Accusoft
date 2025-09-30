@@ -90,7 +90,7 @@
 
     table {
         width: 100%;
-       
+
         border-collapse: collapse;
 
         tr td:nth-child(2) {
@@ -153,7 +153,7 @@
     color: white;
     box-shadow: none;
 
-    input{
+    input {
         color: white;
     }
 }
@@ -252,24 +252,25 @@
             }
 
             & table {
-               
+
 
                 thead {
-                    th{
+                    th {
                         font-size: 15px;
                     }
 
                     th:nth-child(1) {
                         width: 50px;
                     }
-        
+
                     th:nth-child(2) {
                         width: 100px;
                     }
-        
+
                     th:nth-child(3) {
                         width: 70px;
                     }
+
                     th:nth-child(5) {
                         width: 70px;
                     }
@@ -354,35 +355,60 @@
     }
 
     .report .table {
-        padding: 5px 8px;
+        padding: 5px 5px;
+
     }
 
-    .report .table #table th {
-        font-size: 12px;
-    }
+    .report .table {
+        padding: 5px;
 
-    .report .table td {
-        font-size: 11px !important;
-        line-height: 18px;
-    }
+        th {
+            font-size: 12px;
+        }
 
-    .report .table table th:nth-child(1) {
-        width: 30px;
-    }
+        td {
+            font-size: 10px !important;
+        }
 
-    .report .table table th:nth-child(2) {
-        width: 70px;
-    }
+        & div {
+            text-align: center;
+            text-transform: capitalize;
+            color: var(--maincolor);
+            display: none;
+            margin-bottom: 5px;
+        }
 
-    .report .table table th:nth-child(3) {
-        width: 40px;
-    }
+        table {
 
-    /* .report .table table th:nth-child(4) {
-        width: 180px;
-    } */
+            th,
+            #foot {
+                font-size: 12px;
 
-    .report .table table th:nth-child(5) {
-        width: 60px;
+            }
+
+            thead {
+
+
+                th:nth-child(1) {
+                    width: 20px;
+                }
+
+                th:nth-child(2) {
+                    width: 60px;
+                }
+
+                th:nth-child(3) {
+                    width: 5px;
+                }
+
+                th:nth-child(5) {
+                    width: 60px;
+                }
+            }
+
+            #foot {
+                font-size: 0.9em;
+            }
+        }
     }
 }

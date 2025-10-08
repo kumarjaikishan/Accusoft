@@ -81,6 +81,7 @@
         .card {
             display: flex;
             justify-content: space-between;
+            align-items: center;
             background: #dbe1e6;
             box-shadow:
                 0 0 5px #fff,
@@ -90,7 +91,7 @@
             padding: 20px 10px;
             border-radius: 10px;
             cursor: pointer;
-            transition: 0.3s;
+            transition: 0.3s ease;
 
             &:hover {
                 scale: 1.02;
@@ -103,22 +104,14 @@
             .data {
                 position: relative;
                 width: 160px;
-                /* padding: 2px; */
-                /* border: 1px solid red; */
 
                 .amt {
-                    /* width: 100%;
-                    height: 40%; */
                     font-size: 1.3em;
                     font-weight: 700;
                     margin-bottom: 4px;
-
-                    /* line-height: 40px; */
                 }
 
                 .day {
-                    /* width: 100%;
-                    height: 60%; */
                     font-size: 0.95em;
                     font-weight: 500;
                     color: #555;
@@ -128,15 +121,35 @@
 
                 .budget-info {
                     font-size: 0.8em;
-                    margin-top: 4px;
                     color: #555;
-                    /* border: 1px solid black; */
+                    min-height: 18px; 
+                    opacity: 0;
+                    transition: opacity 0.3s ease;
+
+                    &.visible {
+                        opacity: 1;
+                    }
+
+                    &.hidden {
+                        opacity: 0;
+                    }
+
+                    .over {
+                        color: red;
+                        font-weight: 500;
+                        /* font-size: 0.8em; */
+                    }
+
+                    .under {
+                        color: green;
+                        font-weight: 500;
+                        /* font-size: 0.8em; */
+                    }
                 }
             }
 
             .icon {
-                width: 110px;
-                /* border: 1px solid red; */
+                width: 100px;
                 text-align: center;
                 position: relative;
                 padding: 2rem;
@@ -145,13 +158,12 @@
                     position: absolute;
                     top: 50%;
                     left: 50%;
-                    width: 100px;
-                    height: 100px;
+                    width: 90px;
+                    height: 90px;
                     border-radius: 50%;
                     transform: translate(-50%, -50%);
-                    transition: 1s;
-                    background: conic-gradient(rgb(252, 92, 101) 2.8deg,
-                            rgb(127, 143, 166) 10.8deg);
+                    transition: background 1s ease;
+                    background: conic-gradient(#034972 2.8deg, #afbbcb 10.8deg);
 
                     .per {
                         position: absolute;
@@ -170,6 +182,7 @@
                 }
             }
         }
+
     }
 
     /* Dark Theme */

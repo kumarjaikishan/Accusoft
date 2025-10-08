@@ -46,8 +46,8 @@ const Datanalysis = () => {
     useEffect(() => {
         let saved = localStorage.getItem("showbudget");
         if (saved) setshowbudget(Boolean(JSON.parse(saved)));
-        console.log(saved)
-        console.log(saved)
+        // console.log(saved)
+        // console.log(saved)
 
     }, []);
 
@@ -181,8 +181,9 @@ const Datanalysis = () => {
         const entries = Object.entries(cardarr || {});
         const nonTotal = entries.filter(([id]) => id !== "Total");
         const total = entries.find(([id]) => id === "Total");
+
         // Optionally sort nonTotal by totalSum desc:
-        nonTotal.sort(([, a], [, b]) => b.totalSum - a.totalSum);
+        // nonTotal.sort(([, a], [, b]) => b.totalSum - a.totalSum);
         return total ? [...nonTotal, total] : nonTotal;
     }, [cardarr]);
 
@@ -238,6 +239,7 @@ const Datanalysis = () => {
                                 <MenuItem value={2023}>2023</MenuItem>
                                 <MenuItem value={2024}>2024</MenuItem>
                                 <MenuItem value={2025}>2025</MenuItem>
+                                <MenuItem value={2025}>2026</MenuItem>
                             </Select>
                         </FormControl>
                     </span>
@@ -269,79 +271,56 @@ const Datanalysis = () => {
                         const deg = percentage * 3.6;
 
                         return (
-                            <div
-                                onClick={() => detail(ledgerId)}
-                                className="card"
-                                key={ledgerId}
-                                id={ledgerId}
-                                style={{ cursor: "pointer" }}
-                            >
-                                <div className="data">
-                                    <div className="amt">₹{fmt(total)}</div>
-                                    <div className="day">{data.ledger}</div>
+  <div
+    onClick={() => detail(ledgerId)}
+    className="card"
+    key={ledgerId}
+    id={ledgerId}
+    style={{ cursor: "pointer" }}
+  >
+    <div className="data">
+      <div className="amt">₹{fmt(total)}</div>
+      <div className="day">{data.ledger}</div>
 
-                                    {showbudget && ledgerId !== "Total" && (
-                                        <div
-                                            className="budget-info"
-                                            style={{
-                                                fontSize: "12px",
-                                                marginTop: 6,
-                                            }}
-                                        >
-                                            Budget: ₹{fmt(budget)} /
-                                            {isOverBudget
-                                                ? <span style={{
-                                                    color: "red",
-                                                    fontSize: "12px",
-                                                    fontWeight: 500
-                                                }} > + {fmt(Math.abs(budgetDiff))}</span>
-                                                : <span style={{
-                                                    color: "green",
-                                                    fontSize: "12px",
-                                                    fontWeight: 500
-                                                }}> - {fmt(Math.abs(budgetDiff))}</span>
-                                            }
-                                        </div>
-                                    )}
+      {/* Budget info block — always rendered but fades in/out */}
+      <div
+        className={`budget-info ${showbudget ? "visible" : "hidden"}`}
+      >
+        {ledgerId === "Total" ? (
+          <>
+            Budget: ₹{fmt(budget)} /
+            {overallTotal > overallBudget ? (
+              <span className="over"> + {fmt(overallTotal - overallBudget)}</span>
+            ) : (
+              <span className="under"> - {fmt(overallBudget - overallTotal)}</span>
+            )}
+          </>
+        ) : (
+          <>
+            Budget: ₹{fmt(budget)} /
+            {isOverBudget ? (
+              <span className="over"> + {fmt(Math.abs(budgetDiff))}</span>
+            ) : (
+              <span className="under"> - {fmt(Math.abs(budgetDiff))}</span>
+            )}
+          </>
+        )}
+      </div>
+    </div>
 
+    <div className="icon">
+      <div
+        className="cir"
+        style={{
+          background: `conic-gradient(#034972 ${deg}deg, #afbbcb ${deg}deg)`,
+        }}
+      >
+        <div className="per">{percentage} %</div>
+      </div>
+    </div>
+  </div>
+);
 
-                                    {showbudget && ledgerId === "Total" && (
-                                        <div
-                                            className="budget-info"
-                                            style={{
-                                                fontSize: "12px",
-                                                marginTop: 6,
-                                            }}
-                                        >
-                                            Budget: {fmt(budget)} /
-                                            {overallTotal > overallBudget
-                                                ? <span style={{
-                                                    color: "red",
-                                                    fontSize: "12px",
-                                                    fontWeight: 500
-                                                }} > + {fmt(overallTotal - overallBudget)}</span>
-                                                : <span style={{
-                                                    color: "green",
-                                                    fontSize: "12px",
-                                                    fontWeight: 500
-                                                }}> - {fmt(overallBudget - overallTotal)}</span>
-                                            }
-                                        </div>
-                                    )}
-                                </div>
-
-                                <div className="icon">
-                                    <div
-                                        className="cir"
-                                        style={{
-                                            background: `conic-gradient(#034972 ${deg}deg, #afbbcb ${deg}deg)`,
-                                        }}
-                                    >
-                                        <div className="per">{percentage} %</div>
-                                    </div>
-                                </div>
-                            </div>
-                        );
                     })}
                 </div>
             </motion.div>

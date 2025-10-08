@@ -239,7 +239,7 @@ const Datanalysis = () => {
                                 <MenuItem value={2023}>2023</MenuItem>
                                 <MenuItem value={2024}>2024</MenuItem>
                                 <MenuItem value={2025}>2025</MenuItem>
-                                <MenuItem value={2025}>2026</MenuItem>
+                                <MenuItem value={2026}>2026</MenuItem>
                             </Select>
                         </FormControl>
                     </span>
@@ -271,55 +271,55 @@ const Datanalysis = () => {
                         const deg = percentage * 3.6;
 
                         return (
-  <div
-    onClick={() => detail(ledgerId)}
-    className="card"
-    key={ledgerId}
-    id={ledgerId}
-    style={{ cursor: "pointer" }}
-  >
-    <div className="data">
-      <div className="amt">₹{fmt(total)}</div>
-      <div className="day">{data.ledger}</div>
+                            <div
+                                onClick={() => detail(ledgerId)}
+                                className="card"
+                                key={ledgerId}
+                                id={ledgerId}
+                                style={{ cursor: "pointer" }}
+                            >
+                                <div className="data">
+                                    <div className="amt">₹{fmt(total)}</div>
+                                    <div className="day">{data.ledger}</div>
 
-      {/* Budget info block — always rendered but fades in/out */}
-      <div
-        className={`budget-info ${showbudget ? "visible" : "hidden"}`}
-      >
-        {ledgerId === "Total" ? (
-          <>
-            Budget: ₹{fmt(budget)} /
-            {overallTotal > overallBudget ? (
-              <span className="over"> + {fmt(overallTotal - overallBudget)}</span>
-            ) : (
-              <span className="under"> - {fmt(overallBudget - overallTotal)}</span>
-            )}
-          </>
-        ) : (
-          <>
-            Budget: ₹{fmt(budget)} /
-            {isOverBudget ? (
-              <span className="over"> + {fmt(Math.abs(budgetDiff))}</span>
-            ) : (
-              <span className="under"> - {fmt(Math.abs(budgetDiff))}</span>
-            )}
-          </>
-        )}
-      </div>
-    </div>
+                                    {/* Budget info block — always rendered but fades in/out */}
+                                    <div
+                                        className={`budget-info ${showbudget ? "visible" : "hidden"}`}
+                                    >
+                                        {ledgerId === "Total" ? (
+                                            <>
+                                                Budget: ₹{fmt(budget)} /
+                                                {overallTotal > overallBudget ? (
+                                                    <span className="over"> + {fmt(overallTotal - overallBudget)}</span>
+                                                ) : (
+                                                    <span className="under"> - {fmt(overallBudget - overallTotal)}</span>
+                                                )}
+                                            </>
+                                        ) : (
+                                            <>
+                                                Budget: ₹{fmt(budget)} /
+                                                {isOverBudget ? (
+                                                    <span className="over"> + {fmt(Math.abs(budgetDiff))}</span>
+                                                ) : (
+                                                    <span className="under"> - {fmt(Math.abs(budgetDiff))}</span>
+                                                )}
+                                            </>
+                                        )}
+                                    </div>
+                                </div>
 
-    <div className="icon">
-      <div
-        className="cir"
-        style={{
-          background: `conic-gradient(#034972 ${deg}deg, #afbbcb ${deg}deg)`,
-        }}
-      >
-        <div className="per">{percentage} %</div>
-      </div>
-    </div>
-  </div>
-);
+                                <div className="icon">
+                                    <div
+                                        className="cir"
+                                        style={{
+                                            background: `conic-gradient(#034972 ${deg}deg, #afbbcb ${deg}deg)`,
+                                        }}
+                                    >
+                                        <div className="per">{percentage} %</div>
+                                    </div>
+                                </div>
+                            </div>
+                        );
 
                     })}
                 </div>

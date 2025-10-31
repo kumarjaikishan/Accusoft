@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 import swal from 'sweetalert';
 import TextField from '@mui/material/TextField';
 import apiWrapper from './apiWrapper';
-import { MdAddBox } from "react-icons/md";
+import { MdAddBox, MdUpdate } from "react-icons/md";
 import Button from '@mui/material/Button';
 import { HiPencilSquare } from "react-icons/hi2";
 import { RiDeleteBin6Line } from "react-icons/ri";
@@ -51,7 +51,7 @@ const Ledpage = ({ setmodal, setdisable, disable, navigate, isledupdate, setisle
       return toast.warn("Budget Can't be Blank", { autoClose: 1300 });
     }
 
-    const url = `${import.meta.env.VITE_API_ADDRESS}/addledger`;
+    const url = `${import.meta.env.VITE_API_ADDRESS}addledger`;
     const method = 'POST';
     const body = { ledger: ledinp.ledger, budget: parseFloat(ledinp.budget) };
 
@@ -181,6 +181,7 @@ const Ledpage = ({ setmodal, setdisable, disable, navigate, isledupdate, setisle
               label="Enter Ledger"
               size='small'
               variant="outlined"
+               style={{ width: '250px' }}
               value={ledinp.ledger}
               onChange={handleLedger}
               className="inpe"
@@ -190,13 +191,23 @@ const Ledpage = ({ setmodal, setdisable, disable, navigate, isledupdate, setisle
               size='small'
               variant="outlined"
               value={ledinp.budget}
-              style={{ width: '180px' }}
+              style={{ width: '170px' }}
               onChange={handleBudget}
               className="inpe"
               type="number"
             />
             {isupda ? (
-              <button disabled={disable} onClick={updat}>Update</button>
+               <Button
+                size='small'
+                className='btne'
+                disabled={disable}
+                title='Add'
+                onClick={updat}
+                startIcon={<MdUpdate />}
+                variant="contained"
+              >
+                Update
+              </Button>
             ) : (
               <Button
                 size='small'

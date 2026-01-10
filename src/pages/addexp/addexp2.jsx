@@ -276,6 +276,8 @@ const AddExpenses = () => {
     );
   }
 
+ 
+
   return (
     <motion.div
       initial={{ opacity: 0, x: '100%' }}

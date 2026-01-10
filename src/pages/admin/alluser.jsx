@@ -10,6 +10,8 @@ import Useredit from './usereditmodal';
 import { MdVerified } from "react-icons/md";
 import { HiPencilSquare } from "react-icons/hi2";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import DataTable from 'react-data-table-component';
+import dayjs from 'dayjs';
 
 
 const Alluser = () => {
@@ -34,7 +36,7 @@ const Alluser = () => {
                 }
             })
             const data = await result.json();
-            console.log("admin all users", data);
+            // console.log("admin all users", data);
             if (result.ok) {
                 setusers(data.users);
                 // dispatch(setloader(false));
@@ -229,6 +231,52 @@ const Alluser = () => {
 
     const currentpost = users.slice(firstpostindex, lastpostindex);
 
+    const columns = [
+        {
+            name: "S.no",
+            selector: (row, index) => index + 1,
+            width: '40px'
+        },
+        {
+            name: "Name",
+            selector: (row) => row.name
+        },
+        {
+            name: "Phone",
+            selector: (row) => row.phone,
+            width: '114px'
+        },
+        {
+            name: "Email",
+            selector: (row) => row.email
+        },
+        {
+            name: "Nos",
+            selector: (row) => row.totalExpenses,
+            width: '70px'
+        },
+        {
+            name: <MdVerified style={{ fontSize: '22px' }} />,
+            selector: (row) => <span className={row.isverified ? 'status done' : 'status'}>{row.isverified ? "Yes" : "No"}</span>,
+            width: '70px'
+        },
+        {
+            name: "Action",
+            selector: (row) => (
+                <span>
+                    <HiPencilSquare className='editicon ico' title='Edit' onClick={() => setinputfield(row)} />
+                    <RiDeleteBin6Line className='deleteicon ico' title='Delete' onClick={() => delet(row._id)} />
+                </span>
+            ),
+            width: '120px'
+        },
+        {
+            name: "Date",
+            selector: (row) => dayjs(row.createdAt).format('DD MMM, YY'),
+            width: '100px'
+        },
+    ]
+    
 
 
     return (
@@ -247,46 +295,15 @@ const Alluser = () => {
                     </span>
                     <span><input type="text" onChange={sear} value={serinp} placeholder='Type to search...' /></span>
                 </div>
-                <div className="table">
-                    <div className="header">
-                        <span>S.no</span>
-                        <span>Name </span>
-                        <span>Phone</span>
-                        <span>Email</span>
-                        <span>Nos</span>
-                        <span><MdVerified style={{ fontSize: '22px' }} /> </span>
-                        <span>Action</span>
-                        <span>Date</span>
-                    </div>
-                    <div className="body" id="tablecontent"   >
 
-                        {currentpost && currentpost.map((val, ind) => {
-                            const expenseDate = new Date(val.createdAt);
-                            const formattedDate = `${expenseDate.getUTCDate().toString().padStart(2, '0')} ${expenseDate.toLocaleString('default', { month: 'short' })
-                                }, ${expenseDate.getFullYear().toString().substr(-2)}`;
-                            return <div key={ind} // Ensure each item has a unique key
-                            >
-                                <span>{ind + 1}</span>
-                                <span>{val.name}</span>
-                                <span>{val.phone}</span>
-                                <span>{val.email}</span>
-                                <span>{val.totalExpenses}</span>
-                                <span className={val.isverified ? 'status done' : 'status'}>{val.isverified ? "Yes" : "No"}</span>
-                                <span>
-                                    <HiPencilSquare className='editicon ico' title='Edit' onClick={() => setinputfield(val)} />
-                                    <RiDeleteBin6Line className='deleteicon ico' title='Delete' onClick={() => delet(val._id)} />
-                                </span>
-                                <span>{formattedDate ? formattedDate : ""}</span>
-                            </div>
-                        })}
-                    </div>
-                </div>
-                <div className="foot">
-                    <span>Showing Result From {firstpostindex + 1} To {lastpostindex >= users.length ? lastpostindex = users.length : lastpostindex} of  {users.length} Results</span>
-                    <span>Pages :
-                        <Pagination currentpage={currentpage} changepageno={changepageno} totalpost={users.length} postperpage={postperpage} />
-                    </span>
-                </div>
+                <DataTable
+                    columns={columns}
+                    data={currentpost}
+                    pagination
+                    // customStyles={useCustomStyles()}
+                    highlightOnHover
+                />
+
                 <Useredit handler={handler} inp={inp} setinp={setinp} modal={modal} setmodal={setmodal} fetche={fetche} />
             </div>
         </>

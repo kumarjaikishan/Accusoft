@@ -67,7 +67,7 @@ const Home = () => {
     // Track distinct months
     const uniqueMonths = new Set();
 
-    useralldetail?.explist.forEach((val) => {
+    useralldetail?.explist?.forEach((val) => {
       const date = dayjs(val.date, "YYYY-MM-DD");
 
       if (date.isSame(today, 'day')) todaysum += val.amount;

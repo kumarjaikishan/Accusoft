@@ -4,184 +4,55 @@
     min-height: calc(100vh - var(--navheight) - var(--footerheight));
     /* border: 2px solid blue; */
 
-    .table {
+    span.status {
+        font-weight: 700;
+        display: inline-block;
+        width: 40px;
+        border-radius: 5px;
+        height: 20px;
+        text-align: center;
+        background: rgba(221, 179, 100, 0.486);
+        color: rgb(86, 56, 2);
+    }
 
-        .header,
-        .body {
+    .status.done {
+        background-color: rgba(118, 234, 118, 0.4);
+        color: rgb(3, 43, 3);
+        /* border-right: 4px solid rgb(1, 59, 1); */
+    }
 
-            /* display: flex;  */
-            >span {
-                /* border: 1px solid red; */
-            }
+    .ico {
+        padding: 2px 5px;
+        box-sizing: content-box;
+        width: 17px;
+        height: 17px;
+        border-radius: .2rem;
+        margin: 0 4px;
+        cursor: pointer;
+    }
 
-            & span:nth-child(1) {
-                width: 50px;
-                /* border: 1px solid red; */
-            }
+    .ico.editicon {
+        color: rgb(7, 120, 182);
+        background: rgba(7, 121, 182, 0.116);
 
-            & span:nth-child(2) {
-                width: 195px;
-                /* text-align: start; */
-                /* border: 1px solid red; */
-            }
-
-            & span:nth-child(3) {
-                width: 170px;
-                /* border: 1px solid black; */
-            }
-
-            & span:nth-child(4) {
-                width: 740px;
-                /* flex-grow: 1; */
-                /* border: 1px solid red; */
-            }
-
-            & span:nth-child(5) {
-                width: 75px;
-                /* border: 1px solid black; */
-            }
-            & span:nth-child(6) {
-                width: 85px;
-                /* border: 1px solid black; */
-            }
-
-            & span:nth-child(7) {
-                width: 90px;
-                display: flex;
-                justify-content: space-around;
-                align-items: center;
-                /* border: 1px solid red; */
-
-            }
-
-            & span:nth-child(8) {
-                width: 95px;
-                display: flex;
-                justify-content: space-around;
-                align-items: center;
-                /* border: 1px solid black; */
-
-
-            }
-
-            .ico {
-                padding: 2px 5px;
-                box-sizing: content-box;
-                width: 17px;
-                height: 17px;
-                border-radius: .2rem;
-                cursor: pointer;
-            }
-
-            .ico.editicon {
-                color: rgb(7, 120, 182);
-                background: rgba(7, 121, 182, 0.116);
-
-                &:hover {
-                    background: rgb(7, 120, 182);
-                    color: white;
-                }
-            }
-
-            .ico.deleteicon {
-                color: rgb(220, 7, 25);
-                background: rgba(182, 7, 16, 0.116);
-
-                &:hover {
-                    background: rgb(220, 7, 25);
-                    color: white;
-                }
-            }
-
-            .ico.printicon {
-                color: rgb(16, 16, 149);
-                background: rgba(29, 10, 198, 0.116);
-
-                &:hover {
-                    background: rgb(16, 16, 149);
-                    color: white;
-                }
-            }
-
-        }
-
-        .header {
-            >span {
-                justify-content: center;
-            }
-        }
-
-        .body {
-
-            span.status {
-                font-weight: 500;
-            }
-
-            span.status {
-                background: rgba(221, 179, 100, 0.486);
-                color: rgb(86, 56, 2);
-                /* border-right: 4px solid rgb(86, 56, 2); */
-            }
-
-            .status.done {
-                background-color: rgba(118, 234, 118, 0.504);
-                color: rgb(1, 59, 1);
-                /* border-right: 4px solid rgb(1, 59, 1); */
-            }
+        &:hover {
+            background: rgb(7, 120, 182);
+            color: white;
         }
     }
+
+    .ico.deleteicon {
+        color: rgb(220, 7, 25);
+        background: rgba(182, 7, 16, 0.116);
+
+        &:hover {
+            background: rgb(220, 7, 25);
+            color: white;
+        }
+    }
+
 }
 
 @media only screen and (max-width: 600px) {
-    .allusers.admin {
-
-        & .table {
-
-            .header,
-            .body {
-                & span:nth-child(1) {
-                    min-width: 28px;
-                    /* border: 1px solid red; */
-                }
-
-                & span:nth-child(2) {
-                    min-width: 65px;
-                    /* border: 1px solid red; */
-                }
-
-                & span:nth-child(3) {
-                    min-width: 55px;
-                    /* border: 1px solid red; */
-                }
-
-                & span:nth-child(4) {
-                    width: 550px;
-                    /* border: 1px solid red; */
-                }
-
-                & span:nth-child(5) {
-                    min-width: 30px;
-                    /* border: 1px solid red; */
-                }
-
-                & span:nth-child(7) {
-                    min-width: 40px;
-                    /* border: 1px solid red; */
-                }
-
-                & span:nth-child(7) {
-                    min-width: 45px;
-                    /* border: 1px solid red; */
-                }
-            }
-
-            .body {
-                div {
-                    span {
-                        font-size: 8px;
-                    }
-                }
-            }
-        }
-    }
+    .allusers.admin {}
 }

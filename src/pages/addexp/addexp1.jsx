@@ -308,6 +308,11 @@ const AddExpenses = () => {
     setSelectedRowIds(selectedRows.map(e=> e._id))
   };
 
+    const manualRow = {
+        ledger: {ledger:'total'},
+       amount:25000,
+    };
+    const tableData = [...filteredExpenses, manualRow];
 
   return (
     <>

@@ -1,313 +1,243 @@
-import React, { useState } from 'react'
-import { useEffect } from 'react';
-import './alluser.css';
-import swal from 'sweetalert';
-import Pagination from '../addexp/pagination';
-import { useSelector, useDispatch } from 'react-redux';
-import { setloader } from '../../store/login';
-import { toast } from 'react-toastify';
-import Useredit from './usereditmodal';
+import React, { useEffect, useState, useCallback, useMemo } from "react";
+import "./alluser.css";
+import swal from "sweetalert";
+import DataTable from "react-data-table-component";
+import dayjs from "dayjs";
+import { toast } from "react-toastify";
 import { MdVerified } from "react-icons/md";
 import { HiPencilSquare } from "react-icons/hi2";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import DataTable from 'react-data-table-component';
-import dayjs from 'dayjs';
+import Useredit from "./usereditmodal";
 
+/* =========================
+   API HELPERS (SRP)
+========================= */
+
+const getToken = () => localStorage.getItem("token");
+
+const fetchUsersApi = async () => {
+    const res = await fetch(`${import.meta.env.VITE_API_ADDRESS}adminuser`, {
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getToken()}`
+        }
+    });
+
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || "Not authorised");
+    return data.users;
+};
+
+const deleteUserApi = async (id) => {
+    const res = await fetch(`${import.meta.env.VITE_API_ADDRESS}removeuser`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getToken()}`
+        },
+        body: JSON.stringify({ id })
+    });
+
+    if (!res.ok) throw new Error("Delete failed");
+};
+
+/* =========================
+   CUSTOM HOOK (DATA ONLY)
+========================= */
+
+const useUsers = () => {
+    const [users, setUsers] = useState([]);
+    const [loading, setLoading] = useState(false);
+
+    const fetchUsers = useCallback(async () => {
+        try {
+            setLoading(true);
+            const data = await fetchUsersApi();
+            setUsers(data);
+        } catch (err) {
+            toast.warn(err.message);
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
+    useEffect(() => {
+        fetchUsers();
+    }, [fetchUsers]);
+
+    return { users, loading, refetch: fetchUsers };
+};
+
+/* =========================
+   MAIN COMPONENT
+========================= */
 
 const Alluser = () => {
-    const dispatch = useDispatch();
-    const useralldetail = useSelector((state) => state.userexplist);
+    const { users, loading, refetch } = useUsers();
 
-    const [users, setusers] = useState([]);
-    useEffect(() => {
-        // dispatch(setloader(true));
-        fetche();
-    }, [])
-
-    const fetche = async () => {
-        const token = localStorage.getItem("token");
-        // dispatch(setloader(true));
-        try {
-            const result = await fetch(`${import.meta.env.VITE_API_ADDRESS}adminuser`, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`,
-                }
-            })
-            const data = await result.json();
-            // console.log("admin all users", data);
-            if (result.ok) {
-                setusers(data.users);
-                // dispatch(setloader(false));
-            } else {
-                toast.warn(data.message ? data.message : "You are not authorised", { autoClose: 1500 });
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
-    const date = new Date;
-    const [serinp, setserinp] = useState("");
-    const [isupdate, setisupdate] = useState(false);
-    let dfbdf = (date.getMonth() + 1);
-    let dfbfvfddf = date.getUTCDate();
-    if (dfbdf < 10) {
-        dfbdf = "0" + dfbdf;
-    }
-    if (dfbfvfddf < 10) {
-        dfbfvfddf = "0" + dfbfvfddf;
-    }
-
-    const today = date.getFullYear() + "-" + dfbdf + "-" + dfbfvfddf;
-
-    const init = {
+    const [search, setSearch] = useState("");
+    const [modal, setModal] = useState(false);
+    const [form, setForm] = useState({
         id: "",
         name: "",
         phone: "",
         email: "",
         admin: "",
         verified: ""
-    }
-    const [inp, setinp] = useState(init);
-    const [currentpage, setcurrentpage] = useState(1);
-    const [postperpage, setpostperpage] = useState(10);
+    });
 
+    /* =========================
+       HANDLERS (SRP)
+    ========================= */
 
-    const [modal, setmodal] = useState(false);
-    const handler = (e) => {
-        let name = e.target.name;
-        let value = e.target.value;
-        console.log(name, " : ", value);
-        setinp({
-            ...inp, [name]: value
-        })
-    }
-
-    //  setting input field for edit user data
-    const setinputfield = async (val) => {
-        // console.log(val);
-        setinp({
-            id: val._id,
-            name: val.name,
-            phone: val.phone,
-            email: val.email,
-            admin: val.isadmin,
-            verified: val.isverified
-        })
-        setmodal(true);
-        // console.log(val);
-    }
-    //  fecthing data for edit ends here
-
-    // for deleteing data
-    const delet = async (val) => {
-        // console.log(val);
-        swal({
-            title: "Are you sure?",
-            text: "Once deleted, you will not be able to recover this Data!",
-            icon: "warning",
-            buttons: true,
-            dangerMode: true,
-        }).then(async (willDelete) => {
-            if (willDelete) {
-                try {
-                    const id = toast.loading('Please Wait...')
-                    const token = localStorage.getItem("token");
-                    // dispatch(setloader(true));
-                    const result = await fetch(`${import.meta.env.VITE_API_ADDRESS}removeuser`, {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "Authorization": `Bearer ${token}`,
-                        },
-                        body: JSON.stringify({
-                            id: val
-                        })
-                    })
-                    const data = await result.json();
-                    // console.log(data);
-                    if (result.ok) {
-                        toast.update(id, { render: 'Deleted Successfully', type: "success", isLoading: false, autoClose: 1600 });
-                        fetche();
-                    }
-                } catch (error) {
-                    toast.update(id, { render: "Someting went wrong", type: "warn", isLoading: false, autoClose: 1600 });
-                    console.log(error);
-                }
-
-            } else {
-                // swal("Your data is safe!");
-            }
+    const openEditModal = (user) => {
+        setForm({
+            id: user._id,
+            name: user.name,
+            phone: user.phone,
+            email: user.email,
+            admin: user.isadmin,
+            verified: user.isverified
         });
-    }
-    // for deleteing data ends here
+        setModal(true);
+    };
 
-    // for sending multiple delete request
-    const senddelete = async () => {
-        const item = document.querySelectorAll("#tablecontent input");
-        swal({
+    const deleteUser = async (id) => {
+        const confirm = await swal({
             title: "Are you sure?",
-            text: "Once deleted, you will not be able to recover this Data!",
+            text: "Once deleted, you will not be able to recover this data!",
             icon: "warning",
             buttons: true,
-            dangerMode: true,
-        })
-            .then(async (willDelete) => {
-                if (willDelete) {
-                    dispatch(setloader(true));
-                    const arr = [];
-                    for (let i = 0; i < item.length; i++) {
-                        if (item[i].checked == true) {
-                            arr.push(item[i].id)
-                        }
-                    }
+            dangerMode: true
+        });
 
-                    if (arr.length < 1) {
-                        toast.warn("Kindly Select data", { autoClose: 1300 });
-                    } else {
-                        const result = await fetch(`${import.meta.env.VITE_API_ADDRESS}delmany`, {
-                            method: "DELETE",
-                            headers: {
-                                "Content-Type": "application/json"
-                            },
-                            body: JSON.stringify({
-                                id: arr
-                            })
-                        })
-                        const data = await result.json();
-                        toast.success("Deleted Successfully", { autoClose: 1300 });
-                        fetche();
+        if (!confirm) return;
 
-                        const item = document.querySelectorAll("#tablecontent input");
-                        const tr = document.querySelectorAll("#tablecontent tr");
-                        for (let i = 0; i < item.length; i++) {
-                            item[i].checked = false;
-                        }
-
-                        highlight();
-                    }
-                } else {
-                    swal("Your data is safe!");
-                }
-
-            })
-    }
-    // for sending multiple delete request ends here
-
-    // for selecting all checkbox
-    const allselect = () => {
-        const it = document.querySelector("#allcheck");
-        const item = document.querySelectorAll("#tablecontent input");
-        if (it.checked == true) {
-            for (let i = 0; i < item.length; i++) {
-                item[i].checked = true
-            }
-        } else {
-            for (let i = 0; i < item.length; i++) {
-                item[i].checked = false;
-            }
+        const toastId = toast.loading("Deleting...");
+        try {
+            await deleteUserApi(id);
+            toast.update(toastId, {
+                render: "Deleted Successfully",
+                type: "success",
+                isLoading: false,
+                autoClose: 1500
+            });
+            refetch();
+        } catch {
+            toast.update(toastId, {
+                render: "Something went wrong",
+                type: "error",
+                isLoading: false
+            });
         }
-        highlight();
-    }
+    };
 
-    // for selecting all checkbox ends here
+    /* =========================
+       SEARCH FILTER (SRP)
+    ========================= */
 
-    const requirede = (e) => {
-        setpostperpage(e.target.value);
-        setcurrentpage(1);
-    }
+    const filteredUsers = useMemo(() => {
+        if (!search.trim()) return users;
 
-    const changepageno = (hi) => {
-        setcurrentpage(hi);
-    }
+        const q = search.toLowerCase();
+        return users.filter((u) =>
+            u.name?.toLowerCase().includes(q) ||
+            u.email?.toLowerCase().includes(q) ||
+            u.phone?.includes(search)
+        );
+    }, [users, search]);
 
-    const sear = (e) => {
-        setserinp(e.target.value);
-    }
-    let lastpostindex = currentpage * postperpage;
-    const firstpostindex = lastpostindex - postperpage;
-
-    const currentpost = users.slice(firstpostindex, lastpostindex);
+    /* =========================
+       TABLE CONFIG (SRP)
+    ========================= */
 
     const columns = [
-        {
-            name: "S.no",
-            selector: (row, index) => index + 1,
-            width: '40px'
-        },
-        {
-            name: "Name",
-            selector: (row) => row.name
-        },
-        {
-            name: "Phone",
-            selector: (row) => row.phone,
-            width: '114px'
-        },
-        {
-            name: "Email",
-            selector: (row) => row.email
-        },
+        { name: "S.no", selector: (_, i) => i + 1, width: "60px" },
+        { name: "Name", selector: (row) => row.name },
+        { name: "Phone", selector: (row) => row.phone, width: "120px" },
+        { name: "Email", selector: (row) => row.email },
         {
             name: "Nos",
             selector: (row) => row.totalExpenses,
-            width: '70px'
+            width: "80px"
         },
         {
-            name: <MdVerified style={{ fontSize: '22px' }} />,
-            selector: (row) => <span className={row.isverified ? 'status done' : 'status'}>{row.isverified ? "Yes" : "No"}</span>,
-            width: '70px'
+            name: "Last Active",
+            selector: (row) =>
+                row.lastActivity
+                    ? dayjs(row.lastActivity).format("DD MMM, YYYY")
+                    : "-",
+            width: "130px"
+        },
+        {
+            name: <MdVerified size={20} />,
+            selector: (row) => (
+                <span className={row.isverified ? "status done" : "status"}>
+                    {row.isverified ? "Yes" : "No"}
+                </span>
+            ),
+            width: "80px"
         },
         {
             name: "Action",
             selector: (row) => (
-                <span>
-                    <HiPencilSquare className='editicon ico' title='Edit' onClick={() => setinputfield(row)} />
-                    <RiDeleteBin6Line className='deleteicon ico' title='Delete' onClick={() => delet(row._id)} />
-                </span>
+                <>
+                    <HiPencilSquare
+                        className="editicon ico"
+                        onClick={() => openEditModal(row)}
+                    />
+                    <RiDeleteBin6Line
+                        className="deleteicon ico"
+                        onClick={() => deleteUser(row._id)}
+                    />
+                </>
             ),
-            width: '120px'
+            width: "120px"
         },
         {
             name: "Date",
-            selector: (row) => dayjs(row.createdAt).format('DD MMM, YY'),
-            width: '100px'
-        },
-    ]
-    
+            selector: (row) =>
+                dayjs(row.createdAt).format("DD MMM, YY"),
+            width: "110px"
+        }
+    ];
 
+    /* =========================
+       JSX
+    ========================= */
 
     return (
-        <>
-            <div className="allusers admin">
-                <div className="head">
-                    <span>All Users List</span>
-                    <span>
-                        Record :  <select name="" id="" value={postperpage} onChange={requirede}>
-                            <option value="10">10</option>
-                            <option value="20">20</option>
-                            <option value="50">50</option>
-                            <option value="100">100</option>
-                            <option value="500">500</option>
-                        </select>
-                    </span>
-                    <span><input type="text" onChange={sear} value={serinp} placeholder='Type to search...' /></span>
-                </div>
-
-                <DataTable
-                    columns={columns}
-                    data={currentpost}
-                    pagination
-                    // customStyles={useCustomStyles()}
-                    highlightOnHover
-                />
-
-                <Useredit handler={handler} inp={inp} setinp={setinp} modal={modal} setmodal={setmodal} fetche={fetche} />
+        <div className="allusers admin">
+            <div className="head">
+                <span>All Users List</span>
+                <span></span>
+                <span>
+                    <input
+                        type="text"
+                        placeholder="Type to search..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                    />
+                </span>
             </div>
-        </>
-    )
-}
+
+            <DataTable
+                columns={columns}
+                data={filteredUsers}
+                pagination
+                progressPending={loading}
+                highlightOnHover
+            />
+
+            <Useredit
+                inp={form}
+                setinp={setForm}
+                modal={modal}
+                setmodal={setModal}
+                fetche={refetch}
+            />
+        </div>
+    );
+};
 
 export default Alluser;

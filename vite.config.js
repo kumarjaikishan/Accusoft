@@ -1,8 +1,9 @@
 import { defineConfig } from "vite";
-import reactRefresh from "@vitejs/plugin-react";
+import react from "@vitejs/plugin-react";
 import viteCompression from 'vite-plugin-compression';
 import svgrPlugin from "vite-plugin-svgr";
 import { visualizer } from 'rollup-plugin-visualizer';
+import tailwindcss from '@tailwindcss/vite'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -10,7 +11,8 @@ export default defineConfig({
     outDir: "build",
   },
   plugins: [
-    reactRefresh(),
+    react(),
+    tailwindcss(),
     // visualizer({
     //   filename: './stats.html',
     //   open: true,

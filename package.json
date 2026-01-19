@@ -2,7 +2,7 @@
   "name": "expmanager",
   "version": "0.1.0",
   "private": false,
-  "proxy": "http://localhost:5000/",
+  "type": "module",
   "dependencies": {
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
@@ -10,6 +10,7 @@
     "@mui/material": "^5.11.1",
     "@mui/x-data-grid": "^5.17.26",
     "@reduxjs/toolkit": "^1.9.5",
+    "@tailwindcss/vite": "^4.1.18",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -29,6 +30,7 @@
     "react-toastify": "^9.1.1",
     "redux-persist": "^6.0.0",
     "sweetalert": "^2.1.2",
+    "tailwindcss": "^4.1.18",
     "vite": "^5.1.6",
     "web-vitals": "^2.1.4"
   },

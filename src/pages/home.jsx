@@ -23,6 +23,11 @@ const Home = () => {
     dispatch(header("Dashboard"));
     dispatch(setloader(true));
     if (!useralldetail.loading) dispatch(setloader(false));
+
+    let chartMonth = localStorage.getItem('ShowChartMonth')
+    if (chartMonth) {
+      setMonthsToShow(Number(chartMonth));
+    }
   }, [useralldetail]);
 
   useEffect(() => {
@@ -176,6 +181,11 @@ const Home = () => {
     };
   }, [filteredMonths]);
 
+  const handleChartMonth = (e) => {
+    let chartMonth = Number(e.target.value);
+    localStorage.setItem('ShowChartMonth', chartMonth)
+    setMonthsToShow(chartMonth)
+  }
 
   return (
     <motion.div
@@ -213,7 +223,7 @@ const Home = () => {
           <select
             className="custom-select"
             value={monthsToShow}
-            onChange={(e) => setMonthsToShow(Number(e.target.value))}
+            onChange={handleChartMonth}
           >
             <option value={5}>Last 5 months</option>
             <option value={12}>Last 12 months</option>

@@ -32,6 +32,7 @@ const Home = () => {
 
   useEffect(() => {
     if (window.innerWidth < 600) {
+      let chartMonth = localStorage.getItem('ShowChartMonth')
       if (chartMonth) {
         setMonthsToShow(Number(chartMonth));
       } else {

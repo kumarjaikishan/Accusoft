@@ -32,7 +32,11 @@ const Home = () => {
 
   useEffect(() => {
     if (window.innerWidth < 600) {
-      setMonthsToShow(5)
+      if (chartMonth) {
+        setMonthsToShow(Number(chartMonth));
+      } else {
+        setMonthsToShow(5)
+      }
     }
   }, [window.innerWidth]);
 

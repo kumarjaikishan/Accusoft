@@ -1,9 +1,9 @@
 import { toast } from 'react-toastify';
 
 
-const apiWrapper = async ({ url, method = 'GET', body = null, dispatch, successAction,notsuccessAction, loaderAction, navigate }) => {
+const apiWrapper = async ({ url, method = 'GET', body = null, dispatch, successAction, notsuccessAction, loaderAction, navigate }) => {
     try {
-        dispatch(loaderAction(true));
+        dispatch?.(loaderAction(true));
         const token = localStorage.getItem("token");
         const options = {
             method,
@@ -17,22 +17,25 @@ const apiWrapper = async ({ url, method = 'GET', body = null, dispatch, successA
         const response = await fetch(url, options);
         const responseData = await response.json();
         console.log("apiwrapper response", responseData);
-         
-        if (response.status === 401 || response.status === 403) {
+
+        if (response.status === 401 || response.status === 498) {
             toast.warn(responseData.message, { autoClose: 2100 });
             return navigate('/logout');
         }
-
-        if (!response.ok) {
-            return notsuccessAction(responseData);
+        if (response.status === 403) {
+            toast.warn(responseData.message, { autoClose: 2100 });
         }
 
+        if (!response.ok) {
+            notsuccessAction?.(responseData);
+            return;
+        }
         return successAction(responseData);
     } catch (error) {
         console.error("ApiWrapper Error:", error);
         toast.error(error.message || 'An error occurred', { autoClose: 2300 });
     } finally {
-        dispatch(loaderAction(false));
+        dispatch?.(loaderAction(false));
     }
 };
 

@@ -175,10 +175,10 @@ const AddExpenses = () => {
           highlight();
         };
 
-        const notsuccessAction = (data) => toast.warn(data.message, { autoClose: 1800 });
+        // const notsuccessAction = (data) => toast.warn(data.message, { autoClose: 1800 });
         const loaderAction = (isLoading) => dispatch(setloader(isLoading));
 
-        await apiWrapper({ url, method, body, dispatch, successAction, loaderAction, navigate, notsuccessAction });
+        await apiWrapper({ url, method, body, dispatch, successAction, loaderAction, navigate });
       }
     });
   };

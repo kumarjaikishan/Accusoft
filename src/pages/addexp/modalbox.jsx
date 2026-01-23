@@ -41,10 +41,15 @@ const Modalbox = ({ modal, navigate, disable, setdisable, init, handler, inp, is
             setisupdate(false);
             setmodal(false);
         };
+        const notsuccessAction=(data)=>{
+            //  toast.error(data.message || 'Something went Wrong')
+            //  console.log(data)
+             setdisable(false);
+        }
 
         const loaderAction = (isLoading) => dispatch(setloader(isLoading));
 
-        await apiWrapper({ url, method, body, dispatch, successAction, loaderAction, navigate });
+        await apiWrapper({ url, method, body, dispatch, successAction, loaderAction,notsuccessAction, navigate });
     }
     // for updating data ends here
 

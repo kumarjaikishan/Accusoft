@@ -35,8 +35,9 @@
 
     .info {
         display: flex;
+        align-items: center;
         height: 60px;
-        /* outline: auto; */
+        gap: 6px;
 
         .photo {
             border: 1px solid grey;
@@ -44,32 +45,40 @@
             height: 60px;
             border-radius: 50%;
             overflow: hidden;
+            flex-shrink: 0;
 
-            :is(img) {
+            img {
                 width: 100%;
-                object-fit: cover;
                 height: 100%;
+                object-fit: cover;
             }
         }
 
         .userinfo {
-            max-width: 100px;
-            padding: 0 4px;
-            /* outline: auto; */
+            max-width: 150px;
+            padding: 0 6px;
             height: 100%;
             display: flex;
-            align-items: center;
+            flex-direction: column;
+            justify-content: center;
 
             div {
                 width: 100%;
-                /* outline: auto; */
-                /* white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis; */
                 text-transform: capitalize;
                 line-height: 16px;
                 font-weight: 500;
-                padding-left: 5px;
+                padding-left: 4px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            div:nth-child(2) {
+                color: gray;
+                font-size: 13px;
+                margin-top: 3px;
+                text-align: left;
+                font-weight: 400;
             }
         }
     }
@@ -142,7 +151,8 @@
             .userinfo {
                 max-width: 60px;
                 padding: 0 4px;
-                /* outline: auto; */
+                outline: auto;
+
 
                 div {
                     font-size: 10px;

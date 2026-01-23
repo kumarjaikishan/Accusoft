@@ -7,7 +7,7 @@ import { IoMenu } from "react-icons/io5";
 import { MdLightMode } from "react-icons/md";
 import { MdBedtime } from "react-icons/md";
 
-const Navbar = ({setIsDarkMode}) => {
+const Navbar = ({ setIsDarkMode }) => {
   const dispatch = useDispatch();
   const [darkmode, setdarkmode] = useState(true)
   const log = useSelector((state) => state.login);
@@ -20,6 +20,7 @@ const Navbar = ({setIsDarkMode}) => {
       dispatch(setnarrow(true))
     }
   }
+
   useEffect(() => {
     let modee = localStorage.getItem('mode');
     if (modee == 'true') {
@@ -31,6 +32,7 @@ const Navbar = ({setIsDarkMode}) => {
       setdarkmode(false)
       document.body.className = 'light-theme';
     }
+    // console.log(useralldetail.user.userType)
   }, [])
 
   const handle = (e) => {
@@ -46,8 +48,6 @@ const Navbar = ({setIsDarkMode}) => {
       localStorage.setItem('mode', false)
     }
   }
-
-
 
   return (
     <>
@@ -67,7 +67,7 @@ const Navbar = ({setIsDarkMode}) => {
           <div className="info">
             <div className="userinfo">
               <div>{useralldetail?.user?.name} </div>
-              {/* <div>{useralldetail?.user?.isadmin ? "Admin" : "User"}</div> */}
+              <div>{useralldetail?.user?.userType}</div>
             </div>
             <NavLink to='/photo' > <div className="photo" ><img src={useralldetail.profilepic ? useralldetail.profilepic : defaultprofile} alt="Profile Pic" /> </div> </NavLink>
           </div> : null}

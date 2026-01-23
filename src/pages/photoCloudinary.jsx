@@ -49,8 +49,9 @@ const Photo = () => {
 
     useEffect(() => {
         dispatch(header("Profile Update"));
+        // console.log(useralldetail.user.userType)
     }, []);
-    
+
     const handleImageUpload1 = (e) => {
         if (e.target.files && e.target.files.length > 0) {
             const file = event.target.files[0];
@@ -218,7 +219,9 @@ const Photo = () => {
         <div className="photopage">
             <div className="profile">
                 <h2>User Profile Detail</h2>
-                <i onClick={() => seteditable(!editable)}>
+                <i
+                    onClick={() => useralldetail?.user?.userType == "demo" ? '' : seteditable(!editable)}
+                >
                     <FaPencil style={{ fontSize: '12px' }} title='Edit Details' />
                 </i>
                 <div className="upper">
@@ -226,7 +229,7 @@ const Photo = () => {
                         <div className="img">
                             <img src={useralldetail.profilepic || defaultProfile} alt="User Avatar" />
                             <span onClick={() => setHide(!hide)} title='Edit Profile Picture'>
-                                <FaPencil  style={{ fontSize: '12px' }}  />
+                                <FaPencil style={{ fontSize: '12px' }} />
                             </span>
                         </div>
                     </div>
@@ -236,7 +239,7 @@ const Photo = () => {
                         <TextField label="Email" name="email" fullWidth size="small" value={input.email} InputProps={{ readOnly: editable }} />
 
                         {!editable && <Button onClick={updateDetails} fullWidth disabled={disable} variant="contained">Update Details</Button>}
-                        <Button onClick={resetPassword} disabled={disable} variant="contained" startIcon={<TbMoodSad />}>Send Password Reset Link</Button>
+                        <Button onClick={resetPassword} disabled={disable || useralldetail?.user?.userType == "demo"} variant="contained" startIcon={<TbMoodSad />}>Send Password Reset Link</Button>
                         {messageSent && <span style={{ fontSize: '12px', color: 'green' }}>{messageSent}</span>}
                     </div>
                 </div>

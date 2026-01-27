@@ -19,6 +19,14 @@ import { ThemeProvider } from '@mui/material/styles';
 
 import Login from './pages/login/login';
 import Logout from './pages/logout';
+import SlowPage from './pages/serverTest/slow';
+import SlowWorkerPage from './pages/serverTest/workerSlow';
+import TipSender from './pages/admin/streamelement';
+import Test from './pages/test';
+import { Errorpage } from './pages/Errorpage';
+import PasswordReset from './pages/password/password';
+import Home from './pages/home';
+import Addexp from './pages/addexp/addexp';
 
 
 const VoucherDetail = lazy(() => import('./pages/ledgerDetail'));
@@ -28,14 +36,8 @@ const Report = lazy(() => import('./pages/Report'));
 const Admin_Dashboard = lazy(() => import('./pages/admin/admin_Dashboard'));
 const Alluser = lazy(() => import('./pages/admin/alluser'));
 const Officeexp = lazy(() => import('./pages/voucher'));
-const Addexp = lazy(() => import('./pages/addexp/addexp'));
-import SlowPage from './pages/serverTest/slow';
-import SlowWorkerPage from './pages/serverTest/workerSlow';
-import TipSender from './pages/admin/streamelement';
-import Test from './pages/test';
-import { Errorpage } from './pages/Errorpage';
-import PasswordReset from './pages/password/password';
-import Home from './pages/home';
+// const Addexp = lazy(() => import('./pages/addexp/addexp'));
+
 
 function App() {
   const dispatch = useDispatch();

@@ -5,7 +5,6 @@ import Sidebar from './components/sidebar/sidebar';
 import Preloader from './preloader';
 // import Photo from './pages/photos3';
 import Photo from './pages/photoCloudinary';
-import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useSelector, useDispatch } from 'react-redux';
 import { setnarrow } from '../src/store/login';
@@ -152,7 +151,7 @@ function App() {
 
   return (
     <>
-      <ToastContainer closeOnClick={true} pauseOnFocusLoss={true} autoClose={2000} />
+     
       <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
         <div className={log.loader ? 'App loader' : 'App'}>
           <Navbar setIsDarkMode={setIsDarkMode} />

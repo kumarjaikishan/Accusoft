@@ -26,7 +26,7 @@ import Test from './pages/test';
 import { Errorpage } from './pages/Errorpage';
 import PasswordReset from './pages/password/password';
 import Home from './pages/home';
-import Addexp from './pages/addexp/addexp';
+// import Addexp from './pages/addexp/addexp';
 
 
 const VoucherDetail = lazy(() => import('./pages/ledgerDetail'));
@@ -36,7 +36,7 @@ const Report = lazy(() => import('./pages/Report'));
 const Admin_Dashboard = lazy(() => import('./pages/admin/admin_Dashboard'));
 const Alluser = lazy(() => import('./pages/admin/alluser'));
 const Officeexp = lazy(() => import('./pages/voucher'));
-// const Addexp = lazy(() => import('./pages/addexp/addexp'));
+const Addexp = lazy(() => import('./pages/addexp/addexp'));
 
 
 function App() {

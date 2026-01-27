@@ -1,39 +1,41 @@
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { useEffect, lazy, Suspense, useState } from 'react';
 import Navbar from './components/navbar/navbar';
 import Sidebar from './components/sidebar/sidebar';
-import Home from './pages/home';
 import Preloader from './preloader';
-import Addexp from './pages/addexp/addexp';
-import { useEffect, lazy, Suspense, useState } from 'react';
-import Login from './pages/login/login';
-import Logout from './pages/logout';
-import Filehandle from './pages/filehandle/filehandle';
 // import Photo from './pages/photos3';
 import Photo from './pages/photoCloudinary';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useSelector, useDispatch } from 'react-redux';
 import { setnarrow } from '../src/store/login';
-import Officeexp from './pages/voucher';
-import Test from './pages/test';
 import { userdata } from './store/api';
-import { Errorpage } from './pages/Errorpage';
-import PasswordReset from './pages/password/password';
 import ProtectedRoutes from './utils/protectedRoute';
 import AdminRoute from './utils/adminRoute';
-import SlowPage from './pages/serverTest/slow';
-import SlowWorkerPage from './pages/serverTest/workerSlow';
 import { AnimatePresence } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
 import { lightTheme, darkTheme } from './themes';
 import { ThemeProvider } from '@mui/material/styles';
-import TipSender from './pages/admin/streamelement';
-import VoucherDetail from './pages/ledgerDetail';
 
+import Login from './pages/login/login';
+import Logout from './pages/logout';
+
+
+const VoucherDetail = lazy(() => import('./pages/ledgerDetail'));
+const Filehandle = lazy(() => import('./pages/filehandle/filehandle'));
 const Datanalysis = lazy(() => import('./pages/dataanalysis'));
 const Report = lazy(() => import('./pages/Report'));
 const Admin_Dashboard = lazy(() => import('./pages/admin/admin_Dashboard'));
 const Alluser = lazy(() => import('./pages/admin/alluser'));
+const Officeexp = lazy(() => import('./pages/voucher'));
+const Addexp = lazy(() => import('./pages/addexp/addexp'));
+import SlowPage from './pages/serverTest/slow';
+import SlowWorkerPage from './pages/serverTest/workerSlow';
+import TipSender from './pages/admin/streamelement';
+import Test from './pages/test';
+import { Errorpage } from './pages/Errorpage';
+import PasswordReset from './pages/password/password';
+import Home from './pages/home';
 
 function App() {
   const dispatch = useDispatch();
@@ -96,7 +98,7 @@ function App() {
   //     console.log("Token check:", error);
   //   }
   // }
-  
+
   const jwtcheck = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -148,65 +150,50 @@ function App() {
 
   return (
     <>
-      <ToastContainer closeOnClick={true} pauseOnFocusLoss={true} />
+      <ToastContainer closeOnClick={true} pauseOnFocusLoss={true} autoClose={2000} />
       <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
         <div className={log.loader ? 'App loader' : 'App'}>
           <Navbar setIsDarkMode={setIsDarkMode} />
           <main className={log.narrow ? "main narrow" : "main"} onClick={sidebarclose}>
             {log.loader && <Preloader />}
             <AnimatePresence mode='wait'>
-              <Routes key={location.pathname} location={location}>
-                <Route element={<ProtectedRoutes />}>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/addexpense" element={<Addexp />} />
-                  <Route path="/photo" element={<Photo />} />
-                  <Route path="/print/:expId" element={<Officeexp />} />
-                  <Route path="/datanalysis/ledgerDetail/:id" element={<VoucherDetail />} />
-                  {/* Lazy loaded routes inside Suspense with proper structure */}
-                  <Route
-                    path="/datanalysis"
-                    element={
-                      <Suspense fallback={<Preloader />}>
-                        <Datanalysis />
-                      </Suspense>
-                    }
-                  />
-                  <Route
-                    path="/report"
-                    element={
-                      <Suspense fallback={<Preloader />}>
-                        <Report />
-                      </Suspense>
-                    } />
-                </Route>
+              <Suspense fallback={<Preloader />}>
+                <Routes key={location.pathname} location={location}>
+                  <Route element={<ProtectedRoutes />}>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/addexpense" element={<Addexp />} />
+                    <Route path="/photo" element={<Photo />} />
+                    <Route path="/print/:expId" element={<Officeexp />} />
+                    <Route path="/datanalysis/ledgerDetail/:id" element={<VoucherDetail />} />
+                    <Route path="/datanalysis" element={<Datanalysis />} />
+                    <Route path="/report" element={<Report />} />
 
-                <Route
-                  path="/admin"
-                  element={
-                    <Suspense fallback={<Preloader />}>
-                      <AdminRoute />
-                    </Suspense>
-                  }
-                >
-                  <Route path="dashboard" element={<Admin_Dashboard />} />
-                  <Route path="tip" element={<TipSender />} />
-                  <Route path="users" element={<Alluser />} />
-                  <Route path="filehandle" element={<Filehandle />} />
-                </Route>
+                    {/* admin path */}
+                    <Route
+                      path="/admin"
+                      element={<AdminRoute />}
+                    >
+                      <Route path="dashboard" element={<Admin_Dashboard />} />
+                      <Route path="tip" element={<TipSender />} />
+                      <Route path="users" element={<Alluser />} />
+                      <Route path="filehandle" element={<Filehandle />} />
+                    </Route>
+                  </Route>
 
-                <Route path="/resetpassword/:token" element={<PasswordReset />} />
-                <Route path="/slow" element={<SlowPage />} />
-                <Route path="/slowworker" element={<SlowWorkerPage />} />
-                <Route path="/logout" element={<Logout />} />
-                <Route path="/test" element={<Test />} />
-                <Route path="*" element={<Errorpage />} />
+                  <Route path="/resetpassword/:token" element={<PasswordReset />} />
+                  <Route path="/slow" element={<SlowPage />} />
+                  <Route path="/slowworker" element={<SlowWorkerPage />} />
+                  <Route path="/logout" element={<Logout />} />
+                  <Route path="/test" element={<Test />} />
+                  <Route path="*" element={<Errorpage />} />
 
-                {log.islogin ? (
-                  <Route path="/login" element={<Navigate to="/" />} />
-                ) : (
-                  <Route path="/login" element={<Login />} />
-                )}
-              </Routes>
+                  {log.islogin ? (
+                    <Route path="/login" element={<Navigate to="/" />} />
+                  ) : (
+                    <Route path="/login" element={<Login />} />
+                  )}
+                </Routes>
+              </Suspense>
             </AnimatePresence>
           </main>
           <footer className={log.narrow ? "footer narrow" : "footer"}>

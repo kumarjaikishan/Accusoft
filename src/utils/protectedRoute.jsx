@@ -4,16 +4,15 @@ import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 
 const ProtectedRoutes = () => {
-    const log = useSelector((state) => state.login);
-    const user = log.islogin;
+    const isLogin = useSelector(state => state.login.islogin);
 
-    useEffect(() => {
-        if (!user) {
-            toast.warn('You are not Logged In.', { autoClose: 2300 });
-        }
-    }, []);
+    if (!isLogin) {
+        toast.warn("You are not logged in", { autoClose: 2300 });
+        return <Navigate to="/login" replace />;
+    }
 
-    return user ?  <Outlet /> :  <Navigate to="/login" />;
+    return <Outlet />;
 };
+
 
 export default ProtectedRoutes;

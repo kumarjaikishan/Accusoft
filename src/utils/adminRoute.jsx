@@ -4,23 +4,15 @@ import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 
 const AdminRoute = () => {
-    const log = useSelector((state) => state.login);
-    const useralldetail = useSelector((state) => state.userexplist);
-    const admin = log.islogin && useralldetail.user.isadmin;
+    const isAdmin = useSelector(state => state.userexplist?.user?.isadmin);
 
-    useEffect(() => {
-        if (!admin) {
-            toast.warn('Access Denied, Admin Authorization is required.', { autoClose: 2300 });
-        }
-    }, []);
+    if (!isAdmin) {
+        toast.warn("Admin access required",{autoClose:2300});
+        return <Navigate to="/" replace />;
+    }
 
-    return admin ? (
-        <>
-            <Outlet />
-        </>
-    ) : (
-        <Navigate to="/logout" />
-    );
+    return <Outlet />;
 };
+
 
 export default AdminRoute;

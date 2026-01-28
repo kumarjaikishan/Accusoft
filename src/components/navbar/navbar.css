@@ -149,15 +149,22 @@
             }
 
             .userinfo {
-                max-width: 60px;
+                max-width: 70px;
                 padding: 0 4px;
-                outline: auto;
+                /* outline: auto; */
 
 
                 div {
                     font-size: 10px;
                     padding-left: 0px;
-                    line-height: 12px;
+                    line-height: 10px;
+                    /* text-overflow: initial; */
+                    /* text-wrap: wrap; */
+                }
+
+                div:nth-child(2) {
+                    font-size: 9px;
+                    margin-top: 3px;
                 }
             }
         }

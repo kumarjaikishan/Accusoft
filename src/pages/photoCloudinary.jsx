@@ -11,7 +11,6 @@ import TextField from '@mui/material/TextField';
 import { CgUndo } from "react-icons/cg";
 import { FaPencil } from "react-icons/fa6";
 import { BsUpload } from "react-icons/bs";
-import axios from 'axios';
 
 // Helper function to convert image URL to File
 const urlToFile = (url, filename) => {
@@ -117,39 +116,62 @@ const Photo = () => {
         setIsFile(false);
 
         try {
+            const xhr = new XMLHttpRequest();
 
-            const response = await axios.post(
-                `${import.meta.env.VITE_API_ADDRESS}photo`,
-                data,
-                {
-                    headers: {
-                        "Authorization": `Bearer ${token}`,
-                    },
-                    onUploadProgress: (progressEvent) => {
-                        const percentage = Math.round(
-                            (progressEvent.loaded * 100) / progressEvent.total
-                        );
-                        // console.log("uploading prcentage:",percentage)
-                        setProgress(percentage);
-                        toast.update(id, { render: "Uploading...", isLoading: true });
-                    }
+            xhr.open("POST", `${import.meta.env.VITE_API_ADDRESS}photo`);
+
+            xhr.setRequestHeader("Authorization", `Bearer ${token}`);
+
+            xhr.upload.onprogress = (event) => {
+                if (event.lengthComputable) {
+                    const percentage = Math.round((event.loaded * 100) / event.total);
+                    setProgress(percentage);
+                    toast.update(id, { render: "Uploading...", isLoading: true });
                 }
-            );
-            console.log(response)
-            document.body.style.cursor = 'default';
-            setHide(true)
-            reset();
-            setIsFile(true);
-            setProgress(0)
-            dispatch(profilepicupdtae(response.data.url))
-            toast.update(id, { render: "Photo Updated Successfully", type: "success", isLoading: false, autoClose: 1300 });
+            };
+
+            xhr.onload = () => {
+                if (xhr.status === 200) {
+                    const response = JSON.parse(xhr.responseText);
+
+                    document.body.style.cursor = "default";
+                    setHide(true);
+                    reset();
+                    setIsFile(true);
+                    setProgress(0);
+
+                    dispatch(profilepicupdtae(response.url));
+
+                    toast.update(id, {
+                        render: "Photo Updated Successfully",
+                        type: "success",
+                        isLoading: false,
+                        autoClose: 1300
+                    });
+                } else {
+                    throw new Error("Upload failed");
+                }
+            };
+
+            xhr.onerror = () => {
+                throw new Error("Network error");
+            };
+
+            xhr.send(data);
 
         } catch (error) {
             setIsFile(true);
-            setProgress(0)
+            setProgress(0);
             console.log(error);
-            toast.update(id, { render: "Error Occurred", type: "error", isLoading: false, autoClose: 1500 });
+
+            toast.update(id, {
+                render: "Error Occurred",
+                type: "error",
+                isLoading: false,
+                autoClose: 1500
+            });
         }
+
     };
 
     const resetForm = () => {

@@ -1,8 +1,22 @@
 .allusers.admin {
     position: relative;
-    padding-top: 10px;
+    padding: 10px;
     min-height: calc(100vh - var(--navheight) - var(--footerheight));
     /* border: 2px solid blue; */
+
+    .head {
+        padding: 5px;
+        margin: 10px 0;
+
+        input {
+            padding: 5px;
+            border-radius: 5px;
+            outline: none;
+            border: none;
+            margin-left: 10px;
+            border: 1px solid rgba(128, 128, 128, 0.77);
+        }
+    }
 
     span.status {
         font-weight: 700;
@@ -54,5 +68,5 @@
 }
 
 @media only screen and (max-width: 600px) {
-    .allusers.admin {}
+    .allusers.admin { padding: 5px;}
 }

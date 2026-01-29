@@ -1,35 +1,28 @@
 import './admin_Dashboard.css';
-import apiWrapper from '../addexp/apiWrapper';
 import { useSelector, useDispatch } from 'react-redux';
 import { setloader } from '../../store/login';
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { FaUsers } from "react-icons/fa";
 import { FaBalanceScale } from "react-icons/fa";
+import { useApi } from '../../utils/useApi';
 
 const Admin_Dashboard = () => {
     const dispatch = useDispatch();
     const userAllDetails = useSelector((state) => state.userexplist);
 
+    const { request, loading, data } = useApi();
+
     useEffect(() => {
-        feteche();
+        request({ url:'admindash', method:'GET' });
+        // console.log("mounted");
+
+        // return () => console.log("unmounted");
     }, [])
-    const [leng, setleng] = useState({})
 
-    const feteche = async () => {
-        const url = `${import.meta.env.VITE_API_ADDRESS}admindash`;
-        const method = 'GET';
-        const body = null;
-
-        const successAction = (data) => {
-            setleng(data)
-            // console.log(data)
-        };
-
-        const loaderAction = (isLoading) => dispatch(setloader(isLoading));
-
-        await apiWrapper({ url, method, body, dispatch, successAction, loaderAction });
-    }
+    useEffect(() => {
+        dispatch(setloader(loading))
+    }, [loading])
 
     return (
         <>
@@ -41,7 +34,7 @@ const Admin_Dashboard = () => {
                 className="admindashboard">
                 <div className="card"  >
                     <div className="data">
-                        <div className="amt"> {leng ? leng.userlen : 0}</div>
+                        <div className="amt"> {data ? data?.userlen : 0}</div>
                         <div className="day">Total Users</div>
                     </div>
                     <div className="icon" style={{ color: "white" }}>
@@ -50,7 +43,7 @@ const Admin_Dashboard = () => {
                 </div>
                 <div className="card"  >
                     <div className="data">
-                        <div className="amt"> {leng ? leng.explen : 0}</div>
+                        <div className="amt"> {data ? data?.explen : 0}</div>
                         <div className="day">Total Expense Record</div>
                     </div>
                     <div className="icon" style={{ color: "white" }}>

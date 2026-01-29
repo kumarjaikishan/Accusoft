@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import axios from 'axios';
 import { toast } from 'react-toastify';
+import { useApi } from '../../utils/useApi';
 
 const TipSender = () => {
     const [username, setUsername] = useState('Kishan');
@@ -10,7 +10,8 @@ const TipSender = () => {
 
     const JWT_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJjaXRhZGVsIiwiZXhwIjoxNzY3MjU5OTQ1LCJqdGkiOiJjYzdjMTljMS1hNDczLTRlZWYtOTg4NC1kZTMzN2ZjNTg1NWIiLCJjaGFubmVsIjoiNjRlOWUxM2JiYmQ4ZTc1MWY4YTE1N2M0Iiwicm9sZSI6Im93bmVyIiwiYXV0aFRva2VuIjoicl9yLXI4b2tfQTFQNkRudmtxaWdfeGRNRk9ORTBkaERXa3Z0R2lIQW5Ecmd2bVZZIiwidXNlciI6IjY0ZTllMTNiYmJkOGU3NTFmOGExNTdjMyIsInVzZXJfaWQiOiI2Zjg0ZmNlZC05NzEyLTQ0ZTEtOGYzNC03ZDIzOGJjZmI4YTgiLCJ1c2VyX3JvbGUiOiJjcmVhdG9yIiwicHJvdmlkZXIiOiJ5b3V0dWJlIiwicHJvdmlkZXJfaWQiOiJVQ3cwR1l3alBUUkhoTU5IYWdWNTFJbnciLCJjaGFubmVsX2lkIjoiOGViODhkZGItNTBjYy00ODIyLWIxZjgtN2I4MDNmZTU2NTgyIiwiY3JlYXRvcl9pZCI6ImQ2MTEwOGI3LTg5YzYtNDUxMS05OTE4LWY4OGRmNWRkOWI0YSJ9.i8V5R1yu0H0HUrLEpt6TkpYaUvvAiRyrO58LnAIw1UY';
     const CHANNEL_ID = '64e9e13bbbd8e751f8a157c4';
-    
+
+    const { request, loading, data } = useApi();
 
     const sendTip = async () => {
         setStatus('Sending...');
@@ -28,20 +29,30 @@ const TipSender = () => {
                 }
             };
 
-            // const response = await axios.post(`https://api.streamelements.com/kappa/v2/activities/${CHANNEL_ID}/mock`, payload, {
-            const response = await axios.post(`https://api.streamelements.com/kappa/v2/activities/${CHANNEL_ID}`, payload, {
+            const response = await fetch(
+                `https://api.streamelements.com/kappa/v2/activities/${CHANNEL_ID}`,
+                {
+                    method: "POST",
                     headers: {
                         Authorization: `Bearer ${JWT_TOKEN}`,
-                        'Content-Type': 'application/json'
-                    }
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(payload)
                 }
             );
 
-            setStatus('✅ Tip sent successfully!');
-            toast.success('Tip sent successfully!', { autoClose: 1500 });
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data?.message || "Failed to send tip");
+            }
+
+            setStatus("✅ Tip sent successfully!");
+            toast.success("Tip sent successfully!", { autoClose: 1500 });
+
         } catch (error) {
             console.error(error);
-            setStatus(`❌ ${error.response?.data?.message || 'Failed to send tip'}`);
+            setStatus(`❌ ${error.message || "Failed to send tip"}`);
         }
     };
 

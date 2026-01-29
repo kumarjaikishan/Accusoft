@@ -1,10 +1,9 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './modalbox.css';
 import { useSelector, useDispatch } from 'react-redux';
 import { setloader } from '../../store/login';
 import { userdata } from '../../store/api'
 import { toast } from 'react-toastify';
-import apiWrapper from './apiWrapper';
 import TextField from '@mui/material/TextField';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -14,44 +13,37 @@ import Button from '@mui/material/Button';
 import { VscDebugRestart } from "react-icons/vsc";
 import { IoIosSave } from "react-icons/io";
 import { MdOutlineUpdate } from "react-icons/md";
-import { FaPencilAlt } from "react-icons/fa";
 import InputAdornment from '@mui/material/InputAdornment';
-import dayjs from 'dayjs';
+import { useApi } from '../../utils/useApi';
 
-const Modalbox = ({ modal, navigate, disable, setdisable, init, handler, inp, isupdate, sub, setmodal, setisupdate, setinp }) => {
+const Modalbox = ({ modal, navigate,disable, init, handler, inp, isupdate, sub, setmodal, setisupdate, setinp }) => {
     const useralldetail = useSelector((state) => state.userexplist);
     const dispatch = useDispatch();
+    const { request, loading, } = useApi();
+
+    useEffect(() => {
+        // dispatch(setloader(loading))
+    }, [loading])
 
     // for updating data  
     const updatee = async (_id) => {
         let { ledger, date, amount, narration } = inp;
-        setdisable(true);
-        // console.log(date)
+        try {
+            const res= await request({
+                url: 'updateexp',
+                method: 'POST',
+                body: { _id, ledger, date, amount, narration: capitalize(narration) },
+            });
 
-        const url = `${import.meta.env.VITE_API_ADDRESS}updateexp`;
-        const method = 'POST';
-        const body = {
-            _id, ledger, date, amount, narration: capitalize(narration)
-        };
-        const successAction = (data) => {
-            toast.success(data.message, { autoClose: 1300 });
+            toast.success(res?.message, { autoClose: 1300 });
             dispatch(userdata());
             setinp(init);
-            setdisable(false);
             setisupdate(false);
             setmodal(false);
-        };
-        const notsuccessAction=(data)=>{
-            //  toast.error(data.message || 'Something went Wrong')
-            //  console.log(data)
-             setdisable(false);
+
+        } catch (error) {
         }
-
-        const loaderAction = (isLoading) => dispatch(setloader(isLoading));
-
-        await apiWrapper({ url, method, body, dispatch, successAction, loaderAction,notsuccessAction, navigate });
     }
-    // for updating data ends here
 
     const capitalize = (value) => {
         const words = value.split(' ');
@@ -66,12 +58,11 @@ const Modalbox = ({ modal, navigate, disable, setdisable, init, handler, inp, is
         }
     }
 
-
     return (
         <div className="modal" onClick={sdef} style={{ display: modal ? "block" : "none" }}>
             <div className="box">
                 <h1>Add Voucher</h1>
-               
+
                 <span className="wrapper">
                     <FormControl className='caps' sx={{ width: '90%', mt: 2, mb: 2 }}>
                         <InputLabel id="demo-simple-select-label">Ledger</InputLabel>
@@ -111,7 +102,9 @@ const Modalbox = ({ modal, navigate, disable, setdisable, init, handler, inp, is
                         onChange={(e) => handler(e, 'narration')}
                         variant="outlined" />
                     <div className='btn'>
-                        {isupdate ? <Button disabled={disable} onClick={() => updatee(inp._id)} variant="contained" startIcon={<MdOutlineUpdate />}>
+                        {isupdate ? <Button 
+                        // disabled={loading} 
+                        onClick={() => updatee(inp._id)} variant="contained" startIcon={<MdOutlineUpdate />}>
                             Update
                         </Button> : <Button disabled={disable} onClick={sub} variant="contained" startIcon={<IoIosSave />}>
                             Submit

@@ -12,6 +12,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { userdata } from '../../store/api'
 import { toast } from 'react-toastify';
 import LoadingButton from '@mui/lab/LoadingButton';
+import { useApi } from '../../utils/useApi';
 
 const Signin = () => {
     let navigate = useNavigate();
@@ -37,6 +38,11 @@ const Signin = () => {
             ...signinp, [name]: value
         })
     }
+    const { request, loading } = useApi();
+
+    useEffect(() => {
+        dispatch(setloader(loading));
+    }, [loading])
 
     const submit = async (e) => {
         e.preventDefault();
@@ -49,45 +55,37 @@ const Signin = () => {
             return;
         }
         try {
-            // dispatch(setloader(true));
-            const res = await fetch(`${import.meta.env.VITE_API_ADDRESS}login`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    email, password
-                })
-            })
-            // console.log(res);
-            const data = await res.json();
-            dispatch(setloader(false));
-            if (res.ok && res.status == 200) {
-                // console.log(data);
-                toast.success(data.message, { autoClose: 1300 });
-                setbtnclick(false);
-                localStorage.setItem("token", data.token);
-                dispatch(userdata());
-                dispatch(setlogin(true));
-                return navigate('/');
+            const res = await request({
+                url: 'login',
+                method: 'POST',
+                body: { email, password },
+            });
+            // console.log(res)
 
-            } else if (res.ok && res.status == 201) {
+            if (res?.message == 'Email sent, check your inbox') {
                 setbtnclick(false);
                 toast.warn("Kindly Verify Email First", { autoClose: 3300 });
-            } else {
-                console.log(data);
-                toast.warn(data.message ? data.message : "Error Occured", { autoClose: 1500 });
-                setbtnclick(false);
+
+              return  swal({
+                    title: 'Kindly Verify Email First',
+                    text: 'Please verify your email first to proceed. Check your spam/junk folder if you don’t see the email.',
+                    icon: 'warning',
+                })
             }
 
-        } catch (error) {
-            console.log(error);
-            toast.warn(error.message, { autoClose: 1500 });
+            toast.success(res.message, { autoClose: 1300 });
             setbtnclick(false);
-            dispatch(setloader(false));
+            localStorage.setItem("token", res.token);
+            dispatch(userdata());
+            navigate('/');
+            dispatch(setlogin(true));
+
+        } catch (error) {
+            setbtnclick(false);
         }
     }
     const [forget, setforget] = useState(false);
+
     const emailset = async () => {
         const email = signinp.email;
         // console.log(email);
@@ -144,7 +142,7 @@ const Signin = () => {
                         label="Password"
                         className='filled'
                         required
-                         size='small'
+                        size='small'
                         type={loginpass ? "password" : null}
                         onChange={signhandle}
                         name="password"

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 import { setloader } from '../../store/login';
 import { toast } from 'react-toastify';
@@ -10,60 +10,34 @@ import Select from '@mui/material/Select';
 import Button from '@mui/material/Button';
 import { VscDebugRestart } from "react-icons/vsc";
 import { IoIosSave } from "react-icons/io";
+import { useApi } from '../../utils/useApi';
 
 const Useredit = ({ inp, modal, setmodal, handler, fetche }) => {
-    const useralldetail = useSelector((state) => state.userexplist);
     const dispatch = useDispatch();
+
+    const { request, loading } = useApi();
+
+    useEffect(() => {
+        dispatch(setloader(loading))
+    }, [loading])
 
     // for updating data fetched above 
     const editdetail = async (_id) => {
-        const token = localStorage.getItem("token");
-        dispatch(setloader(true));
         const { id, name, phone, email, admin, verified } = inp;
-        console.log(inp);
-        try {
-            const result = await fetch(`${import.meta.env.VITE_API_ADDRESS}adminuserupdate`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`,
-                },
-                body: JSON.stringify({
-                    id, name, phone, email, admin, verified
-                })
-            })
-            const datea = await result.json();
-            // console.log(datea);
-            if (result.ok) {
-                toast.success(datea.message, { autoClose: 1300 })
-                // dispatch(userdata());
-                fetche();
-                setmodal(false);
-            } else {
-                toast.warn(datea.message, { autoClose: 1300 })
-                console.log(datea);
-            }
-            dispatch(setloader(false));
-        } catch (error) {
-            toast.warn("Sopmething went wrong", { autoClose: 1300 })
-            console.log(error);
-            dispatch(setloader(false));
-        }
 
+        const res = await request({
+            url: 'adminuserupdate',
+            method: 'POST',
+            body: { id, name, phone, email, admin, verified, },
+        });
+        // console.log(data)
+        toast.success(res?.message, { autoClose: 1300 })
+        fetche();
+        setmodal(false);
     }
-    // for updating data fetched above ends here
 
-
-    const jkh = () => {
-        setisledupdate(true);
-        setmodal(false)
-    }
     var modale = document.querySelector(".modal");
-    const sdef = function (event) {
-        if (event.target == modale) {
-            setmodal(false);
-        }
-    }
+
     return (
         <div className="modal" style={{ display: modal ? "block" : "none" }}>
             <div className="box">
@@ -112,11 +86,11 @@ const Useredit = ({ inp, modal, setmodal, handler, fetche }) => {
                         </Select>
                     </FormControl>
                     <div className='btn'>
-                    <Button className='muibtn' onClick={editdetail} variant="contained" startIcon={<IoIosSave />}>
+                        <Button disabled={loading} className='muibtn' onClick={editdetail} variant="contained" startIcon={<IoIosSave />}>
                             Submit
                         </Button>
                         <Button
-                           onClick={() => setmodal(false)}
+                            onClick={() => setmodal(false)}
                             className='muibtn outlined' title='Cancel' variant="outlined" startIcon={<VscDebugRestart />}>
                             Cancel
                         </Button>

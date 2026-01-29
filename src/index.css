@@ -175,6 +175,84 @@ body {
   }
 }
 
+.modal {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    /* border: 2px solid red; */
+    backdrop-filter: blur(5px);
+
+
+    & .box {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 500px;
+        border-radius: 20px;
+        transform: translate(-50%, -50%);
+        background: var(--maincolor);
+        box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.4);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+
+        & h1 {
+            width: 100%;
+            height: 50px;
+            line-height: 50px;
+            color: aliceblue;
+            letter-spacing: 2px;
+            text-align: center;
+        }
+
+        & .ledgeredit {
+            position: absolute;
+            top: 8px;
+            right: 20px;
+            background: white;
+            color: rgb(21, 21, 21);
+            width: 35px;
+            height: 35px;
+            line-height: 35px;
+            text-align: center;
+            border-radius: 50%;
+            cursor: pointer;
+
+            i {
+                font-size: 20px;
+            }
+        }
+
+        .wrapper {
+            display: flex;
+            flex-direction: column;
+            border-radius: 25px 25px 0 0;
+            align-items: center;
+            width: 100%;
+            background: var(--background);
+            padding-bottom: 20px;
+        }
+
+        & .btn {
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            /* border: 1px solid red; */
+        }
+
+        
+    }
+
+    & .box.shake {
+        animation: aniok 0.4s linear forwards;
+    }
+}
+
 @keyframes SlackLoader-animation-step {
   28.3% {
     width: 19px;

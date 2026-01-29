@@ -8,7 +8,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setloader } from '../../store/login';
 import { userdata, addexpense } from '../../store/api'
 import { toast } from 'react-toastify';
-import apiWrapper from './apiWrapper';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useNavigate } from "react-router-dom";
 import Button from '@mui/material/Button';
@@ -21,9 +20,15 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc.js';
 import timezone from 'dayjs/plugin/timezone.js';
 import { BiLoaderAlt } from "react-icons/bi";
+import { useApi } from '../../utils/useApi';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
+
+const capitalize = (value) => {
+  const words = value.split(' ');
+  return words.map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+};
 
 
 const AddExpenses = () => {
@@ -51,10 +56,15 @@ const AddExpenses = () => {
     narration: '',
   };
   const [expenseInput, setExpenseInput] = useState(init);
+  const { request, loading } = useApi();
+  const { request: delrequest, loading: delloading, data: deldata } = useApi();
 
   useEffect(() => {
-    dispatch(setloader(false));
-  }, []);
+    dispatch(setloader(loading));
+  }, [loading]);
+  useEffect(() => {
+    dispatch(setloader(delloading));
+  }, [delloading]);
 
   useEffect(() => {
     setIsSearching(true)
@@ -73,15 +83,10 @@ const AddExpenses = () => {
     });
   };
 
-  const capitalize = (value) => {
-    const words = value.split(' ');
-    return words.map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
-  };
 
   // Add expense
   const submitExpense = async () => {
     let { ledger, date, amount, narration } = expenseInput;
-
 
     if (!ledger || !date || !amount || !narration) {
       const shakeElement = document.querySelector('.box');
@@ -90,37 +95,22 @@ const AddExpenses = () => {
       dispatch(setloader(false));
       return toast.warn('Kindly Fill all Fields', { autoClose: 1700 });
     }
-    // console.log(date)
-    // console.log(dayjs(date).startOf("day").toDate())
-    const url = `${import.meta.env.VITE_API_ADDRESS}addexpense`;
-    const method = 'POST';
-    const body = {
-      ledger,
-      date,
-      amount,
-      narration: capitalize(narration)
-    };
 
-    let ledgername = userAllDetails.ledgerlist.find(item => item._id === ledger);
-    const newExpense = {
-      _id: `temp-${Date.now()}`,
-      ledger: { _id: ledger, ledger: ledgername.ledger },
-      date,
-      amount,
-      narration: capitalize(narration),
-    };
+    const res = await request({
+      url: 'addexpense',
+      method: 'POST',
+      body: {
+        ledger,
+        date,
+        amount,
+        narration: capitalize(narration)
+      },
+    });
 
-    const successAction = (data) => {
-      toast.success(data.message, { autoClose: 1300 });
-      dispatch(userdata());
-      setIsModalOpen(false);
-      setExpenseInput(init);
-    };
-
-    const notsuccessAction = (data) => toast.warn(data.message, { autoClose: 1800 });
-    const loaderAction = (isLoading) => dispatch(setloader(isLoading));
-
-    await apiWrapper({ url, method, body, dispatch, successAction, loaderAction, notsuccessAction, navigate });
+    toast.success(res?.message, { autoClose: 1300 });
+    dispatch(userdata());
+    setIsModalOpen(false);
+    setExpenseInput(init);
   };
 
   // Edit expense
@@ -161,24 +151,21 @@ const AddExpenses = () => {
       dangerMode: true,
     }).then(async (willDelete) => {
       if (willDelete) {
-        const url = `${import.meta.env.VITE_API_ADDRESS}delmany`;
-        const method = 'POST';
-        const body = { id: itemIds };
 
-        const successAction = (data) => {
-          toast.success(data.message, { autoClose: 1300 });
-          dispatch(userdata());
-          document.querySelectorAll('#tablecontent input:checked').forEach((item) => (item.checked = false));
-          setTimeout(() => {
-            isAnimatingRef.current = false;
-          }, 100);
-          highlight();
-        };
+        const res = await delrequest({
+          url: 'delmany',
+          method: 'POST',
+          body: { id: itemIds },
+        });
 
-        // const notsuccessAction = (data) => toast.warn(data.message, { autoClose: 1800 });
-        const loaderAction = (isLoading) => dispatch(setloader(isLoading));
+        toast.success(res?.message, { autoClose: 1800 });
+        dispatch(userdata());
+        document.querySelectorAll('#tablecontent input:checked').forEach((item) => (item.checked = false));
+        setTimeout(() => {
+          isAnimatingRef.current = false;
+        }, 100);
+        highlight();
 
-        await apiWrapper({ url, method, body, dispatch, successAction, loaderAction, navigate });
       }
     });
   };
@@ -222,8 +209,6 @@ const AddExpenses = () => {
   const firstPostIndex = lastPostIndex - postsPerPage;
   const currentPosts = filteredExpenses.slice(firstPostIndex, lastPostIndex);
 
-  // Sorting logic (optional: still works on current page only)
-  const [sortOrder, setSortOrder] = useState('ASC');
 
   const container = { visible: { transition: { delayChildren: .1 } } };
 
@@ -323,7 +308,7 @@ const AddExpenses = () => {
         <Modalbox
           init={init}
           setdisable={setdisable}
-          disable={disable}
+          disable={loading}
           setinp={setExpenseInput}
           setisupdate={setIsUpdateMode}
           setmodal={setIsModalOpen}

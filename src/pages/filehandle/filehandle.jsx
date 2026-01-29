@@ -23,7 +23,7 @@ const Filehandle = () => {
     const [jobid, setjobid] = useState('')
 
     useEffect(() => {
-        firstfetch()
+        // firstfetch()
     }, [])
 
     const handleFileChange = (e) => {

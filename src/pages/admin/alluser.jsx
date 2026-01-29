@@ -8,6 +8,7 @@ import { MdVerified } from "react-icons/md";
 import { HiPencilSquare } from "react-icons/hi2";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import Useredit from "./usereditmodal";
+import { useApi } from "../../utils/useApi";
 
 /* =========================
    API HELPERS (SRP)
@@ -15,18 +16,6 @@ import Useredit from "./usereditmodal";
 
 const getToken = () => localStorage.getItem("token");
 
-const fetchUsersApi = async () => {
-    const res = await fetch(`${import.meta.env.VITE_API_ADDRESS}adminuser`, {
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${getToken()}`
-        }
-    });
-
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.message || "Not authorised");
-    return data.users;
-};
 
 const deleteUserApi = async (id) => {
     const res = await fetch(`${import.meta.env.VITE_API_ADDRESS}removeuser`, {
@@ -41,39 +30,21 @@ const deleteUserApi = async (id) => {
     if (!res.ok) throw new Error("Delete failed");
 };
 
-/* =========================
-   CUSTOM HOOK (DATA ONLY)
-========================= */
-
-const useUsers = () => {
-    const [users, setUsers] = useState([]);
-    const [loading, setLoading] = useState(false);
-
-    const fetchUsers = useCallback(async () => {
-        try {
-            setLoading(true);
-            const data = await fetchUsersApi();
-            setUsers(data);
-        } catch (err) {
-            toast.warn(err.message);
-        } finally {
-            setLoading(false);
-        }
-    }, []);
-
-    useEffect(() => {
-        fetchUsers();
-    }, [fetchUsers]);
-
-    return { users, loading, refetch: fetchUsers };
-};
 
 /* =========================
    MAIN COMPONENT
 ========================= */
 
 const Alluser = () => {
-    const { users, loading, refetch } = useUsers();
+    const { request, loading, data,error } = useApi();
+
+    useEffect(() => {
+        refetch()
+    }, [])
+    useEffect(() => {
+        // console.log(loading)
+        // console.log(users?.users)
+    }, [loading])
 
     const [search, setSearch] = useState("");
     const [modal, setModal] = useState(false);
@@ -85,6 +56,10 @@ const Alluser = () => {
         admin: "",
         verified: ""
     });
+
+    const refetch = async() => {
+       await request({ url: 'adminuser', method: 'GET' });
+    }
 
     /* =========================
        HANDLERS (SRP)
@@ -137,15 +112,15 @@ const Alluser = () => {
     ========================= */
 
     const filteredUsers = useMemo(() => {
-        if (!search.trim()) return users;
+        if (!search.trim()) return data?.users;
 
         const q = search.toLowerCase();
-        return users.filter((u) =>
+        return data?.users?.filter((u) =>
             u.name?.toLowerCase().includes(q) ||
             u.email?.toLowerCase().includes(q) ||
             u.phone?.includes(search)
         );
-    }, [users, search]);
+    }, [data, search]);
 
     /* =========================
        TABLE CONFIG (SRP)
@@ -209,7 +184,7 @@ const Alluser = () => {
     return (
         <div className="allusers admin">
             <div className="head">
-                <span>All Users List</span>
+                <span>All Users List :</span>
                 <span></span>
                 <span>
                     <input

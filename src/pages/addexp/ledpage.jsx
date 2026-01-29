@@ -6,13 +6,13 @@ import { userdata } from '../../store/api';
 import { toast } from 'react-toastify';
 import swal from 'sweetalert';
 import TextField from '@mui/material/TextField';
-import apiWrapper from './apiWrapper';
 import { MdAddBox, MdUpdate } from "react-icons/md";
 import Button from '@mui/material/Button';
 import { HiPencilSquare } from "react-icons/hi2";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import { useApi } from '../../utils/useApi';
 
-const Ledpage = ({ setmodal, setdisable, disable, navigate, isledupdate, setisledupdate }) => {
+const Ledpage = ({ setmodal, setdisable, isledupdate, setisledupdate }) => {
   const dispatch = useDispatch();
   const useralldetail = useSelector((state) => state.userexplist);
 
@@ -40,6 +40,11 @@ const Ledpage = ({ setmodal, setdisable, disable, navigate, isledupdate, setisle
       setledinp({ ...ledinp, budget: value });
     }
   };
+  const { request, loading } = useApi();
+
+  useEffect(()=>{
+      dispatch(setloader(loading))
+  },[loading])
 
   // Add ledger
   const add = async () => {
@@ -51,72 +56,51 @@ const Ledpage = ({ setmodal, setdisable, disable, navigate, isledupdate, setisle
       return toast.warn("Budget Can't be Blank", { autoClose: 1300 });
     }
 
-    const url = `${import.meta.env.VITE_API_ADDRESS}addledger`;
-    const method = 'POST';
-    const body = { ledger: ledinp.ledger, budget: parseFloat(ledinp.budget) };
+    try {
+      const res = await request({
+        url: 'addledger',
+        method: 'POST',
+        body: { ledger: ledinp.ledger, budget: parseFloat(ledinp.budget) },
+      });
 
-    setdisable(true);
-
-    const successAction = (data) => {
-      toast.success(data.message, { autoClose: 1300 });
+      toast.success(res.message, { autoClose: 1300 });
       dispatch(userdata());
       setledinp(init);
       setdisable(false);
-    };
-
-    const notsuccessAction = (data) => {
-      toast.warn(data.message, { autoClose: 1800 });
+    } catch (error) {
       setdisable(false);
-    };
-
-    const loaderAction = (isLoading) => dispatch(setloader(isLoading));
-
-    await apiWrapper({ url, method, body, dispatch, successAction, loaderAction, navigate, notsuccessAction });
+    }
   };
 
   // Update ledger
   const updat = async () => {
     if (!ledinp.ledger) return toast.warn("Ledger Can't be Blank", { autoClose: 1300 });
-    if (!ledinp.budget) return toast.warn("Budget Can't be Blank", { autoClose: 1300 });
 
     const ledger_id = ledinp.ind;
     const newledger = ledinp.ledger;
     const newbudget = parseFloat(ledinp.budget);
 
     const token = localStorage.getItem("token");
+
+    setdisable(true);
     try {
-      setdisable(true);
-      const res = await fetch(`${import.meta.env.VITE_API_ADDRESS}updateledger`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
-        body: JSON.stringify({
+      const res = await request({
+        url: 'updateledger',
+        method: 'POST',
+        body: {
           ledger_id,
           newledger,
           newbudget
-        })
+        },
       });
 
-      const data = await res.json();
+      toast.success(res.message, { autoClose: 1300 });
+      setledinp(init);
+      setinsupdat(false);
+      dispatch(userdata());
 
-      if (!res.ok && data.message === 'jwt expired') {
-        toast.warn('Session expired. Please log in again.', { autoClose: 1700 });
-        return navigate('/logout');
-      }
-
-      if (res.ok && res.status === 200) {
-        toast.success(data.message, { autoClose: 1300 });
-        setledinp(init);
-        setinsupdat(false);
-        dispatch(userdata());
-      } else {
-        toast.warn(data.message, { autoClose: 2300 });
-      }
-      setdisable(false);
     } catch (error) {
-      console.log(error);
+    } finally {
       setdisable(false);
     }
   };
@@ -131,24 +115,21 @@ const Ledpage = ({ setmodal, setdisable, disable, navigate, isledupdate, setisle
       dangerMode: true,
     }).then(async (willDelete) => {
       if (willDelete) {
-        const url = `${import.meta.env.VITE_API_ADDRESS}/deleteledger`;
-        const method = 'POST';
-        const body = { ledgerid: id };
+
         setdisable(true);
+        try {
+          const res = await request({
+            url: 'deleteledger',
+            method: 'POST',
+            body: { ledgerid: id },
+          });
 
-        const successAction = (data) => {
-          toast.success(data.message, { autoClose: 1300 });
+          toast.success(res.message, { autoClose: 1300 });
           dispatch(userdata());
+        } catch (error) {
+        } finally {
           setdisable(false);
-        };
-        const notsuccessAction = (data) => {
-          toast.warn(data.message, { autoClose: 1800 });
-          setdisable(false);
-        };
-
-        const loaderAction = (isLoading) => dispatch(setloader(isLoading));
-
-        await apiWrapper({ url, method, body, dispatch, successAction, loaderAction, navigate, notsuccessAction });
+        }
       }
     });
   };
@@ -181,7 +162,7 @@ const Ledpage = ({ setmodal, setdisable, disable, navigate, isledupdate, setisle
               label="Enter Ledger"
               size='small'
               variant="outlined"
-               style={{ width: '250px' }}
+              style={{ width: '250px' }}
               value={ledinp.ledger}
               onChange={handleLedger}
               className="inpe"
@@ -197,10 +178,10 @@ const Ledpage = ({ setmodal, setdisable, disable, navigate, isledupdate, setisle
               type="number"
             />
             {isupda ? (
-               <Button
+              <Button
                 size='small'
                 className='btne'
-                disabled={disable}
+                disabled={loading}
                 title='Add'
                 onClick={updat}
                 startIcon={<MdUpdate />}
@@ -212,7 +193,7 @@ const Ledpage = ({ setmodal, setdisable, disable, navigate, isledupdate, setisle
               <Button
                 size='small'
                 className='btne'
-                disabled={disable}
+                disabled={loading}
                 title='Add'
                 onClick={add}
                 startIcon={<MdAddBox />}

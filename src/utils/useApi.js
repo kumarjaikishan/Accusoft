@@ -25,27 +25,21 @@ export const useApi = () => {
 
         } catch (err) {
             setError(err.message);
+            // console.log("apiUse error:", err.message);
+            // console.log("apiUse error status:", err.status);
+
             if (err.isApiError) {
                 toast.warn(err.message, { autoClose: 2500 });
-            } else if (err.message == 'Token Refresh failed') {
-                toast.warn("Session Expired");
             } else {
                 toast.error(err.message || "Unexpected error occurred");
             }
 
-            // console.log("apiUse error:", err.message);
-            // console.log("apiUse error status:", err.status);
+            if (err.status == 403 || err.status == 405) {
+                setTimeout(() => {
+                    navigate("/logout");
+                }, 500);
+            }
 
-            if (err.status == 403) {
-                setTimeout(() => {
-                    navigate("/logout");
-                }, 500);
-            }
-            if (err.message == 'Token Refresh failed') {
-                setTimeout(() => {
-                    navigate("/logout");
-                }, 500);
-            }
             throw err;
         } finally {
             setLoading(false);

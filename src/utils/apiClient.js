@@ -36,7 +36,6 @@ export const apiClient = async ({
 
     // 🔁 Access token expired
     if (response.status === 401) {
-
         if (isRefreshing) {
             return new Promise((resolve, reject) => {
                 failedQueue.push({ resolve, reject });
@@ -47,13 +46,18 @@ export const apiClient = async ({
 
         try {
             // 🔐 refresh token comes ONLY from cookie
-            console.log("retrying for refresh token")
+            // console.log("retrying for refresh token")
             const refreshRes = await fetch(BASE_URL + "refresh", {
                 method: "POST",
                 credentials: "include" // ⭐ sends cookie
             });
 
-            if (!refreshRes.ok) throw new Error("Token Refresh failed");
+            if (!refreshRes.ok) {
+                const err = new Error("Session Expired");
+                err.isApiError = true;
+                err.status = refreshRes.status;
+                throw err;
+            } 
 
             const refreshData = await refreshRes.json();
 

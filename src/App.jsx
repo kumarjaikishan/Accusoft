@@ -48,7 +48,7 @@ function App() {
 
 
   useEffect(() => {
-    console.log(import.meta.env.VITE_API_ADDRESS);
+    // console.log(import.meta.env.VITE_API_ADDRESS);
     const token = localStorage.getItem("token");
     token && userdatacall();
   }, []);

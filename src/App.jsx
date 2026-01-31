@@ -8,7 +8,6 @@ import Photo from './pages/photoCloudinary';
 import 'react-toastify/dist/ReactToastify.css';
 import { useSelector, useDispatch } from 'react-redux';
 import { setnarrow } from '../src/store/login';
-import { userdata } from './store/api';
 import ProtectedRoutes from './utils/protectedRoute';
 import AdminRoute from './utils/adminRoute';
 import { AnimatePresence } from 'framer-motion';
@@ -25,6 +24,8 @@ import Test from './pages/test';
 import { Errorpage } from './pages/Errorpage';
 import PasswordReset from './pages/password/password';
 import Home from './pages/home';
+import { useApi } from './utils/useApi';
+import { useUserApi } from './store/apicalls';
 // import Addexp from './pages/addexp/addexp';
 
 
@@ -43,16 +44,17 @@ function App() {
   let navigate = useNavigate();
   const log = useSelector((state) => state.login);
   let location = useLocation();
+  const { userdatacall } = useUserApi();
 
 
   useEffect(() => {
     console.log(import.meta.env.VITE_API_ADDRESS);
     const token = localStorage.getItem("token");
-    token && dispatch(userdata());
+    token && userdatacall();
   }, []);
 
   useEffect(() => {
-    log.islogin && jwtcheck();
+    // log.islogin && jwtcheck();
   }, [log?.islogin]);
 
   // Autoclose sidebar when screen size is below 600px
@@ -67,91 +69,58 @@ function App() {
     "Invalid Token": ['Invalid Token', 'You need to log in again.']
   }
 
+  const { request, loading, } = useApi();
+
+  //  no longer need beacuse calling userdata also seeing all these things
   // const jwtcheck = async () => {
   //   try {
-  //     const token = localStorage.getItem('token');
-  //     const responsee = await fetch(`${import.meta.env.VITE_API_ADDRESS}jwtcheck`, {
-  //       method: 'GET',
-  //       headers: {
-  //         Authorization: `Bearer ${token}`,
-  //       },
-  //     });
-  //     // console.log(responsee)
-  //     const data = await responsee.json();
-  //     console.log("jwt check", data);
-
-  //     if (tokenErrors[data.message]) {
-  //       const title = tokenErrors[data.message][0];
-  //       const text = tokenErrors[data.message][1];
-
-  //       swal({
-  //         title,
-  //         text,
-  //         icon: 'warning',
-  //         button: {
-  //           text: 'OK',
-  //         },
-  //       }).then(() => {
-  //         return navigate('/logout');
-  //       });
+  //     const token = localStorage.getItem("token");
+  //     if (!token) {
+  //       console.warn("No token found, redirecting to logout...");
+  //       return navigate("/logout");
   //     }
+
+  //     const response = await request({
+  //       url: 'jwtcheck',
+  //       method: 'GET',
+  //     });
+
+  //     console.log(response)
+
+
+  //     // if (!response.ok) {
+  //     //   // console.error("JWT check failed:", data?.message);
+  //     //   return navigate("/logout");
+  //     // }
+
+  //     // let data;
+  //     // try {
+  //     //   data = await response.json();
+  //     // } catch (err) {
+  //     //   console.error("Failed to parse JWT check response:", err);
+  //     //   return navigate("/logout");
+  //     // }
+
+  //     // console.log("jwt check", data);
+
+  //     // const errorConfig = tokenErrors?.[data?.message];
+  //     // if (errorConfig) {
+  //     //   const [title, text] = errorConfig;
+  //     //   swal({
+  //     //     title,
+  //     //     text,
+  //     //     icon: "warning",
+  //     //     button: { text: "OK" },
+  //     //   }).then(() => navigate("/logout"));
+  //     // }
   //   } catch (error) {
-  //     console.log("Token check:", error);
+  //     console.error("Token check error:", error);
+  //     navigate("/logout");
   //   }
-  // }
-
-  const jwtcheck = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        console.warn("No token found, redirecting to logout...");
-        return navigate("/logout");
-      }
-
-      const response = await fetch(
-        `${import.meta.env.VITE_API_ADDRESS}jwtcheck`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      let data = await response.json();
-      if (!response.ok) {
-        console.error("JWT check failed:", data?.message);
-        return navigate("/logout");
-      }
-
-      // let data;
-      // try {
-      //   data = await response.json();
-      // } catch (err) {
-      //   console.error("Failed to parse JWT check response:", err);
-      //   return navigate("/logout");
-      // }
-
-      console.log("jwt check", data);
-
-      const errorConfig = tokenErrors?.[data?.message];
-      if (errorConfig) {
-        const [title, text] = errorConfig;
-        swal({
-          title,
-          text,
-          icon: "warning",
-          button: { text: "OK" },
-        }).then(() => navigate("/logout"));
-      }
-    } catch (error) {
-      console.error("Token check error:", error);
-      navigate("/logout");
-    }
-  };
+  // };
 
   return (
     <>
-     
       <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
         <div className={log.loader ? 'App loader' : 'App'}>
           <Navbar setIsDarkMode={setIsDarkMode} />

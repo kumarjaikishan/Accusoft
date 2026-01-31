@@ -13,11 +13,11 @@ import { userdata } from '../../store/api'
 import { toast } from 'react-toastify';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { useApi } from '../../utils/useApi';
+import { useForm } from '../../utils/useForm';
 
 const Signin = () => {
     let navigate = useNavigate();
     const dispatch = useDispatch();
-    const useralldetail = useSelector((state) => state.userexplist);
     const init = {
         email: "",
         password: ""
@@ -26,19 +26,11 @@ const Signin = () => {
         dispatch(setloader(false));
     }, [])
 
-
-    const [signinp, setsigninp] = useState(init);
+    const { fields, handlechange } = useForm(init)
+    const { request, loading } = useApi();
     const [loginpass, setloginpass] = useState(true);
     const [btnclick, setbtnclick] = useState(false);
 
-    const signhandle = (e) => {
-        const name = e.target.name;
-        const value = e.target.value;
-        setsigninp({
-            ...signinp, [name]: value
-        })
-    }
-    const { request, loading } = useApi();
 
     useEffect(() => {
         dispatch(setloader(loading));
@@ -47,7 +39,7 @@ const Signin = () => {
     const submit = async (e) => {
         e.preventDefault();
         setbtnclick(true);
-        const { email, password } = signinp;
+        const { email, password } = fields;
 
         if (!email || !password) {
             toast.warn("All fields are Required", { autoClose: 1100 });
@@ -66,7 +58,7 @@ const Signin = () => {
                 setbtnclick(false);
                 toast.warn("Kindly Verify Email First", { autoClose: 3300 });
 
-              return  swal({
+                return swal({
                     title: 'Kindly Verify Email First',
                     text: 'Please verify your email first to proceed. Check your spam/junk folder if you don’t see the email.',
                     icon: 'warning',
@@ -84,10 +76,11 @@ const Signin = () => {
             setbtnclick(false);
         }
     }
+
     const [forget, setforget] = useState(false);
 
     const emailset = async () => {
-        const email = signinp.email;
+        const email = fields.email;
         // console.log(email);
         if (email == "") {
             return toast.warn("Email can't be empty", { autoClose: 2100 })
@@ -128,9 +121,9 @@ const Signin = () => {
                         type='email'
                         size='small'
                         className='filled'
-                        onChange={signhandle}
+                        onChange={handlechange}
                         name="email"
-                        value={signinp.email}
+                        value={fields.email}
                         InputProps={{
                             startAdornment: <InputAdornment position="start">
                                 <IoMailOutline />
@@ -144,9 +137,9 @@ const Signin = () => {
                         required
                         size='small'
                         type={loginpass ? "password" : null}
-                        onChange={signhandle}
+                        onChange={handlechange}
                         name="password"
-                        value={signinp.password}
+                        value={fields.password}
                         InputProps={{
                             startAdornment: <InputAdornment position="start">
                                 <MdKey />

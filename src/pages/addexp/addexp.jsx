@@ -21,6 +21,7 @@ import utc from 'dayjs/plugin/utc.js';
 import timezone from 'dayjs/plugin/timezone.js';
 import { BiLoaderAlt } from "react-icons/bi";
 import { useApi } from '../../utils/useApi';
+import { useForm } from '../../utils/useForm';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -55,13 +56,14 @@ const AddExpenses = () => {
     amount: '',
     narration: '',
   };
-  const [expenseInput, setExpenseInput] = useState(init);
+  const { fields, handlechange, reset, editfields } = useForm(init)
   const { request, loading } = useApi();
   const { request: delrequest, loading: delloading, data: deldata } = useApi();
 
   useEffect(() => {
     dispatch(setloader(loading));
   }, [loading]);
+
   useEffect(() => {
     dispatch(setloader(delloading));
   }, [delloading]);
@@ -76,17 +78,9 @@ const AddExpenses = () => {
     return () => clearTimeout(timerId);
   }, [searchInput]);
 
-  const handleInputChange = (e, field) => {
-    setExpenseInput({
-      ...expenseInput,
-      [field]: e.target.value
-    });
-  };
-
-
   // Add expense
   const submitExpense = async () => {
-    let { ledger, date, amount, narration } = expenseInput;
+    let { ledger, date, amount, narration } = fields;
 
     if (!ledger || !date || !amount || !narration) {
       const shakeElement = document.querySelector('.box');
@@ -110,18 +104,19 @@ const AddExpenses = () => {
     toast.success(res?.message, { autoClose: 1300 });
     dispatch(userdata());
     setIsModalOpen(false);
-    setExpenseInput(init);
+    reset();
   };
 
   // Edit expense
   const setDataForEdit = (expense) => {
-    setExpenseInput({
+    const newobj = {
       _id: expense._id,
       ledger: expense.ledger._id,
       date: dayjs(expense.date).format('YYYY-MM-DD'),
       amount: expense.amount,
       narration: expense.narration,
-    });
+    }
+    editfields(newobj)
     setIsUpdateMode(true);
     setIsModalOpen(true);
   };
@@ -305,20 +300,22 @@ const AddExpenses = () => {
             <Pagination currentpage={currentPage} changepageno={changePageNumber} totalpost={filteredExpenses.length} postperpage={postsPerPage} />
           </span>
         </div>
+
         <Modalbox
           init={init}
           setdisable={setdisable}
           disable={loading}
-          setinp={setExpenseInput}
+          reset={reset}
           setisupdate={setIsUpdateMode}
           setmodal={setIsModalOpen}
           sub={submitExpense}
           modal={isModalOpen}
-          handler={handleInputChange}
-          inp={expenseInput}
+          handlechange={handlechange}
+          fields={fields}
           isupdate={isUpdateMode}
           navigate={navigate}
         />
+
         <Ledpage navigate={navigate} setmodal={setIsModalOpen} setdisable={setdisable} disable={disable} setisledupdate={setIsLedgerUpdate} isledupdate={isLedgerUpdate} />
       </motion.div>
     </>

@@ -16,7 +16,7 @@ import { MdOutlineUpdate } from "react-icons/md";
 import InputAdornment from '@mui/material/InputAdornment';
 import { useApi } from '../../utils/useApi';
 
-const Modalbox = ({ modal, navigate,disable, init, handler, inp, isupdate, sub, setmodal, setisupdate, setinp }) => {
+const Modalbox = ({ modal, navigate, disable,  handlechange, fields, isupdate, sub, setmodal, setisupdate, reset }) => {
     const useralldetail = useSelector((state) => state.userexplist);
     const dispatch = useDispatch();
     const { request, loading, } = useApi();
@@ -27,9 +27,9 @@ const Modalbox = ({ modal, navigate,disable, init, handler, inp, isupdate, sub, 
 
     // for updating data  
     const updatee = async (_id) => {
-        let { ledger, date, amount, narration } = inp;
+        let { ledger, date, amount, narration } = fields;
         try {
-            const res= await request({
+            const res = await request({
                 url: 'updateexp',
                 method: 'POST',
                 body: { _id, ledger, date, amount, narration: capitalize(narration) },
@@ -37,7 +37,7 @@ const Modalbox = ({ modal, navigate,disable, init, handler, inp, isupdate, sub, 
 
             toast.success(res?.message, { autoClose: 1300 });
             dispatch(userdata());
-            setinp(init);
+            reset();
             setisupdate(false);
             setmodal(false);
 
@@ -69,8 +69,8 @@ const Modalbox = ({ modal, navigate,disable, init, handler, inp, isupdate, sub, 
                         <Select
                             name="ledger"
                             labelId="demo-simple-select-label"
-                            onChange={(e) => handler(e, 'ledger')}
-                            value={inp.ledger}
+                            onChange={handlechange}
+                            value={fields.ledger}
                             id="demo-simple-select"
                             label="Ledger"
                         >
@@ -84,27 +84,28 @@ const Modalbox = ({ modal, navigate,disable, init, handler, inp, isupdate, sub, 
                     <TextField
                         type='date'
                         label="Date"
-                        value={inp.date}
-                        onChange={(e) => handler(e, 'date')}
+                        value={fields.date}
+                        name="date"
+                        onChange={handlechange}
                         sx={{ width: '90%', mt: 2, mb: 2 }} />
 
                     <TextField sx={{ width: '90%', mt: 2, mb: 2 }} id="outlined-basic" label="Amount" name="amount"
                         onKeyPress={(event) => { if (!/[0-9]/.test(event.key)) { event.preventDefault(); } }}
-                        type="tel" value={inp.amount}
-                        onChange={(e) => handler(e, 'amount')}
+                        type="tel" value={fields.amount}
+                        onChange={handlechange}
                         InputProps={{
                             startAdornment: <InputAdornment position="start">₹</InputAdornment>,
                         }}
                         variant="outlined" />
 
                     <TextField multiline rows={2} sx={{ width: '90%', mt: 2, mb: 2 }} id="outlined-basic" label="Narration"
-                        name="narration" value={inp.narration} type="text"
-                        onChange={(e) => handler(e, 'narration')}
+                        name="narration" value={fields.narration} type="text"
+                        onChange={handlechange}
                         variant="outlined" />
                     <div className='btn'>
-                        {isupdate ? <Button 
-                        // disabled={loading} 
-                        onClick={() => updatee(inp._id)} variant="contained" startIcon={<MdOutlineUpdate />}>
+                        {isupdate ? <Button
+                            // disabled={loading} 
+                            onClick={() => updatee(fields._id)} variant="contained" startIcon={<MdOutlineUpdate />}>
                             Update
                         </Button> : <Button disabled={disable} onClick={sub} variant="contained" startIcon={<IoIosSave />}>
                             Submit
@@ -114,7 +115,7 @@ const Modalbox = ({ modal, navigate,disable, init, handler, inp, isupdate, sub, 
                             onClick={() => {
                                 setmodal(false);
                                 setisupdate(false);
-                                setinp(init);
+                                reset();
                             }}
                             className='muibtn outlined' title='Cancel' variant="outlined" startIcon={<VscDebugRestart />}>
                             Cancel

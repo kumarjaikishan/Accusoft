@@ -10,10 +10,11 @@ import { FaUserAstronaut } from "react-icons/fa";
 import { setloader, setlogin } from '../../store/login';
 import { useSelector, useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
+import { useForm } from '../../utils/useForm';
 
 const Signup = ({ setlog }) => {
     const dispatch = useDispatch();
-    const useralldetail = useSelector((state) => state.userexplist);
+
     const init = {
         name: "",
         email: "",
@@ -22,23 +23,16 @@ const Signup = ({ setlog }) => {
         cpassword: "",
         ledger: ["general", "other"]
     }
+    const { fields, handlechange, reset } = useForm(init)
     const [btnclick, setbtnclick] = useState(false);
-    const [signinp, setsigninp] = useState(init);
     const [signuppass, setsignuppass] = useState(true);
-    const signhandle = (e) => {
-        const name = e.target.name;
-        const value = e.target.value;
-        setsigninp({
-            ...signinp, [name]: value
-        })
-    }
 
     const submit = async (e) => {
         e.preventDefault();
-        // console.log(signinp);
+        // return console.log(fields);
         setbtnclick(true);
 
-        const { name, email, phone, password, cpassword } = signinp;
+        const { name, email, phone, password, cpassword } = fields;
         if (!name || !email || !phone || !password) {
             toast.warn("All Fields are Required", { autoClose: 1300 })
             setbtnclick(false);
@@ -69,7 +63,7 @@ const Signup = ({ setlog }) => {
             const datae = await res.json();
             // console.log(datae);
             if (res.ok) {
-                setsigninp(init);
+                reset()
                 // toast.success("Signup Successful,verify your Email", { autoClose: 3300 })
                 swal({
                     title: 'Signup Successful',
@@ -109,9 +103,9 @@ const Signup = ({ setlog }) => {
                         required
                         size='small'
                         className='filled'
-                        onChange={signhandle}
+                        onChange={handlechange}
                         name="name"
-                        value={signinp.name}
+                        value={fields.name}
                         InputProps={{
                             startAdornment: <InputAdornment position="start">
                                 <FaUserAstronaut />
@@ -123,10 +117,10 @@ const Signup = ({ setlog }) => {
                         required
                         size='small'
                         className='filled'
-                        onChange={signhandle}
+                        onChange={handlechange}
                         name="email"
                         type='email'
-                        value={signinp.email}
+                        value={fields.email}
                         InputProps={{
                             startAdornment: <InputAdornment position="start">
                                 <IoMailOutline />
@@ -137,14 +131,14 @@ const Signup = ({ setlog }) => {
                         label="Phone"
                         required
                         size='small'
-                        color={signinp.phone.length == 10 ? "primary" : "warning"}
+                        color={fields.phone.length == 10 ? "primary" : "warning"}
                         className='filled'
-                        onChange={signhandle}
+                        onChange={handlechange}
                         name="phone"
                         type='tel'
                         inputProps={{ minLength: 10, maxLength: 10 }}
                         onKeyPress={(event) => { if (!/[0-9]/.test(event.key)) { event.preventDefault(); } }}
-                        value={signinp.phone}
+                        value={fields.phone}
                         InputProps={{
                             startAdornment: <InputAdornment position="start">
                                 <MdLocalPhone />
@@ -156,10 +150,10 @@ const Signup = ({ setlog }) => {
                         className='filled'
                         required
                         size='small'
-                        onChange={signhandle}
+                        onChange={handlechange}
                         name="password"
                         type={signuppass ? "password" : null}
-                        value={signinp.password}
+                        value={fields.password}
                         InputProps={{
                             startAdornment: <InputAdornment position="start">
                                 <MdKey />
@@ -173,11 +167,11 @@ const Signup = ({ setlog }) => {
                         label="Confirm Password"
                         className='filled'
                         size='small'
-                        color={signinp.password == signinp.cpassword ? "primary" : "warning"}
+                        color={fields.password == fields.cpassword ? "primary" : "warning"}
                         required
-                        onChange={signhandle}
+                        onChange={handlechange}
                         name="cpassword"
-                        value={signinp.cpassword}
+                        value={fields.cpassword}
                         InputProps={{
                             startAdornment: <InputAdornment position="start">
                                 <MdKey />

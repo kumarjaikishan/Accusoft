@@ -82,7 +82,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: #dbe1e6;
+            background: var(--cardBackground);
             box-shadow:
                 0 0 5px #fff,
                 5px 5px 10px #a7aaaf,
@@ -114,14 +114,14 @@
                 .day {
                     font-size: 0.95em;
                     font-weight: 500;
-                    color: #555;
+                    /* color: #555; */
                     margin-bottom: 4px;
                     text-transform: capitalize;
                 }
 
                 .budget-info {
                     font-size: 0.8em;
-                    color: #555;
+                    /* color: #555; */
                     min-height: 18px; 
                     opacity: 0;
                     transition: opacity 0.3s ease;
@@ -141,7 +141,7 @@
                     }
 
                     .under {
-                        color: green;
+                        color: rgb(10, 157, 10);
                         font-weight: 500;
                         /* font-size: 0.8em; */
                     }
@@ -153,6 +153,7 @@
                 text-align: center;
                 position: relative;
                 padding: 2rem;
+                 color: var(--color);
 
                 .cir {
                     position: absolute;
@@ -171,7 +172,7 @@
                         left: 4px;
                         right: 4px;
                         bottom: 4px;
-                        background: #dbe1e6;
+                        background: var(--cardBackground);
                         border-radius: 50%;
                         font-size: 1.7em;
                         font-weight: 600;

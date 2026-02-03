@@ -78,7 +78,7 @@
 
         .day {
           font-size: 0.9em;
-          color: #555;
+          /* color: #555; */
           margin-top: 4px;
         }
 
@@ -110,7 +110,7 @@
 
         svg {
           font-size: 3.2em;
-          color: var(--maincolor, #555);
+          color: var(--iconColor, #555);
         }
       }
     }

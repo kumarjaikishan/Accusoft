@@ -26,6 +26,7 @@ import PasswordReset from './pages/password/password';
 import Home from './pages/home';
 import { useApi } from './utils/useApi';
 import { useUserApi } from './store/apicalls';
+
 // import Addexp from './pages/addexp/addexp';
 
 
@@ -34,6 +35,7 @@ const Filehandle = lazy(() => import('./pages/filehandle/filehandle'));
 const Datanalysis = lazy(() => import('./pages/dataanalysis'));
 const Report = lazy(() => import('./pages/Report'));
 const Admin_Dashboard = lazy(() => import('./pages/admin/admin_Dashboard'));
+const Logger = lazy(() => import('./pages/admin/logger'));
 const Alluser = lazy(() => import('./pages/admin/alluser'));
 const Officeexp = lazy(() => import('./pages/voucher'));
 const Addexp = lazy(() => import('./pages/addexp/addexp'));
@@ -144,8 +146,9 @@ function App() {
                       element={<AdminRoute />}
                     >
                       <Route path="dashboard" element={<Admin_Dashboard />} />
-                      <Route path="tip" element={<TipSender />} />
                       <Route path="users" element={<Alluser />} />
+                      <Route path="logs" element={<Logger />} />
+                      <Route path="tip" element={<TipSender />} />
                       <Route path="filehandle" element={<Filehandle />} />
                     </Route>
                   </Route>

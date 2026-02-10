@@ -1,9 +1,8 @@
 import { useState } from "react";
 
-
 export const useForm = (initial = {}) => {
-
     const [fields, setfields] = useState(initial);
+
     const handlechange = (e) => {
         const { name, value } = e.target;
         setfields((prev) => {
@@ -13,9 +12,11 @@ export const useForm = (initial = {}) => {
             }
         })
     }
+
     const reset = (e) => {
         setfields(initial)
     }
+    
     const editfields=(obj)=>{
           setfields((prev) => {
             return {

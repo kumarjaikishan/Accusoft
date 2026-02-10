@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { CSVLink } from 'react-csv';
 import './report.css';
-import { setloader, setnarrow } from '../store/login';
+import { setnarrow } from '../store/login';
 import { MdDownload } from "react-icons/md";
 import { IoMdPrint } from "react-icons/io";
 import { VscDebugRestart } from "react-icons/vsc";
@@ -18,64 +18,80 @@ const Report = () => {
     const dispatch = useDispatch();
     const { user, explist, ledgerlist } = useSelector(state => state.userexplist);
 
-    const [isSearch, setIsSearch] = useState(false);
-    const [filteredData, setFilteredData] = useState([]);
     const [inputs, setInputs] = useState({
         from: dayjs().subtract(1, 'month').format('YYYY-MM-DD'),
         to: dayjs().format('YYYY-MM-DD'),
         ledger: 'all'
     });
 
-    useEffect(() => {
-        dispatch(setloader(false));
-        handleSearch();
-    }, []);
-
-    const header = [
+    /* ===========================
+       Memoized CSV headers
+    ============================ */
+    const header = useMemo(() => [
         { label: "Ledger", key: "ledger.ledger" },
         { label: "Amount", key: "amount" },
         { label: "Date", key: "date" },
         { label: "Narration", key: "narration" }
-    ];
+    ], []);
 
-    const handleInputChange = (e) => {
+    /* ===========================
+       Input handler
+    ============================ */
+    const handleInputChange = useCallback((e) => {
         const { name, value } = e.target;
         setInputs(prev => ({ ...prev, [name]: value }));
-    };
+    }, []);
 
-    const handleSearch = () => {
-        setIsSearch(true);
+    /* ===========================
+       Derived filtered data
+    ============================ */
+    const filteredData = useMemo(() => {
         const { from, to, ledger } = inputs;
 
-        const filtered = explist.filter(item => {
+        return explist.filter(item => {
             const itemDate = dayjs(item.date);
-            const inRange = itemDate.isBetween(dayjs(from).startOf('day'), dayjs(to).endOf('day'), null, '[]');
-            return ledger === 'all' ? inRange : inRange && item.ledger.ledger === ledger;
+            const inRange = itemDate.isBetween(
+                dayjs(from).startOf('day'),
+                dayjs(to).endOf('day'),
+                null,
+                '[]'
+            );
+
+            return ledger === 'all'
+                ? inRange
+                : inRange && item.ledger.ledger === ledger;
         });
+    }, [explist, inputs.from, inputs.to, inputs.ledger]);
 
-        setFilteredData(filtered);
-    };
+    const isSearch = filteredData.length > 0;
 
-    const clearSearch = () => {
-        setIsSearch(false);
+    /* ===========================
+       Clear filters
+    ============================ */
+    const clearSearch = useCallback(() => {
         setInputs({
             from: dayjs().subtract(1, 'month').format('YYYY-MM-DD'),
             to: dayjs().format('YYYY-MM-DD'),
             ledger: 'all'
         });
-        setFilteredData([]);
-    };
+    }, []);
 
-    const handlePrint = () => {
+    /* ===========================
+       Print
+    ============================ */
+    const handlePrint = useCallback(() => {
         dispatch(setnarrow(true));
         setTimeout(() => window.print(), 1);
-    };
+    }, [dispatch]);
 
-    const formatDate = (date) => dayjs(date).format('DD-MMM-YY');
+    const formatDate = useCallback(
+        (date) => dayjs(date).format('DD-MMM-YY'),
+        []
+    );
 
-    useEffect(() => {
-        handleSearch();
-    }, [inputs]);
+    const totalAmount = useMemo(() => {
+        return filteredData.reduce((acc, val) => acc + val.amount, 0);
+    }, [filteredData]);
 
     return (
         <motion.div
@@ -88,20 +104,41 @@ const Report = () => {
             <div className="cont">
                 <span>
                     <span>
-                        From: <input type="date" name="from" value={inputs.from} onChange={handleInputChange} />
+                        From:
+                        <input
+                            type="date"
+                            name="from"
+                            value={inputs.from}
+                            onChange={handleInputChange}
+                        />
                     </span>
                     <span>
-                        To: <input type="date" name="to" value={inputs.to} onChange={handleInputChange} />
+                        To:
+                        <input
+                            type="date"
+                            name="to"
+                            value={inputs.to}
+                            onChange={handleInputChange}
+                        />
                     </span>
+
                     <FormControl className='ledger caps mui' size='small'>
                         <InputLabel>Ledger</InputLabel>
-                        <Select name="ledger" label="Ledger" value={inputs.ledger} onChange={handleInputChange}>
+                        <Select
+                            name="ledger"
+                            label="Ledger"
+                            value={inputs.ledger}
+                            onChange={handleInputChange}
+                        >
                             <MenuItem value="all">All</MenuItem>
-                            {ledgerlist.map((val, idx) => (
-                                <MenuItem key={idx} value={val.ledger}>{val.ledger}</MenuItem>
+                            {ledgerlist.map((val) => (
+                                <MenuItem key={val._id} value={val.ledger}>
+                                    {val.ledger}
+                                </MenuItem>
                             ))}
                         </Select>
                     </FormControl>
+
                     <Button
                         className='muibtn'
                         disabled={!isSearch}
@@ -114,19 +151,39 @@ const Report = () => {
                 </span>
 
                 <span>
-                    <CSVLink data={filteredData} headers={header} filename={`${user?.name}-Expense-Record`}>
-                        <Button className='muibtn' size='small' variant="contained" startIcon={<MdDownload />}>
+                    <CSVLink
+                        data={filteredData}
+                        headers={header}
+                        filename={`${user?.name}-Expense-Record`}
+                    >
+                        <Button
+                            className='muibtn'
+                            size='small'
+                            variant="contained"
+                            startIcon={<MdDownload />}
+                        >
                             CSV
                         </Button>
                     </CSVLink>
-                    <Button className='muibtn' size='small' variant="contained" onClick={handlePrint} startIcon={<IoMdPrint />}>
+
+                    <Button
+                        className='muibtn'
+                        size='small'
+                        variant="contained"
+                        onClick={handlePrint}
+                        startIcon={<IoMdPrint />}
+                    >
                         Print
                     </Button>
                 </span>
             </div>
 
             <div className="table" id='printarea'>
-                <div className='head'><b>Accusoft - {user?.name}</b> (Report from {formatDate(inputs.from)} to {formatDate(inputs.to)})</div>
+                <div className='head'>
+                    <b>Accusoft - {user?.name}</b>
+                    (Report from {formatDate(inputs.from)} to {formatDate(inputs.to)})
+                </div>
+
                 <table id='tavlecontent'>
                     <thead>
                         <tr>
@@ -139,10 +196,12 @@ const Report = () => {
                     </thead>
                     <tbody>
                         {filteredData.length === 0 ? (
-                            <tr><td colSpan={5}><b>No Record Found</b></td></tr>
+                            <tr>
+                                <td colSpan={5}><b>No Record Found</b></td>
+                            </tr>
                         ) : (
                             filteredData.map((val, idx) => (
-                                <tr key={idx}>
+                                <tr key={val._id || idx}>
                                     <td>{idx + 1}</td>
                                     <td>{val.ledger.ledger}</td>
                                     <td>{val.amount}</td>
@@ -151,10 +210,11 @@ const Report = () => {
                                 </tr>
                             ))
                         )}
+
                         {filteredData.length > 0 && (
                             <tr>
                                 <td colSpan={2}><b>Total</b></td>
-                                <td>{filteredData.reduce((acc, val) => acc + val.amount, 0)}</td>
+                                <td><b>{totalAmount}</b></td>
                                 <td colSpan={2}></td>
                             </tr>
                         )}

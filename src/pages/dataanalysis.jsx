@@ -46,15 +46,10 @@ const Datanalysis = () => {
     useEffect(() => {
         let saved = localStorage.getItem("showbudget");
         if (saved) setshowbudget(Boolean(JSON.parse(saved)));
-        // console.log(saved)
-        // console.log(saved)
+         }, []);
 
-    }, []);
-
-    const [cardarr, setcardarr] = useState({});
 
     useEffect(() => {
-        cal();
         dispatch(setloader(false));
         localStorage.setItem("month", String(inp.month));
         localStorage.setItem("year", String(inp.year));
@@ -64,18 +59,19 @@ const Datanalysis = () => {
     const fmt = (n) =>
         typeof n === "number" ? n.toLocaleString(undefined, { maximumFractionDigits: 2 }) : n;
 
-    // main calculation
-    const cal = () => {
+  
+    const cardarr = useMemo(() => {
+        // console.log('main calc memozintion')
         const newLedgerSum = {};
         let allLedgerSum = 0;
         let allLedgerBudgetSum = 0;
 
-        // Defensive: ensure ledgerlist exists
-        const ledgerlist = Array.isArray(useralldetail?.ledgerlist) ? useralldetail.ledgerlist : [];
+        const ledgerlist = Array.isArray(useralldetail?.ledgerlist)
+            ? useralldetail.ledgerlist
+            : [];
 
-        // Build dictionary keyed by ledgerId
         ledgerlist.forEach((led) => {
-            const budgetNum = Number(led.budget || 0) || 0;
+            const budgetNum = Number(led.budget || 0);
             allLedgerBudgetSum += budgetNum;
             newLedgerSum[led._id] = {
                 ledger: led.ledger,
@@ -84,20 +80,19 @@ const Datanalysis = () => {
             };
         });
 
-        const monthIn2Digit = String(parseInt(inp.month, 10) + 1).padStart(2, "0");
+        const monthIn2Digit = String(inp.month + 1).padStart(2, "0");
         const startDate = dayjs(`${inp.year}-${monthIn2Digit}-01`);
         const endDate = startDate.endOf("month");
 
-        const explist = Array.isArray(useralldetail?.explist) ? useralldetail.explist : [];
+        const explist = Array.isArray(useralldetail?.explist)
+            ? useralldetail.explist
+            : [];
 
         explist.forEach((entry) => {
-            // defensive extraction: entry.ledger may be object or id string
             const ledgerId =
-                entry?.ledger && typeof entry.ledger === "object"
-                    ? entry.ledger._id
-                    : entry?.ledger || null;
+                typeof entry?.ledger === "object" ? entry.ledger._id : entry?.ledger;
 
-            const amountValue = parseFloat(entry.amount);
+            const amountValue = Number(entry.amount);
             const entryDate = dayjs(entry.date);
 
             if (
@@ -105,24 +100,24 @@ const Datanalysis = () => {
                 !isNaN(amountValue) &&
                 entryDate.isValid() &&
                 entryDate.isSameOrAfter(startDate) &&
-                entryDate.isSameOrBefore(endDate)
+                entryDate.isSameOrBefore(endDate) &&
+                newLedgerSum[ledgerId]
             ) {
-                if (newLedgerSum[ledgerId]) {
-                    allLedgerSum += amountValue;
-                    newLedgerSum[ledgerId].totalSum += amountValue;
-                }
+                allLedgerSum += amountValue;
+                newLedgerSum[ledgerId].totalSum += amountValue;
             }
         });
 
-        // Add Total entry inside the object (safe)
         newLedgerSum["Total"] = {
             ledger: "Total",
             budget: allLedgerBudgetSum,
             totalSum: allLedgerSum,
         };
 
-        setcardarr(newLedgerSum);
-    };
+        return newLedgerSum;
+    }, [useralldetail.ledgerlist, useralldetail.explist, inp.month, inp.year]);
+
+
 
     const monname = [
         "Jan",
@@ -234,12 +229,9 @@ const Datanalysis = () => {
                                 id="year-select"
                                 label="Year"
                             >
-                                <MenuItem value={2021}>2021</MenuItem>
-                                <MenuItem value={2022}>2022</MenuItem>
-                                <MenuItem value={2023}>2023</MenuItem>
-                                <MenuItem value={2024}>2024</MenuItem>
-                                <MenuItem value={2025}>2025</MenuItem>
-                                <MenuItem value={2026}>2026</MenuItem>
+                                {[2026, 2025, 2024, 2023, 2022, 2021].map((val, ind) => {
+                                    return <MenuItem key={val} value={val}>{val}</MenuItem>
+                                })}
                             </Select>
                         </FormControl>
                     </span>

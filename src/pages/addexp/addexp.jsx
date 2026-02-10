@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import './addexp.css';
 import swal from 'sweetalert';
 import Pagination from './pagination';
@@ -31,11 +31,18 @@ const capitalize = (value) => {
   return words.map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
 };
 
-
 const AddExpenses = () => {
+  // console.log('%c🔄 AddExpenses re-render', 'color:red;font-weight:bold');
+
+  const renderCount = React.useRef(0);
+  renderCount.current++;
+  // console.log(`🧮 render count → ${renderCount.current}`);
+
   const dispatch = useDispatch();
   let navigate = useNavigate();
-  const userAllDetails = useSelector((state) => state.userexplist);
+  const explist = useSelector((state) => state.userexplist.explist);
+
+  // console.log('🟣 redux userexplist length:', explist?.length);
 
   const [searchInput, setSearchInput] = useState('');
   const [finalsearch, setfinalserach] = useState('');
@@ -49,6 +56,16 @@ const AddExpenses = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
 
+  // console.log('📦 state snapshot:', {
+  //   searchInput,
+  //   finalsearch,
+  //   isModalOpen,
+  //   isLedgerUpdate,
+  //   currentPage,
+  //   postsPerPage,
+  //   isSearching
+  // });
+
   const init = {
     _id: '',
     ledger: '',
@@ -56,29 +73,34 @@ const AddExpenses = () => {
     amount: '',
     narration: '',
   };
+
   const { fields, handlechange, reset, editfields } = useForm(init)
   const { request, loading } = useApi();
-  const { request: delrequest, loading: delloading, data: deldata } = useApi();
+  const { request: delrequest, loading: delloading } = useApi();
 
   useEffect(() => {
-    dispatch(setloader(loading));
-  }, [loading]);
+    // console.log('⚡ useEffect → loader change', { loading, delloading });
+    dispatch(setloader(loading || delloading));
+  }, [loading, delloading]);
 
   useEffect(() => {
-    dispatch(setloader(delloading));
-  }, [delloading]);
-
-  useEffect(() => {
+    // console.log('⌛ useEffect → search debounce fired:', searchInput);
     setIsSearching(true)
+
+    if (searchInput === '') {
+      setfinalserach('');
+      setIsSearching(false)
+      return;
+    }
+
     const timerId = setTimeout(() => {
       setfinalserach(searchInput.toLowerCase());
       setIsSearching(false)
-    }, 1300);
+    }, 1200);
 
     return () => clearTimeout(timerId);
   }, [searchInput]);
 
-  // Add expense
   const submitExpense = async () => {
     let { ledger, date, amount, narration } = fields;
 
@@ -93,12 +115,7 @@ const AddExpenses = () => {
     const res = await request({
       url: 'addexpense',
       method: 'POST',
-      body: {
-        ledger,
-        date,
-        amount,
-        narration: capitalize(narration)
-      },
+      body: { ledger, date, amount, narration: capitalize(narration) },
     });
 
     toast.success(res?.message, { autoClose: 1300 });
@@ -107,8 +124,8 @@ const AddExpenses = () => {
     reset();
   };
 
-  // Edit expense
   const setDataForEdit = (expense) => {
+    // console.log('✏️ edit clicked:', expense._id);
     const newobj = {
       _id: expense._id,
       ledger: expense.ledger._id,
@@ -121,7 +138,6 @@ const AddExpenses = () => {
     setIsModalOpen(true);
   };
 
-  // Delete expense
   const deleteExpense = (expenseId) => {
     isAnimatingRef.current = true;
     sendDeleteRequest([expenseId]);
@@ -134,6 +150,7 @@ const AddExpenses = () => {
   };
 
   const sendDeleteRequest = async (itemIds) => {
+
     if (itemIds.length < 1) {
       return toast.warn('Kindly Select Atlest 1 Entry', { autoClose: 1700 });
     }
@@ -146,7 +163,6 @@ const AddExpenses = () => {
       dangerMode: true,
     }).then(async (willDelete) => {
       if (willDelete) {
-
         const res = await delrequest({
           url: 'delmany',
           method: 'POST',
@@ -160,7 +176,6 @@ const AddExpenses = () => {
           isAnimatingRef.current = false;
         }, 100);
         highlight();
-
       }
     });
   };
@@ -173,15 +188,18 @@ const AddExpenses = () => {
   };
 
   const handlePageSizeChange = (e) => {
+    // console.log('📏 page size changed:', e.target.value);
     setPostsPerPage(Number(e.target.value));
     setCurrentPage(1);
   };
 
   const changePageNumber = (pageNumber) => {
+    // console.log('📄 page changed:', pageNumber);
     setCurrentPage(pageNumber);
   };
 
   const highlight = () => {
+    // console.log('🎨 highlight rows');
     const checkboxes = document.querySelectorAll('#tablecontent input');
     const tableRows = document.querySelectorAll('#tablecontent div');
     checkboxes.forEach((checkbox, index) => {
@@ -190,19 +208,32 @@ const AddExpenses = () => {
     });
   };
 
-  // ✅ Filter first, then paginate
-  const filteredExpenses = userAllDetails?.explist?.filter((item) => {
-    return (
-      finalsearch === '' ||
-      item.narration.toLowerCase().includes(finalsearch) ||
-      item.ledger.ledger.toLowerCase().includes(finalsearch) ||
-      item.amount.toString().includes(finalsearch)
-    );
-  }) || [];
 
-  let lastPostIndex = currentPage * postsPerPage;
-  const firstPostIndex = lastPostIndex - postsPerPage;
-  const currentPosts = filteredExpenses.slice(firstPostIndex, lastPostIndex);
+  const filteredExpenses = React.useMemo(() => {
+    // console.log('📄 filtering expenses (memoized)');
+    return explist?.filter((item) => {
+      return (
+        finalsearch === '' ||
+        item.narration.toLowerCase().includes(finalsearch) ||
+        item.ledger.ledger.toLowerCase().includes(finalsearch) ||
+        item.amount.toString().includes(finalsearch)
+      );
+    }) || [];
+  }, [explist, finalsearch]);
+
+
+  const { currentPosts, firstPostIndex, lastPostIndex } = useMemo(() => {
+    // console.log('📄 paginating expenses (memoized)');
+
+    const last = currentPage * postsPerPage;
+    const first = last - postsPerPage;
+
+    return {
+      firstPostIndex: first,
+      lastPostIndex: last,
+      currentPosts: filteredExpenses.slice(first, last),
+    };
+  }, [filteredExpenses, currentPage, postsPerPage]);
 
 
   const container = { visible: { transition: { delayChildren: .1 } } };

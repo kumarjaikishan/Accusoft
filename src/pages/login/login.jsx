@@ -12,7 +12,6 @@ const Login = () => {
         setlog(val);
     }
 
-
     return (
         <>
             <div className="login">

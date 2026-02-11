@@ -38,6 +38,7 @@ export const useApi = () => {
 
         } catch (err) {
             setError(err.message);
+            // console.log(err)
             // console.log("apiUse error:", err.message);
             // console.log("apiUse error status:", err.status);
 
@@ -63,28 +64,28 @@ export const useApi = () => {
 };
 
 const logger = (detail) => {
-  const prev = JSON.parse(localStorage.getItem("apiLogs")) || [];
+    const prev = JSON.parse(localStorage.getItem("apiLogs")) || [];
 
-  const key = `${detail.method}_${detail.endpoint}`;
+    const key = `${detail.method}_${detail.endpoint}`;
 
-  // Separate current API logs and others
-  const sameApi = prev.filter(
-    log => `${log.method}_${log.endpoint}` === key
-  );
+    // Separate current API logs and others
+    const sameApi = prev.filter(
+        log => `${log.method}_${log.endpoint}` === key
+    );
 
-  const otherApis = prev.filter(
-    log => `${log.method}_${log.endpoint}` !== key
-  );
+    const otherApis = prev.filter(
+        log => `${log.method}_${log.endpoint}` !== key
+    );
 
-  // Add new log
-  const updatedSameApi = [...sameApi, detail];
+    // Add new log
+    const updatedSameApi = [...sameApi, detail];
 
-  // Keep only last 10
-  const trimmedSameApi = updatedSameApi.slice(-10);
+    // Keep only last 10
+    const trimmedSameApi = updatedSameApi.slice(-10);
 
-  const finalLogs = [...otherApis, ...trimmedSameApi];
+    const finalLogs = [...otherApis, ...trimmedSameApi];
 
-  localStorage.setItem("apiLogs", JSON.stringify(finalLogs));
+    localStorage.setItem("apiLogs", JSON.stringify(finalLogs));
 };
 
 

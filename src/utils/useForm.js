@@ -16,7 +16,7 @@ export const useForm = (initial = {}) => {
     const reset = (e) => {
         setfields(initial)
     }
-    
+
     const editfields=(obj)=>{
           setfields((prev) => {
             return {

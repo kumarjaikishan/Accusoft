@@ -71,6 +71,7 @@
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
+                 text-align: end;
             }
 
             div:nth-child(2) {
@@ -79,6 +80,7 @@
                 margin-top: 3px;
                 text-align: left;
                 font-weight: 400;
+                 text-align: end;
             }
         }
     }

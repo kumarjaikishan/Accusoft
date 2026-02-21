@@ -5,6 +5,7 @@ export const useForm = (initial = {}) => {
 
     const handlechange = (e) => {
         const { name, value } = e.target;
+        
         setfields((prev) => {
             return {
                 ...prev,

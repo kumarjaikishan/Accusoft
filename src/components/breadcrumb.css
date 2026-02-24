@@ -1,0 +1,41 @@
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  font-size: 17px;
+  padding: 2px;
+  border-radius: 6px;
+  /* outline: auto; */
+}
+
+.breadcrumb-item {
+  display: flex;
+  align-items: center;
+}
+
+.breadcrumb a {
+  text-decoration: none;
+  color: #1976d2;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.breadcrumb a:hover {
+  color: #0d47a1;
+}
+
+.separator {
+  margin: 0 6px;
+  color: #888;
+}
+
+.active {
+  color: #333;
+  font-weight: 600;
+}
+
+@media only screen and (max-width: 600px) {
+  .breadcrumb {
+    font-size: 13px;
+    padding: 2px;
+  }
+}

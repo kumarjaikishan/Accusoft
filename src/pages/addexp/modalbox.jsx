@@ -70,7 +70,7 @@ const Modalbox = ({ modal, navigate, disable,  handlechange, fields, isupdate, s
                             name="ledger"
                             labelId="demo-simple-select-label"
                             onChange={handlechange}
-                            value={fields.ledger}
+                            value={fields?.ledger}
                             id="demo-simple-select"
                             label="Ledger"
                         >
@@ -84,14 +84,14 @@ const Modalbox = ({ modal, navigate, disable,  handlechange, fields, isupdate, s
                     <TextField
                         type='date'
                         label="Date"
-                        value={fields.date}
+                        value={fields?.date}
                         name="date"
                         onChange={handlechange}
                         sx={{ width: '90%', mt: 2, mb: 2 }} />
 
                     <TextField sx={{ width: '90%', mt: 2, mb: 2 }} id="outlined-basic" label="Amount" name="amount"
                         onKeyPress={(event) => { if (!/[0-9]/.test(event.key)) { event.preventDefault(); } }}
-                        type="tel" value={fields.amount}
+                        type="tel" value={fields?.amount}
                         onChange={handlechange}
                         InputProps={{
                             startAdornment: <InputAdornment position="start">₹</InputAdornment>,
@@ -99,10 +99,10 @@ const Modalbox = ({ modal, navigate, disable,  handlechange, fields, isupdate, s
                         variant="outlined" />
 
                     <TextField multiline rows={2} sx={{ width: '90%', mt: 2, mb: 2 }} id="outlined-basic" label="Narration"
-                        name="narration" value={fields.narration} type="text"
+                        name="narration" value={fields?.narration} type="text"
                         onChange={handlechange}
                         variant="outlined" />
-                    <div className='btn'>
+                     <div className='btn'>
                         {isupdate ? <Button
                             // disabled={loading} 
                             onClick={() => updatee(fields._id)} variant="contained" startIcon={<MdOutlineUpdate />}>

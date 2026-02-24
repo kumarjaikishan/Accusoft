@@ -6,6 +6,7 @@ import { setnarrow } from '../../store/login';
 import { IoMenu } from "react-icons/io5";
 import { MdLightMode } from "react-icons/md";
 import { MdBedtime } from "react-icons/md";
+import Breadcrumbs from '../Breadcrumb';
 
 const Navbar = ({ setIsDarkMode }) => {
   const dispatch = useDispatch();
@@ -54,7 +55,10 @@ const Navbar = ({ setIsDarkMode }) => {
       <nav className={log.narrow ? "nav narrow" : "nav"}>
         <div className="cont">
           <IoMenu onClick={fun} className='navicon' title='menu' />
-          <span>{log.head} </span>
+          {/* <span>{log.head} </span> */}
+          <div>
+            <Breadcrumbs />
+          </div>
         </div>
         <span className='mode'>
           <input onChange={handle} id='checkbox' name='checkbox' checked={darkmode} type="checkbox" className="checkbox" />

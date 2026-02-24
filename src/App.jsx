@@ -39,6 +39,7 @@ const Logger = lazy(() => import('./pages/admin/logger'));
 const Alluser = lazy(() => import('./pages/admin/alluser'));
 const Officeexp = lazy(() => import('./pages/voucher'));
 const Addexp = lazy(() => import('./pages/addexp/addexp'));
+// const Addexp = lazy(() => import('./pages/addexp/addexp_data'));
 
 
 function App() {
@@ -55,7 +56,7 @@ function App() {
     if (token) {
       userdatacall();
     } else {
-      navigate('/logout');
+      // navigate('/logout');
     }
   }, []);
 
@@ -74,8 +75,6 @@ function App() {
     "jwt expired": ['Session Expired', 'Your session has expired. Please log in again.'],
     "Invalid Token": ['Invalid Token', 'You need to log in again.']
   }
-
-  const { request, loading, } = useApi();
 
   //  no longer need beacuse calling userdata also seeing all these things
   // const jwtcheck = async () => {
@@ -137,7 +136,7 @@ function App() {
                 <Routes key={location.pathname} location={location}>
                   <Route element={<ProtectedRoutes />}>
                     <Route path="/" element={<Home />} />
-                    <Route path="/addexpense" element={<Addexp />} />
+                    <Route path="/expense" element={<Addexp />} />
                     <Route path="/photo" element={<Photo />} />
                     <Route path="/print/:expId" element={<Officeexp />} />
                     <Route path="/datanalysis/ledgerDetail/:id" element={<VoucherDetail />} />

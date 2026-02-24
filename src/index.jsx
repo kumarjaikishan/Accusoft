@@ -15,7 +15,7 @@ let persistor = persistStore(store);
 root.render(
   // <React.StrictMode>
   <Provider store={store}>
-    <ToastContainer closeOnClick={true} pauseOnFocusLoss={true} autoClose={2000} />
+    <ToastContainer closeOnClick={true} pauseOnFocusLoss={false} autoClose={2000} />
     <BrowserRouter >
       <PersistGate persistor={persistor} >
         <App />

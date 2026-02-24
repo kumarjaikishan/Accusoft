@@ -46,7 +46,7 @@ const Sidebar = () => {
         },
         {
             name: 'Expenses',
-            link: '/addexpense',
+            link: '/expense',
             logo: <BsBank2 title='Expense' />,
         },
         {

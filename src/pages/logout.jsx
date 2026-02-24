@@ -17,7 +17,7 @@ const Logout = () => {
         method: 'POST',
       });
     } catch (error) {
-
+        console.log(error)
     }
   }
 
@@ -31,4 +31,4 @@ const Logout = () => {
   }, [])
 }
 
-export default Logout
+export default Logout;

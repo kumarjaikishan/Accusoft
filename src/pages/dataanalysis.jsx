@@ -46,7 +46,7 @@ const Datanalysis = () => {
     useEffect(() => {
         let saved = localStorage.getItem("showbudget");
         if (saved) setshowbudget(Boolean(JSON.parse(saved)));
-         }, []);
+    }, []);
 
 
     useEffect(() => {
@@ -59,7 +59,7 @@ const Datanalysis = () => {
     const fmt = (n) =>
         typeof n === "number" ? n.toLocaleString(undefined, { maximumFractionDigits: 2 }) : n;
 
-  
+
     const cardarr = useMemo(() => {
         // console.log('main calc memozintion')
         const newLedgerSum = {};
@@ -195,129 +195,162 @@ const Datanalysis = () => {
                 transition={{ duration: 0.2, ease: "easeInOut" }}
                 className="datanalysis"
             >
-                <div className="cont">
-                    <span>
-                        <FormControl size="small" className=" select caps">
-                            <InputLabel id="month-select-label">Month</InputLabel>
-                            <Select
-                                name="month"
-                                size="small"
-                                labelId="month-select-label"
-                                onChange={handle}
-                                value={inp.month}
-                                id="month-select"
-                                label="Month"
-                            >
-                                {monname.map((val, ind) => {
-                                    return (
-                                        <MenuItem sx={{ textTransform: "capitalize" }} key={ind} value={ind}>
-                                            {val}
-                                        </MenuItem>
-                                    );
-                                })}
-                            </Select>
-                        </FormControl>
-                    </span>
-                    <span>
-                        <FormControl size="small" className="select caps">
-                            <InputLabel id="year-select-label">Year</InputLabel>
-                            <Select
-                                name="year"
-                                labelId="year-select-label"
-                                onChange={handle}
-                                value={inp.year}
-                                id="year-select"
-                                label="Year"
-                            >
-                                {[2026, 2025, 2024, 2023, 2022, 2021].map((val, ind) => {
-                                    return <MenuItem key={val} value={val}>{val}</MenuItem>
-                                })}
-                            </Select>
-                        </FormControl>
-                    </span>
+                {/* <motion.div
+                    initial={{
+                        opacity: 0,
+                        scale: 0.6,
+                        skewX: -12,
+                        skewY: -12,
+                        x: 120,
+                        y: 120,
+                        transformOrigin: "100% 100%",
+                    }}
+                    animate={{
+                        opacity: 1,
+                        scale: 1,
+                        skewX: 0,
+                        skewY: 0,
+                        x: 0,
+                        y: 0,
+                    }}
+                    exit={{
+                        opacity: 0,
+                        scale: 0.6,
+                        skewX: 12,
+                        skewY: 12,
+                        x: 120,
+                        y: 120,
+                        transformOrigin: "100% 100%",
+                    }}
+                    transition={{
+                        duration: 0.45,
+                        ease: "easeInOut",
+                    }}
+                    className="datanalysis"
+                > */}
+                    <div className="cont">
+                        <span>
+                            <FormControl size="small" className=" select caps">
+                                <InputLabel id="month-select-label">Month</InputLabel>
+                                <Select
+                                    name="month"
+                                    size="small"
+                                    labelId="month-select-label"
+                                    onChange={handle}
+                                    value={inp.month}
+                                    id="month-select"
+                                    label="Month"
+                                >
+                                    {monname.map((val, ind) => {
+                                        return (
+                                            <MenuItem sx={{ textTransform: "capitalize" }} key={ind} value={ind}>
+                                                {val}
+                                            </MenuItem>
+                                        );
+                                    })}
+                                </Select>
+                            </FormControl>
+                        </span>
+                        <span>
+                            <FormControl size="small" className="select caps">
+                                <InputLabel id="year-select-label">Year</InputLabel>
+                                <Select
+                                    name="year"
+                                    labelId="year-select-label"
+                                    onChange={handle}
+                                    value={inp.year}
+                                    id="year-select"
+                                    label="Year"
+                                >
+                                    {[2026, 2025, 2024, 2023, 2022, 2021].map((val, ind) => {
+                                        return <MenuItem key={val} value={val}>{val}</MenuItem>
+                                    })}
+                                </Select>
+                            </FormControl>
+                        </span>
 
-                    {/* You may want a toggle for showbudget */}
-                    <div className="show-budget-toggle">
-                        <input
-                            type="checkbox"
-                            id="showBudget"
-                            checked={showbudget}
-                            onChange={BudgetToggle}
-                        />
-                        <label htmlFor="showBudget">{showbudget ? "Show Budget: ON" : "Show Budget: OFF"}</label>
+                        {/* You may want a toggle for showbudget */}
+                        <div className="show-budget-toggle">
+                            <input
+                                type="checkbox"
+                                id="showBudget"
+                                checked={showbudget}
+                                onChange={BudgetToggle}
+                            />
+                            <label htmlFor="showBudget">{showbudget ? "Show Budget: ON" : "Show Budget: OFF"}</label>
+                        </div>
                     </div>
-                </div>
 
-                <div className="cards">
-                    {sortedEntries.length === 0 && <div className="empty">No data for selected month</div>}
+                    <div className="cards">
+                        {sortedEntries.length === 0 && <div className="empty">No data for selected month</div>}
 
-                    {sortedEntries.map(([ledgerId, data]) => {
-                        const total = Number(data?.totalSum || 0);
-                        const budget = Number(data?.budget || 0);
-                        // percent of overall total (avoid division by zero)
-                        const percentage = overallTotal > 0 ? Math.floor((total / overallTotal) * 100) : 0;
-                        const budgetDiff = total - budget;
-                        const isOverBudget = budgetDiff > 0;
+                        {sortedEntries.map(([ledgerId, data]) => {
+                            const total = Number(data?.totalSum || 0);
+                            const budget = Number(data?.budget || 0);
+                            // percent of overall total (avoid division by zero)
+                            const percentage = overallTotal > 0 ? Math.floor((total / overallTotal) * 100) : 0;
+                            const budgetDiff = total - budget;
+                            const isOverBudget = budgetDiff > 0;
 
-                        // conic-gradient expects degrees: percentage * 3.6
-                        const deg = percentage * 3.6;
+                            // conic-gradient expects degrees: percentage * 3.6
+                            const deg = percentage * 3.6;
 
-                        return (
-                            <div
-                                onClick={() => detail(ledgerId)}
-                                className="card"
-                                key={ledgerId}
-                                id={ledgerId}
-                                style={{ cursor: "pointer" }}
-                            >
-                                <div className="data">
-                                    <div className="amt">₹{fmt(total)}</div>
-                                    <div className="day">{data.ledger}</div>
+                            return (
+                                <div
+                                    onClick={() => detail(ledgerId)}
+                                    className="card"
+                                    key={ledgerId}
+                                    id={ledgerId}
+                                    style={{ cursor: "pointer" }}
+                                >
+                                    <div className="data">
+                                        <div className="amt">₹{fmt(total)}</div>
+                                        <div className="day">{data.ledger}</div>
 
-                                    {/* Budget info block — always rendered but fades in/out */}
-                                    <div
-                                        className={`budget-info ${showbudget ? "visible" : "hidden"}`}
-                                    >
-                                        {ledgerId === "Total" ? (
-                                            <>
-                                                Budget: ₹{fmt(budget)} /
-                                                {overallTotal > overallBudget ? (
-                                                    <span className="over"> + {fmt(overallTotal - overallBudget)}</span>
-                                                ) : (
-                                                    <span className="under"> - {fmt(overallBudget - overallTotal)}</span>
-                                                )}
-                                            </>
-                                        ) : (
-                                            <>
-                                                Budget: ₹{fmt(budget)} /
-                                                {isOverBudget ? (
-                                                    <span className="over"> + {fmt(Math.abs(budgetDiff))}</span>
-                                                ) : (
-                                                    <span className="under"> - {fmt(Math.abs(budgetDiff))}</span>
-                                                )}
-                                            </>
-                                        )}
+                                        {/* Budget info block — always rendered but fades in/out */}
+                                        <div
+                                            className={`budget-info ${showbudget ? "visible" : "hidden"}`}
+                                        >
+                                            {ledgerId === "Total" ? (
+                                                <>
+                                                    Budget: ₹{fmt(budget)} /
+                                                    {overallTotal > overallBudget ? (
+                                                        <span className="over"> + {fmt(overallTotal - overallBudget)}</span>
+                                                    ) : (
+                                                        <span className="under"> - {fmt(overallBudget - overallTotal)}</span>
+                                                    )}
+                                                </>
+                                            ) : (
+                                                <>
+                                                    Budget: ₹{fmt(budget)} /
+                                                    {isOverBudget ? (
+                                                        <span className="over"> + {fmt(Math.abs(budgetDiff))}</span>
+                                                    ) : (
+                                                        <span className="under"> - {fmt(Math.abs(budgetDiff))}</span>
+                                                    )}
+                                                </>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    <div className="icon">
+                                        <div
+                                            className="cir"
+                                            style={{
+                                                background: `conic-gradient(#034972 ${deg}deg, #afbbcb ${deg}deg)`,
+                                            }}
+                                        >
+                                            <div className="per">{percentage} %</div>
+                                        </div>
                                     </div>
                                 </div>
+                            );
 
-                                <div className="icon">
-                                    <div
-                                        className="cir"
-                                        style={{
-                                            background: `conic-gradient(#034972 ${deg}deg, #afbbcb ${deg}deg)`,
-                                        }}
-                                    >
-                                        <div className="per">{percentage} %</div>
-                                    </div>
-                                </div>
-                            </div>
-                        );
-
-                    })}
-                </div>
-            </motion.div>
-        </>
-    );
+                        })}
+                    </div>
+                </motion.div>
+            </>
+            );
 };
 
-export default Datanalysis;
+            export default Datanalysis;

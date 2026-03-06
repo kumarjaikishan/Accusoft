@@ -39,7 +39,7 @@ const Sidebar = () => {
     const menu = [
         { name: "Dashboard", link: "/", icon: <FaTachometerAlt /> },
         { name: "Expenses", link: "/expense", icon: <BsBank2 /> },
-        { name: "Analysis", link: "/data_analysis", icon: <FaBook /> },
+        { name: "Analysis", link: "/datanalysis", icon: <FaBook /> },
         { name: "Report", link: "/report", icon: <TbReportAnalytics /> }
     ];
 
@@ -127,6 +127,11 @@ const Sidebar = () => {
                                 <NavLink to="/admin/dashboard" className={navLinkStyle}>
                                     <FaTachometerAlt />
                                     {!log.narrow && "Dashboard"}
+                                </NavLink>
+
+                                <NavLink to="/admin/users" className={navLinkStyle}>
+                                    <CiUser />
+                                    {!log.narrow && "Users"}
                                 </NavLink>
 
                                 <NavLink to="/admin/logs" className={navLinkStyle}>

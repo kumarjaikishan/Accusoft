@@ -122,7 +122,7 @@ const Navbar = ({ setIsDarkMode }) => {
               <span className="text-sm font-semibold text-gray-800">
                 {useralldetail?.user?.name}
               </span>
-              <span className="text-xs text-gray-500 capitalize">
+              <span className="text-xs text-gray-500">
                 {useralldetail?.user?.userType}
               </span>
             </div>

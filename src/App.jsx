@@ -23,7 +23,7 @@ import TipSender from './pages/admin/streamelement';
 import Test from './pages/test';
 import { Errorpage } from './pages/Errorpage';
 import PasswordReset from './pages/password/password';
-import Home from './pages/home';
+import Home from './pages/homePage/home';
 import { useApi } from './utils/useApi';
 import { useUserApi } from './store/apicalls';
 
@@ -32,11 +32,10 @@ import { useUserApi } from './store/apicalls';
 
 const VoucherDetail = lazy(() => import('./pages/ledgerDetail'));
 const Filehandle = lazy(() => import('./pages/filehandle/filehandle'));
-const Datanalysis = lazy(() => import('./pages/dataanalysis'));
+const Datanalysis = lazy(() => import('./pages/dataAnalysis/dataanalysis'));
 const Report = lazy(() => import('./pages/Report'));
 const Admin_Dashboard = lazy(() => import('./pages/admin/admin_Dashboard'));
 const Logger = lazy(() => import('./pages/admin/logger'));
-const Alluser = lazy(() => import('./pages/admin/alluser'));
 const Officeexp = lazy(() => import('./pages/voucher'));
 const Addexp = lazy(() => import('./pages/addexp/addexp'));
 // const Addexp = lazy(() => import('./pages/addexp/addexp_data'));
@@ -139,8 +138,8 @@ function App() {
                     <Route path="/expense" element={<Addexp />} />
                     <Route path="/photo" element={<Photo />} />
                     <Route path="/print/:expId" element={<Officeexp />} />
-                    <Route path="/datanalysis/ledgerDetail/:id" element={<VoucherDetail />} />
-                    <Route path="/datanalysis" element={<Datanalysis />} />
+                    <Route path="/data_analysis/ledgerDetail/:id" element={<VoucherDetail />} />
+                    <Route path="/data_analysis" element={<Datanalysis />} />
                     <Route path="/report" element={<Report />} />
 
                     {/* admin path */}
@@ -149,7 +148,6 @@ function App() {
                       element={<AdminRoute />}
                     >
                       <Route path="dashboard" element={<Admin_Dashboard />} />
-                      <Route path="users" element={<Alluser />} />
                       <Route path="logs" element={<Logger />} />
                       <Route path="tip" element={<TipSender />} />
                       <Route path="filehandle" element={<Filehandle />} />

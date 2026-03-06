@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import './home.css';
 import { useSelector, useDispatch } from 'react-redux';
-import { header, setloader } from '../store/login';
+import { header, setloader } from '../../store/login';
 import { motion } from 'framer-motion';
 import { FaIndianRupeeSign } from "react-icons/fa6";
 import { MdElectricBolt } from "react-icons/md";

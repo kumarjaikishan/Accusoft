@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import "./dataanalysis.css";
 import { useSelector, useDispatch } from "react-redux";
-import { setloader } from "../store/login";
+import { setloader } from "../../store/login";
 import { motion } from "framer-motion";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -150,7 +150,7 @@ const Datanalysis = () => {
     const detail = (ledgerId) => {
         if (ledgerId === "Total") {
             navigate(
-                `/datanalysis/ledgerDetail/all?&ledgerName=All Ledger&month=${inp.month}&year=${inp.year}`
+                `/data_analysis/ledgerDetail/all?&ledgerName=All Ledger&month=${inp.month}&year=${inp.year}`
             );
             return;
         }
@@ -159,14 +159,14 @@ const Datanalysis = () => {
         const ledgerItem = (useralldetail?.ledgerlist || []).find((e) => e._id === ledgerId);
         if (ledgerItem) {
             navigate(
-                `/datanalysis/ledgerDetail/${ledgerId}?&ledgerName=${encodeURIComponent(
+                `/data_analysis/ledgerDetail/${ledgerId}?&ledgerName=${encodeURIComponent(
                     ledgerItem.ledger
                 )}&month=${inp.month}&year=${inp.year}`
             );
         } else {
             // fallback to all
             navigate(
-                `/datanalysis/ledgerDetail/all?&ledgerName=All Ledger&month=${inp.month}&year=${inp.year}`
+                `/data_analysis/ledgerDetail/all?&ledgerName=All Ledger&month=${inp.month}&year=${inp.year}`
             );
         }
     };

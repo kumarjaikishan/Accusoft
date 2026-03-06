@@ -1,10 +1,10 @@
-/* @import "tailwindcss"; */
+@import "tailwindcss";
 
 * {
-  margin: 0;
+  /* margin: 0;
   padding: 0;
   box-sizing: border-box;
-  scroll-behavior: smooth;
+  scroll-behavior: smooth; */
 
   &::-webkit-scrollbar {
     width: 4px;
@@ -21,13 +21,12 @@
 }
 
 
-
 :root {
   --navheight: 70px;
   --navheightmobile: 50px;
   --sidebarwide: 210px;
-  --sidebarwidemobile: 160px;
-  --sidebarnarrow: 75px;
+  --sidebarwidemobile: 180px;
+  --sidebarnarrow: 80px;
   --mobilelogowidth: 45px;
   --footerheight: 25px;
   --footerheightmobile: 20px;

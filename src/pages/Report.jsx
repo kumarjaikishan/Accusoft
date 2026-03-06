@@ -1,225 +1,208 @@
-import React, { useState, useMemo, useCallback } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { CSVLink } from 'react-csv';
-import './report.css';
-import { setnarrow } from '../store/login';
+import React, { useState, useMemo, useCallback } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { CSVLink } from "react-csv";
+import { setnarrow } from "../store/login";
 import { MdDownload } from "react-icons/md";
 import { IoMdPrint } from "react-icons/io";
 import { VscDebugRestart } from "react-icons/vsc";
-import Button from '@mui/material/Button';
-import { motion } from 'framer-motion';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-import dayjs from 'dayjs';
+import { motion } from "framer-motion";
+import DataTable from "react-data-table-component";
+import dayjs from "dayjs";
 
 const Report = () => {
     const dispatch = useDispatch();
-    const { user, explist, ledgerlist } = useSelector(state => state.userexplist);
-
-    const [inputs, setInputs] = useState({
-        from: dayjs().subtract(1, 'month').format('YYYY-MM-DD'),
-        to: dayjs().format('YYYY-MM-DD'),
-        ledger: 'all'
-    });
-
-    /* ===========================
-       Memoized CSV headers
-    ============================ */
-    const header = useMemo(() => [
-        { label: "Ledger", key: "ledger.ledger" },
-        { label: "Amount", key: "amount" },
-        { label: "Date", key: "date" },
-        { label: "Narration", key: "narration" }
-    ], []);
-
-    /* ===========================
-       Input handler
-    ============================ */
-    const handleInputChange = useCallback((e) => {
-        const { name, value } = e.target;
-        setInputs(prev => ({ ...prev, [name]: value }));
-    }, []);
-
-    /* ===========================
-       Derived filtered data
-    ============================ */
-    const filteredData = useMemo(() => {
-        const { from, to, ledger } = inputs;
-
-        return explist.filter(item => {
-            const itemDate = dayjs(item.date);
-            const inRange = itemDate.isBetween(
-                dayjs(from).startOf('day'),
-                dayjs(to).endOf('day'),
-                null,
-                '[]'
-            );
-
-            return ledger === 'all'
-                ? inRange
-                : inRange && item.ledger.ledger === ledger;
-        });
-    }, [explist, inputs.from, inputs.to, inputs.ledger]);
-
-    const isSearch = filteredData.length > 0;
-
-    /* ===========================
-       Clear filters
-    ============================ */
-    const clearSearch = useCallback(() => {
-        setInputs({
-            from: dayjs().subtract(1, 'month').format('YYYY-MM-DD'),
-            to: dayjs().format('YYYY-MM-DD'),
-            ledger: 'all'
-        });
-    }, []);
-
-    /* ===========================
-       Print
-    ============================ */
-    const handlePrint = useCallback(() => {
-        dispatch(setnarrow(true));
-        setTimeout(() => window.print(), 1);
-    }, [dispatch]);
-
-    const formatDate = useCallback(
-        (date) => dayjs(date).format('DD-MMM-YY'),
-        []
+    const { user, explist, ledgerlist } = useSelector(
+        (state) => state.userexplist
     );
 
-    const totalAmount = useMemo(() => {
-        return filteredData.reduce((acc, val) => acc + val.amount, 0);
-    }, [filteredData]);
+    const [inputs, setInputs] = useState({
+        from: dayjs().subtract(1, "month").format("YYYY-MM-DD"),
+        to: dayjs().format("YYYY-MM-DD"),
+        ledger: "all",
+    });
+
+    /* ---------------- FILTER ---------------- */
+
+    const handleInputChange = useCallback((e) => {
+        const { name, value } = e.target;
+        setInputs((prev) => ({ ...prev, [name]: value }));
+    }, []);
+
+    const filteredData = useMemo(() => {
+        return explist.filter((item) => {
+            const itemDate = dayjs(item.date);
+            const inRange = itemDate.isBetween(
+                dayjs(inputs.from).startOf("day"),
+                dayjs(inputs.to).endOf("day"),
+                null,
+                "[]"
+            );
+
+            return inputs.ledger === "all"
+                ? inRange
+                : inRange && item.ledger.ledger === inputs.ledger;
+        });
+    }, [explist, inputs]);
+
+    const totalAmount = useMemo(
+        () =>
+            filteredData.reduce((acc, val) => acc + Number(val.amount), 0),
+        [filteredData]
+    );
+
+    const clearSearch = useCallback(() => {
+        setInputs({
+            from: dayjs().subtract(1, "month").format("YYYY-MM-DD"),
+            to: dayjs().format("YYYY-MM-DD"),
+            ledger: "all",
+        });
+    }, []);
+
+    const handlePrint = useCallback(() => {
+        dispatch(setnarrow(true));
+        setTimeout(() => window.print(), 200);
+    }, [dispatch]);
+
+    const formatDate = (date) => dayjs(date).format("DD MMM YYYY");
+
+    /* ---------------- TABLE COLUMNS ---------------- */
+
+    const columns = [
+        { name: "#", selector: (_, i) => i + 1, width: "60px" },
+        { name: "Ledger", selector: (row) => row.ledger.ledger, width: "140px" },
+        {
+            name: "Amount",
+            selector: (row) => `₹ ${row.amount}`,
+            sortable: true,
+            width: "120px"
+        },
+        {
+            name: "Narration",
+            selector: (row) => row.narration,
+            grow: 2, // 👈 takes remaining space
+            wrap: true, // allows multiline
+        },
+
+        {
+            name: "Date",
+            selector: (row) => formatDate(row.date),
+            width: "120px"
+        },
+    ];
 
     return (
         <motion.div
-            initial={{ opacity: 0, x: '100%' }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: '-100%' }}
-            transition={{ duration: 0.2, ease: "easeInOut" }}
-            className="report"
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="p-4 md:p-6 space-y-8"
         >
-            <div className="cont">
-                <span>
-                    <span>
-                        From:
+            {/* ---------------- FILTER BAR ---------------- */}
+            <div className="bg-white rounded-2xl shadow-lg p-6 flex flex-wrap gap-4 items-center justify-between">
+                <div className="flex flex-wrap gap-4 items-center">
+                    <div className="flex flex-col text-sm">
+                        <label className="text-gray-500 mb-1">From</label>
                         <input
                             type="date"
                             name="from"
                             value={inputs.from}
                             onChange={handleInputChange}
+                            className="border px-3 py-2 rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none"
                         />
-                    </span>
-                    <span>
-                        To:
+                    </div>
+
+                    <div className="flex flex-col text-sm">
+                        <label className="text-gray-500 mb-1">To</label>
                         <input
                             type="date"
                             name="to"
                             value={inputs.to}
                             onChange={handleInputChange}
+                            className="border px-3 py-2 rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none"
                         />
-                    </span>
+                    </div>
 
-                    <FormControl className='ledger caps mui' size='small'>
-                        <InputLabel>Ledger</InputLabel>
-                        <Select
+                    <div className="flex flex-col text-sm">
+                        <label className="text-gray-500 mb-1">Ledger</label>
+                        <select
                             name="ledger"
-                            label="Ledger"
                             value={inputs.ledger}
                             onChange={handleInputChange}
+                            className="border px-3 py-2 rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none"
                         >
-                            <MenuItem value="all">All</MenuItem>
+                            <option value="all">All</option>
                             {ledgerlist.map((val) => (
-                                <MenuItem key={val._id} value={val.ledger}>
+                                <option key={val._id} value={val.ledger}>
                                     {val.ledger}
-                                </MenuItem>
+                                </option>
                             ))}
-                        </Select>
-                    </FormControl>
+                        </select>
+                    </div>
 
-                    <Button
-                        className='muibtn'
-                        disabled={!isSearch}
-                        variant="contained"
+                    <button
                         onClick={clearSearch}
-                        startIcon={<VscDebugRestart />}
+                        className="flex items-center gap-2 px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg transition text-sm"
                     >
-                        Clear
-                    </Button>
-                </span>
-
-                <span>
-                    <CSVLink
-                        data={filteredData}
-                        headers={header}
-                        filename={`${user?.name}-Expense-Record`}
-                    >
-                        <Button
-                            className='muibtn'
-                            size='small'
-                            variant="contained"
-                            startIcon={<MdDownload />}
-                        >
-                            CSV
-                        </Button>
-                    </CSVLink>
-
-                    <Button
-                        className='muibtn'
-                        size='small'
-                        variant="contained"
-                        onClick={handlePrint}
-                        startIcon={<IoMdPrint />}
-                    >
-                        Print
-                    </Button>
-                </span>
-            </div>
-
-            <div className="table" id='printarea'>
-                <div className='head'>
-                    <b>Accusoft - {user?.name}</b>
-                    (Report from {formatDate(inputs.from)} to {formatDate(inputs.to)})
+                        <VscDebugRestart /> Clear
+                    </button>
                 </div>
 
-                <table id='tavlecontent'>
-                    <thead>
-                        <tr>
-                            <th>S.no</th>
-                            <th>Ledger</th>
-                            <th>Amount</th>
-                            <th>Narration</th>
-                            <th>Date</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {filteredData.length === 0 ? (
-                            <tr>
-                                <td colSpan={5}><b>No Record Found</b></td>
-                            </tr>
-                        ) : (
-                            filteredData.map((val, idx) => (
-                                <tr key={val._id || idx}>
-                                    <td>{idx + 1}</td>
-                                    <td>{val.ledger.ledger}</td>
-                                    <td>{val.amount}</td>
-                                    <td>{val.narration}</td>
-                                    <td>{formatDate(val.date)}</td>
-                                </tr>
-                            ))
-                        )}
+                {/* Actions */}
+                <div className="flex gap-3">
+                    <CSVLink
+                        data={filteredData}
+                        headers={[
+                            { label: "Ledger", key: "ledger.ledger" },
+                            { label: "Amount", key: "amount" },
+                            { label: "Date", key: "date" },
+                            { label: "Narration", key: "narration" },
+                        ]}
+                        filename={`${user?.name}-Expense-Record`}
+                    >
+                        <button className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition text-sm">
+                            <MdDownload /> CSV
+                        </button>
+                    </CSVLink>
 
-                        {filteredData.length > 0 && (
-                            <tr>
-                                <td colSpan={2}><b>Total</b></td>
-                                <td><b>{totalAmount}</b></td>
-                                <td colSpan={2}></td>
-                            </tr>
-                        )}
-                    </tbody>
-                </table>
+                    <button
+                        onClick={handlePrint}
+                        className="flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition text-sm"
+                    >
+                        <IoMdPrint /> Print
+                    </button>
+                </div>
+            </div>
+
+            {/* ---------------- TOTAL CARD ---------------- */}
+            <div className="bg-gradient-to-r from-indigo-600 to-cyan-500 text-white rounded-2xl p-6 shadow-lg flex justify-between items-center">
+                <div>
+                    <p className="text-sm opacity-80">
+                        Report from {formatDate(inputs.from)} to{" "}
+                        {formatDate(inputs.to)}
+                    </p>
+                    <h2 className="text-3xl font-bold mt-1">
+                        ₹ {totalAmount.toLocaleString()}
+                    </h2>
+                </div>
+                <div className="text-sm opacity-80">
+                    {filteredData.length} Records
+                </div>
+            </div>
+
+            {/* ---------------- DATA TABLE ---------------- */}
+            <div className="bg-white rounded-2xl shadow-lg p-6">
+                <DataTable
+                    columns={columns}
+                    data={filteredData}
+                    //   pagination
+                    highlightOnHover
+                    striped
+                    noDataComponent={
+                        <div className="py-6 text-gray-500">
+                            No Record Found
+                        </div>
+                    }
+                />
             </div>
         </motion.div>
     );

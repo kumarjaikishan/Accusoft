@@ -18,8 +18,9 @@ const Useredit = ({ inp, modal, setmodal, handler, fetche }) => {
     const { request, loading } = useApi();
 
     useEffect(() => {
-        dispatch(setloader(loading))
+        dispatch(setloader(loading));
     }, [loading])
+  
 
     // for updating data fetched above 
     const editdetail = async (_id) => {
@@ -53,7 +54,7 @@ const Useredit = ({ inp, modal, setmodal, handler, fetche }) => {
                         variant="outlined" />
 
                     <TextField disabled sx={{ width: '90%', mt: 1, mb: 1 }} id="outlined-basic" label="Email"
-                        name="email" value={inp.email} type="text" onChange={handler}
+                        name="email" value={inp?.email} type="text" onChange={handler}
                         variant="outlined" />
 
                     <FormControl className='caps' sx={{ width: '90%', mt: 1, mb: 1 }}>
@@ -62,7 +63,7 @@ const Useredit = ({ inp, modal, setmodal, handler, fetche }) => {
                             name="admin"
                             labelId="demo-simple-select-label"
                             onChange={handler}
-                            value={inp.admin}
+                            value={inp?.isadmin}
                             id="demo-simple-select"
                             label="Type"
                         >
@@ -77,7 +78,7 @@ const Useredit = ({ inp, modal, setmodal, handler, fetche }) => {
                             name="verified"
                             labelId="demo-simple-select-label"
                             onChange={handler}
-                            value={inp.verified}
+                            value={inp.isverified}
                             id="demo-simple-select"
                             label="verified"
                         >

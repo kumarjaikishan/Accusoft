@@ -46,7 +46,7 @@ const Sidebar = () => {
         },
         {
             name: 'Expenses',
-            link: '/addexpense',
+            link: '/expense',
             logo: <BsBank2 title='Expense' />,
         },
         {
@@ -152,6 +152,18 @@ const Sidebar = () => {
                                                 <CiUser title='User' />
                                             </span>
                                             <span className="name">Users</span>
+                                        </span>
+                                    </NavLink>
+                                    <NavLink
+                                        className={(navData) => (navData.isActive ? 'active' : '')}
+                                        style={{ textDecoration: 'none' }}
+                                        to="/admin/logs"
+                                    >
+                                        <span className="li undersubmenu" onClick={() => dispatch(header('Admin/ Users'))}>
+                                            <span className="logo">
+                                                <CiUser title='User' />
+                                            </span>
+                                            <span className="name">Logs</span>
                                         </span>
                                     </NavLink>
                                     <NavLink

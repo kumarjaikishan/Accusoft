@@ -1,13 +1,13 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
-    LayoutDashboard,
-    PieChart,
-    ShieldCheck,
-    Zap,
-    ArrowRight,
-    Calendar,
-    BarChart3,
-    BookOpen,Star
+  LayoutDashboard,
+  PieChart,
+  ShieldCheck,
+  Zap,
+  ArrowRight,
+  Calendar,
+  BarChart3,
+  BookOpen, Star
 } from 'lucide-react';
 import { Link, useOutletContext } from "react-router-dom";
 
@@ -28,11 +28,11 @@ const Hero = ({ theme, subtextClass }) => {
             Accusoft brings all your spending into one easy-to-use place. See daily totals, monthly trends, and detailed lists of every transaction.
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
-          <Link to="/dashboard">
-            <button className="flex items-center justify-center gap-2 bg-blue-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-blue-700 transition-all group shadow-xl shadow-blue-600/20">
-              Open Your Dashboard
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </button>
+            <Link to="/dashboard">
+              <button className="flex items-center justify-center gap-2 bg-blue-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-blue-700 transition-all group shadow-xl shadow-blue-600/20">
+                Open Your Dashboard
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </button>
             </Link>
           </div>
         </div>
@@ -48,7 +48,7 @@ const Hero = ({ theme, subtextClass }) => {
               <rect x="330" y="150" width="30" height="210" rx="5" fill="#60A5FA" />
               <path d="M180,300 L230,260 L280,220 L330,170" fill="none" stroke="#FBBF24" strokeWidth="6" strokeLinecap="round" />
               <circle cx="330" cy="170" r="8" fill="#FBBF24" />
-              <circle cx="120" cy="180" r="25" fill="#FBBF24" className="animate-bounce" style={{animationDuration: '3s'}} />
+              <circle cx="120" cy="180" r="25" fill="#FBBF24" className="animate-bounce" style={{ animationDuration: '3s' }} />
               <text x="115" y="187" fontSize="20" fontWeight="bold" fill="white">$</text>
             </svg>
           </div>
@@ -68,11 +68,12 @@ const Features = ({ theme, cardClass, subtextClass, mainFeatures }) => {
           <p className="text-3xl lg:text-5xl font-bold mb-6">Take charge with our Interactive Dashboard.</p>
           <p className={subtextClass}>We built Accusoft to be as easy to use as your favorite social app, but with the power of a professional accounting tool.</p>
         </div>
-        
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {mainFeatures.map((f, i) => (
             <div key={i} className={`p-8 rounded-[2rem] border transition-all duration-300 group ${cardClass} hover:shadow-2xl hover:scale-105`}>
-              <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/30 rounded-2xl inline-block group-hover:bg-blue-600 group-hover:text-white transition-colors">
+              <div className="mb-6 p-4 rounded-2xl inline-block border border-transparent 
+group-hover:border-blue-600 transition-all">
                 {f.icon}
               </div>
               <h3 className="text-xl font-bold mb-3">{f.title}</h3>
@@ -106,15 +107,15 @@ const Reports = ({ theme, cardClass, subtextClass, reportTypes, activeTab, setAc
               {activeTab === 'daily' && (
                 <div className="animate-in fade-in duration-500">
                   <p className="text-xs font-bold opacity-50 mb-1">Today's Spend</p>
-                  <h4 className="text-4xl font-bold mb-6">$84.20</h4>
+                  <h4 className="text-4xl font-bold mb-6">₹84.20</h4>
                   <div className="space-y-3">
                     <div className="flex justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-800">
                       <span className="text-sm font-medium">Coffee & Lunch</span>
-                      <span className="text-sm font-bold text-red-500">-$24.20</span>
+                      <span className="text-sm font-bold text-red-500">-₹24.20</span>
                     </div>
                     <div className="flex justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-800">
                       <span className="text-sm font-medium">Grocery Store</span>
-                      <span className="text-sm font-bold text-red-500">-$60.00</span>
+                      <span className="text-sm font-bold text-red-500">-₹60.00</span>
                     </div>
                   </div>
                 </div>
@@ -171,8 +172,8 @@ const Reports = ({ theme, cardClass, subtextClass, reportTypes, activeTab, setAc
                 <button
                   key={type.id}
                   onClick={() => setActiveTab(type.id)}
-                  className={`w-full text-left p-6 rounded-3xl border transition-all ${activeTab === type.id 
-                    ? 'bg-blue-600 border-blue-600 text-white shadow-xl shadow-blue-600/20' 
+                  className={`w-full text-left p-6 rounded-3xl border transition-all ${activeTab === type.id
+                    ? 'bg-blue-600 border-blue-600 text-white shadow-xl shadow-blue-600/20'
                     : `${cardClass} hover:border-blue-400`}`}
                 >
                   <div className="flex items-center gap-4 mb-2">
@@ -194,6 +195,84 @@ const Reports = ({ theme, cardClass, subtextClass, reportTypes, activeTab, setAc
   );
 };
 
+const Achievements = ({ theme, cardClass, subtextClass }) => {
+  const sectionRef = useRef(null);
+  const [hasStarted, setHasStarted] = useState(false);
+  const [counts, setCounts] = useState([0, 0, 0, 0]);
+
+  const stats = [
+    { label: "Registered Users", value: 10, suffix: "+" },
+    { label: "Expense Records", value: 2000, suffix: "+" },
+    { label: "Ledgers Managed", value: 50, suffix: "+" },
+    // { label: "Avg. Monthly Savings", value: 18, suffix: "%" },
+  ];
+
+  useEffect(() => {
+    const node = sectionRef.current;
+    if (!node) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setHasStarted(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.35 }
+    );
+
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!hasStarted) return;
+
+    const duration = 1400;
+    const start = performance.now();
+    let rafId = 0;
+
+    const tick = (now) => {
+      const progress = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+
+      setCounts(stats.map((s) => Math.floor(s.value * eased)));
+
+      if (progress < 1) {
+        rafId = requestAnimationFrame(tick);
+      }
+    };
+
+    rafId = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafId);
+  }, [hasStarted]);
+
+  return (
+    <section ref={sectionRef} className={`py-20 px-6 transition-colors ${theme === 'light' ? 'bg-white' : 'bg-slate-900'}`}>
+      <div className="container mx-auto">
+        <div className="text-center max-w-3xl mx-auto mb-14">
+          <h2 className="text-blue-600 font-bold tracking-widest uppercase text-xs mb-3">Proven Results</h2>
+          <p className="text-3xl lg:text-5xl font-bold mb-5">Built to perform at scale.</p>
+          <p className={subtextClass}>
+            From first-time trackers to daily power users, teams trust Accusoft to keep every expense organized and visible.
+          </p>
+        </div>
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-12">
+          {stats.map((stat, i) => (
+            <div key={stat.label} className={`rounded-3xl border p-7 transition-all duration-300 ${cardClass}`}>
+              <p className="text-3xl lg:text-4xl font-extrabold text-blue-600 mb-2">
+                {counts[i].toLocaleString()}{stat.suffix}
+              </p>
+              <p className={`text-sm font-semibold ${subtextClass}`}>{stat.label}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
 const CTA = () => {
   return (
     <section id="cta" className="py-24 px-6">
@@ -204,9 +283,11 @@ const CTA = () => {
             <p className="text-blue-100 text-xl mb-10 leading-relaxed">
               Join 500+ smart savers who use Accusoft every day. It’s simple, free, and secure.
             </p>
-            <button className="bg-white text-blue-600 px-10 py-5 rounded-3xl font-bold text-xl hover:scale-105 transition-transform shadow-xl">
-              Get Started for Free
-            </button>
+            <Link to="/dashboard">
+              <button className="bg-white text-blue-600 px-10 py-5 rounded-3xl font-bold text-xl hover:scale-105 transition-transform shadow-xl">
+                Get Started for Free
+              </button>
+            </Link>
           </div>
           <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
           <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/2 w-96 h-96 bg-indigo-900/20 rounded-full blur-3xl"></div>
@@ -216,79 +297,85 @@ const CTA = () => {
   );
 };
 
-const LandingBody = ({}) => {
-     const { theme, ThemeStyles, activeTab, setActiveTab } = useOutletContext();
+const LandingBody = ({ }) => {
+  const { theme, ThemeStyles, activeTab, setActiveTab } = useOutletContext();
 
   const mainFeatures = [
-     {
-       icon: <LayoutDashboard className="w-6 h-6 text-blue-500" />,
-       title: "Interactive Dashboard",
-       description: "A single, beautiful screen to control all your money. Everything you need is just one click away."
-     },
-     {
-       icon: <PieChart className="w-6 h-6 text-purple-500" />,
-       title: "Visual Spending Stories",
-       description: "We turn boring numbers into colorful charts so you can see your spending habits instantly."
-     },
-     {
-       icon: <ShieldCheck className="w-6 h-6 text-green-500" />,
-       title: "Bank-Level Safety",
-       description: "Your data is locked away safely. Only you have the key to your financial information."
-     },
-     {
-       icon: <Zap className="w-6 h-6 text-amber-500" />,
-       title: "Always Fast",
-       description: "No waiting around. The app opens instantly and saves your data the moment you type it."
-     }
-   ];
- 
-   const reportTypes = [
-     {
-       id: 'daily',
-       icon: <Calendar className="w-5 h-5" />,
-       title: "Daily Tracking",
-       description: "See exactly what you spent today. Perfect for staying on top of small daily purchases."
-     },
-     {
-       id: 'monthly',
-       icon: <BarChart3 className="w-5 h-5" />,
-       title: "Monthly Summaries",
-       description: "Compare your spending week by week to see where you can save more for the future."
-     },
-     {
-       id: 'ledger',
-       icon: <BookOpen className="w-5 h-5" />,
-       title: "Personal Ledger",
-       description: "A clean, organized list of every single transaction. It’s like a digital diary for your wallet."
-     }
-   ];
+    {
+      icon: <LayoutDashboard className="w-6 h-6 text-blue-500" />,
+      title: "Interactive Dashboard",
+      description: "A single, beautiful screen to control all your money. Everything you need is just one click away."
+    },
+    {
+      icon: <PieChart className="w-6 h-6 text-purple-500" />,
+      title: "Visual Spending Stories",
+      description: "We turn boring numbers into colorful charts so you can see your spending habits instantly."
+    },
+    // {
+    //   icon: <ShieldCheck className="w-6 h-6 text-green-500" />,
+    //   title: "Bank-Level Safety",
+    //   description: "Your data is locked away safely. Only you have the key to your financial information."
+    // },
+    {
+      icon: <Zap className="w-6 h-6 text-amber-500" />,
+      title: "Always Fast",
+      description: "No waiting around. The app opens instantly and saves your data the moment you type it."
+    }
+  ];
 
-    return (
-        <>
-            <main>
-                <Hero theme={theme} subtextClass={ThemeStyles.subtext} />
+  const reportTypes = [
+    {
+      id: 'daily',
+      icon: <Calendar className="w-5 h-5" />,
+      title: "Daily Tracking",
+      description: "See exactly what you spent today. Perfect for staying on top of small daily purchases."
+    },
+    {
+      id: 'monthly',
+      icon: <BarChart3 className="w-5 h-5" />,
+      title: "Monthly Summaries",
+      description: "Compare your spending week by week to see where you can save more for the future."
+    },
+    {
+      id: 'ledger',
+      icon: <BookOpen className="w-5 h-5" />,
+      title: "Personal Ledger",
+      description: "A clean, organized list of every single transaction. It’s like a digital diary for your wallet."
+    }
+  ];
 
-                <Features
-                    theme={theme}
-                    cardClass={ThemeStyles.card}
-                    subtextClass={ThemeStyles.subtext}
-                    mainFeatures={mainFeatures}
-                />
+  return (
+    <>
+      <main>
+        <Hero theme={theme} subtextClass={ThemeStyles.subtext} />
 
-                <Reports
-                    theme={theme}
-                    cardClass={ThemeStyles.card}
-                    subtextClass={ThemeStyles.subtext}
-                    reportTypes={reportTypes}
-                    activeTab={activeTab}
-                    setActiveTab={setActiveTab}
-                />
+        <Features
+          theme={theme}
+          cardClass={ThemeStyles.card}
+          subtextClass={ThemeStyles.subtext}
+          mainFeatures={mainFeatures}
+        />
 
-                <CTA />
-            </main>
+        <Reports
+          theme={theme}
+          cardClass={ThemeStyles.card}
+          subtextClass={ThemeStyles.subtext}
+          reportTypes={reportTypes}
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+        />
 
-        </>
-    );
+        <Achievements
+          theme={theme}
+          cardClass={ThemeStyles.card}
+          subtextClass={ThemeStyles.subtext}
+        />
+
+        <CTA />
+      </main>
+
+    </>
+  );
 };
 
 export default LandingBody;

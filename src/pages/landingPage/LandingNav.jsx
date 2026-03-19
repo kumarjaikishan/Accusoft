@@ -9,21 +9,17 @@ export const LandingNav = ({ theme, toggleTheme, isScrolled }) => {
   return (
     <nav className={`fixed top-0 w-full z-50 transition-all duration-300 backdrop-blur-md ${navClass}`}>
       <div className="container mx-auto px-6 flex justify-between items-center">
+      <Link to="/">
         <div className="flex items-center gap-2">
           <div className="bg-blue-600 p-2 rounded-lg shadow-lg shadow-blue-500/30">
             <Wallet className="text-white w-6 h-6" />
           </div>
           <span className="text-2xl font-bold tracking-tight">Accusoft</span>
         </div>
+        </Link>
 
         <div className="flex items-center gap-4 md:gap-8 font-medium">
-          <div className="hidden lg:flex items-center gap-8 text-sm uppercase tracking-wide opacity-80">
-            {/* <a href="#features" className="hover:text-blue-600 transition-colors">Features</a>
-            <a href="#reports" className="hover:text-blue-600 transition-colors">Reporting</a> */}
-            <Link to="/dashboard"
-              className="hover:text-blue-600 transition-colors"
-            >Get Started</Link>
-          </div>
+      
 
           <button
             onClick={toggleTheme}
@@ -31,10 +27,11 @@ export const LandingNav = ({ theme, toggleTheme, isScrolled }) => {
           >
             {theme === 'light' ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
           </button>
-
-          <button className="bg-blue-600 text-white px-5 py-2 rounded-full hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/20 text-sm font-bold">
-            Try Free
-          </button>
+          <Link to="/dashboard">
+            <button className="bg-blue-600 text-white px-5 py-2 rounded-full hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/20 text-sm font-bold">
+              Try Free
+            </button>
+          </Link>
         </div>
       </div>
     </nav>

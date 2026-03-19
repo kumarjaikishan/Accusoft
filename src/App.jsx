@@ -1,7 +1,5 @@
 import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
-import { useEffect, lazy, Suspense, useState } from 'react';
-import Navbar from './components/navbar/navbar';
-import Sidebar from './components/sidebar/sidebar';
+import { useEffect, lazy, Suspense } from 'react';
 import Preloader from './preloader';
 import Photo from './pages/photoCloudinary';
 import 'react-toastify/dist/ReactToastify.css';
@@ -54,8 +52,9 @@ function App() {
   const { userdatacall } = useUserApi();
 
   // ✅ Layout detection
-  const isLanding = ["/", "/terms", "/privacy"].includes(location.pathname);
-  const isAuthPage = location.pathname === "/login";
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [location.pathname, location.search]);
 
   // ✅ Fetch user if token exists
   useEffect(() => {

@@ -2,7 +2,7 @@ import React from "react";
 
 const Privacy = () => {
   return (
-    <div className="min-h-screen px-4 py-10 bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+    <div className="min-h-screen  px-4 py-10 bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
       
       <div className="max-w-4xl mx-auto bg-white dark:bg-gray-800 shadow-lg rounded-2xl p-8 transition-colors duration-300">
 

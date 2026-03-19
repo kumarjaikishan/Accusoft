@@ -17,7 +17,7 @@ const getDesktopColumns = () => [
     selector: (row) => row.amount,
     sortable: true,
     width: "120px",
-    cell: (row) => <span className="font-mono font-semibold text-content">Rs. {row.amount}</span>,
+    cell: (row) => <span className="font-mono font-semibold text-content">₹ {row.amount}</span>,
   },
   {
     name: "Narration",

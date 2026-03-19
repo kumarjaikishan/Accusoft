@@ -1,12 +1,10 @@
-import { useState } from "react";
-import './filehandle.css';
+import { useState, useEffect } from "react";
+import { Pencil, Trash2, Save, RefreshCw } from 'lucide-react';
+
 import { toast } from 'react-toastify';
-import { useEffect } from "react";
-import { HiPencilSquare } from "react-icons/hi2";
-import { RiDeleteBin6Line } from "react-icons/ri";
+
 import swal from 'sweetalert';
-import { IoIosSave } from "react-icons/io";
-import { MdOutlineUpdate } from "react-icons/md";
+
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 
@@ -129,7 +127,6 @@ const Filehandle = () => {
                     }))
                 })
             });
-
 
             setdisable(false)
             if (!fileJobRes.ok) throw new Error("Error occurred while creating the file job");
@@ -360,30 +357,30 @@ const Filehandle = () => {
     }
 
     return (
-        <div className="filehandle">
+        <div className="w-full h-full overflow-hidden relative p-[5px]">
             <div style={{ margin: '5px 0px', display: 'flex', justifyContent: 'center' }}>
-                <Button className='muibtn' sx={{ mr: 5 }} onClick={() => setmodalopen(true)} disabled={disable} variant="contained" startIcon={<MdOutlineUpdate />}>
+                <Button className='muibtn' sx={{ mr: 5 }} onClick={() => setmodalopen(true)} disabled={disable} variant="contained" startIcon={<RefreshCw />}>
                     Create New
                 </Button>
-                <Button className='muibtn outlined' onClick={() => updateTimerall()} variant="outlined" startIcon={<IoIosSave />}>
+                <Button className='muibtn outlined' onClick={() => updateTimerall()} variant="outlined" startIcon={<Save />}>
                     update timer
                 </Button>
             </div>
 
-            <div className="table">
-                <table>
+            <div className="w-full overflow-auto h-[calc(100%-80px)]">
+                <table className="w-full border-collapse">
                     <thead>
-                        <tr className="header">
-                            <th>S.no</th>
-                            <th>Days</th>
-                            <th>Expiry</th>
-                            <th>Remaining</th>
-                            <th>Files</th>
-                            <th>Emails</th>
-                            <th>Actions</th>
+                        <tr className="bg-black text-white border border-black">
+                            <th className="border border-black p-2 text-left">S.no</th>
+                            <th className="border border-black p-2 text-left">Days</th>
+                            <th className="border border-black p-2 text-left">Expiry</th>
+                            <th className="border border-black p-2 text-left">Remaining</th>
+                            <th className="border border-black p-2 text-left">Files</th>
+                            <th className="border border-black p-2 text-left">Emails</th>
+                            <th className="border border-black p-2 text-left">Actions</th>
                         </tr>
                     </thead>
-                    <tbody className="body">
+                    <tbody className="w-full">
                         {jobs?.map((job, ind) => {
                             // Calculate remaining days
                             const expiryDate = new Date(job.expiryDate);
@@ -392,41 +389,41 @@ const Filehandle = () => {
                             const daysRemaining = Math.ceil(timeDiff / (1000 * 60 * 60 * 24)); // Convert milliseconds to days
 
                             return (
-                                <tr className="bodyrow" key={ind}>
-                                    <td>{ind + 1}</td>
-                                    <td>{job.days}</td>
-                                    <td>
+                                <tr className="border border-black" key={ind}>
+                                    <td className="border border-black p-2 text-left">{ind + 1}</td>
+                                    <td className="border border-black p-2 text-left">{job.days}</td>
+                                    <td className="border border-black p-2 text-left">
                                         {expiryDate.toLocaleDateString('en-GB', { // Formatting date as '26 Nov, 2024'
                                             day: 'numeric',
                                             month: 'short',
                                             year: 'numeric',
                                         })}
                                     </td>
-                                    <td>
+                                    <td className="border border-black p-2 text-left">
                                         {daysRemaining} days
                                     </td>
-                                    <td>
+                                    <td className="border border-black p-2 text-left">
                                         {job.fileUrls?.map((file, fileIndex) => (
-                                            <div className="teste" key={fileIndex}>
-                                                <span key={fileIndex}>{fileIndex + 1}. {file.filename.split('flname')[0]}.{file.filename.split('flname')[1].split('.')[1]}
+                                            <div className="flex justify-between items-center mb-1" key={fileIndex}>
+                                                <span className="w-[calc(100%-42px)] leading-tight" key={fileIndex}>{fileIndex + 1}. {file.filename.split('flname')[0]}.{file.filename.split('flname')[1].split('.')[1]}
                                                 </span>
-                                                <span>
-                                                    <RiDeleteBin6Line title={`Delete ${file.filename.split('flname')[0]}`} onClick={() => assetdelete(file, fileIndex)} className='deleteicon ico' />
+                                                <span className="w-[40px] text-center">
+                                                    <Trash2 title={`Delete ${file.filename.split('flname')[0]}`} onClick={() => assetdelete(file, fileIndex)} className='p-[3px] box-content w-[20px] h-[20px] rounded-[.2rem] cursor-pointer mx-[5px] text-[var(--deleteicon)] bg-[rgba(182,7,16,0.116)] hover:bg-[var(--deleteicon)] hover:text-white' />
                                                 </span>
                                             </div>
                                         ))}
                                     </td>
-                                    <td>
-                                        <ul>
+                                    <td className="border border-black p-2 text-left">
+                                        <ul className="list-none">
                                             {job.emailRecipients?.map((email, emailIndex) => (
                                                 <li key={emailIndex}>{emailIndex + 1}. {email}</li>
                                             ))}
                                         </ul>
                                     </td>
-                                    <td>
-                                        <HiPencilSquare title="Edit" onClick={() => setedit(job)} className='editicon ico' />
-                                        <MdOutlineUpdate title="Refresh" onClick={() => updateTimerone(job._id)} className='refresh ico' />
-                                        <RiDeleteBin6Line title="Delete" onClick={() => deleteJob(job._id)} className='deleteicon ico' />
+                                    <td className="border border-black p-2 text-center whitespace-nowrap">
+                                        <Pencil title="Edit" onClick={() => setedit(job)} className='p-[3px] box-content w-[20px] h-[20px] rounded-[.2rem] cursor-pointer mx-[5px] text-[var(--editicon)] bg-[rgba(7,121,182,0.116)] hover:bg-[var(--editicon)] hover:text-[var(--background)]' />
+                                        <RefreshCw title="Refresh" onClick={() => updateTimerone(job._id)} className='p-[3px] box-content w-[20px] h-[20px] rounded-[.2rem] cursor-pointer mx-[5px] text-[var(--printicon)] bg-[rgba(4,198,85,0.116)] hover:bg-[var(--printicon)] hover:text-white' />
+                                        <Trash2 title="Delete" onClick={() => deleteJob(job._id)} className='p-[3px] box-content w-[20px] h-[20px] rounded-[.2rem] cursor-pointer mx-[5px] text-[var(--deleteicon)] bg-[rgba(182,7,16,0.116)] hover:bg-[var(--deleteicon)] hover:text-white' />
                                     </td>
                                 </tr>
                             );
@@ -435,19 +432,19 @@ const Filehandle = () => {
                 </table>
             </div>
 
-            {modalopen && <div className="modale">
-                <form onSubmit={handleSubmit}>
-                    <h2>Create File Job</h2>
+            {modalopen && <div className="absolute top-0 left-0 w-full h-full bg-white/10 backdrop-blur-[5px] flex items-center justify-center z-[100]">
+                <form className="rounded-[10px] overflow-hidden bg-white shadow-[10px_10px_25px_5px_rgba(0,0,0,0.3)] w-[400px]" onSubmit={handleSubmit}>
+                    <h2 className="w-full text-center bg-[var(--maincolor)] text-white py-[5px]">Create File Job</h2>
 
                     {/* File Upload */}
-                    <div>
+                    <div className="px-[10px] py-[5px] text-center mt-[5px]">
                         {isupdate ? <label>Add New Files:</label> :
                             <label>Upload Files:</label>}
                         <br />
-                        <input type="file" multiple onChange={handleFileChange} />
+                        <input className="w-full text-center" type="file" multiple onChange={handleFileChange} />
                     </div>
                 
-                    <div>
+                    <div className="px-[10px] py-[5px] text-center mt-[5px]">
                         <TextField fullWidth id="outlined-basic" label="Email Recipients" name="email"
                             value={emails}
                             onChange={handleEmailChange}
@@ -456,7 +453,7 @@ const Filehandle = () => {
                             variant="outlined" />
                     </div>
 
-                    <div>
+                    <div className="px-[10px] py-[5px] text-center mt-[5px]">
                         <TextField fullWidth id="outlined-basic" label="Days" name="days"
                             onKeyPress={(event) => { if (!/[0-9]/.test(event.key)) { event.preventDefault(); } }}
                             type="tel" value={days}
@@ -465,7 +462,7 @@ const Filehandle = () => {
                             size="small"
                             variant="outlined" />
                     </div>
-                    <div>
+                    <div className="px-[10px] py-[5px] text-center mt-[5px]">
                         <TextField fullWidth id="outlined-basic" label="Message" name="message"
                             multiline
                             rows={4}
@@ -478,13 +475,13 @@ const Filehandle = () => {
 
                     {/* Submit Button */}
                     <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-                        {isupdate ? <Button className='muibtn' disabled={disable} onClick={update} variant="contained" startIcon={<MdOutlineUpdate />}>
+                        {isupdate ? <Button className='muibtn' disabled={disable} onClick={update} variant="contained" startIcon={<RefreshCw />}>
                             Update
-                        </Button> : <Button className='muibtn' disabled={disable} type="submit" variant="contained" startIcon={<MdOutlineUpdate />}>
+                        </Button> : <Button className='muibtn' disabled={disable} type="submit" variant="contained" startIcon={<RefreshCw />}>
                             Create Job
                         </Button>}
 
-                        <Button className='muibtn outlined' onClick={reset} variant="outlined" startIcon={<IoIosSave />}>
+                        <Button className='muibtn outlined' onClick={reset} variant="outlined" startIcon={<Save />}>
                             Cancel
                         </Button>
                     </div>

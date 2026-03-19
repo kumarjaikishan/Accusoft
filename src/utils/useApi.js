@@ -38,7 +38,7 @@ export const useApi = () => {
 
         } catch (err) {
             setError(err.message);
-            // console.log(err)
+            console.log(err)
             // console.log("apiUse error:", err.message);
             // console.log("apiUse error status:", err.status);
 

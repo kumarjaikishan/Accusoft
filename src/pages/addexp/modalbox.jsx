@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import './modalbox.css';
+import { RefreshCcw, Save, RefreshCw } from 'lucide-react';
+
 import { useSelector, useDispatch } from 'react-redux';
 import { setloader } from '../../store/login';
 import { userdata } from '../../store/api'
@@ -10,13 +11,11 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Button from '@mui/material/Button';
-import { VscDebugRestart } from "react-icons/vsc";
-import { IoIosSave } from "react-icons/io";
-import { MdOutlineUpdate } from "react-icons/md";
+
 import InputAdornment from '@mui/material/InputAdornment';
 import { useApi } from '../../utils/useApi';
 
-const Modalbox = ({ modal, navigate, disable,  handlechange, fields, isupdate, sub, setmodal, setisupdate, reset }) => {
+const Modalbox = ({ modal, navigate, disable, handlechange, fields, isupdate, sub, setmodal, setisupdate, reset }) => {
     const useralldetail = useSelector((state) => state.userexplist);
     const dispatch = useDispatch();
     const { request, loading, } = useApi();
@@ -51,19 +50,18 @@ const Modalbox = ({ modal, navigate, disable,  handlechange, fields, isupdate, s
         return capitalizedWords.join(' ');
     };
 
-    var modale = document.querySelector(".modal");
     const sdef = function (event) {
-        if (event.target == modale) {
+        if (event.target.classList.contains('modal')) {
             setmodal(false);
         }
     }
 
     return (
-        <div className="modal" onClick={sdef} style={{ display: modal ? "block" : "none" }}>
-            <div className="box">
-                <h1>Add Voucher</h1>
+        <div className="modal absolute top-0 left-0 w-full h-full bg-white/20 dark:bg-black/40 backdrop-blur-[5px] z-[100]" onClick={sdef} style={{ display: modal ? "block" : "none" }}>
+            <div className="absolute top-1/2 left-1/2 w-[500px] h-max rounded-[20px] -translate-x-1/2 -translate-y-1/2 shadow-[10px_10px_20px_rgba(0,0,0,0.4)] overflow-hidden flex flex-col items-center max-sm:top-[35%] max-sm:w-[96vw] bg-[var(--maincolor)] dark:bg-slate-900">
+                <h1 className="w-full h-[50px] leading-[50px] text-[aliceblue] tracking-[2px] text-center max-sm:text-[1.5em] max-sm:tracking-[1px] bg-[var(--maincolor)] dark:bg-slate-900">Add Voucher</h1>
 
-                <span className="wrapper">
+                <span className="flex flex-col rounded-t-[30px] pt-[5px] bg-surface items-center w-full pb-[20px] max-sm:pb-[15px]">
                     <FormControl className='caps' sx={{ width: '90%', mt: 2, mb: 2 }}>
                         <InputLabel id="demo-simple-select-label">Ledger</InputLabel>
                         <Select
@@ -102,12 +100,12 @@ const Modalbox = ({ modal, navigate, disable,  handlechange, fields, isupdate, s
                         name="narration" value={fields?.narration} type="text"
                         onChange={handlechange}
                         variant="outlined" />
-                     <div className='btn'>
+                    <div className='w-full flex justify-around mt-4 max-sm:flex-col max-sm:gap-2 max-sm:px-4'>
                         {isupdate ? <Button
                             // disabled={loading} 
-                            onClick={() => updatee(fields._id)} variant="contained" startIcon={<MdOutlineUpdate />}>
+                            onClick={() => updatee(fields._id)} variant="contained" startIcon={<RefreshCw />}>
                             Update
-                        </Button> : <Button disabled={disable} onClick={sub} variant="contained" startIcon={<IoIosSave />}>
+                        </Button> : <Button disabled={disable} onClick={sub} variant="contained" startIcon={<Save />}>
                             Submit
                         </Button>}
 
@@ -117,7 +115,7 @@ const Modalbox = ({ modal, navigate, disable,  handlechange, fields, isupdate, s
                                 setisupdate(false);
                                 reset();
                             }}
-                            className='muibtn outlined' title='Cancel' variant="outlined" startIcon={<VscDebugRestart />}>
+                            className='muibtn outlined' title='Cancel' variant="outlined" startIcon={<RefreshCcw />}>
                             Cancel
                         </Button>
                         {/* <Button endIcon={<CircularProgress size={15} color="inherit" />} title="Create New Tournament"

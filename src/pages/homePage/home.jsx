@@ -1,16 +1,11 @@
 import React, { useState, useEffect, useMemo } from "react";
+import { IndianRupee, Zap, ShoppingBag, Wallet, Scale, Clock } from 'lucide-react';
+
 import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import { header, setloader } from "../../store/login";
 import { motion } from "framer-motion";
 import { Bar } from "react-chartjs-2";
-import { FaIndianRupeeSign } from "react-icons/fa6";
-import { MdElectricBolt } from "react-icons/md";
-import {
-  FaShoppingBag,
-  FaGoogleWallet,
-  FaBalanceScaleRight,
-} from "react-icons/fa";
-import { FiClock } from "react-icons/fi";
+
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -35,6 +30,8 @@ const Home = () => {
     (state) => state.userexplist,
     shallowEqual
   );
+
+  const mode = useSelector((state) => state.theme.mode);
 
   const [monthsToShow, setMonthsToShow] = useState(12);
 
@@ -165,21 +162,21 @@ const Home = () => {
       },
       plugins: {
         legend: {
-          labels: { color: "#374151" },
+          labels: { color: mode === "dark" ? "#e5e7eb" : "#374151" },
         },
       },
       scales: {
         x: {
-          ticks: { color: "#6b7280" },
+          ticks: { color: mode === "dark" ? "#9ca3af" : "#6b7280" },
           grid: { display: false },
         },
         y: {
-          ticks: { color: "#6b7280" },
-          grid: { color: "#e5e7eb" },
+          ticks: { color: mode === "dark" ? "#9ca3af" : "#6b7280" },
+          grid: { color: mode === "dark" ? "#374151" : "#e5e7eb" },
         },
       },
     }),
-    []
+    [mode]
   );
 
   /* ================= DUMMY RECENT ================= */
@@ -199,7 +196,7 @@ const Home = () => {
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="min-h-screen bg-gray-100 p-6"
+      className="min-h-screen bg-transparent p-4 lg:p-6"
     >
       {/* CARDS */}
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-5 mb-8">
@@ -207,21 +204,21 @@ const Home = () => {
           {
             amt: sums.todaysum,
             label: "Today",
-            icon: <FaIndianRupeeSign />,
+            icon: <IndianRupee />,
             iconBg: "from-indigo-500 to-purple-500",
             border: 'border-indigo-400'
           },
           {
             amt: sums.yestersum,
             label: "Yesterday",
-            icon: <MdElectricBolt />,
+            icon: <Zap />,
             iconBg: "from-yellow-400 to-orange-500",
             border: 'border-yellow-400'
           },
           {
             amt: sums.weeksum,
             label: "Last Week",
-            icon: <FaShoppingBag />,
+            icon: <ShoppingBag />,
             iconBg: "from-pink-500 to-rose-500",
             border: 'border-rose-400',
           },
@@ -230,7 +227,7 @@ const Home = () => {
             label: "Last Month",
             avg: sums.dailyAvg,
             avgLabel: "Daily Avg",
-            icon: <FaGoogleWallet />,
+            icon: <Wallet />,
             iconBg: "from-cyan-500 to-blue-500",
             border: 'border-cyan-400',
           },
@@ -239,20 +236,20 @@ const Home = () => {
             label: "Last Year",
             avg: sums.monthlyAvg,
             avgLabel: "Monthly Avg",
-            icon: <FaBalanceScaleRight />,
+            icon: <Scale />,
             iconBg: "from-emerald-500 to-green-600",
             border: 'border-emerald-400'
           },
         ].map((item, i) => (
           <div
             key={i}
-            className={`bg-white rounded-xl border-l-4 ${item.border} p-5 pb-2 shadow-sm hover:shadow-md transition-all duration-300`}
+            className={`bg-white dark:bg-slate-900 rounded-xl border-l-4 ${item.border} p-5 pb-2 shadow-[0_4px_20px_0_rgba(0,0,0,0.1)] dark:shadow-none dark:border-white/5 hover:shadow-lg dark:hover:bg-slate-800 transition-all duration-300`}
           >
             {/* Top Section */}
             <div className="flex justify-between items-start">
               <div>
-                <p className="text-sm text-gray-500">{item.label}</p>
-                <h2 className="text-xl font-semibold text-gray-800 mt-1">
+                <p className="text-sm text-gray-500 dark:text-gray-400">{item.label}</p>
+                <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mt-1">
                   ₹ {item.amt || 0}
                 </h2>
               </div>
@@ -266,7 +263,7 @@ const Home = () => {
 
             {/* Average Badge */}
             {item.avg !== undefined && (
-              <div className="mt-1 inline-flex items-center gap-1 text-xs font-medium px-3 py-1 rounded-lg bg-indigo-50 text-indigo-600">
+              <div className="mt-1 inline-flex items-center gap-1 text-xs font-medium px-3 py-1 rounded-lg bg-indigo-50 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400">
                 {item.avgLabel}: ₹ {item.avg}
               </div>
             )}
@@ -276,17 +273,17 @@ const Home = () => {
 
       {/* CHART + RECENT */}
       <div className="grid lg:grid-cols-3 gap-6">
-        <div className="bg-white shadow-sm rounded-xl p-6 lg:col-span-2">
+        <div className="bg-white dark:bg-slate-900 shadow-[0_4px_20px_0_rgba(0,0,0,0.2)] dark:shadow-none border border-slate-200 dark:border-white/5 rounded-xl p-4 lg:col-span-2">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="font-semibold text-gray-700">
+            <h3 className="font-semibold text-gray-700 dark:text-gray-200">
               Monthly Expense Overview
             </h3>
 
             <div className="relative inline-block">
               <select
-                className="appearance-none bg-white border border-gray-300 
-    rounded-xl px-4 py-2 pr-10 text-sm font-medium text-gray-700
-    shadow-sm hover:border-indigo-400
+                className="appearance-none bg-white dark:bg-slate-800 border border-gray-300 dark:border-white/10
+    rounded-xl px-4 py-2 pr-10 text-sm font-medium text-gray-700 dark:text-gray-200
+    shadow-sm hover:border-indigo-400 dark:hover:border-indigo-500
     focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500
     transition-all duration-200 cursor-pointer"
                 value={monthsToShow}
@@ -309,12 +306,12 @@ const Home = () => {
         </div>
 
         {/* RECENT */}
-        <div className="bg-white shadow-sm rounded-xl p-6">
+        <div className="bg-white dark:bg-slate-900 shadow-[0_4px_20px_0_rgba(0,0,0,0.2)] dark:shadow-none border border-slate-200 dark:border-white/5 rounded-xl p-4">
           <div className="flex items-center gap-2 mb-4">
-            <div className="p-2 rounded-lg bg-indigo-50 text-indigo-600">
-              <FiClock className="text-lg" />
+            <div className="p-2 rounded-lg bg-indigo-50 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400">
+              <Clock className="text-lg" />
             </div>
-            <h3 className="font-semibold text-gray-700">
+            <h3 className="font-semibold text-gray-700 dark:text-gray-200">
               Recent Spend
             </h3>
           </div>
@@ -324,31 +321,31 @@ const Home = () => {
               {explist.slice(0, 5).map((item, index) => (
                 <div
                   key={index}
-                  className="flex  justify-between  gap-2 p-3 rounded-lg hover:bg-gray-200 transition"
+                  className="flex justify-between gap-2 p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition"
                 >
                   <div className="min-w-0 flex-1 ">
-                    <p className="text-xs font-medium text-gray-800">
+                    <p className="text-xs font-medium text-gray-800 dark:text-gray-200">
                       <span className="mr-2">{dayjs(item.date).format('DD/MM/YY')}</span>
                       <span>• </span>
                       <span className=" capitalize"> {item?.ledger?.ledger}</span>
                     </p>
 
-                    <p className="text-xs font-medium text-gray-500 truncate">
+                    <p className="text-xs font-medium text-gray-500 dark:text-gray-400 truncate">
                       {item.narration}
                     </p>
 
                   </div>
 
-                  <div className="text-sm  w-15 text-end font-semibold text-indigo-600">
+                  <div className="text-sm  w-15 text-end font-semibold text-indigo-600 dark:text-indigo-400">
                     ₹ {item.amount}
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-            <div className="flex flex-col items-center justify-center py-12 text-gray-400">
-              <div className="flex items-center justify-center w-12 h-12 mb-2 rounded-full bg-purple-100">
-                <FiClock className="text-2xl text-purple-500" />
+            <div className="flex flex-col items-center justify-center py-12 text-gray-400 dark:text-gray-500">
+              <div className="flex items-center justify-center w-12 h-12 mb-2 rounded-full bg-purple-100 dark:bg-purple-900/30">
+                <Clock className="text-2xl text-purple-500 dark:text-purple-400" />
               </div>
               <p className="text-sm font-medium">
                 No recent transactions

@@ -78,23 +78,18 @@ const TipSender = () => {
     const containerStyle = {
         maxWidth: '400px',
         margin: '2rem auto',
-        padding: '2rem',
-        border: '1px solid #ddd',
-        borderRadius: '12px',
-        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
-        fontFamily: 'Arial, sans-serif'
     };
 
     return (
-        <div style={containerStyle}>
-            <h2 style={{ marginBottom: '1.5rem' }}>💸 Send a Tip</h2>
+        <div style={containerStyle} className="bg-white dark:bg-slate-900 p-8 border border-gray-200 dark:border-white/5 rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] dark:shadow-none font-sans mt-8">
+            <h2 className="mb-6 text-2xl font-bold text-gray-800 dark:text-gray-100">💸 Send a Tip</h2>
 
             <input
                 type="text"
                 placeholder="Username"
                 value={username}
                 onChange={e => setUsername(e.target.value)}
-                style={inputStyle}
+                className="w-full text-base p-3 mb-4 border border-gray-300 dark:border-white/10 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-slate-800 dark:text-gray-100 transition-all"
             />
 
             <input
@@ -102,7 +97,7 @@ const TipSender = () => {
                 placeholder="Amount (e.g. 10)"
                 value={amount}
                 onChange={e => setAmount(e.target.value)}
-                style={inputStyle}
+                className="w-full text-base p-3 mb-4 border border-gray-300 dark:border-white/10 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-slate-800 dark:text-gray-100 transition-all"
             />
 
             <input
@@ -110,12 +105,12 @@ const TipSender = () => {
                 placeholder="Message (optional)"
                 value={message}
                 onChange={e => setMessage(e.target.value)}
-                style={inputStyle}
+                className="w-full text-base p-3 mb-4 border border-gray-300 dark:border-white/10 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-slate-800 dark:text-gray-100 transition-all"
             />
 
-            <button onClick={sendTip} style={buttonStyle}>Send Tip</button>
+            <button onClick={sendTip} className="px-6 py-3 text-base bg-indigo-600 hover:bg-indigo-700 text-white border-none rounded-lg cursor-pointer transition-all w-full font-medium">Send Tip</button>
 
-            <p style={{ marginTop: '1rem', fontStyle: 'italic', color: '#555' }}>{status}</p>
+            <p className="mt-4 italic text-sm text-gray-500 dark:text-gray-400 text-center">{status}</p>
         </div>
     );
 };

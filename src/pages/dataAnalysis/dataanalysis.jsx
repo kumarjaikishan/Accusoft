@@ -14,6 +14,7 @@ const Datanalysis = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const useralldetail = useSelector((state) => state.userexplist || {});
+  const mode = useSelector((state) => state.theme?.mode || "light");
   const [showbudget, setshowbudget] = useState(true);
 
   const today = new Date();
@@ -145,19 +146,19 @@ const Datanalysis = () => {
       initial={{ opacity: 0, y: 40 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="p-4 md:p-6 space-y-8"
+      className="min-h-screen bg-slate-50 dark:bg-slate-800 p-4 md:p-6 space-y-8"
     >
       {/* ---------- HEADER ---------- */}
-      <div className="bg-gradient-to-r from-indigo-600 to-cyan-500 p-6 rounded-2xl shadow-lg text-white flex flex-wrap gap-4 items-center justify-between">
+      <div className="bg-gradient-to-r from-indigo-600 to-cyan-500 dark:from-slate-800 dark:to-slate-900 p-6 rounded-2xl shadow-lg text-white flex flex-wrap gap-4 items-center justify-between border border-transparent dark:border-white/10">
         <div className="flex gap-3 flex-wrap">
           <select
             name="month"
             value={inp.month}
             onChange={handle}
-            className="px-4 py-2 rounded-xl bg-white/20 backdrop-blur text-white outline-none"
+            className="px-4 py-2 rounded-xl bg-white/20 dark:bg-black/30 backdrop-blur text-white outline-none"
           >
             {monname.map((m, i) => (
-              <option key={i} value={i} className="text-black">{m}</option>
+              <option key={i} value={i} className="text-black dark:text-gray-200 dark:bg-slate-800">{m}</option>
             ))}
           </select>
 
@@ -165,10 +166,10 @@ const Datanalysis = () => {
             name="year"
             value={inp.year}
             onChange={handle}
-            className="px-4 py-2 rounded-xl bg-white/20 backdrop-blur text-white outline-none"
+            className="px-4 py-2 rounded-xl bg-white/20 dark:bg-black/30 backdrop-blur text-white outline-none"
           >
             {[2026, 2025, 2024, 2023, 2022].map((y) => (
-              <option key={y} value={y} className="text-black">{y}</option>
+              <option key={y} value={y} className="text-black dark:text-gray-200 dark:bg-slate-800">{y}</option>
             ))}
           </select>
         </div>
@@ -177,8 +178,8 @@ const Datanalysis = () => {
           onClick={() => setshowbudget(!showbudget)}
           className={`px-5 py-2 rounded-full font-medium transition
           ${showbudget
-              ? "bg-white text-indigo-600"
-              : "bg-black/20 text-white"}`}
+              ? "bg-white text-indigo-600 dark:bg-slate-700 dark:text-cyan-400"
+              : "bg-black/20 text-white dark:bg-white/5 dark:text-gray-300"}`}
         >
           {showbudget ? "Budget ON" : "Budget OFF"}
         </button>
@@ -202,24 +203,24 @@ const Datanalysis = () => {
               key={ledgerId}
               whileHover={{ y: -6 }}
               onClick={() => detail(ledgerId)}
-              className="relative bg-white/70 backdrop-blur-xl rounded-2xl shadow-lg hover:shadow-2xl transition p-6 cursor-pointer"
+              className="relative bg-white/70 dark:bg-slate-900/40 backdrop-blur-xl rounded-2xl shadow-lg dark:shadow-none border border-transparent dark:hover:border-slate-500 dark:border-white/10 hover:shadow-2xl transition p-6 cursor-pointer"
             >
               {/* Title & Amount */}
               <div className="space-y-1">
-                <h3 className="text-xl font-bold text-gray-800">
+                <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100">
                   ₹ {fmt(total)}
                 </h3>
-                <p className="text-sm text-gray-500 capitalize">
+                <p className="text-sm text-gray-500 dark:text-gray-400 capitalize">
                   {data.ledger}
                 </p>
 
                 {showbudget && (
                   <div className="text-xs mt-2">
-                    <span className="text-gray-500">
+                    <span className="text-gray-500 dark:text-gray-400">
                       Budget: ₹ {fmt(budget)} /
                     </span>
                     <span
-                      className={`ml-1 font-semibold ${isOverBudget ? "text-red-500" : "text-green-600"
+                      className={`ml-1 font-semibold ${isOverBudget ? "text-red-500 dark:text-red-400" : "text-green-600 dark:text-emerald-400"
                         }`}
                     >
                       {isOverBudget
@@ -238,11 +239,11 @@ const Datanalysis = () => {
                   transition={{ duration: 1 }}
                   className="absolute inset-0 rounded-full"
                   style={{
-                    background: `conic-gradient(${isOverBudget ? "#ef4444" : "#6366f1"
-                      } ${percentage * 3.6}deg, #e5e7eb 0deg)`
+                    background: `conic-gradient(${isOverBudget ? (mode === "dark" ? "#f87171" : "#ef4444") : (mode === "dark" ? "#818cf8" : "#6366f1")
+                      } ${percentage * 3.6}deg, ${mode === "dark" ? "#334155" : "#e5e7eb"} 0deg)`
                   }}
                 />
-                <div className="absolute inset-2 bg-white rounded-full flex items-center justify-center text-sm font-semibold">
+                <div className="absolute inset-2 bg-white dark:bg-slate-900 rounded-full flex items-center justify-center text-sm font-semibold dark:text-gray-200">
                   {percentage}%
                 </div>
               </div>

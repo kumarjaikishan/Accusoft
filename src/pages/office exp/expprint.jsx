@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import './expprint.css';
 // import sig from '../../img/JAISIGN.png'
 // import img from '../../img/good-nature-logo.png'
 
@@ -31,51 +30,51 @@ const Expprint = ({ inp }) => {
     }
 
     return (
-        <div className='expprint'>
+        <div className='w-full h-full flex items-center flex-col'>
 
-            <div className="box">
-                <div className="header">
-                    <div className="logo">
-                        {/* <img src={img} alt="" /> */}
-                        <span>"हमारा सपना सबका हो घर अपना "</span>
+            <div className="w-[80%] print:w-[98%] h-[420px] mt-[20px] relative border-[2px] border-black">
+                <div className="relative w-full h-[90px] flex justify-between border-b border-black before:absolute before:top-[2px] before:left-0 before:w-full before:h-full before:border-b before:border-black">
+                    <div className="px-[8px] flex flex-col justify-center items-center h-full">
+                        {/* <img className="w-[130px]" src={img} alt="" /> */}
+                        <span className="text-[10px]">"हमारा सपना सबका हो घर अपना "</span>
                     </div>
-                    <div className="heading">
+                    <div className="flex flex-col items-center w-[70%] justify-between px-[10px] py-[5px]">
                         <h1>Good Nature Projects Pvt Ltd.</h1>
-                        <h6>1st floor, Vimla Market-3, Nala Road, Patel Nagar, Biharsharif, Nalanda, Bihar-803101</h6>
-                        <h5>http://www.goodnatureprojects.com, e-mail-ops@goodnatureprojects.com</h5>
+                        <h6 className="text-[8px]">1st floor, Vimla Market-3, Nala Road, Patel Nagar, Biharsharif, Nalanda, Bihar-803101</h6>
+                        <h5 className="text-[10px]">http://www.goodnatureprojects.com, e-mail-ops@goodnatureprojects.com</h5>
                     </div>
                 </div>
-                <div className="title">
-                    <h3><u>Payment Voucher</u></h3>
+                <div className="relative w-full h-[110px] flex flex-col border-b border-black">
+                    <h3 className="text-center"><u>Payment Voucher</u></h3>
                     <div>
-                        <span className='quest'>Voucher No.</span>
-                        <span className='ans vno'>{inp._id}</span>
+                        <span className='inline-block bg-gray-500 text-black w-[110px] font-semibold py-[2px] pl-[5px]'>Voucher No.</span>
+                        <span className='bg-[#302b2b] inline-block text-center text-white py-[2px] border border-white w-[260.5px]'>{inp._id}</span>
                     </div>
-                    <div className='set'>
+                    <div className='flex justify-between p-0'>
                         <span>
-                            <span className='quest'>Ledger</span>
-                            <span className='ans lname'>{inp?.ledger?.ledger}   </span>
-                            <span className='quest deb'>Debit</span>
+                            <span className='inline-block bg-gray-500 text-black w-[110px] font-semibold py-[2px] pl-[5px]'>Ledger</span>
+                            <span className='bg-[#302b2b] inline-block text-center text-white py-[2px] border border-white w-[200px]'>{inp?.ledger?.ledger}   </span>
+                            <span className='inline-block bg-gray-500 w-[110px] font-semibold py-[2px] pl-[5px] max-w-[60px] text-white print:max-w-[53px]'>Debit</span>
                         </span>
                         <span>
-                            <span className='quest qdat'>Date</span>
-                            <span className='ans dat'>{inp.date}</span>
+                            <span className='inline-block bg-gray-500 w-[110px] font-semibold py-[2px] pl-[5px] max-w-[50px] text-white'>Date</span>
+                            <span className='bg-[#302b2b] inline-block text-center text-white py-[2px] border border-white w-[145px]'>{inp.date}</span>
                         </span>
                     </div>
                 </div>
-                <div className="particular">
-                    <div className="narr">
+                <div className="relative w-full h-[100px] flex items-center pl-[5px] justify-between">
+                    <div className="w-[calc(100%-132px)]">
                         {inp.narration}
                     </div>
-                    <div className="amount" onChange={() => inWords(inp.amount)}> {inp.amount}.00  </div>
-                    <div className="word">Amount</div>
+                    <div className="w-[130px] font-bold leading-[100px] text-center border-l border-black" onChange={() => inWords(inp.amount)}> {inp.amount}.00  </div>
+                    <div className="absolute top-[-12px] -translate-y-1/2 right-[25px] text-[1.2em] font-semibold">Amount</div>
                 </div>
-                <div className="inttoword" id='textvalue'>twenty five rupess</div>
-                <div className="sign">
+                <div className="h-[25px] text-right pr-[20px] border-b border-t border-black font-semibold capitalize" id='textvalue'>twenty five rupess</div>
+                <div className="relative w-full h-[90px] py-[5px] px-[20px] flex justify-between">
                     <div><u>Approver By</u></div>
-                    <div>
+                    <div className="flex flex-col items-center">
                         <span><u>Accountant</u></span>
-                        {/* <img src={sig} alt="" /> */}
+                        {/* <img className="w-[200px]" src={sig} alt="" /> */}
                     </div>
                     <div><u>Receiver Signature</u></div>
                 </div>

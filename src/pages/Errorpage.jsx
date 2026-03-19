@@ -21,9 +21,9 @@ export const Errorpage = () => {
       initial={{ opacity: 0, y: 40 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="min-h-fit flex items-center justify-center px-3 bg-white"
+      className="min-h-screen flex items-center justify-center px-3 bg-slate-50 dark:bg-slate-800"
     >
-      <div className="max-w-3xl  w-full text-center bg-white rounded-3xl p-4 md:p-8">
+      <div className="max-w-3xl w-full text-center bg-white dark:bg-slate-900 rounded-3xl p-4 md:p-8 shadow-xl dark:shadow-none dark:border dark:border-white/5">
         
         {/* Image */}
         <div className="flex justify-center mb-6">
@@ -35,12 +35,12 @@ export const Errorpage = () => {
         </div>
 
         {/* Title */}
-        <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
+        <h1 className="text-4xl md:text-5xl font-bold text-gray-800 dark:text-gray-100 mb-4">
           Oops! Page Not Found
         </h1>
 
         {/* Description */}
-        <p className="text-gray-500 text-sm md:text-base mb-8 leading-relaxed">
+        <p className="text-gray-500 dark:text-gray-400 text-sm md:text-base mb-8 leading-relaxed">
           Sorry, the page you are looking for does not exist or has been moved.
           If you believe this is a mistake, please report it and we’ll fix it
           as soon as possible.
@@ -57,7 +57,7 @@ export const Errorpage = () => {
 
           <button
             onClick={() => navigate(-1)}
-            className="px-6 py-3 rounded-xl border border-gray-300 text-gray-700 font-medium hover:bg-gray-100 transition"
+            className="px-6 py-3 rounded-xl border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 font-medium hover:bg-gray-100 dark:hover:bg-slate-800 transition"
           >
             Go Back
           </button>

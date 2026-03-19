@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import './voucher.css';
 import Expprint from './office exp/expprint';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
@@ -52,7 +51,7 @@ const Voucher = () => {
     }
     return (
         <>
-            <div className='office'>
+            <div className='w-full h-full flex flex-col items-center print:color-adjust-exact'>
                 <Expprint inp={exp}/>
             </div>
 

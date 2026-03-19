@@ -1,6 +1,5 @@
 import { useMemo } from "react";
 import { useLocation, Link } from "react-router-dom";
-import "./breadcrumb.css";
 
 function Breadcrumbs() {
   const location = useLocation();
@@ -21,16 +20,30 @@ function Breadcrumbs() {
   }, [location.pathname]);
 
   return (
-    <nav className="breadcrumb">
+    <nav className="flex items-center text-[17px] p-[2px] rounded-[6px] max-sm:text-[13px] max-sm:p-[2px]">
       {breadcrumbs.map((crumb, index) => (
-        <span key={crumb.path} className="breadcrumb-item">
+        <span key={crumb.path} className="flex items-center">
           {index < breadcrumbs.length - 1 ? (
             <>
-              <Link to={crumb.path}>{crumb.name}</Link>
-              <span className="separator">&gt;</span>
+              <Link
+                to={crumb.path}
+                className="
+                  no-underline font-medium transition-colors duration-200 ease-in-out
+                  text-indigo-600 hover:text-indigo-800
+                  dark:text-indigo-400 dark:hover:text-indigo-300
+                "
+              >
+                {crumb.name}
+              </Link>
+
+              <span className="mx-[6px] text-slate-400 dark:text-slate-500">
+                &gt;
+              </span>
             </>
           ) : (
-            <span className="active">{crumb.name}</span>
+            <span className="font-semibold text-slate-700 dark:text-slate-200">
+              {crumb.name}
+            </span>
           )}
         </span>
       ))}

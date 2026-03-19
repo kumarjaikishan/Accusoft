@@ -1,11 +1,10 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { useDispatch } from "react-redux";
+import { Users, Scale, User, BadgeCheck, Pencil, Trash2 } from 'lucide-react';
+
+import { useDispatch, useSelector } from "react-redux";
 import { setloader } from "../../store/login";
 import { motion } from "framer-motion";
-import { FaUsers, FaBalanceScale, FaRegUser } from "react-icons/fa";
-import { MdVerified } from "react-icons/md";
-import { HiPencilSquare } from "react-icons/hi2";
-import { RiDeleteBin6Line } from "react-icons/ri";
+
 import DataTable from "react-data-table-component";
 import dayjs from "dayjs";
 import swal from "sweetalert";
@@ -16,6 +15,7 @@ import { Avatar, Grow } from "@mui/material";
 
 const AdminPanel = () => {
     const dispatch = useDispatch();
+    const mode = useSelector((state) => state.theme.mode);
     const { request, loading, data } = useApi();
 
     const [search, setSearch] = useState("");
@@ -113,7 +113,7 @@ const AdminPanel = () => {
                     src={row?.imgsrc}
                     alt={'user Profile photo'}
                 >
-                    {!row?.imgsrc && <FaRegUser />}
+                    {!row?.imgsrc && <User />}
                 </Avatar>
                 <div>
                     <p className="text-[12px] md:text-[14px] text-gray-700 font-semibold">
@@ -155,14 +155,14 @@ const AdminPanel = () => {
             name: "Action",
             selector: (row) => (
                 <div className="flex gap-3">
-                    <HiPencilSquare
+                    <Pencil
                         className="cursor-pointer text-indigo-600 hover:scale-110 transition"
                         onClick={() => {
                             setForm(row);
                             setModal(true);
                         }}
                     />
-                    <RiDeleteBin6Line
+                    <Trash2
                         className="cursor-pointer text-red-500 hover:scale-110 transition"
                         onClick={() => deleteUser(row._id)}
                     />
@@ -187,7 +187,7 @@ const AdminPanel = () => {
                             {derivedData?.totalUsers || 0}
                         </h2>
                     </div>
-                    <FaUsers size={40} className="opacity-70" />
+                    <Users size={40} className="opacity-70" />
                 </div>
 
                 <div className="bg-gradient-to-r from-emerald-500 to-green-600 text-white rounded-2xl p-6 shadow-lg flex justify-between items-center">
@@ -197,14 +197,14 @@ const AdminPanel = () => {
                             {derivedData?.totalRecords || 0}
                         </h2>
                     </div>
-                    <FaBalanceScale size={40} className="opacity-70" />
+                    <Scale size={40} className="opacity-70" />
                 </div>
             </div>
 
             {/* ---------------- USER TABLE ---------------- */}
-            <div className="bg-white rounded-2xl shadow-lg p-6">
+            <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-[0_4px_20px_0_rgba(0,0,0,0.05)] dark:shadow-none border border-transparent dark:border-white/5 p-6 overflow-hidden overflow-x-auto">
                 <div className="flex flex-wrap justify-between items-center mb-4 gap-4">
-                    <h2 className="text-xl font-semibold">
+                    <h2 className="text-xl font-semibold dark:text-gray-100">
                         All Users
                     </h2>
 
@@ -213,7 +213,7 @@ const AdminPanel = () => {
                         placeholder="Search users..."
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        className="border px-4 py-2 rounded-lg text-sm w-full sm:w-64 focus:ring-2 focus:ring-indigo-400 outline-none"
+                        className="border border-gray-200 dark:border-white/10 dark:bg-slate-800 dark:text-gray-200 px-4 py-2 rounded-lg text-sm w-full sm:w-64 focus:ring-2 focus:ring-indigo-400 dark:focus:ring-indigo-500 outline-none transition-all"
                     />
                 </div>
 
@@ -224,14 +224,24 @@ const AdminPanel = () => {
                     progressPending={loading}
                     highlightOnHover
                     customStyles={{
-                        rows: {
-                            style: { padding: "10px 0" },
+                        table: {
+                            style: { backgroundColor: 'transparent' },
+                        },
+                        header: {
+                            style: { backgroundColor: 'transparent', color: mode === 'dark' ? '#f3f4f6' : '#1f2937' },
+                        },
+                        headRow: {
+                            style: { backgroundColor: mode === 'dark' ? '#1e293b' : '#f9fafb', borderBottomColor: mode === 'dark' ? 'rgba(255,255,255,0.05)' : '#e5e7eb' },
                         },
                         headCells: {
-                            style: {
-                                fontWeight: "600",
-                                fontSize: "14px",
-                            },
+                            style: { fontWeight: "600", fontSize: "14px", color: mode === 'dark' ? '#d1d5db' : '#374151' },
+                        },
+                        rows: {
+                            style: { padding: "10px 0", backgroundColor: mode === 'dark' ? '#0f172a' : '#ffffff', borderBottomColor: mode === 'dark' ? 'rgba(255,255,255,0.05)' : '#e5e7eb', color: mode === 'dark' ? '#f3f4f6' : '#1f2937' },
+                            highlightOnHoverStyle: { backgroundColor: mode === 'dark' ? '#1e293b' : '#f3f4f6', color: mode === 'dark' ? '#ffffff' : '#111827', borderBottomColor: mode === 'dark' ? '#334155' : '#d1d5db', transitionDuration: '0.15s', outline: 'none' },
+                        },
+                        pagination: {
+                            style: { backgroundColor: mode === 'dark' ? '#0f172a' : '#ffffff', color: mode === 'dark' ? '#d1d5db' : '#374151', borderTopColor: mode === 'dark' ? 'rgba(255,255,255,0.05)' : '#e5e7eb' },
                         },
                     }}
                 />

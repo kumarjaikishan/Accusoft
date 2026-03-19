@@ -10,25 +10,25 @@ const Logout = () => {
   let navigate = useNavigate();
   const { request, loading } = useApi();
 
-  async function logout() {
-    try {
-      const res = await request({
-        url: 'logout',
-        method: 'POST',
-      });
-    } catch (error) {
-        console.log(error)
-    }
-  }
-
   useEffect(() => {
-    localStorage.clear("token");
-    document.title = "AccuSoft";
-    dispatch(userlogout());
-    dispatch(setlogin(false));
-    navigate('/login');
-    logout()
-  }, [])
+    async function performLogout() {
+      try {
+        await request({
+          url: 'logout',
+          method: 'POST',
+        });
+      } catch (error) {
+        // Suppress frontend notification for expected token timeout overlaps
+      } finally {
+        localStorage.removeItem("token");
+        document.title = "AccuSoft";
+        dispatch(userlogout());
+        dispatch(setlogin(false));
+        navigate('/login', { replace: true });
+      }
+    }
+    performLogout();
+  }, []);
 }
 
 export default Logout;

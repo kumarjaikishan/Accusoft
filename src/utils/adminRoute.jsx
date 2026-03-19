@@ -8,11 +8,10 @@ const AdminRoute = () => {
 
     if (!isAdmin) {
         toast.warn("Admin access required",{autoClose:2300});
-        return <Navigate to="/" replace />;
+        return <Navigate to="/login" replace />;
     }
 
     return <Outlet />;
 };
-
 
 export default AdminRoute;

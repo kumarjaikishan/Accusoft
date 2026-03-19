@@ -1,15 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import './photo.css';
+import { Frown, Undo, Pencil, CloudUpload } from 'lucide-react';
+
 import { useSelector, useDispatch } from 'react-redux';
 import { header } from '../store/login';
 import { profilepicupdtae, profiledetailupdtae } from '../store/api';
 import { toast } from 'react-toastify';
-import Button from '@mui/material/Button';
-import { TbMoodSad } from "react-icons/tb";
-import TextField from '@mui/material/TextField';
-import { CgUndo } from "react-icons/cg";
-import { FaPencil } from "react-icons/fa6";
-import { IoMdCloudUpload } from "react-icons/io";
 
 // Helper function to convert image URL to File
 const urlToFile = (url, filename) => {
@@ -98,7 +93,7 @@ const Photo = () => {
         const newImage = urlToFile(webpImage, name);
         const id = toast.loading("Please wait...");
         setIsFile(false);
-    
+
         try {
             // Fetch the signed URL
             const res = await fetch(`${import.meta.env.VITE_API_ADDRESS}getsignedurl`, {
@@ -109,10 +104,10 @@ const Photo = () => {
                 },
                 body: JSON.stringify({ type: newImage.type, name }),
             });
-    
+
             if (!res.ok) throw new Error("Failed to get signed URL.");
             const { url: postObjectUrl } = await res.json();
-    
+
             // Upload the image to S3
             const uploadRes = await fetch(postObjectUrl, {
                 method: "PUT",
@@ -121,9 +116,9 @@ const Photo = () => {
                 },
                 body: newImage,
             });
-    
+
             if (!uploadRes.ok) throw new Error("Failed to upload image.");
-    
+
             // Update status
             const statusRes = await fetch(`${import.meta.env.VITE_API_ADDRESS}status`, {
                 method: "POST",
@@ -133,23 +128,22 @@ const Photo = () => {
                 },
                 body: JSON.stringify({ imageurl: postObjectUrl.split('?')[0], oldurl: useralldetail.profilepic }),
             });
-    
+
             if (!statusRes.ok) throw new Error("Failed to update status.");
-            
+
             const statusMessage = await statusRes.json();
             setHide(!hide);
             reset();
             dispatch(profilepicupdtae(postObjectUrl.split('?')[0]));
             document.body.style.cursor = 'default';
             toast.update(id, { render: statusMessage.message, type: "success", isLoading: false, autoClose: 1600 });
-    
+
         } catch (error) {
             setIsFile(true);
             console.log(error.message);
             toast.update(id, { render: error.message, type: "error", isLoading: false, autoClose: 1600 });
         }
     };
-    
 
     const resetForm = () => {
         document.querySelector("#wrapper").innerHTML = "";
@@ -215,36 +209,42 @@ const Photo = () => {
     };
 
     return (
-        <div className="photopage">
-            <div className="profile">
-                <h2>User Profile Detail</h2>
-                <i onClick={() => seteditable(!editable)}>
-                    <FaPencil style={{ fontSize: '12px' }} title='Edit Details'  />
+        <div className="w-full h-full items-start sm:items-center flex justify-center px-2 py-4 sm:py-8 text-gray-800 dark:text-gray-100">
+            <div className="relative w-full max-w-[700px] mx-auto p-4 sm:p-6 bg-white dark:bg-slate-900 rounded-2xl shadow-lg dark:shadow-none border border-transparent dark:border-white/5 flex flex-col mt-4">
+                <h2 className="text-center font-bold tracking-wide sm:tracking-widest text-[#212529] dark:text-gray-100 text-xl sm:text-2xl mb-6">User Profile Detail</h2>
+                <i
+                    className="absolute top-4 right-4 sm:top-6 sm:right-6 w-[35px] h-[35px] sm:w-[45px] sm:h-[45px] shadow-md flex justify-center items-center rounded-full bg-indigo-600 text-white cursor-pointer transition hover:scale-105 hover:bg-indigo-700 z-10"
+                    onClick={() => seteditable(!editable)}
+                >
+                    <Pencil className="w-[12px] h-[12px] sm:w-[16px] sm:h-[16px]" title='Edit Details' />
                 </i>
-                <div className="upper">
-                    <div className="profile-header">
-                        <img src={useralldetail.profilepic || defaultProfile} alt="User Avatar" />
-                        <Button onClick={() => setHide(!hide)}>Update profile</Button>
+                <div className="relative w-full sm:w-[96%] mx-auto p-4 sm:p-6 border-2 border-dashed border-gray-300 dark:border-white/10 rounded-xl flex flex-col sm:flex-row justify-between mb-4 bg-slate-50 dark:bg-slate-800/50">
+                    <div className="text-center border-b sm:border-b-0 sm:border-r border-gray-300 dark:border-white/10 w-full sm:w-[35%] py-4 sm:py-6 mb-4 sm:mb-0 flex flex-col items-center justify-center">
+                        <img className="w-[110px] h-[110px] sm:w-[150px] sm:h-[150px] rounded-full object-cover shadow-md border-4 border-white dark:border-slate-800 mb-4" src={useralldetail.profilepic || defaultProfile} alt="User Avatar" />
+                        <button onClick={() => setHide(!hide)} className="text-sm font-medium text-indigo-600 dark:text-cyan-400 hover:underline">Update Image</button>
                     </div>
-                    <div className="profile-bio">
-                        <TextField label="Name" name="name" fullWidth size="small" value={input.name} onChange={handleInputChange} InputProps={{ readOnly: editable }} />
-                        <TextField label="Phone" name="phone" fullWidth size="small" value={input.phone} onChange={handleInputChange} InputProps={{ readOnly: editable }} inputProps={{ maxLength: 10, pattern: "[0-9]*" }} />
-                        <TextField label="Email" name="email" fullWidth size="small" value={input.email} disabled />
+                    <div className="w-full sm:w-[60%] flex flex-col justify-center gap-4 pt-4 sm:pt-0 pl-0 sm:pl-4">
+                        <input type="text" placeholder="Name" name="name" readOnly={editable} value={input.name} onChange={handleInputChange} className="w-full px-4 py-2 border border-gray-300 dark:border-white/10 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-slate-800 dark:text-gray-100 transition shadow-sm text-sm" />
+                        <input type="tel" placeholder="Phone" name="phone" readOnly={editable} maxLength={10} value={input.phone} onChange={handleInputChange} className="w-full px-4 py-2 border border-gray-300 dark:border-white/10 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-slate-800 dark:text-gray-100 transition shadow-sm text-sm" />
+                        <input type="email" placeholder="Email" name="email" readOnly={true} value={input.email} className="w-full px-4 py-2 border border-gray-300 dark:border-white/10 rounded-lg outline-none bg-gray-100 dark:bg-slate-900/50 dark:text-gray-400 cursor-not-allowed shadow-sm text-sm" title="Email cannot be edited" />
 
-                        {!editable && <Button onClick={updateDetails} fullWidth disabled={disable} variant="contained">Update Details</Button>}
-                        <Button onClick={resetPassword} disabled={disable} variant="contained" startIcon={<TbMoodSad />}>Send Password Reset Link</Button>
-                        {messageSent && <span style={{ fontSize: '12px', color: 'green' }}>{messageSent}</span>}
+                        {!editable && <button onClick={updateDetails} disabled={disable} className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 rounded-lg transition disabled:opacity-50 mt-1">Update Details</button>}
+                        <button onClick={resetPassword} disabled={disable} className="w-full border border-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 font-medium py-2 rounded-lg transition flex items-center justify-center gap-2 disabled:opacity-50 mt-1"><Frown className="text-lg" /> Send Password Reset Link</button>
+                        {messageSent && <span className="text-xs text-green-600 dark:text-green-400 font-medium mt-1">{messageSent}</span>}
                     </div>
                 </div>
-                <div className={hide ? "lower hide" : "lower"}>
-                    <input type="file" id='dfe' accept="image/*" onChange={handleImageUpload} />
-                    <label htmlFor="dfe">Choose File</label>
-                    <div id="wrapper">
-                        {webpImage && <img src={webpImage} alt="Image format" />}
+                <div className={`flex justify-center items-center flex-col transition-all duration-500 py-4 ${hide ? "hidden" : "flex"}`}>
+                    <input type="file" id='dfe' accept="image/*" onChange={handleImageUpload} className="hidden" />
+                    <label className="w-[250px] h-[100px] rounded-xl flex flex-col justify-center items-center gap-2 border-2 border-dashed border-indigo-600 dark:border-cyan-400 font-medium text-indigo-600 dark:text-cyan-400 cursor-pointer bg-indigo-50 dark:bg-slate-800/80 hover:bg-indigo-100 dark:hover:bg-slate-800 transition shadow-sm" htmlFor="dfe">
+                        <CloudUpload className="text-2xl" />
+                        <span>Select Image</span>
+                    </label>
+                    <div className="mt-4 overflow-x-auto w-full flex justify-center" id="wrapper">
+                        {webpImage && <img className="rounded-xl border-2 border-dashed border-indigo-600 dark:border-cyan-400 shadow-md object-contain max-h-[200px]" src={webpImage} alt="Image format" />}
                     </div>
-                    <div id="btn">
-                        {isFile && <Button color='error' onClick={resetForm} disabled={!isFile} startIcon={<CgUndo />} variant="outlined">Undo</Button>}
-                        <Button className={isFile ? null : "disabled"} onClick={handleUpload} disabled={!isFile} startIcon={<IoMdCloudUpload />} variant="contained">Upload</Button>
+                    <div className="mt-4 flex gap-4 w-full justify-center" id="btn">
+                        {isFile && <Button color='error' onClick={resetForm} disabled={!isFile} startIcon={<Undo />} variant="outlined">Undo</Button>}
+                        <Button className={isFile ? "" : "opacity-40 grayscale pointer-events-none"} onClick={handleUpload} disabled={!isFile} startIcon={<CloudUpload />} variant="contained">Upload</Button>
                     </div>
                 </div>
             </div>

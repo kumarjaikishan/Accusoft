@@ -1,9 +1,9 @@
 import React from 'react'
-import './slow.css';
+import { Send } from 'lucide-react';
+
 import { useState } from 'react';
 import TextField from '@mui/material/TextField';
-import LoadingButton from '@mui/lab/LoadingButton';
-import { IoMdSend } from "react-icons/io";
+
 import { toast } from 'react-toastify';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -46,9 +46,9 @@ const SlowWorkerPage = () => {
     }
     return (
         <>
-            <div className="slow">
+            <div className="w-full h-[calc(100vh-var(--navheight))] gap-[1.2rem] flex justify-center items-center flex-col">
             <h2>Slowdown the Server but handle by Worker Threads</h2>
-                <form onSubmit={submit}>
+                <form className="w-[200px] h-[100px] gap-[1.2rem] flex flex-col" onSubmit={submit}>
                     <TextField
                         label="Delay (In MilliSecond)"
                         required
@@ -58,15 +58,13 @@ const SlowWorkerPage = () => {
                         name="delay"
                         value={delay}
                     />
-                     <LoadingButton
-                        loading={disable}
-                        type='submit'
-                        startIcon={<IoMdSend />}
-                        loadingPosition="start"
-                        variant="contained"
+                     <button
+                        type="submit"
+                        disabled={disable}
+                        className="w-full bg-[var(--maincolor)] hover:bg-[var(--maincolor)]/90 text-white font-bold py-2 px-4 rounded transition-opacity disabled:opacity-70 flex items-center justify-center gap-2 uppercase tracking-wide shadow-md"
                     >
-                        Submit
-                    </LoadingButton>
+                        {disable ? "Submitting..." : <><Send /> Submit</>}
+                    </button>
                 </form>
             </div>
         </>

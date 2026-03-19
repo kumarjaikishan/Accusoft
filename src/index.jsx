@@ -16,7 +16,7 @@ root.render(
   // <React.StrictMode>
   <Provider store={store}>
     <ToastContainer closeOnClick={true} pauseOnFocusLoss={false} autoClose={2000} />
-    <BrowserRouter >
+    <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <PersistGate persistor={persistor} >
         <App />
       </PersistGate>

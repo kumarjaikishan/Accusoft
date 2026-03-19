@@ -1,128 +1,99 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import { Menu, Sun, Moon } from 'lucide-react';
+
 import { NavLink } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { setnarrow } from "../../store/login";
-import { IoMenu } from "react-icons/io5";
-import { MdLightMode, MdBedtime } from "react-icons/md";
+import { toggleTheme } from "../../store/themeSlice";
+
 import Breadcrumbs from "../Breadcrumb";
 
-const Navbar = ({ setIsDarkMode }) => {
+const Navbar = () => {
   const dispatch = useDispatch();
-  const [darkmode, setdarkmode] = useState(true);
 
   const log = useSelector((state) => state.login);
   const useralldetail = useSelector((state) => state.userexplist);
+  const mode = useSelector((state) => state.theme.mode);
 
   const defaultprofile =
     "https://res.cloudinary.com/dusxlxlvm/image/upload/v1699090690/just_yoljye.png";
 
+  // Sidebar toggle
   const fun = () => {
     dispatch(setnarrow(!log.narrow));
   };
 
-  /* ========= KEEPING YOUR ORIGINAL DARK MODE SYSTEM ========= */
-  useEffect(() => {
-    let modee = localStorage.getItem("mode");
-    if (modee === "true") {
-      setIsDarkMode(true);
-      setdarkmode(true);
-      document.body.className = "dark-theme";
-    } else {
-      setIsDarkMode(false);
-      setdarkmode(false);
-      document.body.className = "light-theme";
-    }
-  }, []);
-
-  const handle = (e) => {
-    if (e.target.checked) {
-      setdarkmode(true);
-      setIsDarkMode(true);
-      document.body.className = "dark-theme";
-      localStorage.setItem("mode", true);
-    } else {
-      document.body.className = "light-theme";
-      setdarkmode(false);
-      setIsDarkMode(false);
-      localStorage.setItem("mode", false);
-    }
+  // 🎯 Toggle theme
+  const handleTheme = () => {
+    dispatch(toggleTheme());
   };
 
   return (
     <nav
-      className={`fixed top-0  h-16 
+      className={`fixed top-0 h-[var(--navheightmobile)] lg:h-[var(--navheight)] w-full left-0 print:hidden
       ${log.narrow
-          ? "w-full lg:w-[calc(100%-var(--sidebarnarrow))]"
-          : " lg:w-[calc(100%-var(--sidebarwide))]"
+          ? "lg:w-[calc(100%-var(--sidebarnarrow))] lg:left-[var(--sidebarnarrow)]"
+          : "lg:w-[calc(100%-var(--sidebarwide))] lg:left-[var(--sidebarwide)]"
         }
-       ${log.narrow
-          ? "left-0 lg:left-[var(--sidebarnarrow)]"
-          : "left-[var(--sidebarwidemobile)] lg:left-[var(--sidebarwide)]"
-        }
-      ml-0 
-      bg-white shadow-sm border-b border-gray-200
+       bg-white dark:bg-slate-900
+      text-[var(--contrast)]
+      shadow-sm border-b border-[var(--tableborder)]
       flex items-center justify-between px-2 lg:px-6
-      transition-all duration-200 z-50`}
+      transition-all duration-300 z-50`}
     >
-      {/* LEFT SECTION (UNCHANGED STRUCTURE) */}
-      <div className="flex items-center gap-1 lg:gap-4 ">
-        <IoMenu
-          onClick={fun}
-          title="menu"
-          className="text-2xl text-gray-700 cursor-pointer hover:text-indigo-600 transition"
+      {/* LEFT */}
+      <div className="flex items-center gap-1 lg:gap-4">
+        <Menu
+          onClick={(e) => {
+            e.stopPropagation();
+            fun();
+          }}
+          className="text-2xl cursor-pointer hover:text-indigo-600 dark:hover:text-indigo-400 transition"
         />
 
-        <div className="text-gray-600 font-medium text-sm">
+        <div className="text-sm font-medium text-gray-600 dark:text-gray-400">
           <Breadcrumbs />
         </div>
       </div>
 
-      {/* RIGHT SECTION */}
+      {/* RIGHT */}
       <div
         className={`flex items-center gap-6 transition-transform duration-300
-      ${!log.narrow
+        ${!log.narrow
             ? "translate-x-[400px] lg:translate-x-0"
             : "translate-x-0"
-          } `
-        }
+          }`}
       >
-        {/* THEME TOGGLE (Modern but same logic) */}
-        <div className="flex items-center gap-2 text-sm">
-          <input
-            onChange={handle}
-            id="checkbox"
-            name="checkbox"
-            checked={darkmode}
-            type="checkbox"
-            className="hidden"
-          />
-
-          <label
-            htmlFor="checkbox"
-            className="flex items-center gap-2 cursor-pointer px-3 py-1 rounded-lg bg-gray-100 hover:bg-gray-200 transition"
-          >
-            {darkmode ? (
-              <>
-                <MdLightMode className="text-yellow-500 text-lg" />
-                <span>Light</span>
-              </>
-            ) : (
-              <>
-                <MdBedtime className="text-indigo-500 text-lg" />
-                <span>Dark</span>
-              </>
-            )}
-          </label>
+        {/* 🌙 THEME TOGGLE */}
+        <div
+          onClick={handleTheme}
+          className="flex items-center gap-2 cursor-pointer px-3 py-1 rounded-lg 
+  bg-slate-100 dark:bg-slate-800/70
+  hover:bg-slate-200 dark:hover:bg-slate-700/80
+  border border-slate-200 dark:border-slate-700
+  transition-all duration-300"
+        >
+          {mode === "dark" ? (
+            <>
+              <Sun className="text-amber-400 text-lg" />
+              <span className="text-slate-700 dark:text-slate-200">Light</span>
+            </>
+          ) : (
+            <>
+              <Moon className="text-indigo-500 text-lg" />
+              <span className="text-slate-700 dark:text-slate-200">Dark</span>
+            </>
+          )}
         </div>
 
-        {/* USER INFO */}
+        {/* 👤 USER INFO */}
         {log.islogin && (
           <div className="flex items-center gap-3">
             <div className="hidden md:flex flex-col text-right leading-tight">
-              <span className="text-sm font-semibold text-gray-800">
+              <span className="text-sm font-semibold">
                 {useralldetail?.user?.name}
               </span>
-              <span className="text-xs text-gray-500 capitalize">
+              <span className="text-xs text-gray-500 dark:text-gray-400 capitalize">
                 {useralldetail?.user?.userType}
               </span>
             </div>
@@ -135,7 +106,7 @@ const Navbar = ({ setIsDarkMode }) => {
                       ? useralldetail.profilepic
                       : defaultprofile
                   }
-                  alt="Profile Pic"
+                  alt="Profile"
                   className="w-full h-full object-cover"
                 />
               </div>

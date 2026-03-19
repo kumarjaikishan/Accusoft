@@ -1,17 +1,14 @@
 import React, { useEffect, useState } from 'react'
+import { Mail, Eye, EyeOff, Key, LogIn } from 'lucide-react';
+
 import { useNavigate } from "react-router-dom";
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
-import { IoMailOutline } from "react-icons/io5";
-import { IoEyeOutline } from "react-icons/io5";
-import { IoEyeOffOutline } from "react-icons/io5";
-import { MdKey } from "react-icons/md";
-import { MdLogin } from "react-icons/md";
+
 import { setloader, setlogin } from '../../store/login';
 import { useSelector, useDispatch } from 'react-redux';
 import { userdata } from '../../store/api'
 import { toast } from 'react-toastify';
-import LoadingButton from '@mui/lab/LoadingButton';
 import { useApi } from '../../utils/useApi';
 import { useForm } from '../../utils/useForm';
 
@@ -30,7 +27,6 @@ const Signin = () => {
     const { request, loading } = useApi();
     const [loginpass, setloginpass] = useState(true);
     const [btnclick, setbtnclick] = useState(false);
-
 
     useEffect(() => {
         dispatch(setloader(loading));
@@ -69,7 +65,7 @@ const Signin = () => {
             setbtnclick(false);
             localStorage.setItem("token", res.token);
             dispatch(userdata());
-            navigate('/');
+            navigate('/dashboard');
             dispatch(setlogin(true));
 
         } catch (error) {
@@ -110,30 +106,29 @@ const Signin = () => {
         }
     }
 
-
     return (
         <>
-            <div className="logine" id='forme'>
-                <form onSubmit={submit}>
+            <div className="w-full h-full" id='forme'>
+                <form onSubmit={submit} className="w-full h-full relative flex flex-col justify-around items-center gap-4 py-4">
                     <TextField
                         label="Email"
                         required
                         type='email'
                         size='small'
-                        className='filled'
+                        className='!w-[80%] max-sm:!w-[93%] !text-[rgb(43,38,38)]'
                         onChange={handlechange}
                         name="email"
                         value={fields.email}
                         InputProps={{
                             startAdornment: <InputAdornment position="start">
-                                <IoMailOutline />
+                                <Mail style={{ color: "var(--maincolor)" }} />
                             </InputAdornment>,
 
                         }}
                     />
                     {!forget && <TextField
                         label="Password"
-                        className='filled'
+                        className='!w-[80%] max-sm:!w-[93%] !text-[rgb(43,38,38)]'
                         required
                         size='small'
                         type={loginpass ? "password" : null}
@@ -142,10 +137,10 @@ const Signin = () => {
                         value={fields.password}
                         InputProps={{
                             startAdornment: <InputAdornment position="start">
-                                <MdKey />
+                                <Key style={{ color: "var(--maincolor)" }} />
                             </InputAdornment>,
-                            endAdornment: <InputAdornment position="end" style={{ cursor: "pointer" }} onClick={() => loginpass ? setloginpass(false) : setloginpass(true)}>
-                                {loginpass ? <IoEyeOutline /> : <IoEyeOffOutline />}
+                            endAdornment: <InputAdornment position="end" style={{ cursor: "pointer", color: "var(--maincolor)" }} onClick={() => loginpass ? setloginpass(false) : setloginpass(true)}>
+                                {loginpass ? <Eye /> : <EyeOff />}
                             </InputAdornment>
                         }}
 
@@ -158,25 +153,23 @@ const Signin = () => {
                         <span style={{ cursor: 'pointer' }} onClick={() => setforget(false)}>SignIn?</span>
                     </div>}
 
-                    {!forget && <LoadingButton
-                        loading={btnclick}
-                        type='submit'
-                        size='small'
-                        startIcon={<MdLogin />}
-                        loadingPosition="start"
-                        variant="contained"
+                    {!forget && <button 
+                        type="submit" 
+                        disabled={btnclick} 
+                        className="border-none outline-none cursor-pointer text-[1.2em] font-semibold tracking-[1px] px-[16px] py-[8px] transition-[0.1s] text-center rounded-[15px] hover:opacity-90 max-sm:mb-4 flex gap-2 items-center justify-center font-sans shadow-sm" 
+                        style={btnclick ? { background: "#cccccc", color: "#666666" } : { background: "var(--maincolor)", color: "white" }}
                     >
-                        Login
-                    </LoadingButton>}
-                    {forget && <LoadingButton
-                        loading={btnclick}
-                        onClick={emailset}
-                        startIcon={<MdKey />}
-                        loadingPosition="start"
-                        variant="contained"
+                        <LogIn /> {btnclick ? "Loading..." : "Login"}
+                    </button>}
+                    {forget && <button 
+                        type="button" 
+                        disabled={btnclick} 
+                        onClick={emailset} 
+                        className="border-none outline-none cursor-pointer text-[1.2em] font-semibold tracking-[1px] px-[16px] py-[8px] transition-[0.1s] text-center rounded-[15px] hover:opacity-90 max-sm:mb-4 flex gap-2 items-center justify-center font-sans shadow-sm" 
+                        style={btnclick ? { background: "#cccccc", color: "#666666" } : { background: "var(--maincolor)", color: "white" }}
                     >
-                        Email sent
-                    </LoadingButton>}
+                        <Key /> {btnclick ? "Sending..." : "Email sent"}
+                    </button>}
 
                 </form>
             </div>

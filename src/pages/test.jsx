@@ -1,7 +1,6 @@
 import React from 'react';
 import { useState } from 'react';
 import { useEffect } from 'react';
-import './test.css';
 
 const Test = () => {
   const [data, setdata] = useState([])
@@ -157,7 +156,7 @@ const Test = () => {
     // console.log(data);
   }
   return (
-    <div className='test'>
+    <div className='border-[5px] border-red-500 w-full h-full overflow-auto relative px-[2rem]'>
       {
         data.map((val, ind) => {
           return (

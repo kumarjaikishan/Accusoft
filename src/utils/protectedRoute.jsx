@@ -14,5 +14,4 @@ const ProtectedRoutes = () => {
     return <Outlet />;
 };
 
-
 export default ProtectedRoutes;

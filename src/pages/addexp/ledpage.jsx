@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import './ledpage.css';
+import { SquarePlus, RefreshCw, Pencil, Trash2, X } from 'lucide-react';
+
 import { useSelector, useDispatch } from 'react-redux';
 import { setloader } from '../../store/login';
 import { userdata } from '../../store/api';
 import { toast } from 'react-toastify';
 import swal from 'sweetalert';
 import TextField from '@mui/material/TextField';
-import { MdAddBox, MdUpdate } from "react-icons/md";
+
 import Button from '@mui/material/Button';
-import { HiPencilSquare } from "react-icons/hi2";
-import { RiDeleteBin6Line } from "react-icons/ri";
+
 import { useApi } from '../../utils/useApi';
 
 const Ledpage = ({ setmodal, setdisable, isledupdate, setisledupdate }) => {
@@ -42,9 +42,9 @@ const Ledpage = ({ setmodal, setdisable, isledupdate, setisledupdate }) => {
   };
   const { request, loading } = useApi();
 
-  useEffect(()=>{
-      dispatch(setloader(loading))
-  },[loading])
+  useEffect(() => {
+    dispatch(setloader(loading))
+  }, [loading])
 
   // Add ledger
   const add = async () => {
@@ -146,18 +146,25 @@ const Ledpage = ({ setmodal, setdisable, isledupdate, setisledupdate }) => {
 
   // Close modal when clicking outside
   const sdef = (event) => {
-    if (event.target.classList.contains('ledpage')) {
+    if (event.target.classList.contains('ledpage-overlay')) {
       setisledupdate(false);
     }
   };
 
   return (
-    <div className="ledpage" onClick={sdef} style={{ display: isledupdate ? "block" : "none" }}>
-      <div className="box">
-        <h2>Hi, {useralldetail?.user?.name}</h2>
+    <div className="ledpage-overlay absolute top-0 left-0 w-full h-full bg-white/20 dark:bg-black/40 backdrop-blur-[5px] z-[110]" onClick={sdef} style={{ display: isledupdate ? "block" : "none" }}>
+      <div className="absolute top-1/2 left-1/2 w-[500px] h-max rounded-[20px] -translate-x-1/2 -translate-y-1/2 shadow-[10px_10px_20px_rgba(0,0,0,0.4)] bg-[var(--maincolor)] dark:bg-slate-900 overflow-hidden flex flex-col items-center max-sm:top-[35%] max-sm:w-[95vw] max-sm:h-[520px]">
+        <button
+          onClick={() => setisledupdate(false)}
+          className="absolute top-2 right-3 text-white/60 hover:text-red-400 transition-colors cursor-pointer p-1"
+          title="Close"
+        >
+          <X size={26} />
+        </button>
+        <h2 className="w-full text-center h-[40px] leading-[40px] text-[aliceblue] capitalize bg-[var(--maincolor)] dark:bg-slate-900 max-sm:text-[20px]">Hi, {useralldetail?.user?.name}</h2>
 
-        <span className='ledwrapper'>
-          <div className="cont">
+        <span className='w-full flex flex-col items-center pt-[5px] pb-[20px] rounded-t-[30px] bg-surface min-h-[400px]'>
+          <div className="flex w-[95%] h-[60px] items-center justify-around gap-[5px] p-[8px] rounded-[20px] mb-[15px]">
             <TextField
               label="Enter Ledger"
               size='small'
@@ -184,7 +191,7 @@ const Ledpage = ({ setmodal, setdisable, isledupdate, setisledupdate }) => {
                 disabled={loading}
                 title='Add'
                 onClick={updat}
-                startIcon={<MdUpdate />}
+                startIcon={<RefreshCw />}
                 variant="contained"
               >
                 Update
@@ -196,7 +203,7 @@ const Ledpage = ({ setmodal, setdisable, isledupdate, setisledupdate }) => {
                 disabled={loading}
                 title='Add'
                 onClick={add}
-                startIcon={<MdAddBox />}
+                startIcon={<SquarePlus />}
                 variant="contained"
               >
                 Add
@@ -204,14 +211,14 @@ const Ledpage = ({ setmodal, setdisable, isledupdate, setisledupdate }) => {
             )}
           </div>
 
-          <div className="mater">
-            <table>
+          <div className="w-[95%] h-[270px] max-sm:h-[380px] rounded-[20px] border border-dotted border-border-subtle overflow-y-auto overflow-x-hidden">
+            <table className="w-full h-fit p-[5px_2px] text-center rounded-[20px] bg-surface text-content">
               <thead>
                 <tr>
-                  <th>Ledger</th>
-                  <th>Budget</th>
-                  <th>Edit</th>
-                  <th>Delete</th>
+                  <th className="w-1/2">Ledger</th>
+                  <th className="w-[10%]">Budget</th>
+                  <th className="w-[10%]">Edit</th>
+                  <th className="w-[10%]">Delete</th>
                 </tr>
               </thead>
               <tbody>
@@ -220,15 +227,15 @@ const Ledpage = ({ setmodal, setdisable, isledupdate, setisledupdate }) => {
                     <td>{val.ledger}</td>
                     <td>{val.budget}</td>
                     <td>
-                      <HiPencilSquare
-                        className='editicon ico'
+                      <Pencil
+                        className='p-[2px_5px] box-content w-[15px] h-[15px] rounded-[.2rem] cursor-pointer text-[var(--editicon)] bg-[rgba(7,121,182,0.116)] hover:bg-[var(--editicon)] hover:text-[var(--background)]'
                         title='Edit'
                         onClick={() => setledgerininput(val._id, val.ledger, val.budget)}
                       />
                     </td>
                     <td>
-                      <RiDeleteBin6Line
-                        className='deleteicon ico'
+                      <Trash2
+                        className='p-[2px_5px] box-content w-[15px] h-[15px] rounded-[.2rem] cursor-pointer text-[var(--deleteicon)] bg-[rgba(182,7,16,0.116)] hover:bg-[var(--deleteicon)] hover:text-white'
                         title='Delete'
                         onClick={() => deletee(val._id)}
                       />

@@ -1,12 +1,9 @@
 import React, { useState } from 'react'
+import { Mail, Eye, EyeOff, Key, Phone, User } from 'lucide-react';
+
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
-import { IoMailOutline } from "react-icons/io5";
-import { IoEyeOutline } from "react-icons/io5";
-import { IoEyeOffOutline } from "react-icons/io5";
-import { MdKey } from "react-icons/md";
-import { MdLocalPhone } from "react-icons/md";
-import { FaUserAstronaut } from "react-icons/fa";
+
 import { setloader, setlogin } from '../../store/login';
 import { useSelector, useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
@@ -96,19 +93,19 @@ const Signup = ({ setlog }) => {
 
     return (
         <>
-            <div className="singup">
-                <form onSubmit={submit}>
+            <div className="w-full h-full">
+                <form onSubmit={submit} className="w-full h-full relative flex flex-col justify-around items-center gap-4 py-4">
                     <TextField
                         label="Name"
                         required
                         size='small'
-                        className='filled'
+                        className='!w-[80%] max-sm:!w-[93%]'
                         onChange={handlechange}
                         name="name"
                         value={fields.name}
                         InputProps={{
                             startAdornment: <InputAdornment position="start">
-                                <FaUserAstronaut />
+                                <User />
                             </InputAdornment>,
                         }}
                     />
@@ -116,14 +113,14 @@ const Signup = ({ setlog }) => {
                         label="Email"
                         required
                         size='small'
-                        className='filled'
+                        className='!w-[80%] max-sm:!w-[93%]'
                         onChange={handlechange}
                         name="email"
                         type='email'
                         value={fields.email}
                         InputProps={{
                             startAdornment: <InputAdornment position="start">
-                                <IoMailOutline />
+                                <Mail />
                             </InputAdornment>,
                         }}
                     />
@@ -132,7 +129,7 @@ const Signup = ({ setlog }) => {
                         required
                         size='small'
                         color={fields.phone.length == 10 ? "primary" : "warning"}
-                        className='filled'
+                        className='!w-[80%] max-sm:!w-[93%]'
                         onChange={handlechange}
                         name="phone"
                         type='tel'
@@ -141,13 +138,13 @@ const Signup = ({ setlog }) => {
                         value={fields.phone}
                         InputProps={{
                             startAdornment: <InputAdornment position="start">
-                                <MdLocalPhone />
+                                <Phone />
                             </InputAdornment>,
                         }}
                     />
                     <TextField
                         label="Password"
-                        className='filled'
+                        className='!w-[80%] max-sm:!w-[93%]'
                         required
                         size='small'
                         onChange={handlechange}
@@ -156,16 +153,16 @@ const Signup = ({ setlog }) => {
                         value={fields.password}
                         InputProps={{
                             startAdornment: <InputAdornment position="start">
-                                <MdKey />
+                                <Key />
                             </InputAdornment>,
                             endAdornment: <InputAdornment position="end" style={{ cursor: "pointer" }} onClick={() => signuppass ? setsignuppass(false) : setsignuppass(true)}>
-                                {signuppass ? <IoEyeOutline /> : <IoEyeOffOutline />}
+                                {signuppass ? <Eye /> : <EyeOff />}
                             </InputAdornment>
                         }}
                     />
                     <TextField
                         label="Confirm Password"
-                        className='filled'
+                        className='!w-[80%] max-sm:!w-[93%]'
                         size='small'
                         color={fields.password == fields.cpassword ? "primary" : "warning"}
                         required
@@ -174,11 +171,11 @@ const Signup = ({ setlog }) => {
                         value={fields.cpassword}
                         InputProps={{
                             startAdornment: <InputAdornment position="start">
-                                <MdKey />
+                                <Key />
                             </InputAdornment>,
                         }}
                     />
-                    <button type='submit' disabled={btnclick} style={btnclick ? { background: "#cccccc", color: "#666666" } : { background: "rgb(3, 73, 114)", color: "white" }} >Signup</button>
+                    <button type='submit' disabled={btnclick} className="border-none outline-none cursor-pointer text-[1.2em] font-semibold tracking-[1px] px-[16px] py-[8px] transition-[0.1s] text-center rounded-[15px] hover:opacity-90 max-sm:mb-4" style={btnclick ? { background: "#cccccc", color: "#666666" } : { background: "var(--maincolor)", color: "white" }} >Signup</button>
                 </form>
             </div>
         </>

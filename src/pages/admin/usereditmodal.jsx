@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react'
+import { RefreshCcw, Save } from 'lucide-react';
+
 import { useSelector, useDispatch } from 'react-redux';
 import { setloader } from '../../store/login';
 import { toast } from 'react-toastify';
@@ -8,8 +10,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Button from '@mui/material/Button';
-import { VscDebugRestart } from "react-icons/vsc";
-import { IoIosSave } from "react-icons/io";
+
 import { useApi } from '../../utils/useApi';
 
 const Useredit = ({ inp, modal, setmodal, handler, fetche }) => {
@@ -20,7 +21,6 @@ const Useredit = ({ inp, modal, setmodal, handler, fetche }) => {
     useEffect(() => {
         dispatch(setloader(loading));
     }, [loading])
-  
 
     // for updating data fetched above 
     const editdetail = async (_id) => {
@@ -87,12 +87,12 @@ const Useredit = ({ inp, modal, setmodal, handler, fetche }) => {
                         </Select>
                     </FormControl>
                     <div className='btn'>
-                        <Button disabled={loading} className='muibtn' onClick={editdetail} variant="contained" startIcon={<IoIosSave />}>
+                        <Button disabled={loading} className='muibtn' onClick={editdetail} variant="contained" startIcon={<Save />}>
                             Submit
                         </Button>
                         <Button
                             onClick={() => setmodal(false)}
-                            className='muibtn outlined' title='Cancel' variant="outlined" startIcon={<VscDebugRestart />}>
+                            className='muibtn outlined' title='Cancel' variant="outlined" startIcon={<RefreshCcw />}>
                             Cancel
                         </Button>
                     </div>

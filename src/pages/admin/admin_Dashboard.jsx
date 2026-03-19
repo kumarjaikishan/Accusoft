@@ -133,9 +133,9 @@ const AdminPanel = () => {
             name: "Last Active",
             selector: (row) =>
                 row.lastActivity
-                    ? dayjs(row.lastActivity).format("DD MMM YYYY")
+                    ? dayjs(row.lastActivity).format("DD MMM YYYY, hh:mm A")
                     : "-",
-            width: "120px"
+            // width: "140px"
         },
         {
             name: "Verified",

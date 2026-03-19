@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Menu, Sun, Moon } from 'lucide-react';
 
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { setnarrow } from "../../store/login";
 import { toggleTheme } from "../../store/themeSlice";
@@ -10,6 +10,10 @@ import Breadcrumbs from "../Breadcrumb";
 
 const Navbar = () => {
   const dispatch = useDispatch();
+   const location = useLocation();
+  //  console.log(location)
+  let isLoginPage = location?.pathname?.includes('login') 
+   console.log(isLoginPage)
 
   const log = useSelector((state) => state.login);
   const useralldetail = useSelector((state) => state.userexplist);
@@ -31,7 +35,7 @@ const Navbar = () => {
   return (
     <nav
       className={`fixed top-0 h-[var(--navheightmobile)] lg:h-[var(--navheight)] w-full left-0 print:hidden
-      ${log.narrow
+      ${isLoginPage ? "w-full" : log.narrow
           ? "lg:w-[calc(100%-var(--sidebarnarrow))] lg:left-[var(--sidebarnarrow)]"
           : "lg:w-[calc(100%-var(--sidebarwide))] lg:left-[var(--sidebarwide)]"
         }

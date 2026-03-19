@@ -121,7 +121,7 @@ const Signin = () => {
                         value={fields.email}
                         InputProps={{
                             startAdornment: <InputAdornment position="start">
-                                <Mail style={{ color: "var(--maincolor)" }} />
+                                <Mail />
                             </InputAdornment>,
 
                         }}
@@ -137,9 +137,9 @@ const Signin = () => {
                         value={fields.password}
                         InputProps={{
                             startAdornment: <InputAdornment position="start">
-                                <Key style={{ color: "var(--maincolor)" }} />
+                                <Key />
                             </InputAdornment>,
-                            endAdornment: <InputAdornment position="end" style={{ cursor: "pointer", color: "var(--maincolor)" }} onClick={() => loginpass ? setloginpass(false) : setloginpass(true)}>
+                            endAdornment: <InputAdornment position="end" style={{ cursor: "pointer" }} onClick={() => loginpass ? setloginpass(false) : setloginpass(true)}>
                                 {loginpass ? <Eye /> : <EyeOff />}
                             </InputAdornment>
                         }}

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { toast } from "react-toastify";
-import { json, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { apiClient } from "./apiClient";
 
 export const useApi = () => {
@@ -42,16 +42,23 @@ export const useApi = () => {
             // console.log("apiUse error:", err.message);
             // console.log("apiUse error status:", err.status);
 
-            if (err.isApiError) {
+            const currentPath = window.location.pathname;
+            const isAuthPage = currentPath === "/logout" || currentPath === "/login";
+            const msg = (err?.message || "").toLowerCase();
+            const isAuthFailure =
+                [401, 403, 405].includes(err?.status) ||
+                msg.includes("jwt expired") ||
+                msg.includes("session expired") ||
+                msg.includes("unauthorized");
+
+            if (err.isApiError && !isAuthPage) {
                 toast.warn(err.message, { autoClose: 2500 });
-            } else {
+            } else if (!isAuthPage) {
                 toast.error(err.message || "Unexpected error occurred");
             }
 
-            if (err.status == 403 || err.status == 405) {
-                setTimeout(() => {
-                    navigate("/logout");
-                }, 500);
+            if (isAuthFailure && currentPath !== "/logout") {
+                navigate("/logout", { replace: true });
             }
 
             throw err;

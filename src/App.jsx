@@ -30,10 +30,10 @@ import LandingLayout from './pages/landingPage/Landing';
 import LandingBody from './pages/landingPage/LandingBody';
 import InnerLayout from './utils/innerLayout';
 
-const VoucherDetail = lazy(() => import('./pages/ledgerDetail'));
+const VoucherDetail = lazy(() => import('./pages/dataAnalysis/ledgerDetail'));
 const Filehandle = lazy(() => import('./pages/filehandle/filehandle'));
 const Datanalysis = lazy(() => import('./pages/dataAnalysis/dataanalysis'));
-const Report = lazy(() => import('./pages/Report'));
+const Report = lazy(() => import('./pages/Report/Report'));
 const Admin_Dashboard = lazy(() => import('./pages/admin/admin_Dashboard'));
 const Logger = lazy(() => import('./pages/admin/logger'));
 const Officeexp = lazy(() => import('./pages/voucher'));

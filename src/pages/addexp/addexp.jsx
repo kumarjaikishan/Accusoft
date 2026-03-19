@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { ChevronDown, SquarePlus, Trash2, Pencil, X, Book } from 'lucide-react';
+import { SquarePlus, Trash2, X, Book } from 'lucide-react';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -21,6 +21,7 @@ import { useNavigate } from 'react-router-dom';
 import { setloader } from '../../store/login';
 import { userdata } from '../../store/api';
 import { useApi } from '../../utils/useApi';
+import { getExpenseTableColumns } from './expenseTableColumns';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -41,6 +42,7 @@ const App = () => {
   const [isLedgerUpdate, setIsLedgerUpdate] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRowIds, setSelectedRowIds] = useState([]);
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768);
 
   const init = {
     _id: '',
@@ -66,6 +68,12 @@ const App = () => {
     }, 800);
     return () => clearTimeout(timerId);
   }, [searchInput]);
+
+  useEffect(() => {
+    const onResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -172,64 +180,7 @@ const App = () => {
     );
   }) || [];
 
-  const columns = [
-    {
-      name: 'S.No',
-      cell: (row, index) => index + 1,
-      width: '70px',
-    },
-    {
-      name: 'Ledger',
-      selector: row => row.ledger?.ledger,
-      sortable: true,
-      width: '140px',
-      cell: row => <span className="capitalize text-content font-medium">{row.ledger?.ledger}</span>
-    },
-    {
-      name: 'Amt',
-      selector: row => row.amount,
-      sortable: true,
-      width: '100px',
-      cell: row => <span className="font-mono font-semibold text-content">₹{row.amount}</span>
-    },
-    {
-      name: 'Narration',
-      selector: row => row.narration,
-      // grow: 2,
-      wrap: true,
-    },
-    {
-      name: 'Date',
-      selector: row => dayjs(row.date).format('DD MMM, YYYY'),
-      sortable: true,
-      width: '120px',
-    },
-    {
-      name: 'Action',
-      cell: row => (
-        <div className="flex items-center gap-2">
-          <button
-            title="Edit"
-            onClick={() => setDataForEdit(row)}
-            className="p-1.5 rounded bg-blue-100 text-blue-600 hover:bg-blue-600 hover:text-white transition-all duration-200"
-          >
-            <Pencil size={18} />
-          </button>
-          <button
-            title="Delete"
-            onClick={() => deleteExpense(row._id)}
-            className="p-1.5 rounded bg-red-100 text-red-600 hover:bg-red-600 hover:text-white transition-all duration-200"
-          >
-            <Trash2 size={18} />
-          </button>
-        </div>
-      ),
-      ignoreRowClick: true,
-      // allowOverflow: true,
-      // button: true,
-      width: '100px',
-    },
-  ];
+  const columns = getExpenseTableColumns({ isMobile, setDataForEdit, deleteExpense });
 
   const customDataTableStyles = {
     table: {
@@ -272,8 +223,6 @@ const App = () => {
       },
       highlightOnHoverStyle: {
         backgroundColor: 'var(--theme-page)',
-        borderBottomColor: 'var(--theme-content)',
-        outline: '1px solid var(--theme-border)',
       },
     },
     pagination: {
@@ -294,7 +243,7 @@ const App = () => {
 
   return (
     <>
-      <div className={`min-h-screen exp bg-page p-4 transition-all duration-300 ${isModalOpen || isLedgerUpdate ? 'overflow-hidden h-screen' : ''}`}>
+      <div className={`min-h-screen exp bg-page p-2 lg:p-4 transition-all duration-300 ${isModalOpen || isLedgerUpdate ? 'overflow-hidden h-screen' : ''}`}>
         <style>{`
         @keyframes shake {
           0%, 100% { transform: translateX(0); }
@@ -356,7 +305,7 @@ const App = () => {
             <div className="relative group w-full sm:w-auto">
               <input
                 type="text"
-                placeholder="Search history..."
+                placeholder="Search Expense..."
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
                 className="w-full sm:w-64 bg-slate-700 dark:bg-slate-800 text-white border-none rounded-lg py-2 pl-3 pr-10 focus:ring-2 focus:ring-blue-500 outline-none transition-all placeholder:text-slate-400 text-sm"
@@ -383,6 +332,7 @@ const App = () => {
               data={filteredExpenses}
               theme={mode === "dark" ? "dark" : "default"}
               selectableRows
+              selectableRowsVisibleOnly
               onSelectedRowsChange={handleSelectedRowsChange}
               pagination
               highlightOnHover

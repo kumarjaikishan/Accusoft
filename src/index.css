@@ -50,7 +50,7 @@
   --navheight: 70px;
   --navheightmobile: 50px;
   --sidebarwide: 210px;
-  --sidebarwidemobile: 180px;
+  --sidebarwidemobile: 210px;
   --sidebarnarrow: 80px;
   --mobilelogowidth: 45px;
   --footerheight: 25px;
@@ -319,4 +319,4 @@ body {
     --theme-content: #334155 !important;
     --theme-border: #e2e8f0 !important;
   }
-}
+}

@@ -34,6 +34,9 @@ const Home = () => {
   const mode = useSelector((state) => state.theme.mode);
 
   const [monthsToShow, setMonthsToShow] = useState(12);
+  const [isMobileView, setIsMobileView] = useState(() =>
+    typeof window !== "undefined" ? window.innerWidth < 768 : false
+  );
 
   useEffect(() => {
     dispatch(header("Dashboard"));
@@ -43,6 +46,12 @@ const Home = () => {
     const stored = localStorage.getItem("ShowChartMonth");
     if (stored) setMonthsToShow(Number(stored));
   }, [loading, dispatch]);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobileView(window.innerWidth < 768);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   /* ================= MAIN CALCULATION ================= */
   const { sums, monthlyData } = useMemo(() => {
@@ -156,6 +165,12 @@ const Home = () => {
     () => ({
       responsive: true,
       maintainAspectRatio: false,
+      layout: {
+        padding: {
+          left: isMobileView ? 8 : 0,
+          right: isMobileView ? 4 : 0,
+        },
+      },
       animation: {
         duration: 600,
         easing: "easeOutQuart",
@@ -167,16 +182,25 @@ const Home = () => {
       },
       scales: {
         x: {
-          ticks: { color: mode === "dark" ? "#9ca3af" : "#6b7280" },
+          ticks: {
+            color: mode === "dark" ? "#9ca3af" : "#6b7280",
+            font: { size: isMobileView ? 10 : 12 },
+          },
           grid: { display: false },
         },
         y: {
-          ticks: { color: mode === "dark" ? "#9ca3af" : "#6b7280" },
+          ticks: {
+            display: !isMobileView,
+            color: mode === "dark" ? "#9ca3af" : "#6b7280",
+            font: { size: isMobileView ? 10 : 12 },
+            padding: isMobileView ? 4 : 8,
+            maxTicksLimit: isMobileView ? 5 : 8,
+          },
           grid: { color: mode === "dark" ? "#374151" : "#e5e7eb" },
         },
       },
     }),
-    [mode]
+    [mode, isMobileView]
   );
 
   /* ================= DUMMY RECENT ================= */
@@ -196,7 +220,7 @@ const Home = () => {
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="min-h-screen bg-transparent p-4 lg:p-6"
+      className="min-h-screen bg-transparent p-2 lg:p-4 lg:p-6"
     >
       {/* CARDS */}
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-5 mb-8">
@@ -273,16 +297,16 @@ const Home = () => {
 
       {/* CHART + RECENT */}
       <div className="grid lg:grid-cols-3 gap-6">
-        <div className="bg-white dark:bg-slate-900 shadow-[0_4px_20px_0_rgba(0,0,0,0.2)] dark:shadow-none border border-slate-200 dark:border-white/5 rounded-xl p-4 lg:col-span-2">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="font-semibold text-gray-700 dark:text-gray-200">
+        <div className="bg-white dark:bg-slate-900 shadow-[0_4px_20px_0_rgba(0,0,0,0.2)] dark:shadow-none border border-slate-200 dark:border-white/5 rounded-xl p-3 sm:p-4 lg:col-span-2">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-4">
+            <h3 className="font-semibold text-sm sm:text-base text-gray-700 dark:text-gray-200">
               Monthly Expense Overview
             </h3>
 
-            <div className="relative inline-block">
+            <div className="relative inline-block w-full sm:w-auto">
               <select
-                className="appearance-none bg-white dark:bg-slate-800 border border-gray-300 dark:border-white/10
-    rounded-xl px-4 py-2 pr-10 text-sm font-medium text-gray-700 dark:text-gray-200
+                className="w-full sm:w-auto appearance-none bg-white dark:bg-slate-800 border border-gray-300 dark:border-white/10
+    rounded-xl px-3 sm:px-4 py-2 pr-10 text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-200
     shadow-sm hover:border-indigo-400 dark:hover:border-indigo-500
     focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500
     transition-all duration-200 cursor-pointer"
@@ -300,13 +324,13 @@ const Home = () => {
             </div>
           </div>
 
-          <div className="h-[320px]">
+          <div className="h-[240px] sm:h-[320px] w-full">
             <Bar data={chartData} options={chartOptions} />
           </div>
         </div>
 
         {/* RECENT */}
-        <div className="bg-white dark:bg-slate-900 shadow-[0_4px_20px_0_rgba(0,0,0,0.2)] dark:shadow-none border border-slate-200 dark:border-white/5 rounded-xl p-4">
+        <div className="bg-white dark:bg-slate-900 shadow-[0_4px_20px_0_rgba(0,0,0,0.2)] dark:shadow-none border border-slate-200 dark:border-white/5 rounded-xl p-3 sm:p-4 overflow-hidden">
           <div className="flex items-center gap-2 mb-4">
             <div className="p-2 rounded-lg bg-indigo-50 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400">
               <Clock className="text-lg" />
@@ -321,22 +345,22 @@ const Home = () => {
               {explist.slice(0, 5).map((item, index) => (
                 <div
                   key={index}
-                  className="flex justify-between gap-2 p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition"
+                  className="flex justify-between items-start gap-2 p-2.5 sm:p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition"
                 >
-                  <div className="min-w-0 flex-1 ">
-                    <p className="text-xs font-medium text-gray-800 dark:text-gray-200">
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[11px] sm:text-xs font-medium text-gray-800 dark:text-gray-200 flex flex-wrap items-center gap-1">
                       <span className="mr-2">{dayjs(item.date).format('DD/MM/YY')}</span>
                       <span>• </span>
                       <span className=" capitalize"> {item?.ledger?.ledger}</span>
                     </p>
 
-                    <p className="text-xs font-medium text-gray-500 dark:text-gray-400 truncate">
+                    <p className="text-[11px] sm:text-xs font-medium text-gray-500 dark:text-gray-400 truncate">
                       {item.narration}
                     </p>
 
                   </div>
 
-                  <div className="text-sm  w-15 text-end font-semibold text-indigo-600 dark:text-indigo-400">
+                  <div className="text-xs sm:text-sm min-w-[78px] sm:min-w-[90px] text-end font-semibold text-indigo-600 dark:text-indigo-400 shrink-0">
                     ₹ {item.amount}
                   </div>
                 </div>

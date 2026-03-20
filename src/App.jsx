@@ -8,7 +8,6 @@ import { setnarrow } from '../src/store/login';
 import ProtectedRoutes from './utils/protectedRoute';
 import AdminRoute from './utils/adminRoute';
 import { AnimatePresence } from 'framer-motion';
-import { lightTheme, darkTheme } from './themes';
 import { ThemeProvider } from '@mui/material/styles';
 
 import Login from './pages/login/login';
@@ -27,6 +26,7 @@ import Privacy from './pages/others/Policy';
 import LandingLayout from './pages/landingPage/Landing';
 import LandingBody from './pages/landingPage/LandingBody';
 import InnerLayout from './utils/innerLayout';
+import { getTheme } from './MuiTheme';
 
 const VoucherDetail = lazy(() => import('./pages/dataAnalysis/ledgerDetail'));
 const Filehandle = lazy(() => import('./pages/filehandle/filehandle'));
@@ -43,6 +43,8 @@ function App() {
 
   const log = useSelector((state) => state.login);
   const mode = useSelector((state) => state.theme.mode);
+
+  const theme = getTheme(mode);
 
   // applying mode globally
   useEffect(() => {
@@ -72,7 +74,7 @@ function App() {
   };
 
   return (
-    <ThemeProvider theme={mode === "dark" ? darkTheme : lightTheme}>
+    <ThemeProvider theme={theme}>
       <AnimatePresence mode="wait">
         <Suspense fallback={<Preloader />}>
           <Routes location={location} key={location.pathname}>

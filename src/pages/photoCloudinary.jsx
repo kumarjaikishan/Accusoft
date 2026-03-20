@@ -97,83 +97,83 @@ const Photo = () => {
     }
 
     const handleUpload1 = async () => {
+        document.body.style.cursor = "wait";
 
-        document.body.style.cursor = 'wait';
         const token = localStorage.getItem("token");
 
-        let name = Date.now() + 'kishan.webp';
-        let newimage = await urlToFile(webpImage, name); // Ensure urlToFile returns a valid File object
+        const name = Date.now() + "kishan.webp";
+        const newimage = await urlToFile(webpImage, name);
 
-        let data = new FormData();
-        data.append('image', newimage);
-        data.append('oldimage', useralldetail.profilepic);
+        const data = new FormData();
+        data.append("image", newimage);
+        data.append("oldimage", useralldetail.profilepic);
 
         const id = toast.loading("Uploading... 0%");
         setIsFile(false);
 
-        try {
-            const xhr = new XMLHttpRequest();
+        const xhr = new XMLHttpRequest();
 
-            xhr.open("POST", `${import.meta.env.VITE_API_ADDRESS}photo`);
+        xhr.open("POST", `${import.meta.env.VITE_API_ADDRESS}photo`, true);
+        xhr.setRequestHeader("Authorization", `Bearer ${token}`);
 
-            xhr.setRequestHeader("Authorization", `Bearer ${token}`);
+        // ✅ Progress
+        xhr.upload.onprogress = (event) => {
+            if (event.lengthComputable) {
+                const percentage = Math.round((event.loaded * 100) / event.total);
+                setProgress(percentage);
 
-            xhr.upload.onprogress = (event) => {
-                if (event.lengthComputable) {
-                    const percentage = Math.round((event.loaded * 100) / event.total);
-                    setProgress(percentage);
-                    toast.update(id, { render: "Uploading...", isLoading: true });
-                }
-            };
-
-            xhr.onload = () => {
-                if (xhr.status === 200) {
-                    const response = JSON.parse(xhr.responseText);
-
-                    document.body.style.cursor = "default";
-                    setHide(true);
-                    reset();
-                    setIsFile(true);
-                    setProgress(0);
-
-                    dispatch(profilepicupdtae(response.url));
-
-                    toast.update(id, {
-                        render: "Photo Updated Successfully",
-                        type: "success",
-                        isLoading: false,
-                        autoClose: 1300
-                    });
-                } else {
-                    throw new Error("Upload failed");
-                }
-            };
-
-            xhr.onerror = () => {
                 toast.update(id, {
-                    render: "Error Occurred",
+                    render: `Uploading... ${percentage}%`,
+                    isLoading: true,
+                });
+            }
+        };
+
+        // ✅ Success / Error
+        xhr.onload = () => {
+            document.body.style.cursor = "default";
+            setProgress(0);
+            setIsFile(true);
+
+            if (xhr.status >= 200 && xhr.status < 300) {
+                const response = JSON.parse(xhr.responseText);
+
+                setHide(true);
+                reset();
+
+                dispatch(profilepicupdtae(response.url));
+
+                toast.update(id, {
+                    render: "Photo Updated Successfully",
+                    type: "success",
+                    isLoading: false,
+                    autoClose: 1300,
+                });
+            } else {
+                toast.update(id, {
+                    render: "Upload Failed",
                     type: "error",
                     isLoading: false,
-                    autoClose: 1500
+                    autoClose: 1500,
                 });
-                throw new Error("Network error");
-            };
+            }
+        };
 
-            xhr.send(data);
-
-        } catch (error) {
-            setIsFile(true);
+        // ❌ Network error
+        xhr.onerror = () => {
+            document.body.style.cursor = "default";
             setProgress(0);
-            console.log(error);
+            setIsFile(true);
 
             toast.update(id, {
-                render: "Error Occurred",
+                render: "Network Error",
                 type: "error",
                 isLoading: false,
-                autoClose: 1500
+                autoClose: 1500,
             });
-        }
+        };
 
+        xhr.send(data);
     };
 
     const resetForm = () => {
@@ -276,17 +276,19 @@ const Photo = () => {
                             <Upload className="text-2xl" />
                             <span>Select Image</span>
                         </div>}
-                    {selectedFile && <div className='flex justify-center items-center flex-col gap-4 mt-2'>
-                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{selectedFile.name}</span>
-                        {webpImage && <img className="rounded-xl border-2 border-dashed border-indigo-600 dark:border-cyan-400 shadow-md object-contain max-h-[200px]" src={webpImage} alt="selected Image" />}
-                        <div className="w-full h-2 bg-gray-200 dark:bg-slate-700 rounded-full overflow-hidden">
-                            <div className="bg-indigo-600 dark:bg-cyan-400 h-2 rounded-full transition-all duration-500" style={{ width: `${progress}%` }}></div>
+                    {selectedFile &&
+                        <div className='flex justify-center items-center flex-col gap-4 mt-2'>
+                            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{selectedFile.name}</span>
+                            {webpImage && <img className=" border-2 border-dashed border-slate-600 dark:border-cyan-400 shadow-md object-cover h-50 w-50 rounded-full" src={webpImage} alt="selected Image" />}
+                            <div className="w-full h-2 bg-gray-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                                <div className="bg-indigo-600 dark:bg-cyan-400 h-2 rounded-full transition-all duration-500" style={{ width: `${progress}%` }}></div>
+                            </div>
+                            <div className="mt-2 flex gap-4 w-full justify-center">
+                                <Button color='error' onClick={resetForm} startIcon={<Undo />} variant="outlined">Reset</Button>
+                                <Button onClick={handleUpload1} startIcon={<Upload />} variant="contained">Upload</Button>
+                            </div>
                         </div>
-                        <div className="mt-2 flex gap-4 w-full justify-center">
-                            <Button color='error' onClick={resetForm} startIcon={<Undo />} variant="outlined">Reset</Button>
-                            <Button onClick={handleUpload1} startIcon={<Upload />} variant="contained">Upload</Button>
-                        </div>
-                    </div>}
+                    }
                 </div>
             </div>
         </div>

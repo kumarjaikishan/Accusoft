@@ -9,7 +9,7 @@ const themeSlice = createSlice({
     initialState,
     reducers: {
         toggleTheme: (state) => {
-            console.log("toggle trigger", state.mode)
+            // console.log("toggle trigger", state.mode)
             state.mode = state.mode === "light" ? "dark" : "light";
             localStorage.setItem("theme", state.mode);
         },

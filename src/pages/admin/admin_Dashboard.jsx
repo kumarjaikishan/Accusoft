@@ -12,6 +12,7 @@ import { toast } from "react-toastify";
 import Useredit from "./usereditmodal";
 import { useApi } from "../../utils/useApi";
 import { Avatar, Grow } from "@mui/material";
+import { useTableStyles } from "../../components/dataTableStyle";
 
 const AdminPanel = () => {
     const dispatch = useDispatch();
@@ -106,9 +107,10 @@ const AdminPanel = () => {
 
     /* ---------------- TABLE ---------------- */
     const columns = [
-        { name: "#", selector: (_, i) => i + 1, width: "60px" },
+        { name: "#", selector: (_, i) => i + 1, width: "50px" },
         {
-            name: "Name", selector: (row) => <div className="flex items-center gap-3 ">
+            name: "Name",
+            selector: (row) => <div className="flex text-wrap items-center gap-3 ">
                 <Avatar
                     src={row?.imgsrc}
                     alt={'user Profile photo'}
@@ -116,16 +118,17 @@ const AdminPanel = () => {
                     {!row?.imgsrc && <User />}
                 </Avatar>
                 <div>
-                    <p className="text-[12px] md:text-[14px] text-gray-700 font-semibold">
+                    <p className="text-[12px] md:text-[14px] text-gray-700 text-wrap font-semibold">
                         {row?.name}
                     </p>
                 </div>
-            </div>
+            </div>,
+            width: '150px'
         },
-        { name: "Phone", selector: (row) => row.phone },
-        { name: "Email", selector: (row) => row.email , Grow:2 },
+        { name: "Phone", selector: (row) => row.phone, width: '120px' },
+        { name: "Email", selector: (row) => <div className=" min-w-[450px] ">{row.email}</div>, flex: 1 },
         {
-            name: "Expenses",
+            name: "Records",
             selector: (row) => row.totalExpenses,
             width: "100px",
         },
@@ -133,9 +136,9 @@ const AdminPanel = () => {
             name: "Last Active",
             selector: (row) =>
                 row.lastActivity
-                    ? dayjs(row.lastActivity).format("DD MMM YYYY, hh:mm A")
+                    ? dayjs(row.lastActivity).format("DD MMM YY, hh:mm A")
                     : "-",
-            // width: "140px"
+            width: "160px"
         },
         {
             name: "Verified",
@@ -168,6 +171,7 @@ const AdminPanel = () => {
                     />
                 </div>
             ),
+            width: "100px"
         },
     ];
 
@@ -220,30 +224,10 @@ const AdminPanel = () => {
                 <DataTable
                     columns={columns}
                     data={filteredUsers}
+                    customStyles={useTableStyles()}
                     pagination
                     progressPending={loading}
                     highlightOnHover
-                    customStyles={{
-                        table: {
-                            style: { backgroundColor: 'transparent' },
-                        },
-                        header: {
-                            style: { backgroundColor: 'transparent', color: mode === 'dark' ? '#f3f4f6' : '#1f2937' },
-                        },
-                        headRow: {
-                            style: { backgroundColor: mode === 'dark' ? '#1e293b' : '#f9fafb', borderBottomColor: mode === 'dark' ? 'rgba(255,255,255,0.05)' : '#e5e7eb' },
-                        },
-                        headCells: {
-                            style: { fontWeight: "600", fontSize: "14px", color: mode === 'dark' ? '#d1d5db' : '#374151' },
-                        },
-                        rows: {
-                            style: { padding: "10px 0", backgroundColor: mode === 'dark' ? '#0f172a' : '#ffffff', borderBottomColor: mode === 'dark' ? 'rgba(255,255,255,0.05)' : '#e5e7eb', color: mode === 'dark' ? '#f3f4f6' : '#1f2937' },
-                            highlightOnHoverStyle: { backgroundColor: mode === 'dark' ? '#1e293b' : '#f3f4f6', color: mode === 'dark' ? '#ffffff' : '#111827', borderBottomColor: mode === 'dark' ? '#334155' : '#d1d5db', transitionDuration: '0.15s', outline: 'none' },
-                        },
-                        pagination: {
-                            style: { backgroundColor: mode === 'dark' ? '#0f172a' : '#ffffff', color: mode === 'dark' ? '#d1d5db' : '#374151', borderTopColor: mode === 'dark' ? 'rgba(255,255,255,0.05)' : '#e5e7eb' },
-                        },
-                    }}
                 />
             </div>
 

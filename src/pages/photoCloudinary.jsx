@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { header } from '../store/login';
 import { profilepicupdtae, profiledetailupdtae } from '../store/api';
 import { toast } from 'react-toastify';
+import { Button } from '@mui/material';
 
 // Helper function to convert image URL to File
 const urlToFile = (url, filename) => {
@@ -149,6 +150,12 @@ const Photo = () => {
             };
 
             xhr.onerror = () => {
+                toast.update(id, {
+                    render: "Error Occurred",
+                    type: "error",
+                    isLoading: false,
+                    autoClose: 1500
+                });
                 throw new Error("Network error");
             };
 

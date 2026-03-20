@@ -8,6 +8,7 @@ import { CSVLink } from "react-csv";
 import { Download, Printer } from "lucide-react";
 import { setnarrow } from "../../store/login";
 import { getLedgerDetailColumns } from "./ledgerDetailColumns";
+import { useTableStyles } from "../../components/dataTableStyle";
 
 const VoucherDetail = () => {
   const dispatch = useDispatch();
@@ -161,10 +162,11 @@ const VoucherDetail = () => {
       </div>
 
       {/* ---------------- TABLE ---------------- */}
-      <div className="bg-white rounded-2xl shadow-lg p-6">
+      <div className="bg-white rounded-xs md:rounded-2xl shadow-lg p-0 md:p-4 lg:p-6">
         <DataTable
           columns={columns}
           data={filteredData}
+          customStyles={useTableStyles()}
           highlightOnHover
           striped
           fixedHeader

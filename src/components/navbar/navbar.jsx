@@ -13,7 +13,7 @@ const Navbar = () => {
    const location = useLocation();
   //  console.log(location)
   let isLoginPage = location?.pathname?.includes('login') 
-   console.log(isLoginPage)
+  //  console.log(isLoginPage)
 
   const log = useSelector((state) => state.login);
   const useralldetail = useSelector((state) => state.userexplist);

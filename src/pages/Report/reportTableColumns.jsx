@@ -37,7 +37,7 @@ const getMobileColumns = () => [
   {
     name: "#",
     selector: (_, i) => i + 1,
-    width: "45px",
+    width: "55px",
     cell: (_, i) => <span className="text-xs">{i + 1}</span>,
   },
   {
@@ -51,13 +51,15 @@ const getMobileColumns = () => [
     name: "₹",
     selector: (row) => row.amount,
     sortable: true,
-    width: "80px",
+    width: "70px",
     cell: (row) => <span className="text-xs font-semibold">₹ {row.amount}</span>,
   },
   {
     name: "Narration",
-     selector: (row) => row.narration || "-",
-     maxWidth: "350px",
+    selector: (row) => row.narration || "-",
+    cell: (row) => <div className=" min-w-[250px]">
+      {row.narration}
+    </div>,
   },
   {
     name: "Date",

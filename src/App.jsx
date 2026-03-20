@@ -35,7 +35,7 @@ const Report = lazy(() => import('./pages/Report/Report'));
 const Admin_Dashboard = lazy(() => import('./pages/admin/admin_Dashboard'));
 const Logger = lazy(() => import('./pages/admin/logger'));
 const Officeexp = lazy(() => import('./pages/voucher'));
-const Addexp = lazy(() => import('./pages/addexp/addexp'));
+const Expense = lazy(() => import('./pages/Expense/Expense'));
 
 function App() {
   const dispatch = useDispatch();
@@ -82,7 +82,7 @@ function App() {
               <Route element={<ProtectedRoutes />}>
 
                 <Route path="/dashboard" element={<Home />} />
-                <Route path="/expense" element={<Addexp />} />
+                <Route path="/expense" element={<Expense />} />
                 <Route path="/photo" element={<Photo />} />
                 <Route path="/print/:expId" element={<Officeexp />} />
                 <Route path="/data_analysis/ledgerDetail/:id" element={<VoucherDetail />} />

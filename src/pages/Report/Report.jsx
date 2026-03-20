@@ -9,6 +9,7 @@ import { motion } from "framer-motion";
 import DataTable from "react-data-table-component";
 import dayjs from "dayjs";
 import { getReportTableColumns } from "./reportTableColumns";
+import { useTableStyles } from "../../components/dataTableStyle";
 
 const Report = () => {
     const dispatch = useDispatch();
@@ -78,50 +79,6 @@ const Report = () => {
 
     const columns = getReportTableColumns({ isMobile });
 
-    const customDataTableStyles = {
-        table: { style: { backgroundColor: 'transparent' } },
-        header: { style: { display: 'none' } },
-        headRow: {
-            style: {
-                backgroundColor: 'var(--theme-page)',
-                color: 'var(--theme-content)',
-                borderBottom: '1px solid var(--theme-border)',
-                minHeight: '48px',
-            },
-        },
-        headCells: {
-            style: {
-                fontWeight: '700',
-                fontSize: '14px',
-                textTransform: 'uppercase',
-                letterSpacing: '0.05em',
-            },
-        },
-        rows: {
-            style: {
-                backgroundColor: 'var(--theme-surface)',
-                color: 'var(--theme-content)',
-                minHeight: '45px',
-                '&:not(:last-child)': {
-                    borderBottomStyle: 'solid',
-                    borderBottomWidth: '1px',
-                    borderBottomColor: 'var(--theme-border)',
-                },
-            },
-            highlightOnHoverStyle: {
-                backgroundColor: 'var(--theme-page)',
-            },
-        },
-        pagination: {
-            style: {
-                backgroundColor: 'var(--theme-surface)',
-                color: 'var(--theme-content)',
-                borderTop: '1px solid var(--theme-border)',
-                marginTop: '0px',
-            },
-        },
-    };
-
     return (
         <motion.div
             initial={{ opacity: 0, y: 40 }}
@@ -134,43 +91,43 @@ const Report = () => {
                 <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
                     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 w-full">
                         <div className="flex flex-col text-sm min-w-0">
-                        <label className="text-gray-500 dark:text-gray-400 mb-1">From</label>
-                        <input
-                            type="date"
-                            name="from"
-                            value={inputs.from}
-                            onChange={handleInputChange}
-                            className="w-full h-10 border dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-800 dark:text-gray-200 px-3 rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none"
-                        />
-                    </div>
+                            <label className="text-gray-500 dark:text-gray-400 mb-1">From</label>
+                            <input
+                                type="date"
+                                name="from"
+                                value={inputs.from}
+                                onChange={handleInputChange}
+                                className="w-full h-10 border dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-800 dark:text-gray-200 px-3 rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none"
+                            />
+                        </div>
 
                         <div className="flex flex-col text-sm min-w-0">
-                        <label className="text-gray-500 dark:text-gray-400 mb-1">To</label>
-                        <input
-                            type="date"
-                            name="to"
-                            value={inputs.to}
-                            onChange={handleInputChange}
-                            className="w-full h-10 border dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-800 dark:text-gray-200 px-3 rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none"
-                        />
-                    </div>
+                            <label className="text-gray-500 dark:text-gray-400 mb-1">To</label>
+                            <input
+                                type="date"
+                                name="to"
+                                value={inputs.to}
+                                onChange={handleInputChange}
+                                className="w-full h-10 border dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-800 dark:text-gray-200 px-3 rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none"
+                            />
+                        </div>
 
                         <div className="flex flex-col text-sm min-w-0">
-                        <label className="text-gray-500 dark:text-gray-400 mb-1">Ledger</label>
-                        <select
-                            name="ledger"
-                            value={inputs.ledger}
-                            onChange={handleInputChange}
-                            className="w-full h-10 border dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-800 dark:text-gray-200 px-3 rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none"
-                        >
-                            <option value="all">All</option>
-                            {ledgerlist.map((val) => (
-                                <option key={val._id} value={val.ledger}>
-                                    {val.ledger}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
+                            <label className="text-gray-500 dark:text-gray-400 mb-1">Ledger</label>
+                            <select
+                                name="ledger"
+                                value={inputs.ledger}
+                                onChange={handleInputChange}
+                                className="w-full h-10 border dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-800 dark:text-gray-200 px-3 rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none"
+                            >
+                                <option value="all">All</option>
+                                {ledgerlist.map((val) => (
+                                    <option key={val._id} value={val.ledger}>
+                                        {val.ledger}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
 
                         <div className="flex items-end">
                             <button
@@ -227,13 +184,12 @@ const Report = () => {
             </div>
 
             {/* ---------------- DATA TABLE ---------------- */}
-            <div className="bg-surface rounded-2xl shadow-md border border-border-subtle overflow-hidden overflow-x-auto">
+            <div className="bg-surface rounded-xm md:rounded-2xl shadow-md border border-border-subtle overflow-hidden overflow-x-auto">
                 <DataTable
                     columns={columns}
                     data={filteredData}
-
                     highlightOnHover
-                    customStyles={customDataTableStyles}
+                    customStyles={useTableStyles()}
                     noDataComponent={
                         <div className="py-12 text-center text-content bg-surface">
                             <div className="text-4xl mb-2 opacity-20">📂</div>

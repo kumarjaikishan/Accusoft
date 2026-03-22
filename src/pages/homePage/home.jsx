@@ -1,16 +1,29 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { IndianRupee, Zap, ShoppingBag, Wallet, Scale, Clock } from 'lucide-react';
+import {
+  IndianRupee,
+  Zap,
+  ShoppingBag,
+  Wallet,
+  Scale,
+  Clock,
+  CalendarDays,
+  ChartColumnBig,
+} from "lucide-react";
 
 import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import { header, setloader } from "../../store/login";
 import { motion } from "framer-motion";
-import { Bar } from "react-chartjs-2";
+import { Bar, Line, Doughnut } from "react-chartjs-2";
 
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
   BarElement,
+  LineElement,
+  PointElement,
+  ArcElement,
+  Filler,
   Tooltip,
   Legend,
 } from "chart.js";
@@ -21,7 +34,17 @@ import isBetween from "dayjs/plugin/isBetween";
 dayjs.extend(isBetween);
 
 /* ✅ REQUIRED REGISTRATION (Fixes your error) */
-ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  LineElement,
+  PointElement,
+  ArcElement,
+  Filler,
+  Tooltip,
+  Legend
+);
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -34,6 +57,7 @@ const Home = () => {
   const mode = useSelector((state) => state.theme.mode);
 
   const [monthsToShow, setMonthsToShow] = useState(12);
+  const [chartType, setChartType] = useState("bar");
   const [isMobileView, setIsMobileView] = useState(() =>
     typeof window !== "undefined" ? window.innerWidth < 768 : false
   );
@@ -45,6 +69,10 @@ const Home = () => {
 
     const stored = localStorage.getItem("ShowChartMonth");
     if (stored) setMonthsToShow(Number(stored));
+    const chartStored = localStorage.getItem("ShowChartType");
+    if (chartStored && ["bar", "line", "doughnut"].includes(chartStored)) {
+      setChartType(chartStored);
+    }
   }, [loading, dispatch]);
 
   useEffect(() => {
@@ -131,40 +159,93 @@ const Home = () => {
     [monthlyData, monthsToShow]
   );
 
+  const monthOptions = [
+    { value: 3, label: "Last 3 months" },
+    { value: 6, label: "Last 6 months" },
+    { value: 12, label: "Last 12 months" },
+  ];
+
+  const chartTypeOptions = [
+    { value: "bar", label: "Bar Chart" },
+    { value: "line", label: "Line Chart" },
+    { value: "doughnut", label: "Doughnut Chart" },
+  ];
+
   /* ================= CHART ================= */
   const chartData = useMemo(
-    () => ({
-      labels: filteredMonths.map((m) => m.month),
-      datasets: [
-        {
-          label: "Expenses",
-          data: filteredMonths.map((m) => m.total),
-          borderRadius: 8,
-          backgroundColor: (context) => {
-            const { chart } = context;
-            const { ctx, chartArea } = chart;
-            if (!chartArea) return "#6366f1";
+    () => {
+      const labels = filteredMonths.map((m) => m.month);
+      const values = filteredMonths.map((m) => m.total);
+      const palette = ["#6366f1", "#22c55e", "#f59e0b", "#06b6d4", "#ef4444", "#8b5cf6", "#14b8a6", "#f97316"];
 
-            const gradient = ctx.createLinearGradient(
-              0,
-              chartArea.top,
-              0,
-              chartArea.bottom
-            );
-            gradient.addColorStop(0, "#6366f1");
-            gradient.addColorStop(1, "#06b6d4");
-            return gradient;
+      if (chartType === "line") {
+        return {
+          labels,
+          datasets: [
+            {
+              label: "Expenses",
+              data: values,
+              borderColor: "#4f46e5",
+              backgroundColor: "rgba(79, 70, 229, 0.16)",
+              tension: 0.35,
+              fill: true,
+              pointRadius: 3,
+              pointHoverRadius: 5,
+            },
+          ],
+        };
+      }
+
+      if (chartType === "doughnut") {
+        return {
+          labels,
+          datasets: [
+            {
+              label: "Expenses",
+              data: values,
+              borderWidth: 2,
+              borderColor: mode === "dark" ? "#0f172a" : "#ffffff",
+              backgroundColor: labels.map((_, i) => palette[i % palette.length]),
+              hoverOffset: 6,
+            },
+          ],
+        };
+      }
+
+      return {
+        labels,
+        datasets: [
+          {
+            label: "Expenses",
+            data: values,
+            borderRadius: 8,
+            backgroundColor: (context) => {
+              const { chart } = context;
+              const { ctx, chartArea } = chart;
+              if (!chartArea) return "#6366f1";
+
+              const gradient = ctx.createLinearGradient(
+                0,
+                chartArea.top,
+                0,
+                chartArea.bottom
+              );
+              gradient.addColorStop(0, "#6366f1");
+              gradient.addColorStop(1, "#06b6d4");
+              return gradient;
+            },
           },
-        },
-      ],
-    }),
-    [filteredMonths]
+        ],
+      };
+    },
+    [filteredMonths, chartType, mode]
   );
 
   const chartOptions = useMemo(
     () => ({
       responsive: true,
       maintainAspectRatio: false,
+      cutout: chartType === "doughnut" ? "62%" : undefined,
       layout: {
         padding: {
           left: isMobileView ? 8 : 0,
@@ -177,11 +258,13 @@ const Home = () => {
       },
       plugins: {
         legend: {
+          position: chartType === "doughnut" ? "bottom" : "top",
           labels: { color: mode === "dark" ? "#e5e7eb" : "#374151" },
         },
       },
       scales: {
         x: {
+          display: chartType !== "doughnut",
           ticks: {
             color: mode === "dark" ? "#9ca3af" : "#6b7280",
             font: { size: isMobileView ? 10 : 12 },
@@ -189,6 +272,7 @@ const Home = () => {
           grid: { display: false },
         },
         y: {
+          display: chartType !== "doughnut",
           ticks: {
             display: !isMobileView,
             color: mode === "dark" ? "#9ca3af" : "#6b7280",
@@ -200,7 +284,7 @@ const Home = () => {
         },
       },
     }),
-    [mode, isMobileView]
+    [mode, isMobileView, chartType]
   );
 
   /* ================= DUMMY RECENT ================= */
@@ -303,29 +387,51 @@ const Home = () => {
               Monthly Expense Overview
             </h3>
 
-            <div className="relative inline-block w-full sm:w-auto">
-              <select
-                className="w-full sm:w-auto appearance-none bg-white dark:bg-slate-800 border border-gray-300 dark:border-white/10
-    rounded-xl px-3 sm:px-4 py-2 pr-10 text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-200
-    shadow-sm hover:border-indigo-400 dark:hover:border-indigo-500
-    focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500
-    transition-all duration-200 cursor-pointer"
-                value={monthsToShow}
-                onChange={(e) => {
-                  const val = Number(e.target.value);
-                  localStorage.setItem("ShowChartMonth", val);
-                  setMonthsToShow(val);
-                }}
-              >
-                <option value={5}>Last 5 months</option>
-                <option value={12}>Last 12 months</option>
-              </select>
+            <div className="flex w-full sm:w-auto flex-col sm:flex-row gap-2">
+              <div className="relative w-full sm:w-[170px]">
+                <CalendarDays className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500 dark:text-slate-300" />
+                <select
+                  className="w-full appearance-none rounded-xl border border-slate-300/90 dark:border-white/10 bg-gradient-to-b from-white to-slate-50 dark:from-slate-800 dark:to-slate-900 pl-9 pr-3 py-2 text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-100 shadow-sm transition-all duration-200 hover:border-indigo-400 dark:hover:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  value={monthsToShow}
+                  onChange={(e) => {
+                    const val = Number(e.target.value);
+                    localStorage.setItem("ShowChartMonth", val);
+                    setMonthsToShow(val);
+                  }}
+                >
+                  {monthOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
+              <div className="relative w-full sm:w-[170px]">
+                <ChartColumnBig className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500 dark:text-slate-300" />
+                <select
+                  className="w-full appearance-none rounded-xl border border-slate-300/90 dark:border-white/10 bg-gradient-to-b from-white to-slate-50 dark:from-slate-800 dark:to-slate-900 pl-9 pr-3 py-2 text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-100 shadow-sm transition-all duration-200 hover:border-indigo-400 dark:hover:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  value={chartType}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    localStorage.setItem("ShowChartType", val);
+                    setChartType(val);
+                  }}
+                >
+                  {chartTypeOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
           </div>
 
           <div className="h-[240px] sm:h-[320px] w-full">
-            <Bar data={chartData} options={chartOptions} />
+            {chartType === "line" && <Line data={chartData} options={chartOptions} />}
+            {chartType === "bar" && <Bar data={chartData} options={chartOptions} />}
+            {chartType === "doughnut" && <Doughnut data={chartData} options={chartOptions} />}
           </div>
         </div>
 

@@ -11,6 +11,7 @@ import { userdata } from '../../store/api'
 import { toast } from 'react-toastify';
 import { useApi } from '../../utils/useApi';
 import { useForm } from '../../utils/useForm';
+import LoadingButton from '../../components/LoadingButton';
 
 const Signin = () => {
     let navigate = useNavigate();
@@ -153,23 +154,27 @@ const Signin = () => {
                         <span style={{ cursor: 'pointer' }} onClick={() => setforget(false)}>SignIn?</span>
                     </div>}
 
-                    {!forget && <button 
-                        type="submit" 
-                        disabled={btnclick} 
-                        className="border-none outline-none cursor-pointer text-[1.2em] font-semibold tracking-[1px] px-[16px] py-[8px] transition-[0.1s] text-center rounded-[15px] hover:opacity-90 max-sm:mb-4 flex gap-2 items-center justify-center font-sans shadow-sm" 
-                        style={btnclick ? { background: "#cccccc", color: "#666666" } : { background: "var(--maincolor)", color: "white" }}
-                    >
-                        <LogIn /> {btnclick ? "Loading..." : "Login"}
-                    </button>}
-                    {forget && <button 
-                        type="button" 
-                        disabled={btnclick} 
-                        onClick={emailset} 
-                        className="border-none outline-none cursor-pointer text-[1.2em] font-semibold tracking-[1px] px-[16px] py-[8px] transition-[0.1s] text-center rounded-[15px] hover:opacity-90 max-sm:mb-4 flex gap-2 items-center justify-center font-sans shadow-sm" 
-                        style={btnclick ? { background: "#cccccc", color: "#666666" } : { background: "var(--maincolor)", color: "white" }}
-                    >
-                        <Key /> {btnclick ? "Sending..." : "Email sent"}
-                    </button>}
+                    {!forget && (
+                        <LoadingButton
+                            type="submit"
+                            loading={loading}
+                            icon={LogIn}
+                            className="max-sm:mb-4"
+                        >
+                            Login
+                        </LoadingButton>
+                    )}
+                    {forget && (
+                        <LoadingButton
+                            type="button"
+                            loading={btnclick}
+                            onClick={emailset}
+                            icon={Key}
+                            className="max-sm:mb-4"
+                        >
+                            Send Reset Email
+                        </LoadingButton>
+                    )}
 
                 </form>
             </div>

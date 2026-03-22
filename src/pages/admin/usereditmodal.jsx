@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { RefreshCcw, Save } from 'lucide-react';
 
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { setloader } from '../../store/login';
 import { toast } from 'react-toastify';
 import TextField from '@mui/material/TextField';
@@ -10,89 +10,98 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Button from '@mui/material/Button';
+import LoadingButton from '../../components/LoadingButton';
 
 import { useApi } from '../../utils/useApi';
 
 const Useredit = ({ inp, modal, setmodal, handler, fetche }) => {
     const dispatch = useDispatch();
-
     const { request, loading } = useApi();
 
     useEffect(() => {
         dispatch(setloader(loading));
-    }, [loading])
+    }, [loading, dispatch])
 
-    // for updating data fetched above 
-    const editdetail = async (_id) => {
+    const editdetail = async () => {
         const { id, name, phone, email, admin, verified } = inp;
 
-        const res = await request({
-            url: 'adminuserupdate',
-            method: 'POST',
-            body: { id, name, phone, email, admin, verified, },
-        });
-        // console.log(data)
-        toast.success(res?.message, { autoClose: 1300 })
-        fetche();
-        setmodal(false);
+        try {
+            const res = await request({
+                url: 'adminuserupdate',
+                method: 'POST',
+                body: { id, name, phone, email, admin, verified, },
+            });
+            toast.success(res?.message, { autoClose: 1300 })
+            fetche();
+            setmodal(false);
+        } catch (error) {
+            console.error(error);
+        }
     }
-
-    var modale = document.querySelector(".modal");
 
     return (
         <div className="modal" style={{ display: modal ? "block" : "none" }}>
             <div className="box">
-                <h1>User Detail</h1>
+                <h1 className="text-white">User Detail</h1>
                 <span className="wrapper">
-                    <TextField sx={{ width: '90%', mt: 3, mb: 1 }} id="outlined-basic" label="Name"
+                    <TextField sx={{ width: '90%', mt: 3, mb: 1 }} id="name" label="Name"
                         name="name" value={inp.name} type="text" onChange={handler}
                         variant="outlined" />
-                    <TextField sx={{ width: '90%', mt: 1, mb: 1 }} id="outlined-basic" label="Phone" name="phone"
+                    <TextField sx={{ width: '90%', mt: 1, mb: 1 }} id="phone" label="Phone" name="phone"
                         onKeyPress={(event) => { if (!/[0-9]/.test(event.key)) { event.preventDefault(); } }}
                         type="tel" value={inp.phone}
                         onChange={handler}
                         variant="outlined" />
 
-                    <TextField disabled sx={{ width: '90%', mt: 1, mb: 1 }} id="outlined-basic" label="Email"
-                        name="email" value={inp?.email} type="text" onChange={handler}
+                    <TextField disabled sx={{ width: '90%', mt: 1, mb: 1 }} id="email" label="Email"
+                        name="email" value={inp?.email} type="text"
                         variant="outlined" />
 
                     <FormControl className='caps' sx={{ width: '90%', mt: 1, mb: 1 }}>
-                        <InputLabel id="demo-simple-select-label">Type</InputLabel>
+                        <InputLabel id="type-label">Type</InputLabel>
                         <Select
                             name="admin"
-                            labelId="demo-simple-select-label"
+                            labelId="type-label"
                             onChange={handler}
                             value={inp?.isadmin}
-                            id="demo-simple-select"
+                            id="type-select"
                             label="Type"
                         >
                             <MenuItem className='caps' value={false}>User</MenuItem>
                             <MenuItem className='caps' value={true}>Admin</MenuItem>
                         </Select>
                     </FormControl>
-                    {inp.verified}
+                    
                     <FormControl className='caps' sx={{ width: '90%', mt: 1, mb: 2 }}>
-                        <InputLabel id="demo-simple-select-label">Verified</InputLabel>
+                        <InputLabel id="verified-label">Verified</InputLabel>
                         <Select
                             name="verified"
-                            labelId="demo-simple-select-label"
+                            labelId="verified-label"
                             onChange={handler}
                             value={inp.isverified}
-                            id="demo-simple-select"
-                            label="verified"
+                            id="verified-select"
+                            label="Verified"
                         >
                             <MenuItem className='caps' value={true}>Verified</MenuItem>
                             <MenuItem className='caps' value={false}>Unverified</MenuItem>
                         </Select>
                     </FormControl>
-                    <div className='btn'>
-                        <Button disabled={loading} className='muibtn' onClick={editdetail} variant="contained" startIcon={<Save />}>
+
+                    <div className='flex justify-around w-full gap-2 px-4'>
+                        <LoadingButton
+                            loading={loading}
+                            onClick={editdetail}
+                            icon={Save}
+                            className="w-1/2"
+                        >
                             Submit
-                        </Button>
+                        </LoadingButton>
                         <Button
                             onClick={() => setmodal(false)}
-                            className='muibtn outlined' title='Cancel' variant="outlined" startIcon={<RefreshCcw />}>
+                            className='w-1/2 bg-gray-200 dark:bg-slate-700 text-slate-800 dark:text-gray-100' 
+                            variant="outlined" 
+                            startIcon={<RefreshCcw size={18} />}
+                        >
                             Cancel
                         </Button>
                     </div>

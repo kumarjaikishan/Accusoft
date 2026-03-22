@@ -8,6 +8,8 @@ import { setnarrow } from "../../store/login";
 import { motion } from "framer-motion";
 import DataTable from "react-data-table-component";
 import dayjs from "dayjs";
+import isBetween from "dayjs/plugin/isBetween";
+dayjs.extend(isBetween);
 import { getReportTableColumns } from "./reportTableColumns";
 import { useTableStyles } from "../../components/dataTableStyle";
 

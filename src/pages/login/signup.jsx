@@ -1,13 +1,16 @@
 import React, { useState } from 'react'
-import { Mail, Eye, EyeOff, Key, Phone, User } from 'lucide-react';
+import { Mail, Eye, EyeOff, Key, Phone, User, UserPlus } from 'lucide-react';
 
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 
-import { setloader, setlogin } from '../../store/login';
-import { useSelector, useDispatch } from 'react-redux';
+import { setloader } from '../../store/login';
+import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import { useForm } from '../../utils/useForm';
+import { useApi } from '../../utils/useApi';
+import LoadingButton from '../../components/LoadingButton';
+import swal from 'sweetalert';
 
 const Signup = ({ setlog }) => {
     const dispatch = useDispatch();
@@ -21,74 +24,44 @@ const Signup = ({ setlog }) => {
         ledger: ["general", "other"]
     }
     const { fields, handlechange, reset } = useForm(init)
-    const [btnclick, setbtnclick] = useState(false);
+    const { request, loading } = useApi();
     const [signuppass, setsignuppass] = useState(true);
 
     const submit = async (e) => {
         e.preventDefault();
-        // return console.log(fields);
-        setbtnclick(true);
-
         const { name, email, phone, password, cpassword } = fields;
+        
         if (!name || !email || !phone || !password) {
-            toast.warn("All Fields are Required", { autoClose: 1300 })
-            setbtnclick(false);
-            return;
+            return toast.warn("All Fields are Required", { autoClose: 1300 });
         }
         if (password != cpassword) {
-            toast.warn("Password does not match", { autoClose: 1300 })
-            setbtnclick(false);
-            return;
+            return toast.warn("Password does not match", { autoClose: 1300 });
         }
         if (phone.length < 10) {
-            toast.warn("Mobile Should be 10 Digits", { autoClose: 1300 })
-            setbtnclick(false);
-            return;
+            return toast.warn("Mobile Should be 10 Digits", { autoClose: 1300 });
         }
 
         try {
-            dispatch(setloader(true));
-            const res = await fetch(`${import.meta.env.VITE_API_ADDRESS}signup`, {
+            const res = await request({
+                url: "signup",
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    name, email, phone, password
-                })
-            })
-            const datae = await res.json();
-            // console.log(datae);
-            if (res.ok) {
-                reset()
-                // toast.success("Signup Successful,verify your Email", { autoClose: 3300 })
+                body: { name, email, phone, password }
+            });
+
+            if (res) {
+                reset();
                 swal({
                     title: 'Signup Successful',
                     text: 'Please verify your email to proceed. Check your spam/junk folder if you don’t see the email.',
                     icon: 'success',
-                    button: {
-                        text: 'OK',
-                    },
+                    button: { text: 'OK' },
                 }).then(() => {
-                    setbtnclick(false);
-                    setlog(true)
+                    setlog(true);
                 });
-
-                dispatch(setloader(false));
-            } else {
-                dispatch(setloader(false));
-                setbtnclick(false);
-                toast.warn(datae.message, { autoClose: 3300 })
             }
-
-            // console.log(datae);
         } catch (error) {
-            dispatch(setloader(false));
-            setbtnclick(false);
-            toast.warn(error.message, { autoClose: 5600 })
-            console.log(error);
+            console.error(error);
         }
-
     }
 
     return (
@@ -105,7 +78,7 @@ const Signup = ({ setlog }) => {
                         value={fields.name}
                         InputProps={{
                             startAdornment: <InputAdornment position="start">
-                                <User />
+                                <User size={20} />
                             </InputAdornment>,
                         }}
                     />
@@ -120,7 +93,7 @@ const Signup = ({ setlog }) => {
                         value={fields.email}
                         InputProps={{
                             startAdornment: <InputAdornment position="start">
-                                <Mail />
+                                <Mail size={20} />
                             </InputAdornment>,
                         }}
                     />
@@ -138,7 +111,7 @@ const Signup = ({ setlog }) => {
                         value={fields.phone}
                         InputProps={{
                             startAdornment: <InputAdornment position="start">
-                                <Phone />
+                                <Phone size={20} />
                             </InputAdornment>,
                         }}
                     />
@@ -153,10 +126,10 @@ const Signup = ({ setlog }) => {
                         value={fields.password}
                         InputProps={{
                             startAdornment: <InputAdornment position="start">
-                                <Key />
+                                <Key size={20} />
                             </InputAdornment>,
                             endAdornment: <InputAdornment position="end" style={{ cursor: "pointer" }} onClick={() => signuppass ? setsignuppass(false) : setsignuppass(true)}>
-                                {signuppass ? <Eye /> : <EyeOff />}
+                                {signuppass ? <Eye size={20} /> : <EyeOff size={20} />}
                             </InputAdornment>
                         }}
                     />
@@ -171,15 +144,23 @@ const Signup = ({ setlog }) => {
                         value={fields.cpassword}
                         InputProps={{
                             startAdornment: <InputAdornment position="start">
-                                <Key />
+                                <Key size={20} />
                             </InputAdornment>,
                         }}
                     />
-                    <button type='submit' disabled={btnclick} className="border-none outline-none cursor-pointer text-[1.2em] font-semibold tracking-[1px] px-[16px] py-[8px] transition-[0.1s] text-center rounded-[15px] hover:opacity-90 max-sm:mb-4" style={btnclick ? { background: "#cccccc", color: "#666666" } : { background: "var(--maincolor)", color: "white" }} >Signup</button>
+                    
+                    <LoadingButton
+                        type="submit"
+                        loading={loading}
+                        icon={UserPlus}
+                        className="max-sm:mb-4 w-[80%] max-sm:w-[93%]"
+                    >
+                        Signup
+                    </LoadingButton>
                 </form>
             </div>
         </>
     )
 }
 
-export default Signup
+export default Signup;

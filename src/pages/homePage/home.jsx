@@ -13,7 +13,7 @@ import {
 import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import { header, setloader } from "../../store/login";
 import { motion } from "framer-motion";
-import { Bar, Line, Doughnut } from "react-chartjs-2";
+import { Bar, Line } from "react-chartjs-2";
 
 import {
   Chart as ChartJS,
@@ -22,7 +22,6 @@ import {
   BarElement,
   LineElement,
   PointElement,
-  ArcElement,
   Filler,
   Tooltip,
   Legend,
@@ -40,7 +39,6 @@ ChartJS.register(
   BarElement,
   LineElement,
   PointElement,
-  ArcElement,
   Filler,
   Tooltip,
   Legend
@@ -70,7 +68,7 @@ const Home = () => {
     const stored = localStorage.getItem("ShowChartMonth");
     if (stored) setMonthsToShow(Number(stored));
     const chartStored = localStorage.getItem("ShowChartType");
-    if (chartStored && ["bar", "line", "doughnut"].includes(chartStored)) {
+    if (chartStored && ["bar", "line"].includes(chartStored)) {
       setChartType(chartStored);
     }
   }, [loading, dispatch]);
@@ -168,7 +166,6 @@ const Home = () => {
   const chartTypeOptions = [
     { value: "bar", label: "Bar Chart" },
     { value: "line", label: "Line Chart" },
-    { value: "doughnut", label: "Doughnut Chart" },
   ];
 
   /* ================= CHART ================= */
@@ -196,21 +193,6 @@ const Home = () => {
         };
       }
 
-      if (chartType === "doughnut") {
-        return {
-          labels,
-          datasets: [
-            {
-              label: "Expenses",
-              data: values,
-              borderWidth: 2,
-              borderColor: mode === "dark" ? "#0f172a" : "#ffffff",
-              backgroundColor: labels.map((_, i) => palette[i % palette.length]),
-              hoverOffset: 6,
-            },
-          ],
-        };
-      }
 
       return {
         labels,
@@ -245,7 +227,6 @@ const Home = () => {
     () => ({
       responsive: true,
       maintainAspectRatio: false,
-      cutout: chartType === "doughnut" ? "62%" : undefined,
       layout: {
         padding: {
           left: isMobileView ? 8 : 0,
@@ -258,13 +239,13 @@ const Home = () => {
       },
       plugins: {
         legend: {
-          position: chartType === "doughnut" ? "bottom" : "top",
+          position: "top",
           labels: { color: mode === "dark" ? "#e5e7eb" : "#374151" },
         },
       },
       scales: {
         x: {
-          display: chartType !== "doughnut",
+          display: true,
           ticks: {
             color: mode === "dark" ? "#9ca3af" : "#6b7280",
             font: { size: isMobileView ? 10 : 12 },
@@ -272,7 +253,7 @@ const Home = () => {
           grid: { display: false },
         },
         y: {
-          display: chartType !== "doughnut",
+          display: true,
           ticks: {
             display: !isMobileView,
             color: mode === "dark" ? "#9ca3af" : "#6b7280",
@@ -431,7 +412,6 @@ const Home = () => {
           <div className="h-[240px] sm:h-[320px] w-full">
             {chartType === "line" && <Line data={chartData} options={chartOptions} />}
             {chartType === "bar" && <Bar data={chartData} options={chartOptions} />}
-            {chartType === "doughnut" && <Doughnut data={chartData} options={chartOptions} />}
           </div>
         </div>
 

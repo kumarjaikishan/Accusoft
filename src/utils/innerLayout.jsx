@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, Suspense } from 'react'
 import Navbar from '../components/navbar/navbar'
 import { Outlet, useLocation } from 'react-router-dom'
 import Sidebar from '../components/sidebar/sidebar'
@@ -27,8 +27,10 @@ const InnerLayout = ({ sidebarclose, log }) => {
             >
                 <Navbar />
                 
-                <div className="flex-1 w-full flex flex-col">
-                    <Outlet />
+                <div className="flex-1 w-full flex flex-col relative">
+                    <Suspense fallback={<Preloader />}>
+                        <Outlet />
+                    </Suspense>
                 </div>
 
                 <footer className="py-2  mt-auto print:hidden">

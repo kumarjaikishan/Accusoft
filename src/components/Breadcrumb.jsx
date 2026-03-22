@@ -1,8 +1,10 @@
 import { useMemo } from "react";
 import { useLocation, Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function Breadcrumbs() {
   const location = useLocation();
+  const mainColor = useSelector((state) => state.theme.mainColor);
 
   const breadcrumbs = useMemo(() => {
     const segments = location.pathname.split("/").filter(Boolean);
@@ -27,11 +29,8 @@ function Breadcrumbs() {
             <>
               <Link
                 to={crumb.path}
-                className="
-                  no-underline font-medium transition-colors duration-200 ease-in-out
-                  text-indigo-600 hover:text-indigo-800
-                  dark:text-indigo-400 dark:hover:text-indigo-300
-                "
+                className="no-underline font-medium transition-colors duration-200 ease-in-out"
+                style={{ color: mainColor }}
               >
                 {crumb.name}
               </Link>

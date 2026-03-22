@@ -17,7 +17,7 @@ const Navbar = () => {
 
   const log = useSelector((state) => state.login);
   const useralldetail = useSelector((state) => state.userexplist);
-  const mode = useSelector((state) => state.theme.mode);
+  const { mode, mainColor } = useSelector((state) => state.theme);
 
   const defaultprofile =
     "https://res.cloudinary.com/dusxlxlvm/image/upload/v1699090690/just_yoljye.png";
@@ -52,7 +52,10 @@ const Navbar = () => {
             e.stopPropagation();
             fun();
           }}
-          className="text-2xl cursor-pointer hover:text-indigo-600 dark:hover:text-indigo-400 transition"
+          className="text-2xl cursor-pointer transition"
+          style={{ color: log.narrow ? 'inherit' : mainColor }}
+          onMouseOver={(e) => e.currentTarget.style.color = mainColor}
+          onMouseOut={(e) => e.currentTarget.style.color = log.narrow ? 'inherit' : mainColor}
         />
 
         <div className="text-sm font-medium text-gray-600 dark:text-gray-400">
@@ -84,7 +87,7 @@ const Navbar = () => {
             </>
           ) : (
             <>
-              <Moon className="text-indigo-500 text-lg" />
+              <Moon style={{ color: mainColor }} className="text-lg" />
               <span className="text-slate-700 dark:text-slate-200">Dark</span>
             </>
           )}
@@ -103,7 +106,10 @@ const Navbar = () => {
             </div>
 
             <NavLink to="/photo">
-              <div className="w-10 h-10 rounded-full overflow-hidden ring-2 ring-indigo-500 hover:ring-indigo-600 transition">
+              <div 
+                className="w-10 h-10 rounded-full overflow-hidden ring-2 transition"
+                style={{ ringColor: mainColor, '--tw-ring-color': mainColor }}
+              >
                 <img
                   src={
                     useralldetail?.profilepic

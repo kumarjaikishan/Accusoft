@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App';
+import Preloader from './preloader';
 import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
 import store from './store/store';
@@ -17,7 +18,7 @@ root.render(
   <Provider store={store}>
     <ToastContainer closeOnClick={true} pauseOnFocusLoss={false} autoClose={2000} />
     <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-      <PersistGate persistor={persistor} >
+      <PersistGate loading={<Preloader />} persistor={persistor}>
         <App />
       </PersistGate>
     </BrowserRouter>

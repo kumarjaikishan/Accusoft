@@ -13,6 +13,7 @@ import Useredit from "./usereditmodal";
 import { useApi } from "../../utils/useApi";
 import { Avatar, Grow } from "@mui/material";
 import { useTableStyles } from "../../components/dataTableStyle";
+import { getAdminTableColumns } from "./AdminTableColumns";
 
 const AdminPanel = () => {
     const dispatch = useDispatch();
@@ -105,75 +106,17 @@ const AdminPanel = () => {
         );
     }, [search, data]);
 
+    const [isMobile, setIsMobile] = useState(false)
+
+    useEffect(() => {
+        const onResize = () => setIsMobile(window.innerWidth < 768);
+        window.addEventListener("resize", onResize);
+        return () => window.removeEventListener("resize", onResize);
+    }, []);
+
     /* ---------------- TABLE ---------------- */
-    const columns = [
-        { name: "#", selector: (_, i) => i + 1, width: "50px" },
-        {
-            name: "Name",
-            selector: (row) => <div className="flex text-wrap items-center gap-3 ">
-                <Avatar
-                    src={row?.imgsrc}
-                    alt={'user Profile photo'}
-                >
-                    {!row?.imgsrc && <User />}
-                </Avatar>
-                <div>
-                    <p className="text-[12px] md:text-[14px] text-gray-700 text-wrap font-semibold">
-                        {row?.name}
-                    </p>
-                </div>
-            </div>,
-            width: '150px'
-        },
-        { name: "Phone", selector: (row) => row.phone, width: '120px' },
-        { name: "Email", selector: (row) => <div className=" min-w-[450px] ">{row.email}</div>, flex: 1 },
-        {
-            name: "Records",
-            selector: (row) => row.totalExpenses,
-            width: "100px",
-        },
-        {
-            name: "Last Active",
-            selector: (row) =>
-                row.lastActivity
-                    ? dayjs(row.lastActivity).format("DD MMM YY, hh:mm A")
-                    : "-",
-            width: "160px"
-        },
-        {
-            name: "Verified",
-            selector: (row) => (
-                <span
-                    className={`px-2 py-1 rounded-full text-xs font-medium ${row.isverified
-                        ? "bg-green-100 text-green-600"
-                        : "bg-red-100 text-red-600"
-                        }`}
-                >
-                    {row.isverified ? "Yes" : "No"}
-                </span>
-            ),
-            width: "100px"
-        },
-        {
-            name: "Action",
-            selector: (row) => (
-                <div className="flex gap-3">
-                    <Pencil
-                        className="cursor-pointer text-indigo-600 hover:scale-110 transition"
-                        onClick={() => {
-                            setForm(row);
-                            setModal(true);
-                        }}
-                    />
-                    <Trash2
-                        className="cursor-pointer text-red-500 hover:scale-110 transition"
-                        onClick={() => deleteUser(row._id)}
-                    />
-                </div>
-            ),
-            width: "100px"
-        },
-    ];
+
+    const columns = getAdminTableColumns({ isMobile, setForm, setModal, deleteUser });
 
     return (
         <motion.div
@@ -206,7 +149,7 @@ const AdminPanel = () => {
             </div>
 
             {/* ---------------- USER TABLE ---------------- */}
-            <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-[0_4px_20px_0_rgba(0,0,0,0.05)] dark:shadow-none border border-transparent dark:border-white/5 p-6 overflow-hidden overflow-x-auto">
+            <div className="bg-white dark:bg-slate-900 rounded-sm shadow-[0_4px_20px_0_rgba(0,0,0,0.05)] dark:shadow-none border border-transparent dark:border-white/5 p-2 md:p-6 overflow-hidden overflow-x-auto">
                 <div className="flex flex-wrap justify-between items-center mb-4 gap-4">
                     <h2 className="text-xl font-semibold dark:text-gray-100">
                         All Users

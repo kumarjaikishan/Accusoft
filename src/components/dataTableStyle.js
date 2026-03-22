@@ -4,16 +4,17 @@ import { useMemo } from "react";
 // 🔥 Main hook (use this in components)
 export const useTableStyles = () => {
   const mode = useSelector((state) => state.theme?.mode);
+  const mainColor = useSelector((state) => state.theme?.mainColor);
 
   const styles = useMemo(() => {
-    return getCustomDataTableStyles(mode);
-  }, [mode]);
+    return getCustomDataTableStyles(mode, mainColor);
+  }, [mode, mainColor]);
 
   return styles;
 };
 
 // 🔥 Internal style generator (NOT exported)
-const getCustomDataTableStyles = (mode) => ({
+const getCustomDataTableStyles = (mode, mainColor) => ({
   table: {
     style: {
       backgroundColor: 'transparent',
@@ -26,7 +27,7 @@ const getCustomDataTableStyles = (mode) => ({
   },
   headRow: {
     style: {
-      backgroundColor: mode === 'dark' ? '#0f172a' : '#1e293b',
+      backgroundColor: mainColor || (mode === 'dark' ? '#0f172a' : '#1e293b'),
       color: '#ffffff',
       minHeight: '48px',
       borderTopLeftRadius: '8px',

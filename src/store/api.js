@@ -42,7 +42,7 @@ const userexplist = createSlice({
             state.profilepic = action.payload.user?.imgsrc;
         },
         userlogout(state, action) {
-            localStorage.clear();
+            localStorage.removeItem("token");
             state.explist = [];
             state.ledgerlist = [];
             state.user = {};

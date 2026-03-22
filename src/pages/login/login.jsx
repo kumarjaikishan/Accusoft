@@ -34,7 +34,7 @@ dark:bg-slate-900/60
 dark:backdrop-blur-xl 
 dark:border-white/10 shadow-2xl dark:shadow-none border border-gray-200 dark:border-white/5 dark:text-gray-100 overflow-hidden flex flex-col justify-start py-6">
                     <div className="w-full relative h-[70px] text-center flex justify-center mb-2  shrink-0">
-                        <Leaf size={50} className="text-[6rem] text-[var(--maincolor)] dark:text-slate-100" />
+                        <Leaf size={50} className="text-[6rem]" style={{ color: 'var(--maincolor)' }} />
                     </div>
                     <h2 className="text-center text-2xl sm:text-3xl font-bold tracking-tight text-slate-800 dark:text-slate-100">
                         {log ? "Welcome Back" : "Join With Us"}

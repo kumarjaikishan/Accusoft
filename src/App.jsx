@@ -18,7 +18,7 @@ import TipSender from './pages/admin/streamelement';
 import Test from './pages/test';
 import { Errorpage } from './pages/Errorpage';
 import PasswordReset from './pages/password/password';
-import Home from './pages/homePage/home';
+const Home = lazy(() => import('./pages/homePage/home'));
 import { useUserApi } from './store/apicalls';
 
 import Terms from './pages/others/Terms';
@@ -27,6 +27,7 @@ import LandingLayout from './pages/landingPage/Landing';
 import LandingBody from './pages/landingPage/LandingBody';
 import InnerLayout from './utils/innerLayout';
 import { getTheme } from './MuiTheme';
+import ThemeChooser from './components/ThemeChooser';
 
 const VoucherDetail = lazy(() => import('./pages/dataAnalysis/ledgerDetail'));
 const Filehandle = lazy(() => import('./pages/filehandle/filehandle'));
@@ -42,14 +43,19 @@ function App() {
   const location = useLocation();
 
   const log = useSelector((state) => state.login);
-  const mode = useSelector((state) => state.theme.mode);
+  const { mode, mainColor } = useSelector((state) => state.theme);
 
-  const theme = getTheme(mode);
+  const theme = getTheme(mode, mainColor || "#0a3d62");
 
   // applying mode globally
   useEffect(() => {
     document.documentElement.classList.toggle("dark", mode === "dark");
   }, [mode]);
+
+  // applying main color globally
+  useEffect(() => {
+    document.documentElement.style.setProperty('--maincolor', mainColor);
+  }, [mainColor]);
 
   const { userdatacall } = useUserApi();
 
@@ -76,8 +82,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <AnimatePresence mode="wait">
-        <Suspense fallback={<Preloader />}>
-          <Routes location={location} key={location.pathname}>
+        <Routes location={location} key={location.pathname}>
 
             {/* 🔐 PROTECTED ROUTES */}
             <Route element={<InnerLayout log={log} sidebarclose={sidebarclose} />}>
@@ -117,9 +122,9 @@ function App() {
               <Route path="/privacy" element={<Privacy />} />
             </Route>
           </Routes>
-        </Suspense>
-      </AnimatePresence>
-    </ThemeProvider>
+        </AnimatePresence>
+        <ThemeChooser />
+      </ThemeProvider>
   );
 }
 

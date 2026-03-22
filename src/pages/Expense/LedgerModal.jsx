@@ -7,8 +7,7 @@ import { userdata } from '../../store/api';
 import { toast } from 'react-toastify';
 import swal from 'sweetalert';
 import TextField from '@mui/material/TextField';
-
-import Button from '@mui/material/Button';
+import LoadingButton from '../../components/LoadingButton';
 
 import { useApi } from '../../utils/useApi';
 import Modalbox from '../../components/custommodal/Modalbox';
@@ -19,10 +18,6 @@ const LedgerModal = ({ setdisable, isledupdate, setisledupdate }) => {
 
   const [isupda, setinsupdat] = useState(false);
 
-  useEffect(() => {
-    // console.log(useralldetail.ledgerlist)
-  }, [])
-
   const init = {
     ind: '',
     ledger: '',
@@ -30,7 +25,6 @@ const LedgerModal = ({ setdisable, isledupdate, setisledupdate }) => {
   };
   const [ledinp, setledinp] = useState(init);
 
-  // handle ledger and budget input changes
   const handleLedger = (e) => {
     setledinp({ ...ledinp, ledger: e.target.value });
   };
@@ -45,9 +39,8 @@ const LedgerModal = ({ setdisable, isledupdate, setisledupdate }) => {
 
   useEffect(() => {
     dispatch(setloader(loading))
-  }, [loading])
+  }, [loading, dispatch])
 
-  // Add ledger
   const add = async () => {
     if (!ledinp.ledger) {
       return toast.warn("Ledger Can't be Blank", { autoClose: 1300 });
@@ -67,13 +60,11 @@ const LedgerModal = ({ setdisable, isledupdate, setisledupdate }) => {
       toast.success(res.message, { autoClose: 1300 });
       dispatch(userdata());
       setledinp(init);
-      setdisable(false);
     } catch (error) {
-      setdisable(false);
+        console.error(error);
     }
   };
 
-  // Update ledger
   const updat = async () => {
     if (!ledinp.ledger) return toast.warn("Ledger Can't be Blank", { autoClose: 1300 });
 
@@ -81,9 +72,6 @@ const LedgerModal = ({ setdisable, isledupdate, setisledupdate }) => {
     const newledger = ledinp.ledger;
     const newbudget = parseFloat(ledinp.budget);
 
-    const token = localStorage.getItem("token");
-
-    setdisable(true);
     try {
       const res = await request({
         url: 'updateledger',
@@ -101,12 +89,10 @@ const LedgerModal = ({ setdisable, isledupdate, setisledupdate }) => {
       dispatch(userdata());
 
     } catch (error) {
-    } finally {
-      setdisable(false);
+        console.error(error);
     }
   };
 
-  // Delete ledger
   const deletee = async (id) => {
     swal({
       title: 'Are you sure?',
@@ -116,8 +102,6 @@ const LedgerModal = ({ setdisable, isledupdate, setisledupdate }) => {
       dangerMode: true,
     }).then(async (willDelete) => {
       if (willDelete) {
-
-        setdisable(true);
         try {
           const res = await request({
             url: 'deleteledger',
@@ -128,14 +112,12 @@ const LedgerModal = ({ setdisable, isledupdate, setisledupdate }) => {
           toast.success(res.message, { autoClose: 1300 });
           dispatch(userdata());
         } catch (error) {
-        } finally {
-          setdisable(false);
+            console.error(error);
         }
       }
     });
   };
 
-  // Set ledger data in input for editing
   const setledgerininput = (id, ledgerName, budget) => {
     setledinp({
       ind: id,
@@ -173,35 +155,29 @@ const LedgerModal = ({ setdisable, isledupdate, setisledupdate }) => {
               size='small'
               variant="outlined"
               value={ledinp.budget}
-              style={{ width: '170px' }}
+              style={{ width: '100px' }}
               onChange={handleBudget}
               className="inpe"
               type="number"
             />
             {isupda ? (
-              <Button
-                size='small'
-                className='btne'
-                disabled={loading}
-                title='Add'
+              <LoadingButton
+                loading={loading}
                 onClick={updat}
-                startIcon={<RefreshCw />}
-                variant="contained"
+                icon={RefreshCw}
+                className="px-2 py-1 text-xs"
               >
                 Update
-              </Button>
+              </LoadingButton>
             ) : (
-              <Button
-                size='small'
-                className='btne'
-                disabled={loading}
-                title='Add'
+              <LoadingButton
+                loading={loading}
                 onClick={add}
-                startIcon={<SquarePlus />}
-                variant="contained"
+                icon={SquarePlus}
+                className="px-2 py-1 text-xs"
               >
                 Add
-              </Button>
+              </LoadingButton>
             )}
           </div>
 

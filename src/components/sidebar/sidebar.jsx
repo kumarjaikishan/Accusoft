@@ -14,6 +14,7 @@ const Sidebar = () => {
 
     const log = useSelector((state) => state.login);
     const user = useSelector((state) => state.userexplist?.user);
+    const { mode, mainColor } = useSelector((state) => state.theme);
 
     const isAdminActive = location.pathname.startsWith("/admin");
     const isServerActive = location.pathname.startsWith("/slow") || location.pathname.startsWith("/slowworker");
@@ -49,18 +50,34 @@ const Sidebar = () => {
         });
     };
 
-    const navLinkStyle = ({ isActive }) =>
+    const getNavLinkClass = (isActive) =>
         `group relative flex w-full items-center ${log.narrow ? "justify-center px-0" : "px-3 lg:px-4"} py-2 lg:py-3 rounded-lg transition-all duration-300
      ${isActive
-            ? "bg-indigo-50 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 border-l-3 lg:border-l-4 border-indigo-600 dark:border-indigo-400"
+            ? "" // Dynamic colors handled via style prop
             : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/10 hover:text-gray-900 dark:hover:text-white"
         }`;
 
-    const submenuHeaderClass = (isActive) =>
+    const getNavLinkStyle = (isActive) => 
+        isActive ? {
+            backgroundColor: mode === 'dark' ? `${mainColor}22` : `${mainColor}11`,
+            color: mainColor,
+            borderLeft: `4px solid ${mainColor}`,
+            borderTopLeftRadius: '0px',
+            borderBottomLeftRadius: '0px',
+            fontWeight: '600'
+        } : {};
+
+    const getSubmenuHeaderClass = (isActive) =>
         `flex items-center w-full ${log.narrow ? "justify-center px-0" : "justify-between px-3 lg:px-4"} py-2 lg:py-3 rounded-lg transition-all duration-300 ${isActive
-            ? "bg-indigo-50 dark:bg-white/10 text-indigo-700 dark:text-white font-medium shadow-[inset_0_1px_4px_rgba(0,0,0,0.05)]"
+            ? "font-medium shadow-[inset_0_1px_4px_rgba(0,0,0,0.05)]"
             : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/10 hover:text-gray-900 dark:hover:text-white"
         }`;
+
+    const getSubmenuHeaderStyle = (isActive) =>
+        isActive ? {
+            backgroundColor: mode === 'dark' ? `${mainColor}22` : `${mainColor}11`,
+            color: mainColor,
+        } : {};
 
     return (
         <div
@@ -79,8 +96,8 @@ const Sidebar = () => {
             {/* Logo */}
             <Link to="/">
                 <div className="h-[var(--navheightmobile)] lg:h-[var(--navheight)] flex items-center px-6 border-b border-gray-200 dark:border-white/10">
-                    <Leaf className="text-[42px] lg:text-[50px] text-indigo-600 dark:text-cyan-400" />
-                    <span className={`text-lg font-semibold text-gray-800 dark:text-white tracking-wide whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100 ml-3"}`}>
+                    <Leaf size={40} style={{ color: mainColor }} />
+                    <span className={`text-lg font-bold tracking-wide whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100 ml-3"}`} style={{ color: mainColor }}>
                         Accusoft
                     </span>
                 </div>
@@ -94,7 +111,8 @@ const Sidebar = () => {
                         <NavLink
                             key={index}
                             to={item.link}
-                            className={navLinkStyle}
+                            className={({ isActive }) => getNavLinkClass(isActive)}
+                            style={({ isActive }) => getNavLinkStyle(isActive)}
                             onClick={() => dispatch(header(item.name))}
                         >
                             <span className="text-lg min-w-[24px] flex justify-center">{item.icon}</span>
@@ -110,7 +128,8 @@ const Sidebar = () => {
                         <button
                             type="button"
                             onClick={() => setAdminOpen(!adminOpen)}
-                            className={submenuHeaderClass(isAdminActive)}
+                            className={getSubmenuHeaderClass(isAdminActive)}
+                            style={getSubmenuHeaderStyle(isAdminActive)}
                         >
                             <div className="flex items-center">
                                 <span className="text-lg min-w-[24px] flex justify-center"><Lock /></span>
@@ -128,17 +147,17 @@ const Sidebar = () => {
                                 }`}
                         >
                             <div className="ml-2 space-y-1">
-                                <NavLink to="/admin/dashboard" className={navLinkStyle}>
+                                <NavLink to="/admin/dashboard" className={({ isActive }) => getNavLinkClass(isActive)} style={({ isActive }) => getNavLinkStyle(isActive)}>
                                     <span className="text-lg min-w-[24px] flex justify-center"><LayoutDashboard /></span>
                                     <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100 ml-3"}`}>Dashboard</span>
                                 </NavLink>
 
-                                <NavLink to="/admin/logs" className={navLinkStyle}>
+                                <NavLink to="/admin/logs" className={({ isActive }) => getNavLinkClass(isActive)} style={({ isActive }) => getNavLinkStyle(isActive)}>
                                     <span className="text-lg min-w-[24px] flex justify-center"><User /></span>
                                     <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100 ml-3"}`}>Logs</span>
                                 </NavLink>
 
-                                <NavLink to="/admin/tip" className={navLinkStyle}>
+                                <NavLink to="/admin/tip" className={({ isActive }) => getNavLinkClass(isActive)} style={({ isActive }) => getNavLinkStyle(isActive)}>
                                     <span className="text-lg min-w-[24px] flex justify-center"><Banknote /></span>
                                     <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100 ml-3"}`}>StreamElement</span>
                                 </NavLink>
@@ -153,7 +172,8 @@ const Sidebar = () => {
                         <button
                             type="button"
                             onClick={() => setServerOpen(!serverOpen)}
-                            className={submenuHeaderClass(isServerActive)}
+                            className={getSubmenuHeaderClass(isServerActive)}
+                            style={getSubmenuHeaderStyle(isServerActive)}
                         >
                             <div className="flex items-center">
                                 <span className="text-lg min-w-[24px] flex justify-center"><Server /></span>
@@ -171,12 +191,12 @@ const Sidebar = () => {
                                 }`}
                         >
                             <div className="ml-2 space-y-1">
-                                <NavLink to="/admin/slow" className={navLinkStyle}>
+                                <NavLink to="/admin/slow" className={({ isActive }) => getNavLinkClass(isActive)} style={({ isActive }) => getNavLinkStyle(isActive)}>
                                     <span className="text-lg min-w-[24px] flex justify-center"><Hourglass /></span>
                                     <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100 ml-3"}`}>Server Slow</span>
                                 </NavLink>
 
-                                <NavLink to="/admin/slowworker" className={navLinkStyle}>
+                                <NavLink to="/admin/slowworker" className={({ isActive }) => getNavLinkClass(isActive)} style={({ isActive }) => getNavLinkStyle(isActive)}>
                                     <span className="text-lg min-w-[24px] flex justify-center"><Truck /></span>
                                     <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100 ml-3"}`}>Worker Fast</span>
                                 </NavLink>
@@ -198,7 +218,7 @@ const Sidebar = () => {
                         <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100 ml-3"}`}>Logout</span>
                     </button>
                 ) : (
-                    <NavLink to="/login" className={navLinkStyle}>
+                    <NavLink to="/login" className={({ isActive }) => getNavLinkClass(isActive)} style={({ isActive }) => getNavLinkStyle(isActive)}>
                         <span className="text-lg min-w-[24px] flex justify-center"><User /></span>
                         <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100 ml-3"}`}>Login</span>
                     </NavLink>

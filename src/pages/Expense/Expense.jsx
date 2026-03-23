@@ -251,18 +251,52 @@ const Expense = () => {
                 placeholder="Search Expense..."
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
-                className="w-full sm:w-64 bg-slate-700 dark:bg-slate-800 text-white border-none rounded-lg py-2 pl-3 pr-10 focus:ring-2 focus:ring-blue-500 outline-none transition-all placeholder:text-slate-400 text-sm"
+                className="
+      w-full sm:w-64
+      bg-white dark:bg-slate-800
+      text-slate-800 dark:text-slate-200
+      border border-slate-300 dark:border-slate-600
+      rounded-lg py-2 pl-3 pr-10
+      focus:ring-2 focus:ring-[var(--maincolor)]
+      focus:border-[var(--maincolor)]
+      outline-none transition-all
+      placeholder:text-slate-400 dark:placeholder:text-slate-500
+      text-sm
+    "
               />
+
               {searchInput ? (
                 <button
-                  onClick={() => setSearchInput('')}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors"
+                  onClick={() => setSearchInput("")}
+                  className="
+        absolute right-2 top-1/2 -translate-y-1/2
+        text-slate-400 hover:text-red-400
+        dark:text-slate-500 dark:hover:text-red-400
+        transition-colors
+      "
                 >
                   <X size={20} />
                 </button>
               ) : (
-                <div className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                <div
+                  className="
+        absolute right-3 top-1/2 -translate-y-1/2
+        text-slate-400 dark:text-slate-500
+      "
+                >
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    />
+                  </svg>
                 </div>
               )}
             </div>

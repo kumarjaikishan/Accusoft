@@ -52,9 +52,9 @@ export const useApi = () => {
                 msg.includes("unauthorized");
 
             if (err.isApiError && !isAuthPage) {
-                toast.warn(err.message, { autoClose: 2500 });
+                toast.warn(err.message, { autoClose: 2500, toastId: isAuthFailure ? "auth-toast" : undefined });
             } else if (!isAuthPage) {
-                toast.error(err.message || "Unexpected error occurred");
+                toast.error(err.message || "Unexpected error occurred", { toastId: isAuthFailure ? "auth-toast" : undefined });
             }
 
             if (isAuthFailure && currentPath !== "/logout") {

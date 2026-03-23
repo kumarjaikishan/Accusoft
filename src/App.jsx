@@ -12,13 +12,11 @@ import { ThemeProvider } from '@mui/material/styles';
 
 import Login from './pages/login/login';
 import Logout from './pages/logout';
-import SlowPage from './pages/serverTest/slow';
-import SlowWorkerPage from './pages/serverTest/workerSlow';
 import TipSender from './pages/admin/streamelement';
 import Test from './pages/test';
 import { Errorpage } from './pages/Errorpage';
 import PasswordReset from './pages/password/password';
-const Home = lazy(() => import('./pages/homePage/home'));
+import Home from './pages/homePage/home';
 import { useUserApi } from './store/apicalls';
 
 import Terms from './pages/others/Terms';
@@ -27,7 +25,6 @@ import LandingLayout from './pages/landingPage/Landing';
 import LandingBody from './pages/landingPage/LandingBody';
 import InnerLayout from './utils/innerLayout';
 import { getTheme } from './MuiTheme';
-import ThemeChooser from './components/ThemeChooser';
 
 const VoucherDetail = lazy(() => import('./pages/dataAnalysis/ledgerDetail'));
 const Filehandle = lazy(() => import('./pages/filehandle/filehandle'));
@@ -38,24 +35,27 @@ const Logger = lazy(() => import('./pages/admin/logger'));
 const Officeexp = lazy(() => import('./pages/voucher'));
 const Expense = lazy(() => import('./pages/Expense/Expense'));
 
+const SlowPage = lazy(() => import('./pages/serverTest/slow'));
+const SlowWorkerPage = lazy(() => import('./pages/serverTest/workerSlow'));
+
+
 function App() {
   const dispatch = useDispatch();
   const location = useLocation();
 
   const log = useSelector((state) => state.login);
-  const { mode, mainColor } = useSelector((state) => state.theme);
+  const mode = useSelector((state) => state.theme.mode);
+  const mainColor = useSelector((state) => state.theme.mainColor);
 
-  const theme = getTheme(mode, mainColor || "#0a3d62");
+  const theme = getTheme(mode, mainColor);
 
-  // applying mode globally
+  // applying mode and mainColor globally
   useEffect(() => {
     document.documentElement.classList.toggle("dark", mode === "dark");
-  }, [mode]);
-
-  // applying main color globally
-  useEffect(() => {
-    document.documentElement.style.setProperty('--maincolor', mainColor);
-  }, [mainColor]);
+    if (mainColor) {
+      document.documentElement.style.setProperty("--maincolor", mainColor);
+    }
+  }, [mode, mainColor]);
 
   const { userdatacall } = useUserApi();
 
@@ -82,7 +82,8 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <AnimatePresence mode="wait">
-        <Routes location={location} key={location.pathname}>
+        <Suspense fallback={<Preloader />}>
+          <Routes location={location} key={location.pathname}>
 
             {/* 🔐 PROTECTED ROUTES */}
             <Route element={<InnerLayout log={log} sidebarclose={sidebarclose} />}>
@@ -122,9 +123,9 @@ function App() {
               <Route path="/privacy" element={<Privacy />} />
             </Route>
           </Routes>
-        </AnimatePresence>
-        <ThemeChooser />
-      </ThemeProvider>
+        </Suspense>
+      </AnimatePresence>
+    </ThemeProvider>
   );
 }
 

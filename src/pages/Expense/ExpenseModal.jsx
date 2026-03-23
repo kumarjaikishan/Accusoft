@@ -51,12 +51,12 @@ const ExpenseModalbox = ({ modal, disable, handlechange, fields, isupdate, sub, 
 
     return (
         <Modalbox open={modal} onClose={() => setmodal(false)}>
-            <div className="w-[500px] h-max rounded-[20px] overflow-hidden flex flex-col items-center max-sm:w-[96vw] bg-slate-800">
-                <h1 className="w-full h-[50px] leading-[50px] text-[aliceblue] tracking-[2px] font-bold text-2xl text-center max-sm:text-[1.5em] max-sm:tracking-[1px] bg-slate-800">
+            <div className="w-[500px] h-max rounded-[20px] overflow-hidden flex flex-col items-center max-sm:w-[96vw] bg-[var(--maincolor)]">
+                <h1 className="w-full h-[50px] leading-[50px] text-[aliceblue] tracking-[2px] font-bold text-2xl text-center max-sm:text-[1.5em] max-sm:tracking-[1px] bg-[var(--maincolor)]">
                     {isupdate ? "Update Voucher" : "Add Voucher"}
                 </h1>
 
-                <span className="flex flex-col rounded-t-[30px] border-t border-amber-50 pt-[5px] bg-surface items-center w-full pb-[20px] max-sm:pb-[15px]">
+                <span className="flex flex-col rounded-t-[30px] border-t border-white/20 pt-[5px] bg-surface items-center w-full pb-[20px] max-sm:pb-[15px]">
                     <FormControl className='caps' sx={{ width: '90%', mt: 2, mb: 2 }}>
                         <InputLabel id="ledger-select-label">Ledger</InputLabel>
                         <Select

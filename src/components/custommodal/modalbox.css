@@ -26,7 +26,7 @@
 
     .content {
         position: relative;
-        background: var(--primarycolor);
+        background: var(--maincolor);
         border-radius: 10px 10px 4px 4px;
         overflow: auto;
         /* border: 3px solid red; */
@@ -43,8 +43,8 @@
         }
 
         .modalbody {
-            background: white;
-            color: rgb(36, 35, 35);
+            background: var(--theme-surface);
+            color: var(--theme-content);
             overflow-y: auto;
             max-height: calc(var(--modal_max_height) - 80px);
             border-radius: 15px 15px 0 0;
@@ -53,13 +53,13 @@
         }
 
         .modalfooter {
-            border-top: 1px solid rgba(128, 128, 128, 0.396);
+            border-top: 1px solid var(--theme-border);
             display: flex;
             gap: 10px;
             justify-content: end;
             height: 40px;
             padding: 5px 5px;
-            background: white;
+            background: var(--theme-surface);
         }
 
         form {

@@ -11,6 +11,8 @@ import LoadingButton from '../../components/LoadingButton';
 
 import { useApi } from '../../utils/useApi';
 import Modalbox from '../../components/custommodal/Modalbox';
+import DataTable from 'react-data-table-component';
+import { useTableStyles } from '../../components/dataTableStyle';
 
 const LedgerModal = ({ setdisable, isledupdate, setisledupdate }) => {
   const dispatch = useDispatch();
@@ -61,7 +63,7 @@ const LedgerModal = ({ setdisable, isledupdate, setisledupdate }) => {
       dispatch(userdata());
       setledinp(init);
     } catch (error) {
-        console.error(error);
+      console.error(error);
     }
   };
 
@@ -89,7 +91,7 @@ const LedgerModal = ({ setdisable, isledupdate, setisledupdate }) => {
       dispatch(userdata());
 
     } catch (error) {
-        console.error(error);
+      console.error(error);
     }
   };
 
@@ -112,7 +114,7 @@ const LedgerModal = ({ setdisable, isledupdate, setisledupdate }) => {
           toast.success(res.message, { autoClose: 1300 });
           dispatch(userdata());
         } catch (error) {
-            console.error(error);
+          console.error(error);
         }
       }
     });
@@ -127,9 +129,45 @@ const LedgerModal = ({ setdisable, isledupdate, setisledupdate }) => {
     setinsupdat(true);
   };
 
+  const customStyles = useTableStyles();
+
+  const columns = [
+    {
+      name: 'Ledger',
+      selector: row => row.ledger,
+      sortable: true,
+      grow: 2,
+    },
+    {
+      name: 'Budget',
+      selector: row => `₹${row.budget}`,
+      sortable: true,
+    },
+    {
+      name: 'Action',
+      cell: (row) => (
+        <div className='flex gap-2'>
+          <Pencil
+            className='p-[2px_5px] box-content w-[15px] h-[15px] rounded-[.2rem] cursor-pointer text-[var(--editicon)] bg-[rgba(7,121,182,0.116)] hover:bg-[var(--editicon)] hover:text-white'
+            title='Edit'
+            onClick={() => setledgerininput(row._id, row.ledger, row.budget)}
+          />
+          <Trash2
+            className='p-[2px_5px] box-content w-[15px] h-[15px] rounded-[.2rem] cursor-pointer text-[var(--deleteicon)] bg-[rgba(182,7,16,0.116)] hover:bg-[var(--deleteicon)] hover:text-white'
+            title='Delete'
+            onClick={() => deletee(row._id)}
+          />
+        </div>
+      ),
+      button: true,
+    },
+  ];
+
   return (
     <Modalbox open={isledupdate} onClose={() => setisledupdate(false)}>
-      <div className="w-[500px] h-max rounded-[20px] bg-slate-800 overflow-hidden flex flex-col items-center max-sm:w-[95vw] max-sm:h-[520px]">
+      <div className="w-[500px] h-[520px] max-sm:w-[95vw] max-sm:h-[520px] rounded-[20px] bg-[var(--maincolor)] overflow-hidden flex flex-col items-center relative">
+
+        {/* Close Button */}
         <button
           onClick={() => setisledupdate(false)}
           className="absolute top-2 right-3 text-white/60 hover:text-red-400 transition-colors cursor-pointer p-1"
@@ -137,29 +175,39 @@ const LedgerModal = ({ setdisable, isledupdate, setisledupdate }) => {
         >
           <X size={26} />
         </button>
-        <h2 className="w-full text-center h-[40px] leading-[40px] font-bold text-2xl text-[aliceblue] capitalize bg-slate-800 max-sm:text-[20px]">Hi, {useralldetail?.user?.name}</h2>
 
-        <span className='w-full flex flex-col items-center pt-[5px] pb-[20px] rounded-t-[30px] bg-surface min-h-[400px]'>
+        {/* Header */}
+        <h2 className="w-full text-center h-[40px] leading-[40px] font-bold text-2xl text-[aliceblue] capitalize bg-[var(--maincolor)] max-sm:text-[20px]">
+          Hi, {useralldetail?.user?.name}
+        </h2>
+
+        {/* Content Section */}
+        <div className="w-full flex flex-col flex-1 items-center pt-[5px] pb-[20px] rounded-t-[30px] border-t border-white/20 bg-surface min-h-0">
+
+          {/* Input Row */}
           <div className="flex w-[95%] h-[60px] items-center justify-around gap-[5px] p-[8px] rounded-[20px] mb-[15px]">
+
             <TextField
               label="Enter Ledger"
-              size='small'
+              size="small"
               variant="outlined"
-              style={{ width: '250px' }}
+              style={{ width: "250px" }}
               value={ledinp.ledger}
               onChange={handleLedger}
               className="inpe"
             />
+
             <TextField
               label="Budget"
-              size='small'
+              size="small"
               variant="outlined"
               value={ledinp.budget}
-              style={{ width: '100px' }}
+              style={{ width: "100px" }}
               onChange={handleBudget}
               className="inpe"
               type="number"
             />
+
             {isupda ? (
               <LoadingButton
                 loading={loading}
@@ -181,41 +229,24 @@ const LedgerModal = ({ setdisable, isledupdate, setisledupdate }) => {
             )}
           </div>
 
-          <div className="w-[95%] h-[270px] max-sm:h-[380px] rounded-[20px] border border-dotted border-border-subtle overflow-y-auto overflow-x-hidden">
-            <table className="w-full h-fit p-[5px_2px] text-center rounded-[20px] bg-surface text-content">
-              <thead>
-                <tr>
-                  <th className="w-1/2">Ledger</th>
-                  <th className="w-[10%]">Budget</th>
-                  <th className="w-[10%]">Edit</th>
-                  <th className="w-[10%]">Delete</th>
-                </tr>
-              </thead>
-              <tbody>
-                {useralldetail.ledgerlist && useralldetail.ledgerlist.map((val, ind) => (
-                  <tr key={ind}>
-                    <td>{val.ledger}</td>
-                    <td>{val.budget}</td>
-                    <td>
-                      <Pencil
-                        className='p-[2px_5px] box-content w-[15px] h-[15px] rounded-[.2rem] cursor-pointer text-[var(--editicon)] bg-[rgba(7,121,182,0.116)] hover:bg-[var(--editicon)] hover:text-[var(--background)]'
-                        title='Edit'
-                        onClick={() => setledgerininput(val._id, val.ledger, val.budget)}
-                      />
-                    </td>
-                    <td>
-                      <Trash2
-                        className='p-[2px_5px] box-content w-[15px] h-[15px] rounded-[.2rem] cursor-pointer text-[var(--deleteicon)] bg-[rgba(182,7,16,0.116)] hover:bg-[var(--deleteicon)] hover:text-white'
-                        title='Delete'
-                        onClick={() => deletee(val._id)}
-                      />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          {/* Table Section */}
+          <div className="w-[95%] flex-1 rounded-[20px] border-2 border-dotted border-[var(--theme-border)] overflow-hidden min-h-0">
+
+            <DataTable
+              columns={columns}
+              data={useralldetail?.ledgerlist || []}
+              customStyles={customStyles}
+              fixedHeader
+              fixedHeaderScrollHeight="100%"
+              highlightOnHover
+              pointerOnHover
+              noDataComponent={
+                <p className="p-4 text-slate-500">No ledgers found</p>
+              }
+            />
+
           </div>
-        </span>
+        </div>
       </div>
     </Modalbox>
   );

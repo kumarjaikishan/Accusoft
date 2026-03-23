@@ -226,7 +226,7 @@ const Expense = () => {
                 setExpenseInput(init);
                 setIsModalOpen(true);
               }}
-              className="flex items-center gap-2 px-4 py-2 bg-slate-800 dark:bg-indigo-600 text-white rounded-lg shadow-sm hover:bg-slate-700 dark:hover:bg-indigo-500 cursor-pointer transition-colors font-semibold text-sm"
+              className="flex items-center gap-2 px-4 py-2 bg-(--maincolor) dark:bg-indigo-600 text-white rounded-lg shadow-sm hover:bg-slate-700 dark:hover:bg-indigo-500 cursor-pointer transition-colors font-semibold text-sm"
             >
               <SquarePlus size={20} />
               Add Expense
@@ -242,7 +242,7 @@ const Expense = () => {
           </div>
 
           {/* Table Header & Search */}
-          <div className="shake-box bg-slate-800 dark:bg-slate-900 border-b border-white/5 text-white p-3 rounded-t-xl flex flex-col sm:flex-row justify-between items-center gap-4">
+          <div className="shake-box bg-(--maincolor) dark:bg-slate-900 border-b border-white/5 text-white p-3 rounded-t-xl flex flex-col sm:flex-row justify-between items-center gap-4">
             <h1 className="text-lg font-bold tracking-tight">Expense Tracking List</h1>
 
             <div className="relative group w-full sm:w-auto">

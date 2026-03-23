@@ -40,7 +40,7 @@ const Modalbox = ({ open, onClose, children, shadow = true }) => {
     >
       <motion.div
         onClick={(e) => e.stopPropagation()}
-        className="relative bg-white rounded-[15px] modalboxe"
+        className="relative bg-surface rounded-[15px] modalboxe"
         // className="
         //   relative
         //   w-min h-min

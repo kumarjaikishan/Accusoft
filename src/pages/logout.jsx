@@ -12,23 +12,27 @@ const Logout = () => {
 
   useEffect(() => {
     async function performLogout() {
+      // 1. Clear local state IMMEDIATELY for responsiveness
+      localStorage.removeItem("token");
+      document.title = "AccuSoft";
+      dispatch(userlogout());
+      dispatch(setlogin(false));
+
+      // 2. Immediate navigation to login
+      navigate('/login', { replace: true });
+
+      // 3. Fire-and-forget backend logout call in the background
       try {
         await request({
           url: 'logout',
           method: 'POST',
         });
       } catch (error) {
-        // Suppress frontend notification for expected token timeout overlaps
-      } finally {
-        localStorage.removeItem("token");
-        document.title = "AccuSoft";
-        dispatch(userlogout());
-        dispatch(setlogin(false));
-        navigate('/login', { replace: true });
+        // Suppress errors as session is already cleared locally
       }
     }
     performLogout();
-  }, []);
+  }, [dispatch, navigate, request]);
 }
 
 export default Logout;

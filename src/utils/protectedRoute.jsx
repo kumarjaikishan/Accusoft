@@ -7,7 +7,7 @@ const ProtectedRoutes = () => {
     const isLogin = useSelector(state => state.login.islogin);
 
     if (!isLogin) {
-        toast.warn("You are not logged in", { autoClose: 2300 });
+        toast.warn("You are not logged in", { autoClose: 2300, toastId: "auth-toast" });
         return <Navigate to="/logout" replace />;
     }
 

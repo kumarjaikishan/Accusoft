@@ -52,6 +52,7 @@ const LedgerModal = ({ setdisable, isledupdate, setisledupdate }) => {
       return toast.warn("Budget Can't be Blank", { autoClose: 1300 });
     }
 
+    const toastId = toast.loading("Adding ledger...");
     try {
       const res = await request({
         url: 'addledger',
@@ -59,10 +60,21 @@ const LedgerModal = ({ setdisable, isledupdate, setisledupdate }) => {
         body: { ledger: ledinp.ledger, budget: parseFloat(ledinp.budget) },
       });
 
-      toast.success(res.message, { autoClose: 1300 });
+      toast.update(toastId, { 
+        render: res.message || "Ledger Added Successfully", 
+        type: "success", 
+        isLoading: false, 
+        autoClose: 1300 
+      });
       dispatch(userdata());
       setledinp(init);
     } catch (error) {
+      toast.update(toastId, { 
+        render: error?.message || "Failed to add ledger", 
+        type: "error", 
+        isLoading: false, 
+        autoClose: 3000 
+      });
       console.error(error);
     }
   };
@@ -74,6 +86,7 @@ const LedgerModal = ({ setdisable, isledupdate, setisledupdate }) => {
     const newledger = ledinp.ledger;
     const newbudget = parseFloat(ledinp.budget);
 
+    const toastId = toast.loading("Updating ledger...");
     try {
       const res = await request({
         url: 'updateledger',
@@ -85,12 +98,23 @@ const LedgerModal = ({ setdisable, isledupdate, setisledupdate }) => {
         },
       });
 
-      toast.success(res.message, { autoClose: 1300 });
+      toast.update(toastId, { 
+        render: res.message || "Ledger Updated Successfully", 
+        type: "success", 
+        isLoading: false, 
+        autoClose: 1300 
+      });
       setledinp(init);
       setinsupdat(false);
       dispatch(userdata());
 
     } catch (error) {
+      toast.update(toastId, { 
+        render: error?.message || "Failed to update ledger", 
+        type: "error", 
+        isLoading: false, 
+        autoClose: 3000 
+      });
       console.error(error);
     }
   };
@@ -105,15 +129,27 @@ const LedgerModal = ({ setdisable, isledupdate, setisledupdate }) => {
     }).then(async (willDelete) => {
       if (willDelete) {
         try {
+          const toastId = toast.loading("Deleting ledger...");
           const res = await request({
             url: 'deleteledger',
             method: 'POST',
             body: { ledgerid: id },
           });
 
-          toast.success(res.message, { autoClose: 1300 });
+          toast.update(toastId, { 
+            render: res.message || "Ledger Deleted Successfully", 
+            type: "success", 
+            isLoading: false, 
+            autoClose: 1300 
+          });
           dispatch(userdata());
         } catch (error) {
+          toast.update(toastId, { 
+            render: error?.message || "Failed to delete ledger", 
+            type: "error", 
+            isLoading: false, 
+            autoClose: 3000 
+          });
           console.error(error);
         }
       }

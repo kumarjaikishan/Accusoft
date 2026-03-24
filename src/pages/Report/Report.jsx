@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback, useEffect } from "react";
+import React, { useState, useMemo, useCallback, useEffect, useDeferredValue } from "react";
 import { Download, Printer, RefreshCcw } from 'lucide-react';
 
 import { useSelector, useDispatch } from "react-redux";
@@ -23,6 +23,9 @@ const Report = () => {
         to: dayjs().format("YYYY-MM-DD"),
         ledger: "all",
     });
+
+    const deferredInputs = useDeferredValue(inputs);
+
     const [isMobile, setIsMobile] = useState(() =>
         typeof window !== "undefined" ? window.innerWidth < 768 : false
     );
@@ -38,17 +41,17 @@ const Report = () => {
         return explist.filter((item) => {
             const itemDate = dayjs(item.date);
             const inRange = itemDate.isBetween(
-                dayjs(inputs.from).startOf("day"),
-                dayjs(inputs.to).endOf("day"),
+                dayjs(deferredInputs.from).startOf("day"),
+                dayjs(deferredInputs.to).endOf("day"),
                 null,
                 "[]"
             );
 
-            return inputs.ledger === "all"
+            return deferredInputs.ledger === "all"
                 ? inRange
-                : inRange && item.ledger.ledger === inputs.ledger;
+                : inRange && item.ledger.ledger === deferredInputs.ledger;
         });
-    }, [explist, inputs]);
+    }, [explist, deferredInputs]);
 
     const totalAmount = useMemo(
         () =>

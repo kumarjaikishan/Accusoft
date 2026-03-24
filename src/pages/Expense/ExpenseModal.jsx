@@ -24,6 +24,7 @@ const ExpenseModalbox = ({ modal, disable, handlechange, fields, isupdate, sub, 
     // for updating data  
     const updatee = async (_id) => {
         let { ledger, date, amount, narration } = fields;
+        const toastId = toast.loading("Updating voucher...");
         try {
             const res = await request({
                 url: 'updateexp',
@@ -31,13 +32,24 @@ const ExpenseModalbox = ({ modal, disable, handlechange, fields, isupdate, sub, 
                 body: { _id, ledger, date, amount, narration: capitalize(narration) },
             });
 
-            toast.success(res?.message, { autoClose: 1300 });
+            toast.update(toastId, { 
+                render: res?.message || "Voucher Updated Successfully", 
+                type: "success", 
+                isLoading: false, 
+                autoClose: 1300 
+            });
             dispatch(userdata());
             reset();
             setisupdate(false);
             setmodal(false);
 
         } catch (error) {
+            toast.update(toastId, { 
+                render: error?.message || "Failed to update voucher", 
+                type: "error", 
+                isLoading: false, 
+                autoClose: 3000 
+            });
             console.error(error);
         }
     }

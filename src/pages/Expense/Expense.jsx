@@ -99,26 +99,34 @@ const Expense = () => {
 
     // API Logic (simplified for tailwind conversion context)
     try {
-      dispatch(setloader(true));
+      const toastId = toast.loading("Adding expense...");
       const res = await request({
         url: 'addexpense',
         method: 'POST',
         body: { ledger, date, amount, narration: capitalize(narration) }
       });
 
-      toast.success(res?.message || "Expense Added Successfully", { autoClose: 1300 });
+      toast.update(toastId, {
+        render: res?.message || "Expense Added Successfully",
+        type: "success",
+        isLoading: false,
+        autoClose: 1300
+      });
       dispatch(userdata());
       setIsModalOpen(false);
       setExpenseInput(init);
     } catch (error) {
-      // toast is automatically dispatched by useApi hook
-    } finally {
-      dispatch(setloader(false));
+      toast.update(toastId, {
+        render: error?.message || "Failed to add expense",
+        type: "error",
+        isLoading: false,
+        autoClose: 3000
+      });
     }
   };
 
   const setDataForEdit = (expense) => {
-    console.log(expense?.ledger?._id)
+    // console.log(expense?.ledger?._id)
     setExpenseInput({
       _id: expense._id,
       ledger: expense?.ledger?._id || '',
@@ -150,20 +158,28 @@ const Expense = () => {
     }).then(async (willDelete) => {
       if (willDelete) {
         try {
-          dispatch(setloader(true));
+          const toastId = toast.loading("Deleting expense(s)...");
           const res = await request({
             url: 'deleteExpense',
             method: 'POST',
             body: { ExpIds: itemIds }
           });
 
-          toast.success(res?.message || "Deleted successfully");
+          toast.update(toastId, {
+            render: res?.message || "Deleted successfully",
+            type: "success",
+            isLoading: false,
+            autoClose: 2000
+          });
           dispatch(userdata());
           setSelectedRowIds([]);
         } catch (error) {
-          // Error managed natively by useApi hook
-        } finally {
-          dispatch(setloader(false));
+          toast.update(toastId, {
+            render: error?.message || "Failed to delete expense",
+            type: "error",
+            isLoading: false,
+            autoClose: 3000
+          });
         }
       }
     });
@@ -216,7 +232,7 @@ const Expense = () => {
                   className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg shadow-sm hover:bg-red-700 transition-colors font-semibold text-sm"
                 >
                   <Trash2 size={20} />
-                  Delete Selected ({selectedRowIds.length})
+                  <span className='hidden md:inline-block'> Delete </span> Selected ({selectedRowIds.length})
                 </motion.button>
               )}
             </AnimatePresence>

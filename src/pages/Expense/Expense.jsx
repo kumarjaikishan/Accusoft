@@ -136,6 +136,7 @@ const Expense = () => {
   };
 
   const sendDeleteRequest = async (itemIds) => {
+
     if (itemIds.length < 1) {
       return toast.warn('Kindly Select Atleast 1 Entry', { autoClose: 1700 });
     }
@@ -151,9 +152,9 @@ const Expense = () => {
         try {
           dispatch(setloader(true));
           const res = await request({
-            url: 'deleteexp',
+            url: 'deleteExpense',
             method: 'POST',
-            body: { ids: itemIds }
+            body: { ExpIds: itemIds }
           });
 
           toast.success(res?.message || "Deleted successfully");

@@ -2,10 +2,10 @@ import React from 'react';
 import dayjs from 'dayjs';
 import { Pencil, Trash2 } from 'lucide-react';
 
-const getDesktopColumns = ({ setDataForEdit, deleteExpense }) => [
+const getDesktopColumns = ({ setDataForEdit, deleteExpense, paginationContext }) => [
   {
     name: 'S.No',
-    cell: (row, index) => index + 1,
+    cell: (row, index) => (paginationContext.currentPage - 1) * paginationContext.rowsPerPage + index + 1,
     width: '70px',
   },
   {
@@ -58,7 +58,7 @@ const getDesktopColumns = ({ setDataForEdit, deleteExpense }) => [
   },
 ];
 
-const getMobileColumns = ({ setDataForEdit, deleteExpense }) => [
+const getMobileColumns = ({ setDataForEdit, deleteExpense, paginationContext }) => [
 
   {
     name: 'Ledger',
@@ -113,5 +113,5 @@ const getMobileColumns = ({ setDataForEdit, deleteExpense }) => [
   },
 ];
 
-export const getExpenseTableColumns = ({ isMobile, setDataForEdit, deleteExpense }) =>
-  isMobile ? getMobileColumns({ setDataForEdit, deleteExpense }) : getDesktopColumns({ setDataForEdit, deleteExpense });
+export const getExpenseTableColumns = ({ isMobile, setDataForEdit, deleteExpense, paginationContext }) =>
+  isMobile ? getMobileColumns({ setDataForEdit, deleteExpense, paginationContext }) : getDesktopColumns({ setDataForEdit, deleteExpense, paginationContext });

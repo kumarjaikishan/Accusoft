@@ -3,8 +3,12 @@ import dayjs from "dayjs";
 
 const formatDate = (date) => dayjs(date).format("DD MMM YYYY");
 
-const getDesktopColumns = () => [
-  { name: "#", selector: (_, i) => i + 1, width: "60px" },
+const getDesktopColumns = ({ paginationContext }) => [
+  { 
+    name: "#", 
+    cell: (row, i) => (paginationContext.currentPage - 1) * paginationContext.rowsPerPage + i + 1, 
+    width: "60px" 
+  },
   {
     name: "Ledger",
     selector: (row) => row.ledger.ledger,
@@ -33,12 +37,11 @@ const getDesktopColumns = () => [
   },
 ];
 
-const getMobileColumns = () => [
+const getMobileColumns = ({ paginationContext }) => [
   {
     name: "#",
-    selector: (_, i) => i + 1,
+    cell: (_, i) => <span className="text-xs">{(paginationContext.currentPage - 1) * paginationContext.rowsPerPage + i + 1}</span>,
     width: "55px",
-    cell: (_, i) => <span className="text-xs">{i + 1}</span>,
   },
   {
     name: "Ledger",
@@ -69,6 +72,6 @@ const getMobileColumns = () => [
   },
 ];
 
-export const getReportTableColumns = ({ isMobile }) =>
-  isMobile ? getMobileColumns() : getDesktopColumns();
+export const getReportTableColumns = ({ isMobile, paginationContext }) =>
+  isMobile ? getMobileColumns({ paginationContext }) : getDesktopColumns({ paginationContext });
 

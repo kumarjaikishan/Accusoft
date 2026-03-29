@@ -29,6 +29,8 @@ const Report = () => {
     const [isMobile, setIsMobile] = useState(() =>
         typeof window !== "undefined" ? window.innerWidth < 768 : false
     );
+    const [currentPage, setCurrentPage] = useState(1);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
 
     /* ---------------- FILTER ---------------- */
 
@@ -59,6 +61,20 @@ const Report = () => {
         [filteredData]
     );
 
+    // Reset page to 1 when search/filter changes
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [deferredInputs]);
+
+    const startIndex = (currentPage - 1) * rowsPerPage;
+    const paginatedData = useMemo(() => {
+        return filteredData.slice(startIndex, startIndex + rowsPerPage);
+    }, [filteredData, startIndex, rowsPerPage]);
+
+    const pageTotal = useMemo(() => {
+        return paginatedData.reduce((acc, val) => acc + Number(val.amount), 0);
+    }, [paginatedData]);
+
     const clearSearch = useCallback(() => {
         setInputs({
             from: dayjs().subtract(1, "month").format("YYYY-MM-DD"),
@@ -82,7 +98,33 @@ const Report = () => {
 
     /* ---------------- TABLE COLUMNS ---------------- */
 
-    const columns = getReportTableColumns({ isMobile });
+    const columns = getReportTableColumns({
+        isMobile,
+        paginationContext: { currentPage, rowsPerPage }
+    });
+
+    const SummaryRow = () => (
+        <div className="flex items-center bg-surface border-t border-border-subtle font-bold text-content min-h-[35px]">
+            {/* 
+              Alignment Logic (Report.jsx):
+              - Desktop prefix: # (60px) + Ledger (140px) = 200px
+              - Mobile prefix: # (55px) + Ledger (90px) = 145px
+          */}
+            <div
+                style={{ width: isMobile ? '145px' : '200px' }}
+                className="flex justify-end pr-4 text-[10px] md:text-xs uppercase tracking-wider opacity-60"
+            >
+                Page Total :
+            </div>
+            <div
+                style={{ width: isMobile ? '70px' : '120px' }}
+                className="font-mono text-blue-600 dark:text-blue-400 px-2"
+            >
+                ₹ {pageTotal.toLocaleString()}
+            </div>
+            <div className="flex-1" />
+        </div>
+    );
 
     return (
         <motion.div
@@ -173,7 +215,7 @@ const Report = () => {
             </div>
 
             {/* ---------------- TOTAL CARD ---------------- */}
-            <div className="bg-gradient-to-r from-indigo-600 to-cyan-500 print:!from-indigo-600 print:!to-cyan-500 print:!text-white dark:from-slate-800 dark:to-slate-900 border border-transparent dark:border-white/10 text-white rounded-2xl p-6 shadow-lg dark:shadow-none flex justify-between items-center">
+            {/* <div className="bg-gradient-to-r from-indigo-600 to-cyan-500 print:!from-indigo-600 print:!to-cyan-500 print:!text-white dark:from-slate-800 dark:to-slate-900 border border-transparent dark:border-white/10 text-white rounded-2xl p-6 shadow-lg dark:shadow-none flex justify-between items-center">
                 <div>
                     <p className="text-sm opacity-80">
                         Report from {formatDate(inputs.from)} to{" "}
@@ -186,7 +228,7 @@ const Report = () => {
                 <div className="text-sm opacity-80">
                     {filteredData.length} Records
                 </div>
-            </div>
+            </div> */}
 
             {/* ---------------- DATA TABLE ---------------- */}
             <div className="bg-surface rounded-xm md:rounded-2xl shadow-md border border-border-subtle overflow-hidden overflow-x-auto">
@@ -194,6 +236,13 @@ const Report = () => {
                     columns={columns}
                     data={filteredData}
                     highlightOnHover
+                    pagination
+                    paginationDefaultPage={currentPage}
+                    onChangePage={page => setCurrentPage(page)}
+                    onChangeRowsPerPage={num => {
+                        setRowsPerPage(num);
+                        setCurrentPage(1);
+                    }}
                     customStyles={useTableStyles()}
                     noDataComponent={
                         <div className="py-12 text-center text-content bg-surface">
@@ -202,6 +251,7 @@ const Report = () => {
                         </div>
                     }
                 />
+                <SummaryRow />
             </div>
         </motion.div>
     );

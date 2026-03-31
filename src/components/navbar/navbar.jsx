@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Menu, Sun, Moon, Leaf, User, Palette, Check, X, RotateCw } from 'lucide-react';
+import { Menu, Sun, Moon, Leaf, User, Palette, Check, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { setnarrow } from "../../store/login";
-import { toggleTheme, setMainColor, toggleRotation, setRotation } from "../../store/themeSlice";
+import { toggleTheme, setMainColor } from "../../store/themeSlice";
 
 import Breadcrumbs from "../Breadcrumb";
 
@@ -18,7 +18,7 @@ const Navbar = () => {
 
   const log = useSelector((state) => state.login);
   const useralldetail = useSelector((state) => state.userexplist);
-  const { mode, mainColor, isRotated } = useSelector((state) => state.theme);
+  const { mode, mainColor } = useSelector((state) => state.theme);
 
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -52,13 +52,6 @@ const Navbar = () => {
   const fun = () => {
     dispatch(setnarrow(!log.narrow));
   };
-  
-  // Reset rotation when leaving /expense
-  useEffect(() => {
-    if (location.pathname !== '/expense' && isRotated) {
-      dispatch(setRotation(false));
-    }
-  }, [location.pathname, isRotated, dispatch]);
 
   // 🎯 Toggle theme
   const handleTheme = () => {
@@ -109,24 +102,6 @@ const Navbar = () => {
             : "translate-x-0"
           }`}
       >
-        {/* 🔄 SCREEN ROTATE (Only on Expense & Mobile) */}
-        {location.pathname === '/expense' && (
-          <div
-            onClick={() => dispatch(toggleRotation())}
-            className="lg:hidden flex items-center justify-center p-2 rounded-lg 
-              bg-slate-100 dark:bg-slate-800/70
-              hover:bg-slate-200 dark:hover:bg-slate-700/80
-              border border-slate-200 dark:border-slate-700
-              transition-all duration-300 cursor-pointer"
-            title="Rotate Screen"
-          >
-            <RotateCw 
-              size={20} 
-              className={`transition-transform duration-500 ${isRotated ? 'rotate-180 text-[var(--maincolor)]' : 'text-slate-600 dark:text-slate-300'}`} 
-            />
-          </div>
-        )}
-
         {/* 🌙 THEME TOGGLE */}
         <div
           onClick={handleTheme}

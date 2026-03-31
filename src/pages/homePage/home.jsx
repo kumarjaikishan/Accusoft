@@ -44,6 +44,46 @@ ChartJS.register(
   Legend
 );
 
+/* ✅ CUSTOM PLUGIN FOR BAR LABELS */
+const barDataLabelsPlugin = {
+  id: "barDataLabels",
+  afterDatasetsDraw(chart) {
+    const { ctx, data } = chart;
+    if (chart.config.type !== "bar") return;
+
+    ctx.save();
+    const meta = chart.getDatasetMeta(0);
+    meta.data.forEach((bar, index) => {
+      const value = data.datasets[0].data[index];
+      if (!value) return;
+
+      const { x, y, base } = bar;
+      const barHeight = base - y;
+
+      // Don't draw if bar is too short for vertical text
+      if (barHeight < 30) return;
+
+      ctx.save();
+      // Position slightly below the top of the bar
+      ctx.translate(x, y + 12);
+      ctx.rotate(-Math.PI / 2);
+
+      ctx.font = "600 11px Inter, sans-serif";
+      ctx.fillStyle = "rgba(255, 255, 255, 0.95)";
+      ctx.textAlign = "right";
+      ctx.textBaseline = "middle";
+
+      // Draw shadow for better readability
+      ctx.shadowColor = "rgba(0, 0, 0, 0.3)";
+      ctx.shadowBlur = 2;
+
+      ctx.fillText(value.toLocaleString(), 0, 0);
+      ctx.restore();
+    });
+    ctx.restore();
+  },
+};
+
 const Home = () => {
   const dispatch = useDispatch();
 
@@ -120,9 +160,20 @@ const Home = () => {
     const dailyAvg = Math.floor(monthsum / Math.min(daySpan, 30));
     const monthlyAvg = Math.floor(yearsum / Math.min(uniqueMonths.size, 12));
 
+    /* ---------------- DYNAMIC MONTHLY RANGE ---------------- */
     const monthlyTotals = {};
-    for (let i = 0; i < 12; i++) {
-      monthlyTotals[today.subtract(i, "month").format("YYYY-MM")] = 0;
+    if (minDate) {
+      const startMonth = minDate.startOf("month");
+      const currentMonth = today.startOf("month");
+      const diff = currentMonth.diff(startMonth, "month");
+      // Use the smaller of (actual months with data) or 12
+      const monthsToGenerate = Math.min(diff + 1, 12);
+
+      for (let i = 0; i < monthsToGenerate; i++) {
+        monthlyTotals[today.subtract(i, "month").format("YYYY-MM")] = 0;
+      }
+    } else {
+      monthlyTotals[today.format("YYYY-MM")] = 0;
     }
 
     explist.forEach((val) => {
@@ -411,12 +462,12 @@ const Home = () => {
 
           <div className="h-[240px] sm:h-[320px] w-full">
             {chartType === "line" && <Line data={chartData} options={chartOptions} />}
-            {chartType === "bar" && <Bar data={chartData} options={chartOptions} />}
+            {chartType === "bar" && <Bar data={chartData} options={chartOptions} plugins={[barDataLabelsPlugin]} />}
           </div>
         </div>
 
         {/* RECENT */}
-        <div className="bg-white dark:bg-slate-900 shadow-[0_4px_20px_0_rgba(0,0,0,0.2)] dark:shadow-none border border-slate-200 dark:border-white/5 rounded-xl p-3 sm:p-4 overflow-hidden">
+        <div className="bg-white dark:bg-slate-900 shadow-[0_4px_20px_0_rgba(0,0,0,0.2)] dark:shadow-none border border-slate-200 dark:border-white/5 rounded-xl p-1 sm:p-4 overflow-hidden">
           <div className="flex items-center gap-2 mb-4">
             <div className="p-2 rounded-lg bg-indigo-50 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400">
               <Clock className="text-lg" />

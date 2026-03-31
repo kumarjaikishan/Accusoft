@@ -21,7 +21,7 @@ const getDesktopColumns = () => [
   },
   {
     name: "Amount",
-    selector: (row) => `₹ ${row.amount}`,
+    selector: (row) => `₹${row.amount}`,
     sortable: true,
     right: true,
     width: "120px",
@@ -52,7 +52,7 @@ const getMobileColumns = () => [
   },
   {
     name: "₹",
-    selector: (row) => ` ${row.amount} ₹`,
+    selector: (row) => `₹${row.amount}`,
     sortable: true,
     right: true,
     width: "80px",

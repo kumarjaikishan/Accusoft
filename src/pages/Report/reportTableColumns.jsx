@@ -21,7 +21,7 @@ const getDesktopColumns = ({ paginationContext }) => [
     selector: (row) => row.amount,
     sortable: true,
     width: "120px",
-    cell: (row) => <span className="font-mono font-semibold text-content">₹ {row.amount}</span>,
+    cell: (row) => <span className="font-mono font-semibold text-content">₹{row.amount}</span>,
   },
   {
     name: "Narration",
@@ -55,7 +55,7 @@ const getMobileColumns = ({ paginationContext }) => [
     selector: (row) => row.amount,
     sortable: true,
     width: "70px",
-    cell: (row) => <span className="text-xs font-semibold">₹ {row.amount}</span>,
+    cell: (row) => <span className="text-xs font-semibold">₹{row.amount}</span>,
   },
   {
     name: "Narration",

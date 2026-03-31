@@ -67,6 +67,29 @@ const VoucherDetail = () => {
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
+   const SummaryRow = () => (
+    <div className="flex items-center bg-surface border-t border-border-subtle font-bold text-content min-h-[35px]">
+      {/* 
+          Alignment Logic:
+          - Desktop prefix: 48px (selectable) + 70px (S.No) + 140px (Ledger) = 258px
+          - Mobile prefix: 48px (selectable) + 120px (Ledger) = 168px
+      */}
+      <div
+        style={{ width: isMobile ? '168px' : '258px' }}
+        className="flex justify-end pr-4 text-[10px] md:text-xs uppercase tracking-wider opacity-60"
+      >
+        Total :
+      </div>
+      <div
+        style={{ width: isMobile ? '70px' : '100px' }}
+        className="font-mono text-blue-600 dark:text-blue-400 px-2"
+      >
+        ₹{totalAmount.toLocaleString()}
+      </div>
+      <div className="flex-1" />
+    </div>
+  );
+
   /* ---------------- TABLE COLUMNS ---------------- */
 
   const columns = getLedgerDetailColumns({ isMobile });
@@ -82,7 +105,7 @@ const VoucherDetail = () => {
 
         {/* LEFT SIDE */}
         <div className="w-full">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 items-end">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-6 items-end">
 
             {/* Ledger */}
             <div>
@@ -95,14 +118,14 @@ const VoucherDetail = () => {
             </div>
 
             {/* Total Amount */}
-            <div>
+            {/* <div>
               <p className="text-xs uppercase tracking-wide opacity-70">
                 Total Amount
               </p>
               <p className="text-2xl md:text-3xl font-bold mt-1">
                 ₹ {totalAmount.toLocaleString()}
               </p>
-            </div>
+            </div> */}
 
             {/* Period */}
             <div>
@@ -115,14 +138,7 @@ const VoucherDetail = () => {
             </div>
 
             {/* Entries */}
-            <div>
-              <p className="text-xs uppercase tracking-wide opacity-70">
-                Total Entries
-              </p>
-              <p className="text-base md:text-lg font-semibold mt-1">
-                {filteredData.length}
-              </p>
-            </div>
+       
 
           </div>
         </div>
@@ -169,14 +185,13 @@ const VoucherDetail = () => {
           customStyles={useTableStyles()}
           highlightOnHover
           striped
-          fixedHeader
-          fixedHeaderScrollHeight="500px"
           noDataComponent={
             <div className="py-6 text-gray-500">
               No Record Found
             </div>
           }
         />
+        <SummaryRow />
       </div>
     </motion.div>
   );

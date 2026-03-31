@@ -58,14 +58,17 @@ const getDesktopColumns = ({ setForm, setModal, deleteUser }) => [
     selector: (row) => (
       <div className="flex gap-3">
         <Pencil
-          className="cursor-pointer text-indigo-600 hover:scale-110 transition"
+          // className="cursor-pointer text-indigo-600 hover:scale-110 transition"
+           className="p-1 rounded bg-blue-100 text-blue-600 hover:bg-blue-600 hover:text-white transition-all duration-200"
           onClick={() => {
             setForm(row);
             setModal(true);
           }}
         />
         <Trash2
-          className="cursor-pointer text-red-500 hover:scale-110 transition"
+          // className="cursor-pointer text-red-500 hover:scale-110 transition"
+           className="p-1 rounded bg-red-100 text-red-600 hover:bg-red-600 hover:text-white transition-all duration-200"
+     
           onClick={() => deleteUser(row._id)}
         />
       </div>

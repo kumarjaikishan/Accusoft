@@ -75,7 +75,7 @@ const VoucherDetail = () => {
           - Mobile prefix: 48px (selectable) + 120px (Ledger) = 168px
       */}
       <div
-        style={{ width: isMobile ? '168px' : '258px' }}
+        style={{ width: isMobile ? '140px' : '140px' }}
         className="flex justify-end pr-4 text-[10px] md:text-xs uppercase tracking-wider opacity-60"
       >
         Total :
@@ -101,7 +101,7 @@ const VoucherDetail = () => {
       transition={{ duration: 0.3 }}
       className="p-2 lg:p-4 md:p-6 space-y-8"
     >
-      <div className="bg-gradient-to-r from-indigo-600 to-cyan-500 text-white rounded-2xl shadow-xl p-2 md:p-3 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div className="bg-gradient-to-r from-indigo-600 to-cyan-500 print:hidden text-white rounded-2xl shadow-xl p-2 md:p-3 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         {/* LEFT SIDE */}
         <div className="grid grid-cols-2 md:grid-cols-3 gap-6 items-end">
 
@@ -127,7 +127,7 @@ const VoucherDetail = () => {
         </div>
 
         {/* RIGHT SIDE */}
-        <div className="flex flex-wrap items-center gap-2 print:hidden">
+        <div className="flex flex-wrap items-center gap-2 ">
           <button
             onClick={() => navigate("/datanalysis")}
             className="px-6 py-2 rounded-xl bg-white text-indigo-600 font-medium hover:bg-gray-100 transition shadow-md"
@@ -162,6 +162,16 @@ const VoucherDetail = () => {
 
       {/* ---------------- TABLE ---------------- */}
       <div className="bg-white rounded-xs md:rounded-xl shadow-lg p-0 md:p-4 lg:p-6">
+        <div className="flex hidden print:flex justify-center gap-4 border-b border-border-subtle p-2">
+          <div>
+            <span className="text-sm font-medium">Ledger : </span>
+            <span className="text-sm font-medium capitalize"> {ledgerName}</span>
+          </div>
+          <div>
+            <span className="text-sm font-medium mr-2">Period : </span>
+            <span className="text-sm font-medium">{displayMonth} {year}</span>
+          </div>
+        </div>
         <DataTable
           columns={columns}
           data={filteredData}

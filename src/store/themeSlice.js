@@ -7,7 +7,10 @@ const initialState = {
 
 const themeSlice = createSlice({
     name: "theme",
-    initialState,
+    initialState: {
+        ...initialState,
+        isRotated: false,
+    },
     reducers: {
         toggleTheme: (state) => {
             state.mode = state.mode === "light" ? "dark" : "light";
@@ -20,9 +23,15 @@ const themeSlice = createSlice({
         setMainColor: (state, action) => {
             state.mainColor = action.payload;
             localStorage.setItem("mainColor", state.mainColor);
+        },
+        toggleRotation: (state) => {
+            state.isRotated = !state.isRotated;
+        },
+        setRotation: (state, action) => {
+            state.isRotated = action.payload;
         }
     }
 });
 
-export const { toggleTheme, setTheme, setMainColor } = themeSlice.actions;
+export const { toggleTheme, setTheme, setMainColor, toggleRotation, setRotation } = themeSlice.actions;
 export default themeSlice.reducer;

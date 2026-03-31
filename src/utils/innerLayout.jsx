@@ -3,11 +3,13 @@ import Navbar from '../components/navbar/navbar'
 import { Outlet, useLocation } from 'react-router-dom'
 import Sidebar from '../components/sidebar/sidebar'
 import Preloader from '../preloader'
-import { Heart, Github, Linkedin, Globe } from 'lucide-react'
+import { Heart, Github, Linkedin, Globe, RotateCw } from 'lucide-react'
+import { useSelector } from 'react-redux'
 
 const InnerLayout = ({ sidebarclose, log }) => {
     const location = useLocation();
     const mainRef = useRef(null);
+    const { isRotated } = useSelector((state) => state.theme);
 
     useEffect(() => {
         if (mainRef.current) {

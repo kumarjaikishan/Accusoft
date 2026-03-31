@@ -64,14 +64,14 @@ const getMobileColumns = ({ setDataForEdit, deleteExpense, paginationContext }) 
     name: 'Ledger',
     selector: (row) => row.ledger?.ledger,
     sortable: true,
-    width: '120px',
+    width: '95px',
     cell: (row) => <span className="capitalize text-content font-medium text-xs">{row.ledger?.ledger}</span>,
   },
   {
     name: '₹',
     selector: (row) => row.amount,
     sortable: true,
-    width: '70px',
+    width: '60px',
     cell: (row) => <span className="font-mono font-semibold text-content text-xs"> {row.amount}</span>,
   },
   {

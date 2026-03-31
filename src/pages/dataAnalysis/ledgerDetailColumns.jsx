@@ -47,7 +47,7 @@ const getMobileColumns = () => [
     width: "35px",
   },
   {
-   name: "Ledger",
+    name: "Ledger",
     selector: (row) => row.ledger?.ledger,
     cell: (row) => <div className="capitalize text-content font-medium text-xs">{row.ledger?.ledger}</div>,
     width: "90px",

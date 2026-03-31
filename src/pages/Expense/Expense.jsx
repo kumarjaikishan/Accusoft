@@ -226,7 +226,7 @@ const Expense = () => {
           - Mobile prefix: 48px (selectable) + 120px (Ledger) = 168px
       */}
       <div
-        style={{ width: isMobile ? '168px' : '258px' }}
+        style={{ width: isMobile ? '80px' : '258px' }}
         className="flex justify-end pr-4 text-[10px] md:text-xs uppercase tracking-wider opacity-60"
       >
         Total :
@@ -349,8 +349,8 @@ const Expense = () => {
               columns={columns}
               data={filteredExpenses}
               theme={mode === "dark" ? "dark" : "default"}
-              selectableRows
-              selectableRowsVisibleOnly
+              selectableRows={isMobile ? false : true}
+              // selectableRowsVisibleOnly
               onSelectedRowsChange={handleSelectedRowsChange}
               pagination
               paginationDefaultPage={currentPage}

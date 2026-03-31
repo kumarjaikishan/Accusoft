@@ -67,7 +67,7 @@ const VoucherDetail = () => {
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
-   const SummaryRow = () => (
+  const SummaryRow = () => (
     <div className="flex items-center bg-surface border-t border-border-subtle font-bold text-content min-h-[35px]">
       {/* 
           Alignment Logic:
@@ -101,45 +101,28 @@ const VoucherDetail = () => {
       transition={{ duration: 0.3 }}
       className="p-2 lg:p-4 md:p-6 space-y-8"
     >
-      <div className="bg-gradient-to-r from-indigo-600 to-cyan-500 text-white rounded-2xl shadow-xl p-6 md:p-8 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-
+      <div className="bg-gradient-to-r from-indigo-600 to-cyan-500 text-white rounded-2xl shadow-xl p-2 md:p-3 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         {/* LEFT SIDE */}
-        <div className="w-full">
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-6 items-end">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-6 items-end">
 
-            {/* Ledger */}
-            <div>
-              <p className="text-xs uppercase tracking-wide opacity-70">
-                Ledger
-              </p>
-              <p className="text-2xl md:text-3xl font-bold capitalize mt-1">
-                {ledgerName}
-              </p>
-            </div>
+          {/* Ledger */}
+          <div>
+            <p className="text-xs uppercase tracking-wide opacity-70">
+              Ledger
+            </p>
+            <p className="text-2xl md:text-2xl font-bold capitalize mt-1">
+              {ledgerName}
+            </p>
+          </div>
 
-            {/* Total Amount */}
-            {/* <div>
-              <p className="text-xs uppercase tracking-wide opacity-70">
-                Total Amount
-              </p>
-              <p className="text-2xl md:text-3xl font-bold mt-1">
-                ₹ {totalAmount.toLocaleString()}
-              </p>
-            </div> */}
-
-            {/* Period */}
-            <div>
-              <p className="text-xs uppercase tracking-wide opacity-70">
-                Period
-              </p>
-              <p className="text-base md:text-lg font-semibold mt-1">
-                {displayMonth} {year}
-              </p>
-            </div>
-
-            {/* Entries */}
-       
-
+          {/* Period */}
+          <div>
+            <p className="text-xs uppercase tracking-wide opacity-70">
+              Period
+            </p>
+            <p className="text-base md:text-lg font-semibold mt-1">
+              {displayMonth} {year}
+            </p>
           </div>
         </div>
 

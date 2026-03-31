@@ -161,7 +161,7 @@ const VoucherDetail = () => {
       </div>
 
       {/* ---------------- TABLE ---------------- */}
-      <div className="bg-white rounded-xs md:rounded-2xl shadow-lg p-0 md:p-4 lg:p-6">
+      <div className="bg-white rounded-xs md:rounded-xl shadow-lg p-0 md:p-4 lg:p-6">
         <DataTable
           columns={columns}
           data={filteredData}

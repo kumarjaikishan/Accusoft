@@ -258,7 +258,7 @@ const Expense = () => {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.3 }}
-          className="w-full mx-auto space-y-4"
+          className="w-full mx-auto space-y-1"
         >
           {/* Consolidated Header: Search & Action Buttons */}
           <div className="shake-box bg-(--maincolor) dark:bg-slate-900 border-b border-white/5 text-white p-3 rounded-t-xl flex flex-wrap items-center justify-between gap-4">
@@ -344,7 +344,7 @@ const Expense = () => {
           </div>
 
           {/* Data Table */}
-          <div className="bg-surface rounded-b-xl shadow-md border border-border-subtle overflow-hidden overflow-x-auto">
+          <div className="bg-surface rounded-b-xl  shadow-md border border-border-subtle overflow-hidden overflow-x-auto">
             <DataTable
               columns={columns}
               data={filteredExpenses}

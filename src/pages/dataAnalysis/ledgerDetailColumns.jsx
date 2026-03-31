@@ -12,19 +12,20 @@ const getDesktopColumns = () => [
   {
     name: "#",
     selector: (_, i) => i + 1,
-    width: "60px",
+    width: "40px",
   },
   {
     name: "Ledger",
-    selector: (row) => formatLedger(row),
-    width: "140px",
+    selector: (row) => row.ledger?.ledger,
+    cell: (row) => <div className="capitalize text-content font-medium text-xs">{row.ledger?.ledger}</div>,
+    width: "90px",
   },
   {
-    name: "Amount",
+    name: "₹",
     selector: (row) => `₹${row.amount}`,
     sortable: true,
     right: true,
-    width: "120px",
+    width: "70px",
   },
   {
     name: "Narration",
@@ -35,7 +36,7 @@ const getDesktopColumns = () => [
   {
     name: "Date",
     selector: (row) => formatDate(row.date),
-    width: "140px",
+    width: "100px",
   },
 ];
 
@@ -43,11 +44,12 @@ const getMobileColumns = () => [
   {
     name: "#",
     selector: (_, i) => i + 1,
-    width: "40px",
+    width: "35px",
   },
   {
-    name: "Ledger",
-    selector: (row) => formatLedger(row),
+   name: "Ledger",
+    selector: (row) => row.ledger?.ledger,
+    cell: (row) => <div className="capitalize text-content font-medium text-xs">{row.ledger?.ledger}</div>,
     width: "90px",
   },
   {

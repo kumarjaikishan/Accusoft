@@ -231,7 +231,7 @@ const Report = () => {
             </div> */}
 
             {/* ---------------- DATA TABLE ---------------- */}
-            <div className="bg-surface rounded-xm md:rounded-2xl shadow-md border border-border-subtle overflow-hidden overflow-x-auto">
+            <div className="bg-surface rounded-xm md:rounded-xl shadow-md border border-border-subtle overflow-hidden overflow-x-auto">
                 <DataTable
                     columns={columns}
                     data={filteredData}

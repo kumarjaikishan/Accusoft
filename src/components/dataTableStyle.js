@@ -30,14 +30,16 @@ const getCustomDataTableStyles = (mode, mainColor) => ({
       backgroundColor: mainColor || (mode === 'dark' ? '#0f172a' : '#1e293b'),
       color: '#ffffff',
       minHeight: '48px',
-      borderTopLeftRadius: '8px',
-      borderTopRightRadius: '8px',
+      borderTopLeftRadius: '2px',
+      borderTopRightRadius: '2px',
     },
   },
   headCells: {
     style: {
       fontWeight: '700',
       fontSize: '14px',
+      paddingLeft: '8px',
+      paddingRight: '8px',
       textTransform: 'uppercase',
       letterSpacing: '0.05em',
     },
@@ -63,8 +65,14 @@ const getCustomDataTableStyles = (mode, mainColor) => ({
       color: 'var(--theme-content)',
       borderTop: '1px solid var(--theme-border)',
       marginTop: '0px',
-      borderBottomLeftRadius: '8px',
-      borderBottomRightRadius: '8px',
+      borderBottomLeftRadius: '2px',
+      borderBottomRightRadius: '2px',
+    },
+  },
+  cells: {
+    style: {
+      paddingLeft: '8px',
+      paddingRight: '8px',
     },
   },
 });

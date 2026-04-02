@@ -67,6 +67,15 @@ const VoucherDetail = () => {
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
+  useEffect(() => {
+    if (month !== undefined && !isNaN(month)) {
+      localStorage.setItem("month", month);
+    }
+    if (year !== undefined && !isNaN(year)) {
+      localStorage.setItem("year", year);
+    }
+  }, [month, year]);
+
   const SummaryRow = () => (
     <div className="flex items-center bg-surface border-t border-border-subtle font-bold text-content min-h-[35px]">
       {/* 
@@ -129,7 +138,7 @@ const VoucherDetail = () => {
         {/* RIGHT SIDE */}
         <div className="flex flex-wrap items-center gap-2 ">
           <button
-            onClick={() => navigate("/datanalysis")}
+            onClick={() => navigate("/data_analysis")}
             className="px-6 py-2 rounded-xl bg-white text-indigo-600 font-medium hover:bg-gray-100 transition shadow-md"
           >
             Return

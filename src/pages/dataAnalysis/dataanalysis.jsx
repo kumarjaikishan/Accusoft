@@ -36,6 +36,11 @@ const Datanalysis = () => {
     dispatch(setloader(false));
   }, []);
 
+  useEffect(() => {
+    localStorage.setItem("month", inp.month);
+    localStorage.setItem("year", inp.year);
+  }, [inp.month, inp.year]);
+
   const fmt = (n) =>
     typeof n === "number"
       ? n.toLocaleString(undefined, { maximumFractionDigits: 2 })

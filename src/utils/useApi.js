@@ -1,6 +1,6 @@
 // utils/useApi.js
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { apiClient } from "./apiClient";
@@ -12,8 +12,8 @@ export const useApi = () => {
 
     const navigate = useNavigate();
 
-    const request = async (config) => {
-        let { url, method } = config
+    const request = useCallback(async (config) => {
+        let { url, method } = config;
 
         try {
             setLoading(true);
@@ -37,27 +37,34 @@ export const useApi = () => {
             return result;
 
         } catch (err) {
-            setError(err.message);
-            console.log(err)
+            const message = err?.message || "Unexpected error occurred";
+            setError(message);
+            console.log(err);
             // console.log("apiUse error:", err.message);
             // console.log("apiUse error status:", err.status);
 
             const currentPath = window.location.pathname;
-            const isAuthPage = currentPath === "/logout" || currentPath === "/login";
+            const isLogoutPage = currentPath === "/logout";
             const msg = (err?.message || "").toLowerCase();
-            const isAuthFailure =
-                [401, 403, 405].includes(err?.status) ||
+            const isSessionFailure =
+                err?.code === "AUTH_EXPIRED" ||
                 msg.includes("jwt expired") ||
                 msg.includes("session expired") ||
                 msg.includes("unauthorized");
+            const toastId = isSessionFailure ? "auth-toast" : `api-${err?.code || err?.status || "error"}`;
+            const toastOptions = { autoClose: 2500, toastId };
 
-            if (err.isApiError && !isAuthPage) {
-                toast.warn(err.message, { autoClose: 2500, toastId: isAuthFailure ? "auth-toast" : undefined });
-            } else if (!isAuthPage) {
-                toast.error(err.message || "Unexpected error occurred", { toastId: isAuthFailure ? "auth-toast" : undefined });
+            if (!isLogoutPage) {
+                if (err?.code === "NETWORK_ERROR" || err?.code === "CONFIG_ERROR" || err?.code === "INVALID_RESPONSE") {
+                    toast.error(message, toastOptions);
+                } else if (err?.isApiError) {
+                    toast.warn(message, toastOptions);
+                } else {
+                    toast.error(message, toastOptions);
+                }
             }
 
-            if (isAuthFailure && currentPath !== "/logout") {
+            if (isSessionFailure && currentPath !== "/logout" && currentPath !== "/login") {
                 navigate("/logout", { replace: true });
             }
 
@@ -65,13 +72,19 @@ export const useApi = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [navigate]);
 
     return { request, loading, error, data };
 };
 
 const logger = (detail) => {
-    const prev = JSON.parse(localStorage.getItem("apiLogs")) || [];
+    let prev = [];
+
+    try {
+        prev = JSON.parse(localStorage.getItem("apiLogs")) || [];
+    } catch (error) {
+        prev = [];
+    }
 
     const key = `${detail.method}_${detail.endpoint}`;
 

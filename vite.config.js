@@ -29,13 +29,13 @@ export default defineConfig({
     }),
 
     // Brotli (best)
-    viteCompression({
-      algorithm: 'brotliCompress',
-      ext: '.br',
-      deleteOriginFile: false,
-      filter: (file) => /\.(js|css|html|svg)$/.test(file),
-      threshold: 1024
-    }),
+    // viteCompression({
+    //   algorithm: 'brotliCompress',
+    //   ext: '.br',
+    //   deleteOriginFile: false,
+    //   filter: (file) => /\.(js|css|html|svg)$/.test(file),
+    //   threshold: 1024
+    // }),
 
     // Gzip (fallback)
     viteCompression({

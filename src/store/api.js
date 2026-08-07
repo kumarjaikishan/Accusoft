@@ -26,7 +26,13 @@ export const userdata = createAsyncThunk("userdata", async () => {
 const userexplist = createSlice({
     name: "user",
     initialState: {
-        explist: [],
+        // explist was removed from here on purpose: /userdata used to ship
+        // the user's *entire* expense history on every login, which every
+        // page (Expense table, dashboard, home, report, ledger detail) then
+        // filtered client-side. Each of those screens now fetches exactly
+        // the slice of data it needs from its own endpoint instead. This
+        // slice only holds the small, genuinely global stuff: profile +
+        // ledger list.
         ledgerlist: [],
         user: {},
         loading: false,
@@ -36,14 +42,12 @@ const userexplist = createSlice({
     },
     reducers: {
          setUserData(state, action) {
-            state.explist = action.payload.explist;
             state.ledgerlist = action.payload.ledger;
             state.user = action.payload.user;
             state.profilepic = action.payload.user?.imgsrc;
         },
         userlogout(state, action) {
             localStorage.removeItem("token");
-            state.explist = [];
             state.ledgerlist = [];
             state.user = {};
         },
@@ -54,10 +58,6 @@ const userexplist = createSlice({
             state.user.name = action.payload.name;
             state.user.phone = action.payload.phone;
         },
-        addexpense(state, action) {
-            state.explist = [action.payload, ...state.explist];
-        },
-       
     },
     extraReducers: (builder) => {
         builder.addCase(userdata.pending, (state,) => {
@@ -70,12 +70,11 @@ const userexplist = createSlice({
         builder.addCase(userdata.fulfilled, (state, action) => {
             state.loading = false;
             // console.log("fulfilled wala", action.payload.msg);
-            state.explist = action.payload.explist;
             state.ledgerlist = action.payload.ledger;
             state.user = action.payload.user;
             state.profilepic = action.payload.user?.imgsrc;
         })
     }
 })
-export const { userlogout, profilepicupdtae, profiledetailupdtae,setUserData, addexpense } = userexplist.actions;
+export const { userlogout, profilepicupdtae, profiledetailupdtae,setUserData } = userexplist.actions;
 export default userexplist.reducer;

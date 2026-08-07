@@ -1,14 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import dayjs from "dayjs";
-import DataTable from "react-data-table-component";
+import DataTableComponent from "react-data-table-component";
+const DataTable = DataTableComponent.default || DataTableComponent;
 import { motion } from "framer-motion";
 import { CSVLink } from "react-csv";
 import { Download, Printer } from "lucide-react";
 import { setnarrow } from "../../store/login";
 import { getLedgerDetailColumns } from "./ledgerDetailColumns";
 import { useTableStyles } from "../../components/dataTableStyle";
+import { useApi } from "../../utils/useApi";
 
 const VoucherDetail = () => {
   const dispatch = useDispatch();
@@ -16,6 +18,7 @@ const VoucherDetail = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768);
+  const { request } = useApi();
 
   const ledgerName = searchParams.get("ledgerName");
   const month = Number(searchParams.get("month"));
@@ -25,36 +28,38 @@ const VoucherDetail = () => {
     .month(month)
     .format("MMMM");
 
-  const { explist } = useSelector((state) => state.userexplist);
+  // Fetched fresh from the server for this specific ledger + month/year -
+  // not filtered from the user's whole expense history whenever the month
+  // changes.
+  const [filteredData, setFilteredData] = useState([]);
+  const [totalAmount, setTotalAmount] = useState(0);
 
-  /* ---------------- FILTERED DATA ---------------- */
-
-  const filteredData = useMemo(() => {
-    if (!explist) return [];
-
-    return explist.filter((e) => {
-      const d = dayjs(e.date);
-
-      const inMonth =
-        d.month() === month && d.year() === year;
-
-      if (id === "all") return inMonth;
-
-      return (
-        e.ledger?._id === id &&
-        inMonth
-      );
-    });
-  }, [explist, id, month, year]);
-
-  const totalAmount = useMemo(
-    () =>
-      filteredData.reduce(
-        (acc, val) => acc + Number(val.amount),
-        0
-      ),
-    [filteredData]
-  );
+  useEffect(() => {
+    if (Number.isNaN(month) || Number.isNaN(year)) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const params = new URLSearchParams({
+          ledgerId: id || "all",
+          month: String(month),
+          year: String(year),
+        });
+        const res = await request({ url: `ledgerdetail?${params.toString()}`, method: "GET" });
+        if (cancelled) return;
+        setFilteredData(res?.items || []);
+        setTotalAmount(res?.sumAmount || 0);
+      } catch (error) {
+        if (!cancelled) {
+          setFilteredData([]);
+          setTotalAmount(0);
+        }
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, month, year]);
 
   const handlePrint = () => {
     dispatch(setnarrow(true));
@@ -77,21 +82,16 @@ const VoucherDetail = () => {
   }, [month, year]);
 
   const SummaryRow = () => (
-    <div className="flex items-center bg-surface border-t border-border-subtle font-bold text-content min-h-[35px]">
-      {/* 
-          Alignment Logic:
-          - Desktop prefix: 48px (selectable) + 70px (S.No) + 140px (Ledger) = 258px
-          - Mobile prefix: 48px (selectable) + 120px (Ledger) = 168px
-      */}
+    <div className="flex items-center flex-nowrap whitespace-nowrap bg-surface border-t border-border-subtle font-bold text-content min-h-[40px] px-2">
       <div
-        style={{ width: isMobile ? '140px' : '140px' }}
-        className="flex justify-end pr-4 text-[10px] md:text-xs uppercase tracking-wider opacity-60"
+        style={{ width: isMobile ? '125px' : '130px' }}
+        className="shrink-0 flex justify-end pr-2 text-[10px] md:text-xs uppercase tracking-wider opacity-70 whitespace-nowrap"
       >
         Total :
       </div>
       <div
-        style={{ width: isMobile ? '70px' : '100px' }}
-        className="font-mono text-blue-600 dark:text-blue-400 px-2"
+        style={{ width: isMobile ? '80px' : '70px' }}
+        className="shrink-0 font-mono text-blue-600 dark:text-blue-400 px-1 text-xs md:text-sm whitespace-nowrap"
       >
         ₹{totalAmount.toLocaleString()}
       </div>
@@ -136,10 +136,10 @@ const VoucherDetail = () => {
         </div>
 
         {/* RIGHT SIDE */}
-        <div className="flex flex-wrap items-center gap-2 ">
+        <div className="grid grid-cols-3 sm:flex sm:items-center gap-1.5 sm:gap-2 w-full sm:w-auto">
           <button
             onClick={() => navigate("/data_analysis")}
-            className="px-6 py-2 rounded-xl bg-white text-indigo-600 font-medium hover:bg-gray-100 transition shadow-md"
+            className="w-full sm:w-auto flex items-center justify-center px-2 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm rounded-lg sm:rounded-xl bg-white text-indigo-600 font-semibold hover:bg-gray-100 transition shadow-md whitespace-nowrap"
           >
             Return
           </button>
@@ -153,17 +153,18 @@ const VoucherDetail = () => {
               { label: "Narration", key: "narration" },
             ]}
             filename={`${ledgerName || "all-ledger"}-${displayMonth}-${year}-record.csv`}
+            className="w-full sm:w-auto"
           >
-            <button className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-indigo-600 font-medium hover:bg-gray-100 transition shadow-md">
-              <Download size={16} /> CSV
+            <button className="w-full sm:w-auto flex items-center justify-center gap-1 sm:gap-2 px-2 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm rounded-lg sm:rounded-xl bg-white text-indigo-600 font-semibold hover:bg-gray-100 transition shadow-md whitespace-nowrap">
+              <Download className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> CSV
             </button>
           </CSVLink>
 
           <button
             onClick={handlePrint}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-indigo-600 font-medium hover:bg-gray-100 transition shadow-md"
+            className="w-full sm:w-auto flex items-center justify-center gap-1 sm:gap-2 px-2 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm rounded-lg sm:rounded-xl bg-white text-indigo-600 font-semibold hover:bg-gray-100 transition shadow-md whitespace-nowrap"
           >
-            <Printer size={16} /> Print
+            <Printer className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> Print
           </button>
         </div>
 

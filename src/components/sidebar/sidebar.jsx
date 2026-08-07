@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Leaf, ChevronDown, ChevronUp, Banknote, Lock, LayoutDashboard, Truck, LogOut, User, Landmark, BarChart, Hourglass, Server, Book } from 'lucide-react';
+import { Leaf, ChevronDown, ChevronUp, Banknote, Lock, LayoutDashboard, Truck, LogOut, User, Landmark, BarChart, Hourglass, Server, Book, Activity } from 'lucide-react';
 
 import { Link, NavLink, useNavigate, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -153,7 +153,7 @@ const Sidebar = () => {
                                 </NavLink>
 
                                 <NavLink to="/admin/logs" className={({ isActive }) => getNavLinkClass(isActive)} style={({ isActive }) => getNavLinkStyle(isActive)}>
-                                    <span className="text-lg min-w-[24px] flex justify-center"><User /></span>
+                                    <span className="text-lg min-w-[24px] flex justify-center"><Activity /></span>
                                     <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100 ml-3"}`}>Logs</span>
                                 </NavLink>
 

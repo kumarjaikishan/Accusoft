@@ -5,7 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { setloader } from "../../store/login";
 import { motion } from "framer-motion";
 
-import DataTable from "react-data-table-component";
+import DataTableComponent from "react-data-table-component";
+const DataTable = DataTableComponent.default || DataTableComponent;
 import dayjs from "dayjs";
 import swal from "sweetalert";
 import { toast } from "react-toastify";

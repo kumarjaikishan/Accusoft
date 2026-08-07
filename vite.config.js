@@ -12,6 +12,9 @@ export default defineConfig({
   //     "/api": "http://localhost:5000/"
   //   }
   // },
+  resolve: {
+    mainFields: ['module', 'browser', 'main'],
+  },
   build: {
     outDir: "build",
   },

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setloader } from "../../store/login";
 import { motion } from "framer-motion";
@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
+import { useApi } from "../../utils/useApi";
 
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
@@ -13,9 +14,14 @@ dayjs.extend(isSameOrBefore);
 const Datanalysis = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const useralldetail = useSelector((state) => state.userexplist || {});
   const mode = useSelector((state) => state.theme?.mode || "light");
+  const { request, loading } = useApi();
   const [showbudget, setshowbudget] = useState(true);
+
+  // Per-ledger totals for the selected month, computed by a Mongo
+  // aggregation on the server - not by iterating every expense the user has
+  // ever logged in the browser.
+  const [ledgerTotals, setLedgerTotals] = useState([]);
 
   const today = new Date();
   const storedMonth = localStorage.getItem("month");
@@ -41,74 +47,47 @@ const Datanalysis = () => {
     localStorage.setItem("year", inp.year);
   }, [inp.month, inp.year]);
 
+  useEffect(() => {
+    dispatch(setloader(loading));
+  }, [loading]);
+
   const fmt = (n) =>
     typeof n === "number"
       ? n.toLocaleString(undefined, { maximumFractionDigits: 2 })
       : n;
 
-  /* ---------------- CALCULATION ---------------- */
+  /* ---------------- FETCH MONTHLY SUMMARY FROM SERVER ---------------- */
 
-  const cardarr = useMemo(() => {
-    const newLedgerSum = {};
-    let allLedgerSum = 0;
-    let allLedgerBudgetSum = 0;
-
-    const ledgerlist = useralldetail?.ledgerlist || [];
-
-    ledgerlist.forEach((led) => {
-      const budgetNum = Number(led.budget || 0);
-      allLedgerBudgetSum += budgetNum;
-      newLedgerSum[led._id] = {
-        ledger: led.ledger,
-        budget: budgetNum,
-        totalSum: 0,
-      };
-    });
-
-    const monthIn2Digit = String(inp.month + 1).padStart(2, "0");
-    const startDate = dayjs(`${inp.year}-${monthIn2Digit}-01`);
-    const endDate = startDate.endOf("month");
-
-    const explist = useralldetail?.explist || [];
-
-    explist.forEach((entry) => {
-      const ledgerId =
-        typeof entry?.ledger === "object"
-          ? entry.ledger._id
-          : entry?.ledger;
-
-      const amountValue = Number(entry.amount);
-      const entryDate = dayjs(entry.date);
-
-      if (
-        ledgerId &&
-        entryDate.isValid() &&
-        entryDate.isSameOrAfter(startDate) &&
-        entryDate.isSameOrBefore(endDate) &&
-        newLedgerSum[ledgerId]
-      ) {
-        allLedgerSum += amountValue;
-        newLedgerSum[ledgerId].totalSum += amountValue;
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await request({
+          url: `ledgersummary?month=${inp.month}&year=${inp.year}`,
+          method: "GET",
+        });
+        if (!cancelled) setLedgerTotals(res?.items || []);
+      } catch (error) {
+        if (!cancelled) setLedgerTotals([]);
       }
-    });
-
-    newLedgerSum["Total"] = {
-      ledger: "Total",
-      budget: allLedgerBudgetSum,
-      totalSum: allLedgerSum,
+    })();
+    return () => {
+      cancelled = true;
     };
-
-    return newLedgerSum;
-  }, [useralldetail, inp.month, inp.year]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inp.month, inp.year]);
 
   const sortedEntries = useMemo(() => {
-    const entries = Object.entries(cardarr || {});
-    const nonTotal = entries.filter(([id]) => id !== "Total");
-    const total = entries.find(([id]) => id === "Total");
-    return total ? [...nonTotal, total] : nonTotal;
-  }, [cardarr]);
+    const nonTotal = ledgerTotals.filter((e) => e._id !== "Total");
+    const total = ledgerTotals.find((e) => e._id === "Total");
+    const entries = nonTotal.map((e) => [e._id, e]);
+    return total ? [...entries, [total._id, total]] : entries;
+  }, [ledgerTotals]);
 
-  const overallTotal = cardarr?.["Total"]?.totalSum || 0;
+  const overallTotal = useMemo(
+    () => ledgerTotals.find((e) => e._id === "Total")?.totalSum || 0,
+    [ledgerTotals]
+  );
 
   const handle = (e) => {
     setinp((prev) => ({
@@ -117,7 +96,7 @@ const Datanalysis = () => {
     }));
   };
 
-  const detail = (ledgerId) => {
+  const detail = useCallback((ledgerId) => {
     if (ledgerId === "Total") {
       navigate(
         `/data_analysis/ledgerDetail/all?&ledgerName=All Ledger&month=${inp.month}&year=${inp.year}`
@@ -125,8 +104,7 @@ const Datanalysis = () => {
       return;
     }
 
-    // find ledger in ledgerlist by _id
-    const ledgerItem = (useralldetail?.ledgerlist || []).find((e) => e._id === ledgerId);
+    const ledgerItem = ledgerTotals.find((e) => e._id === ledgerId);
     if (ledgerItem) {
       navigate(
         `/data_analysis/ledgerDetail/${ledgerId}?&ledgerName=${encodeURIComponent(
@@ -139,7 +117,7 @@ const Datanalysis = () => {
         `/data_analysis/ledgerDetail/all?&ledgerName=All Ledger&month=${inp.month}&year=${inp.year}`
       );
     }
-  };
+  }, [ledgerTotals, inp.month, inp.year, navigate]);
 
   const monname = [
     "Jan", "Feb", "Mar", "Apr", "May", "Jun",

@@ -14,34 +14,52 @@ export const useApi = () => {
 
     const request = useCallback(async (config) => {
         let { url, method } = config;
+        const startTime = performance.now();
 
         try {
             setLoading(true);
             setError(null);
 
-            let start = performance.now();
             const result = await apiClient(config);
-            let end = performance.now();
+            const endTime = performance.now();
+            const durationMs = Number((endTime - startTime).toFixed(2));
 
             const logDetail = {
+                id: `${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
                 endpoint: url,
-                method: method || "GET",
-                time: (end - start).toFixed(2) + ' ms',
-                date: new Date(),
+                method: (method || "GET").toUpperCase(),
+                durationMs,
+                time: `${durationMs} ms`,
+                status: 200,
+                success: true,
+                date: new Date().toISOString(),
                 date1: Date.now()
-            }
-            logger(logDetail)
-            // console.log("result useapi",result)
+            };
+            logger(logDetail);
 
             setData(result);
             return result;
 
         } catch (err) {
+            const endTime = performance.now();
+            const durationMs = Number((endTime - startTime).toFixed(2));
             const message = err?.message || "Unexpected error occurred";
             setError(message);
+
+            const logDetail = {
+                id: `${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
+                endpoint: url,
+                method: (method || "GET").toUpperCase(),
+                durationMs,
+                time: `${durationMs} ms`,
+                status: err?.status || 500,
+                success: false,
+                error: message,
+                date: new Date().toISOString(),
+                date1: Date.now()
+            };
+            logger(logDetail);
             console.log(err);
-            // console.log("apiUse error:", err.message);
-            // console.log("apiUse error status:", err.status);
 
             const currentPath = window.location.pathname;
             const isLogoutPage = currentPath === "/logout";
@@ -77,6 +95,12 @@ export const useApi = () => {
     return { request, loading, error, data };
 };
 
+const getBaseEndpoint = (urlStr) => {
+    if (!urlStr) return "unknown";
+    const cleaned = String(urlStr).replace(/^\/+/, "");
+    return cleaned.split("?")[0] || cleaned;
+};
+
 const logger = (detail) => {
     let prev = [];
 
@@ -86,36 +110,31 @@ const logger = (detail) => {
         prev = [];
     }
 
-    const key = `${detail.method}_${detail.endpoint}`;
+    const baseEndpoint = getBaseEndpoint(detail.endpoint);
+    const key = `${baseEndpoint}_${detail.method}`;
 
-    // Separate current API logs and others
-    const sameApi = prev.filter(
-        log => `${log.method}_${log.endpoint}` === key
-    );
+    // Separate current API base endpoint logs and others
+    const sameApi = prev.filter(log => {
+        const logBase = getBaseEndpoint(log.endpoint);
+        const logMethod = (log.method || "GET").toUpperCase();
+        return `${logBase}_${logMethod}` === key;
+    });
 
-    const otherApis = prev.filter(
-        log => `${log.method}_${log.endpoint}` !== key
-    );
+    const otherApis = prev.filter(log => {
+        const logBase = getBaseEndpoint(log.endpoint);
+        const logMethod = (log.method || "GET").toUpperCase();
+        return `${logBase}_${logMethod}` !== key;
+    });
 
-    // Add new log
+    // Add new log and keep last 50 per API endpoint
     const updatedSameApi = [...sameApi, detail];
-
-    // Keep only last 10
-    const trimmedSameApi = updatedSameApi.slice(-10);
+    const trimmedSameApi = updatedSameApi.slice(-50);
 
     const finalLogs = [...otherApis, ...trimmedSameApi];
 
-    localStorage.setItem("apiLogs", JSON.stringify(finalLogs));
+    try {
+        localStorage.setItem("apiLogs", JSON.stringify(finalLogs));
+    } catch (e) {
+        console.error("Failed to save apiLogs to localStorage", e);
+    }
 };
-
-
-const logger2 = (detail) => {
-    const prev = JSON.parse(localStorage.getItem("apiLogs")) || [];
-
-    const updated = [...prev, detail];
-
-    localStorage.setItem("apiLogs", JSON.stringify(updated));
-};
-
-
-

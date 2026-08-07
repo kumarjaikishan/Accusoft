@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback, useEffect, useDeferredValue } from "react";
+import React, { useState, useMemo, useCallback, useEffect } from "react";
 import { Download, Printer, RefreshCcw } from 'lucide-react';
 
 import { useSelector, useDispatch } from "react-redux";
@@ -6,31 +6,42 @@ import { CSVLink } from "react-csv";
 import { setnarrow } from "../../store/login";
 
 import { motion } from "framer-motion";
-import DataTable from "react-data-table-component";
+import DataTableComponent from "react-data-table-component";
+const DataTable = DataTableComponent.default || DataTableComponent;
 import dayjs from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
 dayjs.extend(isBetween);
 import { getReportTableColumns } from "./reportTableColumns";
 import { useTableStyles } from "../../components/dataTableStyle";
+import { useApi } from "../../utils/useApi";
 
 const Report = () => {
     const dispatch = useDispatch();
-    const { user, explist, ledgerlist } = useSelector(
+    const { user, ledgerlist } = useSelector(
         (state) => state.userexplist
     );
-    const [inputs, setInputs] = useState({
+    const { request } = useApi();
+
+    const initialInputs = useMemo(() => ({
         from: dayjs().subtract(1, "month").format("YYYY-MM-DD"),
         to: dayjs().format("YYYY-MM-DD"),
         ledger: "all",
-    });
+    }), []);
 
-    const deferredInputs = useDeferredValue(inputs);
+    const [inputs, setInputs] = useState(initialInputs);
+    const [appliedInputs, setAppliedInputs] = useState(initialInputs);
 
     const [isMobile, setIsMobile] = useState(() =>
         typeof window !== "undefined" ? window.innerWidth < 768 : false
     );
     const [currentPage, setCurrentPage] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(10);
+
+    // Data for the selected date range (+ optional ledger), fetched from the
+    // server whenever the range/ledger changes - not filtered from the
+    // user's entire expense history in the browser.
+    const [filteredData, setFilteredData] = useState([]);
+    const [sumAmount, setSumAmount] = useState(0);
 
     /* ---------------- FILTER ---------------- */
 
@@ -39,32 +50,58 @@ const Report = () => {
         setInputs((prev) => ({ ...prev, [name]: value }));
     }, []);
 
-    const filteredData = useMemo(() => {
-        return explist.filter((item) => {
-            const itemDate = dayjs(item.date);
-            const inRange = itemDate.isBetween(
-                dayjs(deferredInputs.from).startOf("day"),
-                dayjs(deferredInputs.to).endOf("day"),
-                null,
-                "[]"
-            );
-
-            return deferredInputs.ledger === "all"
-                ? inRange
-                : inRange && item.ledger.ledger === deferredInputs.ledger;
+    const handleBlur = useCallback(() => {
+        setAppliedInputs((prev) => {
+            if (prev.from === inputs.from && prev.to === inputs.to && prev.ledger === inputs.ledger) {
+                return prev;
+            }
+            return inputs;
         });
-    }, [explist, deferredInputs]);
+    }, [inputs]);
 
-    const totalAmount = useMemo(
-        () =>
-            filteredData.reduce((acc, val) => acc + Number(val.amount), 0),
-        [filteredData]
-    );
+    const handleSelectChange = useCallback((e) => {
+        const { name, value } = e.target;
+        setInputs((prev) => {
+            const updated = { ...prev, [name]: value };
+            setAppliedInputs(updated);
+            return updated;
+        });
+    }, []);
+
+    useEffect(() => {
+        let cancelled = false;
+        (async () => {
+            try {
+                const params = new URLSearchParams({
+                    from: appliedInputs.from,
+                    to: appliedInputs.to,
+                });
+                if (appliedInputs.ledger && appliedInputs.ledger !== "all") {
+                    params.set("ledger", appliedInputs.ledger);
+                }
+                const res = await request({ url: `explistrange?${params.toString()}`, method: "GET" });
+                if (cancelled) return;
+                setFilteredData(res?.items || []);
+                setSumAmount(res?.sumAmount || 0);
+            } catch (error) {
+                if (!cancelled) {
+                    setFilteredData([]);
+                    setSumAmount(0);
+                }
+            }
+        })();
+        return () => {
+            cancelled = true;
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [appliedInputs.from, appliedInputs.to, appliedInputs.ledger]);
+
+    const totalAmount = sumAmount;
 
     // Reset page to 1 when search/filter changes
     useEffect(() => {
         setCurrentPage(1);
-    }, [deferredInputs]);
+    }, [appliedInputs]);
 
     const startIndex = (currentPage - 1) * rowsPerPage;
     const paginatedData = useMemo(() => {
@@ -76,11 +113,13 @@ const Report = () => {
     }, [paginatedData]);
 
     const clearSearch = useCallback(() => {
-        setInputs({
+        const resetState = {
             from: dayjs().subtract(1, "month").format("YYYY-MM-DD"),
             to: dayjs().format("YYYY-MM-DD"),
             ledger: "all",
-        });
+        };
+        setInputs(resetState);
+        setAppliedInputs(resetState);
     }, []);
 
     const handlePrint = useCallback(() => {
@@ -104,21 +143,21 @@ const Report = () => {
     });
 
     const SummaryRow = () => (
-        <div className="flex items-center bg-surface border-t border-border-subtle font-bold text-content min-h-[35px]">
+        <div className="flex items-center flex-nowrap whitespace-nowrap bg-surface border-t border-border-subtle font-bold text-content min-h-[40px] px-2">
             {/* 
               Alignment Logic (Report.jsx):
-              - Desktop prefix: # (60px) + Ledger (140px) = 200px
-              - Mobile prefix: # (55px) + Ledger (90px) = 145px
+              - Desktop prefix: # (40px) + Ledger (100px) = 140px
+              - Mobile prefix: # (40px) + Ledger (90px) = 130px
           */}
             <div
-                style={{ width: isMobile ? '145px' : '200px' }}
-                className="flex justify-end pr-4 text-[10px] md:text-xs uppercase tracking-wider opacity-60"
+                style={{ width: isMobile ? '130px' : '140px' }}
+                className="shrink-0 flex justify-end pr-2 text-[10px] md:text-xs uppercase tracking-wider opacity-70 whitespace-nowrap"
             >
-                Page Total :
+                Total :
             </div>
             <div
-                style={{ width: isMobile ? '70px' : '120px' }}
-                className="font-mono text-blue-600 dark:text-blue-400 px-2"
+                style={{ width: isMobile ? '65px' : '80px' }}
+                className="shrink-0 font-mono text-blue-600 dark:text-blue-400 px-1 text-xs md:text-sm whitespace-nowrap"
             >
                 ₹ {pageTotal.toLocaleString()}
             </div>
@@ -144,6 +183,8 @@ const Report = () => {
                                 name="from"
                                 value={inputs.from}
                                 onChange={handleInputChange}
+                                onBlur={handleBlur}
+                                onKeyDown={(e) => e.key === "Enter" && e.target.blur()}
                                 className="w-full h-10 border dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-800 dark:text-gray-200 px-3 rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none"
                             />
                         </div>
@@ -155,6 +196,8 @@ const Report = () => {
                                 name="to"
                                 value={inputs.to}
                                 onChange={handleInputChange}
+                                onBlur={handleBlur}
+                                onKeyDown={(e) => e.key === "Enter" && e.target.blur()}
                                 className="w-full h-10 border dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-800 dark:text-gray-200 px-3 rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none"
                             />
                         </div>
@@ -164,7 +207,7 @@ const Report = () => {
                             <select
                                 name="ledger"
                                 value={inputs.ledger}
-                                onChange={handleInputChange}
+                                onChange={handleSelectChange}
                                 className="w-full h-10 border dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-800 dark:text-gray-200 px-3 rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none"
                             >
                                 <option value="all">All</option>

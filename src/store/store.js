@@ -2,9 +2,11 @@ import { configureStore } from "@reduxjs/toolkit";
 import login from "./login";
 import userexplist from './api'
 import theme from './themeSlice'
-import storage from 'redux-persist/lib/storage';
+import storageModule from 'redux-persist/lib/storage';
 import {persistReducer} from 'redux-persist';
 import { combineReducers } from "@reduxjs/toolkit";
+
+const storage = storageModule.default || storageModule;
 
 const persistConfig={
     key:"Accosoft",

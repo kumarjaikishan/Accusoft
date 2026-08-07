@@ -1,9 +1,10 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { SquarePlus, Trash2, X, Book } from 'lucide-react';
+import React, { useEffect, useState, useRef, useCallback, useMemo } from 'react';
+import { SquarePlus, Trash2, X, Book, Settings } from 'lucide-react';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { AnimatePresence, motion } from 'framer-motion';
-import DataTable from 'react-data-table-component';
+import DataTableComponent from 'react-data-table-component';
+const DataTable = DataTableComponent.default || DataTableComponent;
 import dayjs from 'dayjs';
 // import './addexp.css';
 import utc from 'dayjs/plugin/utc.js';
@@ -14,7 +15,6 @@ import { toast } from 'react-toastify';
 // Icons
 
 import { setloader } from '../../store/login';
-import { userdata } from '../../store/api';
 import { useApi } from '../../utils/useApi';
 import { getExpenseTableColumns } from './expenseTableColumns';
 import ExpenseModalbox from './ExpenseModal';
@@ -26,10 +26,17 @@ dayjs.extend(timezone);
 
 const Expense = () => {
   const dispatch = useDispatch();
-  // Mocking Redux state for demonstration. In production, this uses your actual store.
-  const userAllDetails = useSelector((state) => state.userexplist) || { explist: [], ledgerlist: [] };
   const mode = useSelector((state) => state.theme?.mode || 'light');
   const { request, loading } = useApi();
+
+  // Server-driven page of expenses. We no longer keep the whole expense
+  // history in Redux/memory - only the page currently on screen, plus the
+  // total row count and the sum for whatever the current search matches
+  // (both computed by Mongo, not by summing/filtering a huge local array).
+  const [rows, setRows] = useState([]);
+  const [totalRows, setTotalRows] = useState(0);
+  const [sumAmount, setSumAmount] = useState(0);
+  const [tableLoading, setTableLoading] = useState(false);
 
   const [searchInput, setSearchInput] = useState('');
   const [finalsearch, setfinalserach] = useState('');
@@ -74,6 +81,33 @@ const Expense = () => {
     return () => window.removeEventListener('resize', onResize);
   }, []);
 
+  // Fetch only the current page of expenses from the server. This is the
+  // single source of truth for the table now - no full-collection fetch,
+  // no client-side filter/slice over the whole dataset.
+  const fetchExpenses = useCallback(async () => {
+    setTableLoading(true);
+    try {
+      const params = new URLSearchParams({
+        page: String(currentPage),
+        limit: String(rowsPerPage),
+      });
+      if (finalsearch) params.set('search', finalsearch);
+
+      const res = await request({ url: `explist?${params.toString()}`, method: 'GET' });
+      setRows(res?.items || []);
+      setTotalRows(res?.total || 0);
+      setSumAmount(res?.sumAmount || 0);
+    } catch (error) {
+      toast.error(error?.message || 'Failed to load expenses');
+    } finally {
+      setTableLoading(false);
+    }
+  }, [currentPage, rowsPerPage, finalsearch, request]);
+
+  useEffect(() => {
+    fetchExpenses();
+  }, [fetchExpenses]);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
@@ -114,7 +148,10 @@ const Expense = () => {
         isLoading: false,
         autoClose: 1300
       });
-      dispatch(userdata());
+      // Refetch just the current page (cheap - a handful of rows) instead of
+      // the old dispatch(userdata()) which re-pulled the user's entire
+      // expense history for a single new row.
+      fetchExpenses();
       setIsModalOpen(false);
       setExpenseInput(init);
     } catch (error) {
@@ -127,7 +164,7 @@ const Expense = () => {
     }
   };
 
-  const setDataForEdit = (expense) => {
+  const setDataForEdit = useCallback((expense) => {
     // console.log(expense?.ledger?._id)
     setExpenseInput({
       _id: expense._id,
@@ -138,12 +175,13 @@ const Expense = () => {
     });
     setIsUpdateMode(true);
     setIsModalOpen(true);
-  };
+  }, []);
 
-  const deleteExpense = (expenseId) => {
+  const deleteExpense = useCallback((expenseId) => {
     isAnimatingRef.current = true;
     sendDeleteRequest([expenseId]);
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const sendDeleteRequest = async (itemIds) => {
 
@@ -173,7 +211,13 @@ const Expense = () => {
             isLoading: false,
             autoClose: 2000
           });
-          dispatch(userdata());
+          // If deleting emptied the current page (and we're not on page 1),
+          // step back a page so the user isn't left staring at a blank page.
+          if (rows.length === itemIds.length && currentPage > 1) {
+            setCurrentPage((p) => p - 1);
+          } else {
+            fetchExpenses();
+          }
           setSelectedRowIds([]);
         } catch (error) {
           toast.update(toastId, {
@@ -187,53 +231,54 @@ const Expense = () => {
     });
   };
 
-  const filteredExpenses = userAllDetails?.explist?.filter((item) => {
-    return (
-      finalsearch === '' ||
-      item.narration?.toLowerCase().includes(finalsearch) ||
-      item.ledger?.ledger?.toLowerCase().includes(finalsearch) ||
-      item.amount?.toString().includes(finalsearch)
-    );
-  }) || [];
-
   // Reset page to 1 when search changes
   useEffect(() => {
     setCurrentPage(1);
   }, [finalsearch]);
 
-  const startIndex = (currentPage - 1) * rowsPerPage;
-  const paginatedData = filteredExpenses.slice(startIndex, startIndex + rowsPerPage);
+  // Column defs (with their cell-render closures) only need to be rebuilt
+  // when the things they actually depend on change - not on every render
+  // (e.g. not when isModalOpen or searchInput changes).
+  const columns = useMemo(
+    () =>
+      getExpenseTableColumns({
+        isMobile,
+        setDataForEdit,
+        deleteExpense,
+        paginationContext: { currentPage, rowsPerPage },
+      }),
+    [isMobile, setDataForEdit, deleteExpense, currentPage, rowsPerPage]
+  );
 
-  const columns = getExpenseTableColumns({
-    isMobile,
-    setDataForEdit,
-    deleteExpense,
-    paginationContext: { currentPage, rowsPerPage }
-  });
-
-
-  const handleSelectedRowsChange = ({ selectedRows }) => {
+  const handleSelectedRowsChange = useCallback(({ selectedRows }) => {
     setSelectedRowIds(selectedRows.map(e => e._id));
-  };
+  }, []);
 
-  const totalAmount = paginatedData.reduce((sum, item) => sum + (parseFloat(item.amount) || 0), 0);
+  // Page total = sum of just the rows currently on screen (matches the
+  // original client-side behaviour, which summed the paginated slice).
+  // sumAmount from the server (everything matching the current search) is
+  // still fetched but intentionally not used here.
+  const totalAmount = useMemo(
+    () => rows.reduce((sum, item) => sum + (parseFloat(item.amount) || 0), 0),
+    [rows]
+  );
 
   const SummaryRow = () => (
-    <div className="flex items-center bg-surface border-t border-border-subtle font-bold text-content min-h-[35px]">
+    <div className="flex items-center flex-nowrap whitespace-nowrap bg-surface border-t border-border-subtle font-bold text-content min-h-[40px] px-2">
       {/* 
           Alignment Logic:
           - Desktop prefix: 48px (selectable) + 70px (S.No) + 140px (Ledger) = 258px
-          - Mobile prefix: 48px (selectable) + 120px (Ledger) = 168px
+          - Mobile prefix: 95px (Ledger)
       */}
       <div
-        style={{ width: isMobile ? '80px' : '258px' }}
-        className="flex justify-end pr-4 text-[10px] md:text-xs uppercase tracking-wider opacity-60"
+        style={{ width: isMobile ? '95px' : '258px' }}
+        className="shrink-0 flex justify-end pr-2 text-[10px] md:text-xs uppercase tracking-wider opacity-70 whitespace-nowrap"
       >
-        Total :
+        Page Total :
       </div>
       <div
-        style={{ width: isMobile ? '70px' : '100px' }}
-        className="font-mono text-blue-600 dark:text-blue-400 px-2"
+        style={{ width: isMobile ? '60px' : '100px' }}
+        className="shrink-0 font-mono text-blue-600 dark:text-blue-400 px-1 text-xs md:text-sm whitespace-nowrap"
       >
         ₹{totalAmount.toLocaleString()}
       </div>
@@ -344,40 +389,65 @@ const Expense = () => {
           </div>
 
           {/* Data Table */}
-          <div className="bg-surface rounded-b-xl  shadow-md border border-border-subtle overflow-hidden overflow-x-auto">
-            <DataTable
-              columns={columns}
-              data={filteredExpenses}
-              theme={mode === "dark" ? "dark" : "default"}
-              selectableRows={isMobile ? false : true}
-              // selectableRowsVisibleOnly
-              onSelectedRowsChange={handleSelectedRowsChange}
-              pagination
-              paginationDefaultPage={currentPage}
-              onChangePage={page => setCurrentPage(page)}
-              onChangeRowsPerPage={num => {
-                setRowsPerPage(num);
-                setCurrentPage(1);
-              }}
-              highlightOnHover
-              customStyles={useTableStyles()}
-              noDataComponent={
-                <div className="py-12 text-center text-content bg-surface">
-                  <div className="text-4xl mb-2 opacity-20">📂</div>
-                  <p className="font-medium">No expense records found</p>
-                  <p className="text-sm">Try adjusting your search or add a new expense</p>
-                </div>
-              }
-            />
+          <div className="bg-surface rounded-b-xl shadow-md border border-border-subtle overflow-hidden overflow-x-auto relative">
+            {tableLoading && rows.length > 0 && (
+              <div className="absolute top-0 left-0 right-0 h-[3px] bg-indigo-100 dark:bg-indigo-950/50 overflow-hidden z-30 pointer-events-none">
+                <div 
+                  className="h-full bg-gradient-to-r from-indigo-500 via-sky-400 to-indigo-600 rounded-r-full shadow-[0_0_8px_rgba(99,102,241,0.8)]"
+                  style={{
+                    animation: 'tableTopProgress 1.2s ease-in-out infinite'
+                  }}
+                />
+                <style>{`
+                  @keyframes tableTopProgress {
+                    0% { transform: translateX(-100%) scaleX(0.2); }
+                    50% { transform: translateX(0%) scaleX(0.7); }
+                    100% { transform: translateX(100%) scaleX(0.2); }
+                  }
+                `}</style>
+              </div>
+            )}
+            <div className={`transition-all duration-300 ${tableLoading && rows.length > 0 ? 'opacity-60 blur-[1.5px] pointer-events-none' : ''}`}>
+              <DataTable
+                columns={columns}
+                data={rows}
+                progressPending={tableLoading && rows.length === 0}
+                progressComponent={
+                  <div className="py-12 flex flex-col items-center justify-center gap-3 text-content bg-surface w-full min-h-[250px]">
+                    <div className="relative flex items-center justify-center p-3">
+                      <Settings className="w-10 h-10 text-indigo-600 dark:text-indigo-400 animate-spin" style={{ animationDuration: '3s' }} />
+                      <Settings className="w-5 h-5 text-cyan-500 dark:text-cyan-400 animate-spin absolute" style={{ animationDirection: 'reverse', animationDuration: '1.8s' }} />
+                    </div>
+                    <p className="text-sm font-semibold text-slate-600 dark:text-slate-300 tracking-wide">Loading expenses...</p>
+                  </div>
+                }
+                theme={mode === "dark" ? "dark" : "default"}
+                selectableRows={isMobile ? false : true}
+                // selectableRowsVisibleOnly
+                onSelectedRowsChange={handleSelectedRowsChange}
+                pagination
+                paginationServer
+                paginationTotalRows={totalRows}
+                paginationDefaultPage={currentPage}
+                paginationPerPage={rowsPerPage}
+                onChangePage={page => setCurrentPage(page)}
+                onChangeRowsPerPage={num => {
+                  setRowsPerPage(num);
+                  setCurrentPage(1);
+                }}
+                highlightOnHover
+                customStyles={useTableStyles()}
+                noDataComponent={
+                  <div className="py-12 text-center text-content bg-surface">
+                    <div className="text-4xl mb-2 opacity-20">📂</div>
+                    <p className="font-medium">No expense records found</p>
+                    <p className="text-sm">Try adjusting your search or add a new expense</p>
+                  </div>
+                }
+              />
+            </div>
             <SummaryRow />
           </div>
-
-          {/* Totals Summary Footer (Optional/Replica of your .foot) */}
-          {/* <div className="mt-4 p-4 bg-white border border-dashed border-slate-300 rounded-lg flex flex-col md:flex-row justify-between items-center gap-4">
-                        <div className="text-slate-600 text-sm font-medium">
-              Total Amount: <span className="text-blue-600 font-bold">₹{filteredExpenses.reduce((acc, curr) => acc + (Number(curr.amount) || 0), 0)}</span>
-            </div>
-          </div> */}
 
           {/* Modals */}
           <ExpenseModalbox
@@ -393,6 +463,7 @@ const Expense = () => {
             fields={expenseInput}
             isupdate={isUpdateMode}
             reset={reset}
+            onSuccess={fetchExpenses}
           />
 
           {/* <Ledpage navigate={navigate} setmodal={setIsModalOpen} setdisable={setdisable} disable={disable} setisledupdate={setIsLedgerUpdate} isledupdate={isLedgerUpdate} /> */}

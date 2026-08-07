@@ -16,7 +16,7 @@ import { useApi } from '../../utils/useApi';
 import Modalbox from '../../components/custommodal/Modalbox';
 import LoadingButton from '../../components/LoadingButton';
 
-const ExpenseModalbox = ({ modal, disable, handlechange, fields, isupdate, sub, setmodal, setisupdate, reset }) => {
+const ExpenseModalbox = ({ modal, disable, handlechange, fields, isupdate, sub, setmodal, setisupdate, reset, onSuccess }) => {
     const useralldetail = useSelector((state) => state.userexplist);
     const dispatch = useDispatch();
     const { request, loading } = useApi();
@@ -39,6 +39,7 @@ const ExpenseModalbox = ({ modal, disable, handlechange, fields, isupdate, sub, 
                 autoClose: 1300 
             });
             dispatch(userdata());
+            if (onSuccess) onSuccess();
             reset();
             setisupdate(false);
             setmodal(false);

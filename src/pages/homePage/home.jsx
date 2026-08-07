@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import {
   IndianRupee,
-  Zap,
   ShoppingBag,
   Wallet,
   Scale,
@@ -14,6 +13,7 @@ import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import { header, setloader } from "../../store/login";
 import { motion } from "framer-motion";
 import { Bar, Line } from "react-chartjs-2";
+import { useApi } from "../../utils/useApi";
 
 import {
   Chart as ChartJS,
@@ -86,13 +86,15 @@ const barDataLabelsPlugin = {
 
 const Home = () => {
   const dispatch = useDispatch();
-
-  const { explist, loading } = useSelector(
-    (state) => state.userexplist,
-    shallowEqual
-  );
+  const { request, loading: apiLoading } = useApi();
 
   const mode = useSelector((state) => state.theme.mode);
+
+  // Fetched once (per month/year window) from the server - not derived by
+  // scanning the user's whole expense history in the browser.
+  const [sums, setSums] = useState({});
+  const [monthlyData, setMonthlyData] = useState([]);
+  const [recent, setRecent] = useState([]);
 
   const [monthsToShow, setMonthsToShow] = useState(12);
   const [chartType, setChartType] = useState("bar");
@@ -102,8 +104,6 @@ const Home = () => {
 
   useEffect(() => {
     dispatch(header("Dashboard"));
-    dispatch(setloader(true));
-    if (!loading) dispatch(setloader(false));
 
     const stored = localStorage.getItem("ShowChartMonth");
     if (stored) setMonthsToShow(Number(stored));
@@ -111,97 +111,36 @@ const Home = () => {
     if (chartStored && ["bar", "line"].includes(chartStored)) {
       setChartType(chartStored);
     }
-  }, [loading, dispatch]);
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(setloader(apiLoading));
+  }, [apiLoading, dispatch]);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await request({ url: "homesummary", method: "GET" });
+        if (cancelled) return;
+        setSums(res?.sums || {});
+        setMonthlyData(res?.monthlyData || []);
+        setRecent(res?.recent || []);
+      } catch (error) {
+        // useApi already surfaces a toast on failure
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     const handleResize = () => setIsMobileView(window.innerWidth < 768);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
-  /* ================= MAIN CALCULATION ================= */
-  const { sums, monthlyData } = useMemo(() => {
-    if (!explist?.length) return { sums: {}, monthlyData: [] };
-
-    let todaysum = 0,
-      yestersum = 0,
-      weeksum = 0,
-      monthsum = 0,
-      yearsum = 0;
-
-    const today = dayjs();
-    const yesterday = today.subtract(1, "day");
-
-    let minDate = null;
-    let maxDate = null;
-    const uniqueMonths = new Set();
-
-    explist.forEach((val) => {
-      const date = dayjs(val.date);
-
-      if (date.isSame(today, "day")) todaysum += val.amount;
-      if (date.isSame(yesterday, "day")) yestersum += val.amount;
-      if (date.isBetween(yesterday.subtract(6, "day"), yesterday, "day", "[]"))
-        weeksum += val.amount;
-      if (date.isBetween(yesterday.subtract(1, "month"), yesterday, "day", "[]"))
-        monthsum += val.amount;
-      if (date.isBetween(yesterday.subtract(1, "year"), yesterday, "day", "[]"))
-        yearsum += val.amount;
-
-      if (!minDate || date.isBefore(minDate)) minDate = date;
-      if (!maxDate || date.isAfter(maxDate)) maxDate = date;
-
-      uniqueMonths.add(date.format("YYYY-MM"));
-    });
-
-    const daySpan =
-      minDate && maxDate ? maxDate.diff(minDate, "day") + 1 : 1;
-
-    const dailyAvg = Math.floor(monthsum / Math.min(daySpan, 30));
-    const monthlyAvg = Math.floor(yearsum / Math.min(uniqueMonths.size, 12));
-
-    /* ---------------- DYNAMIC MONTHLY RANGE ---------------- */
-    const monthlyTotals = {};
-    if (minDate) {
-      const startMonth = minDate.startOf("month");
-      const currentMonth = today.startOf("month");
-      const diff = currentMonth.diff(startMonth, "month");
-      // Use the smaller of (actual months with data) or 12
-      const monthsToGenerate = Math.min(diff + 1, 12);
-
-      for (let i = 0; i < monthsToGenerate; i++) {
-        monthlyTotals[today.subtract(i, "month").format("YYYY-MM")] = 0;
-      }
-    } else {
-      monthlyTotals[today.format("YYYY-MM")] = 0;
-    }
-
-    explist.forEach((val) => {
-      const key = dayjs(val.date).format("YYYY-MM");
-      if (monthlyTotals[key] !== undefined)
-        monthlyTotals[key] += val.amount;
-    });
-
-    const monthlyDataArr = Object.entries(monthlyTotals)
-      .sort(([a], [b]) => dayjs(a).diff(dayjs(b)))
-      .map(([month, total]) => ({
-        month: dayjs(month).format("MMM YY"),
-        total,
-      }));
-
-    return {
-      sums: {
-        todaysum,
-        yestersum,
-        weeksum,
-        monthsum,
-        yearsum,
-        dailyAvg,
-        monthlyAvg,
-      },
-      monthlyData: monthlyDataArr,
-    };
-  }, [explist]);
 
   const filteredMonths = useMemo(
     () => monthlyData.slice(-monthsToShow),
@@ -319,17 +258,7 @@ const Home = () => {
     [mode, isMobileView, chartType]
   );
 
-  /* ================= DUMMY RECENT ================= */
-  const recentSpend = useMemo(
-    () => [
-      { title: "Amazon Purchase dsfdsfd sdfdsf fsdfsdfds sdfsd fsdfsdf", category: "Shopping", amount: 2499 },
-      { title: "Electricity Bill", category: "Utilities", amount: 1800 },
-      { title: "Swiggy Order", category: "Food", amount: 650 },
-      { title: "Netflix", category: "Subscription", amount: 499 },
-      { title: "Uber Ride", category: "Travel", amount: 320 },
-    ],
-    []
-  );
+  /* ================= RECENT ================= */
 
   return (
     <motion.div
@@ -339,7 +268,7 @@ const Home = () => {
       className="min-h-screen bg-transparent p-2 lg:p-4 lg:p-6"
     >
       {/* CARDS */}
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-5 mb-8">
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 mb-8">
         {[
           {
             amt: sums.todaysum,
@@ -349,18 +278,11 @@ const Home = () => {
             border: 'border-indigo-400'
           },
           {
-            amt: sums.yestersum,
-            label: "Yesterday",
-            icon: <Zap />,
-            iconBg: "from-yellow-400 to-orange-500",
-            border: 'border-yellow-400'
-          },
-          {
             amt: sums.weeksum,
             label: "Last Week",
             icon: <ShoppingBag />,
-            iconBg: "from-pink-500 to-rose-500",
-            border: 'border-rose-400',
+            iconBg: "from-yellow-400 to-orange-500",
+            border: 'border-yellow-400'
           },
           {
             amt: sums.monthsum,
@@ -477,9 +399,9 @@ const Home = () => {
             </h3>
           </div>
 
-          {recentSpend.length > 0 ? (
+          {recent.length > 0 ? (
             <div className="space-y-1">
-              {explist.slice(0, 5).map((item, index) => (
+              {recent.map((item, index) => (
                 <div
                   key={index}
                   className="flex justify-between items-start gap-2 p-2.5 sm:p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition"

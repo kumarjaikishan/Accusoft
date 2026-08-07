@@ -11,7 +11,8 @@ import LoadingButton from '../../components/LoadingButton';
 
 import { useApi } from '../../utils/useApi';
 import Modalbox from '../../components/custommodal/Modalbox';
-import DataTable from 'react-data-table-component';
+import DataTableComponent from 'react-data-table-component';
+const DataTable = DataTableComponent.default || DataTableComponent;
 import { useTableStyles } from '../../components/dataTableStyle';
 
 const LedgerModal = ({ setdisable, isledupdate, setisledupdate }) => {

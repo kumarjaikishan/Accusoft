@@ -36,25 +36,25 @@ const getDesktopColumns = ({ setDataForEdit, deleteExpense, paginationContext })
   {
     name: 'Action',
     cell: (row) => (
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1.5">
         <button
           title="Edit"
           onClick={() => setDataForEdit(row)}
-          className="p-1.5 rounded bg-blue-100 text-blue-600 hover:bg-blue-600 hover:text-white transition-all duration-200"
+          className="p-1.5 rounded bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 hover:bg-blue-600 hover:text-white transition-all duration-200"
         >
-          <Pencil size={18} />
+          <Pencil size={14} />
         </button>
         <button
           title="Delete"
           onClick={() => deleteExpense(row._id)}
-          className="p-1.5 rounded bg-red-100 text-red-600 hover:bg-red-600 hover:text-white transition-all duration-200"
+          className="p-1.5 rounded bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-400 hover:bg-red-600 hover:text-white transition-all duration-200"
         >
-          <Trash2 size={18} />
+          <Trash2 size={14} />
         </button>
       </div>
     ),
     ignoreRowClick: true,
-    width: '100px',
+    width: '80px',
   },
 ];
 
@@ -90,22 +90,22 @@ const getMobileColumns = ({ setDataForEdit, deleteExpense, paginationContext }) 
   },
   {
     name: 'Action',
-    width: '80px',
+    width: '70px',
     cell: (row) => (
       <div className="flex items-center gap-1">
         <button
           title="Edit"
           onClick={() => setDataForEdit(row)}
-          className="p-1 rounded bg-blue-100 text-blue-600 hover:bg-blue-600 hover:text-white transition-all duration-200"
+          className="p-1 rounded bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 hover:bg-blue-600 hover:text-white transition-all duration-200"
         >
-          <Pencil size={14} />
+          <Pencil size={13} />
         </button>
         <button
           title="Delete"
           onClick={() => deleteExpense(row._id)}
-          className="p-1 rounded bg-red-100 text-red-600 hover:bg-red-600 hover:text-white transition-all duration-200"
+          className="p-1 rounded bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-400 hover:bg-red-600 hover:text-white transition-all duration-200"
         >
-          <Trash2 size={14} />
+          <Trash2 size={13} />
         </button>
       </div>
     ),

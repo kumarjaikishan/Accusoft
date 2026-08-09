@@ -3,6 +3,7 @@
 import { useCallback, useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { apiClient } from "./apiClient";
 
 export const useApi = () => {
@@ -10,6 +11,7 @@ export const useApi = () => {
     const [data, setData] = useState(null);
     const [error, setError] = useState(null);
 
+    const isAdmin = useSelector((state) => state.userexplist?.user?.isadmin);
     const navigate = useNavigate();
 
     const request = useCallback(async (config) => {
@@ -24,18 +26,20 @@ export const useApi = () => {
             const endTime = performance.now();
             const durationMs = Number((endTime - startTime).toFixed(2));
 
-            const logDetail = {
-                id: `${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
-                endpoint: url,
-                method: (method || "GET").toUpperCase(),
-                durationMs,
-                time: `${durationMs} ms`,
-                status: 200,
-                success: true,
-                date: new Date().toISOString(),
-                date1: Date.now()
-            };
-            logger(logDetail);
+            if (isAdmin) {
+                const logDetail = {
+                    id: `${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
+                    endpoint: url,
+                    method: (method || "GET").toUpperCase(),
+                    durationMs,
+                    time: `${durationMs} ms`,
+                    status: 200,
+                    success: true,
+                    date: new Date().toISOString(),
+                    date1: Date.now()
+                };
+                logger(logDetail);
+            }
 
             setData(result);
             return result;
@@ -46,19 +50,21 @@ export const useApi = () => {
             const message = err?.message || "Unexpected error occurred";
             setError(message);
 
-            const logDetail = {
-                id: `${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
-                endpoint: url,
-                method: (method || "GET").toUpperCase(),
-                durationMs,
-                time: `${durationMs} ms`,
-                status: err?.status || 500,
-                success: false,
-                error: message,
-                date: new Date().toISOString(),
-                date1: Date.now()
-            };
-            logger(logDetail);
+            if (isAdmin) {
+                const logDetail = {
+                    id: `${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
+                    endpoint: url,
+                    method: (method || "GET").toUpperCase(),
+                    durationMs,
+                    time: `${durationMs} ms`,
+                    status: err?.status || 500,
+                    success: false,
+                    error: message,
+                    date: new Date().toISOString(),
+                    date1: Date.now()
+                };
+                logger(logDetail);
+            }
             console.log(err);
 
             const currentPath = window.location.pathname;
@@ -90,7 +96,7 @@ export const useApi = () => {
         } finally {
             setLoading(false);
         }
-    }, [navigate]);
+    }, [navigate, isAdmin]);
 
     return { request, loading, error, data };
 };

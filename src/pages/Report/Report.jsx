@@ -3,7 +3,7 @@ import { Download, Printer, RefreshCcw } from 'lucide-react';
 
 import { useSelector, useDispatch } from "react-redux";
 import { CSVLink } from "react-csv";
-import { setnarrow } from "../../store/login";
+import { setnarrow, setloader } from "../../store/login";
 
 import { motion } from "framer-motion";
 import DataTableComponent from "react-data-table-component";
@@ -20,7 +20,7 @@ const Report = () => {
     const { user, ledgerlist } = useSelector(
         (state) => state.userexplist
     );
-    const { request } = useApi();
+    const { request, loading } = useApi();
 
     const initialInputs = useMemo(() => ({
         from: dayjs().subtract(1, "month").format("YYYY-MM-DD"),
@@ -165,6 +165,24 @@ const Report = () => {
         </div>
     );
 
+    useEffect(() => {
+        dispatch(setloader(loading));
+    }, [loading, dispatch]);
+
+    const TableSkeleton = () => (
+        <div className="w-full p-4 space-y-3 bg-surface animate-pulse">
+            {Array.from({ length: 10 }).map((_, idx) => (
+                <div key={idx} className="flex items-center gap-4 py-2 border-b border-border-subtle">
+                    <div className="h-4 w-10 bg-slate-200 dark:bg-slate-700/80 rounded"></div>
+                    <div className="h-4 w-28 bg-slate-200 dark:bg-slate-700/80 rounded"></div>
+                    <div className="h-4 w-20 bg-slate-200 dark:bg-slate-700/80 rounded"></div>
+                    <div className="h-4 w-24 bg-slate-200 dark:bg-slate-700/80 rounded"></div>
+                    <div className="h-4 flex-1 bg-slate-200 dark:bg-slate-700/50 rounded"></div>
+                </div>
+            ))}
+        </div>
+    );
+
     return (
         <motion.div
             initial={{ opacity: 0, y: 40 }}
@@ -257,22 +275,6 @@ const Report = () => {
                 </div>
             </div>
 
-            {/* ---------------- TOTAL CARD ---------------- */}
-            {/* <div className="bg-gradient-to-r from-indigo-600 to-cyan-500 print:!from-indigo-600 print:!to-cyan-500 print:!text-white dark:from-slate-800 dark:to-slate-900 border border-transparent dark:border-white/10 text-white rounded-2xl p-6 shadow-lg dark:shadow-none flex justify-between items-center">
-                <div>
-                    <p className="text-sm opacity-80">
-                        Report from {formatDate(inputs.from)} to{" "}
-                        {formatDate(inputs.to)}
-                    </p>
-                    <h2 className="text-3xl font-bold mt-1">
-                        ₹ {totalAmount.toLocaleString()}
-                    </h2>
-                </div>
-                <div className="text-sm opacity-80">
-                    {filteredData.length} Records
-                </div>
-            </div> */}
-
             {/* ---------------- DATA TABLE ---------------- */}
             <div className="bg-surface rounded-xm md:rounded-xl shadow-md border border-border-subtle overflow-hidden overflow-x-auto">
                 <DataTable
@@ -287,6 +289,8 @@ const Report = () => {
                         setCurrentPage(1);
                     }}
                     customStyles={useTableStyles()}
+                    progressPending={loading}
+                    progressComponent={<TableSkeleton />}
                     noDataComponent={
                         <div className="py-12 text-center text-content bg-surface">
                             <div className="text-4xl mb-2 opacity-20">📂</div>

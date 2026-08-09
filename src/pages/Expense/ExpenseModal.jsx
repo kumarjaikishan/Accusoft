@@ -7,10 +7,8 @@ import { toast } from 'react-toastify';
 import TextField from '@mui/material/TextField';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
+import Autocomplete from '@mui/material/Autocomplete';
 import Button from '@mui/material/Button';
-
 import InputAdornment from '@mui/material/InputAdornment';
 import { useApi } from '../../utils/useApi';
 import Modalbox from '../../components/custommodal/Modalbox';
@@ -62,6 +60,8 @@ const ExpenseModalbox = ({ modal, disable, handlechange, fields, isupdate, sub, 
         return capitalizedWords.join(' ');
     };
 
+    const selectedLedgerOption = useralldetail?.ledgerlist?.find(val => val._id === fields?.ledger) || null;
+
     return (
         <Modalbox open={modal} onClose={() => setmodal(false)}>
             <div className="w-[500px] h-max rounded-[20px] overflow-hidden flex flex-col items-center max-sm:w-[96vw] bg-[var(--maincolor)]">
@@ -70,21 +70,27 @@ const ExpenseModalbox = ({ modal, disable, handlechange, fields, isupdate, sub, 
                 </h1>
 
                 <span className="flex flex-col rounded-t-[30px] border-t border-white/20 pt-[5px] bg-surface items-center w-full pb-[20px] max-sm:pb-[15px]">
-                    <FormControl className='caps' sx={{ width: '90%', mt: 2, mb: 2 }}>
-                        <InputLabel id="ledger-select-label">Ledger</InputLabel>
-                        <Select
-                            name="ledger"
-                            labelId="ledger-select-label"
-                            onChange={handlechange}
-                            value={fields?.ledger}
-                            id="ledger-select"
-                            label="Ledger"
-                        >
-                            {useralldetail?.ledgerlist?.map((val, ind) => {
-                                return <MenuItem sx={{ textTransform: "capitalize" }} key={ind} value={val._id}>{val.ledger}</MenuItem>
-                            })}
-                        </Select>
-                    </FormControl>
+                    <Autocomplete
+                        options={useralldetail?.ledgerlist || []}
+                        getOptionLabel={(option) => option.ledger ? option.ledger.charAt(0).toUpperCase() + option.ledger.slice(1) : ''}
+                        value={selectedLedgerOption}
+                        onChange={(event, newValue) => {
+                            handlechange({
+                                target: {
+                                    name: 'ledger',
+                                    value: newValue ? newValue._id : ''
+                                }
+                            });
+                        }}
+                        sx={{ width: '90%', mt: 2, mb: 2 }}
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                label="Ledger"
+                                placeholder="Type or select ledger..."
+                            />
+                        )}
+                    />
 
                     <TextField
                         type='date'

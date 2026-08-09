@@ -168,71 +168,87 @@ const Datanalysis = () => {
         </button>
       </div>
 
-      {/* ---------- CARDS ---------- */}
+      {/* ---------- CARDS / SKELETON LOADING ---------- */}
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {sortedEntries.map(([ledgerId, data]) => {
-          const total = Number(data.totalSum || 0);
-          const budget = Number(data.budget || 0);
-          const percentage =
-            overallTotal > 0
-              ? Math.floor((total / overallTotal) * 100)
-              : 0;
-
-          const budgetDiff = total - budget;
-          const isOverBudget = budgetDiff > 0;
-
-          return (
-            <motion.div
-              key={ledgerId}
-              whileHover={{ y: -6 }}
-              onClick={() => detail(ledgerId)}
-              className="relative bg-white/70 dark:bg-slate-900/40 backdrop-blur-xl rounded-2xl shadow-lg dark:shadow-none border border-transparent dark:hover:border-slate-500 dark:border-white/10 hover:shadow-2xl transition p-6 cursor-pointer"
+        {loading ? (
+          Array.from({ length: 8 }).map((_, idx) => (
+            <div
+              key={idx}
+              className="relative bg-white dark:bg-slate-900/60 rounded-2xl shadow-lg dark:shadow-none border border-slate-200 dark:border-white/10 p-6 animate-pulse"
             >
-              {/* Title & Amount */}
-              <div className="space-y-1">
-                <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100">
-                  ₹ {fmt(total)}
-                </h3>
-                <p className="text-sm text-gray-500 dark:text-gray-400 capitalize">
-                  {data.ledger}
-                </p>
-
-                {showbudget && (
-                  <div className="text-xs mt-2">
-                    <span className="text-gray-500 dark:text-gray-400">
-                      Budget: ₹ {fmt(budget)} /
-                    </span>
-                    <span
-                      className={`ml-1 font-semibold ${isOverBudget ? "text-red-500 dark:text-red-400" : "text-green-600 dark:text-emerald-400"
-                        }`}
-                    >
-                      {isOverBudget
-                        ? `+ ${fmt(Math.abs(budgetDiff))}`
-                        : `- ${fmt(Math.abs(budgetDiff))}`}
-                    </span>
-                  </div>
-                )}
+              <div className="space-y-3 pr-20">
+                <div className="h-7 w-28 bg-slate-200 dark:bg-slate-700/80 rounded-lg"></div>
+                <div className="h-4 w-20 bg-slate-200 dark:bg-slate-700/60 rounded-md"></div>
+                <div className="h-4 w-36 bg-slate-200 dark:bg-slate-700/40 rounded-md mt-2"></div>
               </div>
+              <div className="absolute top-4 right-4 w-20 h-20 rounded-full bg-slate-200 dark:bg-slate-700/80"></div>
+            </div>
+          ))
+        ) : (
+          sortedEntries.map(([ledgerId, data]) => {
+            const total = Number(data.totalSum || 0);
+            const budget = Number(data.budget || 0);
+            const percentage =
+              overallTotal > 0
+                ? Math.floor((total / overallTotal) * 100)
+                : 0;
 
-              {/* Animated Progress Circle */}
-              <div className="absolute top-4 right-4 w-20 h-20">
-                <motion.div
-                  initial={{ rotate: -90 }}
-                  animate={{ rotate: 0 }}
-                  transition={{ duration: 1 }}
-                  className="absolute inset-0 rounded-full"
-                  style={{
-                    background: `conic-gradient(${isOverBudget ? (mode === "dark" ? "#f87171" : "#ef4444") : (mode === "dark" ? "#818cf8" : "#6366f1")
-                      } ${percentage * 3.6}deg, ${mode === "dark" ? "#334155" : "#e5e7eb"} 0deg)`
-                  }}
-                />
-                <div className="absolute inset-2 bg-white dark:bg-slate-900 rounded-full flex items-center justify-center text-sm font-semibold dark:text-gray-200">
-                  {percentage}%
+            const budgetDiff = total - budget;
+            const isOverBudget = budgetDiff > 0;
+
+            return (
+              <motion.div
+                key={ledgerId}
+                whileHover={{ y: -6 }}
+                onClick={() => detail(ledgerId)}
+                className="relative bg-white/70 dark:bg-slate-900/40 backdrop-blur-xl rounded-2xl shadow-lg dark:shadow-none border border-transparent dark:hover:border-slate-500 dark:border-white/10 hover:shadow-2xl transition p-6 cursor-pointer"
+              >
+                {/* Title & Amount */}
+                <div className="space-y-1">
+                  <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100">
+                    ₹ {fmt(total)}
+                  </h3>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 capitalize">
+                    {data.ledger}
+                  </p>
+
+                  {showbudget && (
+                    <div className="text-xs mt-2">
+                      <span className="text-gray-500 dark:text-gray-400">
+                        Budget: ₹ {fmt(budget)} /
+                      </span>
+                      <span
+                        className={`ml-1 font-semibold ${isOverBudget ? "text-red-500 dark:text-red-400" : "text-green-600 dark:text-emerald-400"
+                          }`}
+                      >
+                        {isOverBudget
+                          ? `+ ${fmt(Math.abs(budgetDiff))}`
+                          : `- ${fmt(Math.abs(budgetDiff))}`}
+                      </span>
+                    </div>
+                  )}
                 </div>
-              </div>
-            </motion.div>
-          );
-        })}
+
+                {/* Animated Progress Circle */}
+                <div className="absolute top-4 right-4 w-20 h-20">
+                  <motion.div
+                    initial={{ rotate: -90 }}
+                    animate={{ rotate: 0 }}
+                    transition={{ duration: 1 }}
+                    className="absolute inset-0 rounded-full"
+                    style={{
+                      background: `conic-gradient(${isOverBudget ? (mode === "dark" ? "#f87171" : "#ef4444") : (mode === "dark" ? "#818cf8" : "#6366f1")
+                        } ${percentage * 3.6}deg, ${mode === "dark" ? "#334155" : "#e5e7eb"} 0deg)`
+                    }}
+                  />
+                  <div className="absolute inset-2 bg-white dark:bg-slate-900 rounded-full flex items-center justify-center text-sm font-semibold dark:text-gray-200">
+                    {percentage}%
+                  </div>
+                </div>
+              </motion.div>
+            );
+          })
+        )}
       </div>
     </motion.div>
   );

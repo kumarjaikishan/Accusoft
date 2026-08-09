@@ -97,7 +97,10 @@ const Home = () => {
   const [recent, setRecent] = useState([]);
 
   const [monthsToShow, setMonthsToShow] = useState(12);
-  const [chartType, setChartType] = useState("bar");
+  const [chartType, setChartType] = useState(() => {
+    const chartStored = localStorage.getItem("ShowChartType");
+    return chartStored && ["bar", "line"].includes(chartStored) ? chartStored : "bar";
+  });
   const [isMobileView, setIsMobileView] = useState(() =>
     typeof window !== "undefined" ? window.innerWidth < 768 : false
   );
@@ -110,6 +113,8 @@ const Home = () => {
     const chartStored = localStorage.getItem("ShowChartType");
     if (chartStored && ["bar", "line"].includes(chartStored)) {
       setChartType(chartStored);
+    } else {
+      setChartType("bar");
     }
   }, [dispatch]);
 

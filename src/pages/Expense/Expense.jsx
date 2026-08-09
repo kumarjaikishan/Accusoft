@@ -286,6 +286,21 @@ const Expense = () => {
     </div>
   );
 
+  const TableSkeleton = () => (
+    <div className="w-full p-4 space-y-3 bg-surface animate-pulse">
+      {Array.from({ length: 10 }).map((_, idx) => (
+        <div key={idx} className="flex items-center gap-4 py-2 border-b border-border-subtle">
+          <div className="h-4 w-8 bg-slate-200 dark:bg-slate-700/80 rounded"></div>
+          <div className="h-4 w-12 bg-slate-200 dark:bg-slate-700/80 rounded"></div>
+          <div className="h-4 w-28 bg-slate-200 dark:bg-slate-700/80 rounded"></div>
+          <div className="h-4 w-24 bg-slate-200 dark:bg-slate-700/80 rounded"></div>
+          <div className="h-4 w-20 bg-slate-200 dark:bg-slate-700/80 rounded"></div>
+          <div className="h-4 flex-1 bg-slate-200 dark:bg-slate-700/50 rounded"></div>
+        </div>
+      ))}
+    </div>
+  );
+
   return (
     <>
       <div className={`min-h-screen exp bg-page p-2 lg:p-4 transition-all duration-300 ${isModalOpen || isLedgerUpdate ? 'overflow-hidden h-screen' : ''}`}>
@@ -412,15 +427,7 @@ const Expense = () => {
                 columns={columns}
                 data={rows}
                 progressPending={tableLoading && rows.length === 0}
-                progressComponent={
-                  <div className="py-12 flex flex-col items-center justify-center gap-3 text-content bg-surface w-full min-h-[250px]">
-                    <div className="relative flex items-center justify-center p-3">
-                      <Settings className="w-10 h-10 text-indigo-600 dark:text-indigo-400 animate-spin" style={{ animationDuration: '3s' }} />
-                      <Settings className="w-5 h-5 text-cyan-500 dark:text-cyan-400 animate-spin absolute" style={{ animationDirection: 'reverse', animationDuration: '1.8s' }} />
-                    </div>
-                    <p className="text-sm font-semibold text-slate-600 dark:text-slate-300 tracking-wide">Loading expenses...</p>
-                  </div>
-                }
+                progressComponent={<TableSkeleton />}
                 theme={mode === "dark" ? "dark" : "default"}
                 selectableRows={isMobile ? false : true}
                 // selectableRowsVisibleOnly

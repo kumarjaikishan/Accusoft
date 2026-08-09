@@ -7,8 +7,7 @@ const AdminRoute = () => {
     const isAdmin = useSelector(state => state.userexplist?.user?.isadmin);
 
     if (!isAdmin) {
-        toast.warn("Admin access required",{autoClose:2300});
-        return <Navigate to="/login" replace />;
+        return <Navigate to="/404" replace />;
     }
 
     return <Outlet />;

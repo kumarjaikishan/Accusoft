@@ -1,5 +1,4 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { toast } from 'react-toastify';
 
 export const userdata = createAsyncThunk("userdata", async () => {
     const token = localStorage.getItem("token");

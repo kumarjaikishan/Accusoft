@@ -13,7 +13,7 @@ export const useTableStyles = () => {
   return styles;
 };
 
-// 🔥 Internal style generator (NOT exported)
+// 🔥 Internal style generator
 const getCustomDataTableStyles = (mode, mainColor) => ({
   table: {
     style: {
@@ -29,50 +29,49 @@ const getCustomDataTableStyles = (mode, mainColor) => ({
     style: {
       backgroundColor: mainColor || (mode === 'dark' ? '#0f172a' : '#1e293b'),
       color: '#ffffff',
-      minHeight: '48px',
-      borderTopLeftRadius: '2px',
-      borderTopRightRadius: '2px',
+      minHeight: '38px',
+      borderTopLeftRadius: '12px',
+      borderTopRightRadius: '12px',
     },
   },
   headCells: {
     style: {
       fontWeight: '700',
-      fontSize: '14px',
-      paddingLeft: '8px',
-      paddingRight: '8px',
+      fontSize: '11px',
+      paddingLeft: '6px',
+      paddingRight: '6px',
       textTransform: 'uppercase',
-      letterSpacing: '0.05em',
+      letterSpacing: '0.04em',
     },
   },
   rows: {
     style: {
-      backgroundColor: 'var(--theme-surface)',
-      color: 'var(--theme-content)',
-      minHeight: '45px',
+      backgroundColor: 'transparent',
+      color: mode === 'dark' ? '#f1f5f9' : '#334155',
+      minHeight: '44px',
       '&:not(:last-child)': {
         borderBottomStyle: 'solid',
         borderBottomWidth: '1px',
-        borderBottomColor: 'var(--theme-border)',
+        borderBottomColor: mode === 'dark' ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)',
       },
     },
     highlightOnHoverStyle: {
-      backgroundColor: 'var(--theme-page)',
+      backgroundColor: mode === 'dark' ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)',
     },
   },
   pagination: {
     style: {
-      backgroundColor: 'var(--theme-surface)',
-      color: 'var(--theme-content)',
-      borderTop: '1px solid var(--theme-border)',
+      backgroundColor: 'transparent',
+      color: mode === 'dark' ? '#94a3b8' : '#64748b',
+      borderTop: mode === 'dark' ? '1px solid rgba(255,255,255,0.06)' : '1px solid rgba(0,0,0,0.06)',
       marginTop: '0px',
-      borderBottomLeftRadius: '2px',
-      borderBottomRightRadius: '2px',
+      fontSize: '12px',
     },
   },
   cells: {
     style: {
-      paddingLeft: '8px',
-      paddingRight: '8px',
+      paddingLeft: '6px',
+      paddingRight: '6px',
     },
   },
 });

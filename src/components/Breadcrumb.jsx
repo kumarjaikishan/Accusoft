@@ -1,16 +1,18 @@
 import { useMemo } from "react";
 import { useLocation, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { ChevronRight } from "lucide-react";
 
 function Breadcrumbs() {
   const location = useLocation();
-  const mainColor = useSelector((state) => state.theme.mainColor);
+  const mainColor = useSelector((state) => state.theme?.mainColor || "#4f46e5");
 
   const breadcrumbs = useMemo(() => {
     const segments = location.pathname.split("/").filter(Boolean);
 
     return segments.map((segment, index) => {
       const formattedName = segment
+        .replace(/_/g, " ")
         .replace(/-/g, " ")
         .replace(/\b\w/g, (char) => char.toUpperCase());
 
@@ -21,26 +23,31 @@ function Breadcrumbs() {
     });
   }, [location.pathname]);
 
+  if (breadcrumbs.length === 0) {
+    return (
+      <span className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-100">
+        Dashboard
+      </span>
+    );
+  }
+
   return (
-    <nav className="flex items-center text-[17px] p-[2px] rounded-[6px] max-sm:text-[13px] max-sm:p-[2px]">
+    <nav className="flex items-center text-xs sm:text-sm font-medium">
       {breadcrumbs.map((crumb, index) => (
         <span key={crumb.path} className="flex items-center">
           {index < breadcrumbs.length - 1 ? (
             <>
               <Link
                 to={crumb.path}
-                className="no-underline font-medium transition-colors duration-200 ease-in-out"
+                className="hover:underline transition-colors truncate max-w-[120px] sm:max-w-[200px]"
                 style={{ color: mainColor }}
               >
                 {crumb.name}
               </Link>
-
-              <span className="mx-[6px] text-slate-400 dark:text-slate-500">
-                &gt;
-              </span>
+              <ChevronRight className="w-3.5 h-3.5 mx-1 text-slate-400 dark:text-slate-500 shrink-0" />
             </>
           ) : (
-            <span className="font-semibold text-slate-700 dark:text-slate-200">
+            <span className="font-bold text-slate-800 dark:text-slate-100 truncate max-w-[140px] sm:max-w-[220px]">
               {crumb.name}
             </span>
           )}

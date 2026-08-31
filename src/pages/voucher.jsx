@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import Expprint from './office exp/expprint';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { toast } from 'react-toastify';
+import { toast } from '../utils/toast';
 import { setloader } from '../store/login';
 
 const Voucher = () => {

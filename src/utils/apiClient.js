@@ -1,5 +1,5 @@
-const BASE_URL = import.meta.env.VITE_API_ADDRESS;
-// const BASE_URL = "/api/";
+const rawBase = import.meta.env.VITE_API_ADDRESS || "http://localhost:5000/api/";
+const BASE_URL = typeof rawBase === "string" ? rawBase.trim() : "http://localhost:5000/api/";
 
 let isRefreshing = false;
 let failedQueue = [];
@@ -66,11 +66,13 @@ export const apiClient = async ({
     url,
     method = "GET",
     body = null,
+    data = null,
 }) => {
     let token = localStorage.getItem("token");
     const endpoint = String(url || "").replace(/^\/+/, "");
     const authEndpoints = ["login", "signup", "checkmail", "setpassword", "refresh", "logout"];
     const isAuthRequest = authEndpoints.includes(endpoint);
+    const payload = body !== null ? body : data;
 
     const makeRequest = () =>
         safeFetch(joinUrl(BASE_URL, endpoint), {
@@ -80,7 +82,7 @@ export const apiClient = async ({
                 "Content-Type": "application/json",
                 Authorization: token ? `Bearer ${token}` : "",
             },
-            body: body ? JSON.stringify(body) : null,
+            body: payload ? JSON.stringify(payload) : null,
         });
 
     let response = await makeRequest();
@@ -91,7 +93,7 @@ export const apiClient = async ({
         if (isRefreshing) {
             return new Promise((resolve, reject) => {
                 failedQueue.push({ resolve, reject });
-            }).then(() => apiClient({ url, method, body }));
+            }).then(() => apiClient({ url, method, body: payload }));
         }
 
         isRefreshing = true;
@@ -132,7 +134,7 @@ export const apiClient = async ({
             localStorage.setItem("token", token);
             processQueue(null);
 
-            return apiClient({ url, method, body });
+            return apiClient({ url, method, body: payload });
         } catch (err) {
             processQueue(err);
             localStorage.removeItem("token");
@@ -142,10 +144,10 @@ export const apiClient = async ({
         }
     }
 
-    let data = {};
+    let resData = {};
 
     try {
-        data = await parseResponse(response);
+        resData = await parseResponse(response);
     } catch (error) {
         throw createApiError("Server returned an invalid response. Please try again.", {
             status: response.status,
@@ -156,12 +158,12 @@ export const apiClient = async ({
     if (!response.ok) {
         const isAuthFailure = response.status === 401 || response.status === 403;
 
-        throw createApiError(getResponseMessage(data, "Request failed. Please try again."), {
+        throw createApiError(getResponseMessage(resData, "Request failed. Please try again."), {
             status: response.status,
-            payload: data,
+            payload: resData,
             code: isAuthFailure && !isAuthRequest ? "AUTH_EXPIRED" : "HTTP_ERROR",
         });
     }
 
-    return data;
+    return resData;
 };

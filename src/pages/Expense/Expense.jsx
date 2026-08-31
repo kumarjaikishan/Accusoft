@@ -6,11 +6,10 @@ import { AnimatePresence, motion } from 'framer-motion';
 import DataTableComponent from 'react-data-table-component';
 const DataTable = DataTableComponent.default || DataTableComponent;
 import dayjs from 'dayjs';
-// import './addexp.css';
 import utc from 'dayjs/plugin/utc.js';
 import timezone from 'dayjs/plugin/timezone.js';
-import swal from 'sweetalert';
-import { toast } from 'react-toastify';
+import { confirmDialog } from '../../utils/confirm';
+import { toast } from '../../utils/toast';
 
 // Icons
 
@@ -189,46 +188,46 @@ const Expense = () => {
       return toast.warn('Kindly Select Atleast 1 Entry', { autoClose: 1700 });
     }
 
-    swal({
+    const willDelete = await confirmDialog({
       title: 'Are you sure?',
       text: 'Once deleted, you will not be able to recover this Data!',
       icon: 'warning',
-      buttons: true,
+      buttons: ['Cancel', 'Delete'],
       dangerMode: true,
-    }).then(async (willDelete) => {
-      if (willDelete) {
-        try {
-          const toastId = toast.loading("Deleting expense(s)...");
-          const res = await request({
-            url: 'deleteExpense',
-            method: 'POST',
-            body: { ExpIds: itemIds }
-          });
-
-          toast.update(toastId, {
-            render: res?.message || "Deleted successfully",
-            type: "success",
-            isLoading: false,
-            autoClose: 2000
-          });
-          // If deleting emptied the current page (and we're not on page 1),
-          // step back a page so the user isn't left staring at a blank page.
-          if (rows.length === itemIds.length && currentPage > 1) {
-            setCurrentPage((p) => p - 1);
-          } else {
-            fetchExpenses();
-          }
-          setSelectedRowIds([]);
-        } catch (error) {
-          toast.update(toastId, {
-            render: error?.message || "Failed to delete expense",
-            type: "error",
-            isLoading: false,
-            autoClose: 3000
-          });
-        }
-      }
     });
+
+    if (willDelete) {
+      try {
+        const toastId = toast.loading("Deleting expense(s)...");
+        const res = await request({
+          url: 'deleteExpense',
+          method: 'POST',
+          body: { ExpIds: itemIds }
+        });
+
+        toast.update(toastId, {
+          render: res?.message || "Deleted successfully",
+          type: "success",
+          isLoading: false,
+          autoClose: 2000
+        });
+        // If deleting emptied the current page (and we're not on page 1),
+        // step back a page so the user isn't left staring at a blank page.
+        if (rows.length === itemIds.length && currentPage > 1) {
+          setCurrentPage((p) => p - 1);
+        } else {
+          fetchExpenses();
+        }
+        setSelectedRowIds([]);
+      } catch (error) {
+        toast.update(toastId, {
+          render: error?.message || "Failed to delete expense",
+          type: "error",
+          isLoading: false,
+          autoClose: 3000
+        });
+      }
+    }
   };
 
   // Reset page to 1 when search changes

@@ -1,16 +1,13 @@
 import { useState, useEffect } from "react";
 import { Pencil, Trash2, Save, RefreshCw } from 'lucide-react';
-
-import { toast } from 'react-toastify';
-
-import swal from 'sweetalert';
-
+import { toast } from '../../utils/toast';
+import { confirmDialog } from '../../utils/confirm';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 
 const Filehandle = () => {
     const [files, setfiles] = useState([]);
-    const [ure, seture] = useState([])
+    const [ure, seture] = useState([]);
     const [emails, setEmails] = useState('');
     const [modalopen, setmodalopen] = useState(false);
     const [days, setdays] = useState('');
@@ -18,11 +15,11 @@ const Filehandle = () => {
     const [messagee, setmessage] = useState('');
     const [disable, setdisable] = useState(false);
     const [isupdate, setisupdate] = useState(false);
-    const [jobid, setjobid] = useState('')
+    const [jobid, setjobid] = useState('');
 
     useEffect(() => {
         // firstfetch()
-    }, [])
+    }, []);
 
     const handleFileChange = (e) => {
         const filese = Array.from(e.target.files);
@@ -50,24 +47,20 @@ const Filehandle = () => {
             },
         });
         const data = await res.json();
-        setjobs(data?.filejobs)
-    }
+        setjobs(data?.filejobs);
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         const emailRecipientss = emails.split(',').map(email => email.trim());
-
-        // Regular expression for validating email addresses
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-        // Check if all emails are valid
         const invalidEmails = emailRecipientss.filter(email => !emailRegex.test(email));
 
         if (invalidEmails.length > 0) {
-            return toast.warn(`Invalid email(s): ${invalidEmails.join(', ')}`, { autoClose: 1900 }); // Prevent form submission
+            return toast.warn(`Invalid email(s): ${invalidEmails.join(', ')}`, { autoClose: 1900 });
         }
-        const id = toast.loading("Please wait...")
+        const id = toast.loading("Please wait...");
 
         const emailRecipients = emails.split(',').map(email => email.trim());
         try {
@@ -89,12 +82,11 @@ const Filehandle = () => {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`,
                 },
-                body: JSON.stringify({ files: filesen }) // Sending filenames and contentTypes
+                body: JSON.stringify({ files: filesen })
             });
 
             if (!res.ok) throw new Error("Error occurred while creating presigned URLs");
 
-            // Parse the response which contains the pre-signed URLs
             const { urls } = await res.json();
 
             await Promise.all(
@@ -103,9 +95,9 @@ const Filehandle = () => {
                     const uploadRes = await fetch(urlObj.url, {
                         method: "PUT",
                         headers: {
-                            "Content-Type": file.type // Ensure correct MIME type
+                            "Content-Type": file.type
                         },
-                        body: file // The actual file blob
+                        body: file
                     });
                     if (!uploadRes.ok) throw new Error(`Error uploading file: ${file.name}`);
                 })
@@ -123,85 +115,80 @@ const Filehandle = () => {
                     messagee,
                     files: urls.map((urlObj, index) => ({
                         filename: filesen[index].filename,
-                        url: urlObj.url.split('?')[0] // Save the S3 URL without query params
+                        url: urlObj.url.split('?')[0]
                     }))
                 })
             });
 
-            setdisable(false)
+            setdisable(false);
             if (!fileJobRes.ok) throw new Error("Error occurred while creating the file job");
             const { message } = await fileJobRes.json();
             firstfetch();
             reset();
             toast.update(id, { render: message, type: "success", isLoading: false, autoClose: 1300 });
         } catch (error) {
-            setdisable(false)
+            setdisable(false);
             console.error('Failed to create file job:', error);
             toast.update(id, { render: error.message, type: "warning", isLoading: false, autoClose: 2600 });
         }
     };
+
     const reset = () => {
         setmodalopen(false);
-        setEmails('')
-        setdays('')
-        setmessage('')
-        setfiles([])
-        seture([])
-        setisupdate(false)
-    }
+        setEmails('');
+        setdays('');
+        setmessage('');
+        setfiles([]);
+        seture([]);
+        setisupdate(false);
+    };
 
     const deleteJob = async (jobid) => {
-        swal({
+        const willDelete = await confirmDialog({
             title: 'Are you sure?',
             text: 'Once deleted, you will not be able to recover this Data!',
             icon: 'warning',
-            buttons: true,
+            buttons: ['Cancel', 'Delete'],
             dangerMode: true,
-        }).then(async (willDelete) => {
-            if (willDelete) {
-                try {
-                    const token = localStorage.getItem("token");
-                    const jobdelete = await fetch(`${import.meta.env.VITE_API_ADDRESS}deleteFileJob`, {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "Authorization": `Bearer ${token}`,
-                        },
-                        body: JSON.stringify({
-                            jobid
-                        })
-                    });
-                    const data = await jobdelete.json();
-                    if (!jobdelete.ok) return toast.warn(data.message, { autoClose: 1900 });
-                    firstfetch();
-                    reset();
-                    toast.success(data.message, { autoClose: 1500 });
-                } catch (error) {
-                    console.log(error)
-                    // toast.error(error.message, { autoClose: 2300 });
-                }
-            } else {
-                // swal('Your data is safe!');
-            }
         });
-    }
+
+        if (willDelete) {
+            try {
+                const token = localStorage.getItem("token");
+                const jobdelete = await fetch(`${import.meta.env.VITE_API_ADDRESS}deleteFileJob`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({ jobid })
+                });
+                const data = await jobdelete.json();
+                if (!jobdelete.ok) return toast.warn(data.message, { autoClose: 1900 });
+                firstfetch();
+                reset();
+                toast.success(data.message, { autoClose: 1500 });
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    };
 
     const setedit = (job) => {
-        setjobid(job._id)
-        setEmails(job.emailRecipients)
-        setdays(job.days)
-        setmessage(job.message)
-        setisupdate(true)
-        setmodalopen(true)
+        setjobid(job._id);
+        setEmails(job.emailRecipients);
+        setdays(job.days);
+        setmessage(job.message);
+        setisupdate(true);
+        setmodalopen(true);
         seture(job.fileUrls);
-    }
+    };
 
     const update = async () => {
         const token = localStorage.getItem("token");
         const apiUrl = import.meta.env.VITE_API_ADDRESS;
 
         try {
-            // If there are files to upload
             if (files.length) {
                 const filesen = files.map(file => {
                     const fileExtension = file.name.split('.').pop();
@@ -244,17 +231,16 @@ const Filehandle = () => {
             }
 
             firstfetch();
-            setisupdate(false)
+            setisupdate(false);
             reset();
             toast.success("Update successful", { autoClose: 1500 });
         } catch (error) {
-            setisupdate(false)
+            setisupdate(false);
             console.error(error);
             toast.error(error.message, { autoClose: 2300 });
         }
     };
 
-    // Helper function to handle job update
     const updateJob = async (fileData = []) => {
         const token = localStorage.getItem("token");
         const res = await fetch(`${import.meta.env.VITE_API_ADDRESS}updateJob`, {
@@ -281,19 +267,18 @@ const Filehandle = () => {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`,
                 },
-                body: JSON.stringify({
-
-                })
+                body: JSON.stringify({})
             });
             const data = await updatequery.json();
             if (!updatequery.ok) return toast.warn(data.message, { autoClose: 1900 });
             firstfetch();
             toast.success(data.message, { autoClose: 1500 });
         } catch (error) {
-            console.log(error)
+            console.log(error);
             toast.error(error.message, { autoClose: 2300 });
         }
-    }
+    };
+
     const updateTimerone = async (jobid) => {
         try {
             const token = localStorage.getItem("token");
@@ -303,58 +288,55 @@ const Filehandle = () => {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`,
                 },
-                body: JSON.stringify({
-                    jobid
-                })
+                body: JSON.stringify({ jobid })
             });
             const data = await updatequery.json();
             if (!updatequery.ok) return toast.warn(data.message, { autoClose: 1900 });
             firstfetch();
             toast.success(data.message, { autoClose: 1500 });
         } catch (error) {
-            console.log(error)
+            console.log(error);
             toast.error(error.message, { autoClose: 2300 });
         }
-    }
+    };
+
     const assetdelete = async (url, index) => {
-        swal({
+        const willDelete = await confirmDialog({
             title: 'Are you sure?',
             text: 'Once deleted, you will not be able to recover this Data!',
             icon: 'warning',
-            buttons: true,
+            buttons: ['Cancel', 'Delete'],
             dangerMode: true,
-        }).then(async (willDelete) => {
-            if (willDelete) {
-                try {
-                    const token = localStorage.getItem("token");
-                    const updatequery = await fetch(`${import.meta.env.VITE_API_ADDRESS}deleteasset`, {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "Authorization": `Bearer ${token}`,
-                        },
-                        body: JSON.stringify({
-                            url: url.url,
-                            index, jobid
-                        })
-                    });
-                    const data = await updatequery.json();
-                    setmodalopen(false)
-                    reset()
-                    if (!updatequery.ok) return toast.warn(data.message, { autoClose: 1900 });
-                    firstfetch();
-                    toast.success(data.message, { autoClose: 1500 });
-                } catch (error) {
-                    reset()
-                    setmodalopen(false)
-                    console.log(error)
-                    toast.error(error.message, { autoClose: 2300 });
-                }
-            } else {
+        });
 
+        if (willDelete) {
+            try {
+                const token = localStorage.getItem("token");
+                const updatequery = await fetch(`${import.meta.env.VITE_API_ADDRESS}deleteasset`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({
+                        url: url.url,
+                        index, jobid
+                    })
+                });
+                const data = await updatequery.json();
+                setmodalopen(false);
+                reset();
+                if (!updatequery.ok) return toast.warn(data.message, { autoClose: 1900 });
+                firstfetch();
+                toast.success(data.message, { autoClose: 1500 });
+            } catch (error) {
+                reset();
+                setmodalopen(false);
+                console.log(error);
+                toast.error(error.message, { autoClose: 2300 });
             }
-        })
-    }
+        }
+    };
 
     return (
         <div className="w-full h-full overflow-hidden relative p-[5px]">
@@ -382,18 +364,17 @@ const Filehandle = () => {
                     </thead>
                     <tbody className="w-full">
                         {jobs?.map((job, ind) => {
-                            // Calculate remaining days
                             const expiryDate = new Date(job.expiryDate);
                             const today = new Date();
                             const timeDiff = expiryDate - today;
-                            const daysRemaining = Math.ceil(timeDiff / (1000 * 60 * 60 * 24)); // Convert milliseconds to days
+                            const daysRemaining = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
 
                             return (
                                 <tr className="border border-black" key={ind}>
                                     <td className="border border-black p-2 text-left">{ind + 1}</td>
                                     <td className="border border-black p-2 text-left">{job.days}</td>
                                     <td className="border border-black p-2 text-left">
-                                        {expiryDate.toLocaleDateString('en-GB', { // Formatting date as '26 Nov, 2024'
+                                        {expiryDate.toLocaleDateString('en-GB', {
                                             day: 'numeric',
                                             month: 'short',
                                             year: 'numeric',
@@ -405,7 +386,8 @@ const Filehandle = () => {
                                     <td className="border border-black p-2 text-left">
                                         {job.fileUrls?.map((file, fileIndex) => (
                                             <div className="flex justify-between items-center mb-1" key={fileIndex}>
-                                                <span className="w-[calc(100%-42px)] leading-tight" key={fileIndex}>{fileIndex + 1}. {file.filename.split('flname')[0]}.{file.filename.split('flname')[1].split('.')[1]}
+                                                <span className="w-[calc(100%-42px)] leading-tight">
+                                                    {fileIndex + 1}. {file.filename.split('flname')[0]}.{file.filename.split('flname')[1]?.split('.')[1] || 'ext'}
                                                 </span>
                                                 <span className="w-[40px] text-center">
                                                     <Trash2 title={`Delete ${file.filename.split('flname')[0]}`} onClick={() => assetdelete(file, fileIndex)} className='p-[3px] box-content w-[20px] h-[20px] rounded-[.2rem] cursor-pointer mx-[5px] text-[var(--deleteicon)] bg-[rgba(182,7,16,0.116)] hover:bg-[var(--deleteicon)] hover:text-white' />
@@ -436,10 +418,8 @@ const Filehandle = () => {
                 <form className="rounded-[10px] overflow-hidden bg-white shadow-[10px_10px_25px_5px_rgba(0,0,0,0.3)] w-[400px]" onSubmit={handleSubmit}>
                     <h2 className="w-full text-center bg-[var(--maincolor)] text-white py-[5px]">Create File Job</h2>
 
-                    {/* File Upload */}
                     <div className="px-[10px] py-[5px] text-center mt-[5px]">
-                        {isupdate ? <label>Add New Files:</label> :
-                            <label>Upload Files:</label>}
+                        {isupdate ? <label>Add New Files:</label> : <label>Upload Files:</label>}
                         <br />
                         <input className="w-full text-center" type="file" multiple onChange={handleFileChange} />
                     </div>
@@ -473,7 +453,6 @@ const Filehandle = () => {
                             variant="outlined" />
                     </div>
 
-                    {/* Submit Button */}
                     <div style={{ display: 'flex', justifyContent: 'space-around' }}>
                         {isupdate ? <Button className='muibtn' disabled={disable} onClick={update} variant="contained" startIcon={<RefreshCw />}>
                             Update
@@ -486,8 +465,7 @@ const Filehandle = () => {
                         </Button>
                     </div>
                 </form>
-            </div>
-            }
+            </div>}
         </div>
     );
 };

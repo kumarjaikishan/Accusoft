@@ -1,20 +1,16 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Menu, Sun, Moon, Leaf, User, Palette, Check, X } from 'lucide-react';
+import { Menu, Sun, Moon, Leaf, User, Palette, Check, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { setnarrow } from "../../store/login";
 import { toggleTheme, setMainColor } from "../../store/themeSlice";
-
 import Breadcrumbs from "../Breadcrumb";
 
 const Navbar = () => {
   const dispatch = useDispatch();
   const location = useLocation();
-  //  console.log(location)
-  let isLoginPage = location?.pathname?.includes('login')
-  //  console.log(isLoginPage)
+  const isLoginPage = location?.pathname?.includes('login');
 
   const log = useSelector((state) => state.login);
   const useralldetail = useSelector((state) => state.userexplist);
@@ -27,14 +23,14 @@ const Navbar = () => {
     "https://res.cloudinary.com/dusxlxlvm/image/upload/v1699090690/just_yoljye.png";
 
   const presets = [
-    '#1e293b', // Slate
-    '#0a3d62', // Default Blue
-    '#7c3aed', // Violet
-    '#db2777', // Pink
-    '#059669', // Emerald
-    '#ea580c', // Orange
-    '#2563eb', // Blue
-    '#4f46e5', // Indigo
+    { name: "Indigo", color: "#4f46e5" },
+    { name: "Slate", color: "#334155" },
+    { name: "Obsidian", color: "#0f172a" },
+    { name: "Emerald", color: "#059669" },
+    { name: "Cyan", color: "#0ea5e9" },
+    { name: "Violet", color: "#7c3aed" },
+    { name: "Rose", color: "#e11d48" },
+    { name: "Amber", color: "#d97706" },
   ];
 
   // Close dropdown on click outside
@@ -48,12 +44,11 @@ const Navbar = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Sidebar toggle
-  const fun = () => {
+  const toggleSidebar = (e) => {
+    e?.stopPropagation();
     dispatch(setnarrow(!log.narrow));
   };
 
-  // 🎯 Toggle theme
   const handleTheme = () => {
     dispatch(toggleTheme());
   };
@@ -65,85 +60,70 @@ const Navbar = () => {
           ? "lg:w-[calc(100%-var(--sidebarnarrow))] lg:left-[var(--sidebarnarrow)]"
           : "lg:w-[calc(100%-var(--sidebarwide))] lg:left-[var(--sidebarwide)]"
         }
-       bg-white dark:bg-slate-900
-      text-[var(--contrast)]
-      shadow-sm border-b border-[var(--tableborder)]
-      flex items-center justify-between px-2 lg:px-6
-      transition-all duration-300 z-50`}
+      bg-white/80 dark:bg-slate-900/80 backdrop-blur-md
+      border-b border-slate-200/80 dark:border-slate-800
+      flex items-center justify-between px-3 sm:px-5 lg:px-6
+      transition-all duration-300 z-50 shadow-xs`}
     >
-      {/* LEFT */}
-      <div className="flex items-center gap-1 lg:gap-4">
-        {!log.islogin &&
-          <Link to="/">
-            <Leaf size={30} style={{ color: mainColor }} />
+      {/* ---------- LEFT: MENU TOGGLE & BREADCRUMBS ---------- */}
+      <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+        {!log.islogin && (
+          <Link to="/" className="shrink-0 flex items-center">
+            <Leaf size={24} style={{ color: mainColor }} />
           </Link>
-        }
-        <Menu
-          onClick={(e) => {
-            e.stopPropagation();
-            fun();
-          }}
-          className="text-2xl cursor-pointer transition"
-          style={{ color: log.narrow ? 'inherit' : mainColor }}
-          onMouseOver={(e) => e.currentTarget.style.color = mainColor}
-          onMouseOut={(e) => e.currentTarget.style.color = log.narrow ? 'inherit' : mainColor}
-        />
+        )}
 
-        <div className="text-sm font-medium text-gray-600 dark:text-gray-400">
+        <button
+          onClick={toggleSidebar}
+          aria-label="Toggle Navigation"
+          className="p-1.5 sm:p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer shrink-0"
+        >
+          <Menu className="w-5 h-5" />
+        </button>
+
+        <div className="min-w-0 truncate">
           <Breadcrumbs />
         </div>
       </div>
 
-      {/* RIGHT */}
-      <div
-        className={`flex items-center gap-6 transition-transform duration-300
-        ${!log.narrow
-            ? "translate-x-[400px] lg:translate-x-0"
-            : "translate-x-0"
-          }`}
-      >
-        {/* 🌙 THEME TOGGLE */}
-        <div
+      {/* ---------- RIGHT: THEME TOGGLE & USER PROFILE ---------- */}
+      <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+        {/* 🌙 THEME TOGGLE BUTTON */}
+        <button
           onClick={handleTheme}
-          className="flex items-center gap-2 cursor-pointer px-3 py-1 rounded-lg 
-  bg-slate-100 dark:bg-slate-800/70
-  hover:bg-slate-200 dark:hover:bg-slate-700/80
-  border border-slate-200 dark:border-slate-700
-  transition-all duration-300"
+          aria-label="Toggle Color Theme"
+          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200 dark:hover:bg-slate-700/90 border border-slate-200/70 dark:border-slate-700/70 transition-all duration-200 cursor-pointer text-xs font-semibold text-slate-700 dark:text-slate-200"
         >
           {mode === "dark" ? (
             <>
-              <Sun className="text-amber-400 text-lg" />
-              <span className="text-slate-700 dark:text-slate-200">Light</span>
+              <Sun className="w-3.5 h-3.5 text-amber-400" />
+              <span className="hidden sm:inline">Light</span>
             </>
           ) : (
             <>
-              <Moon style={{ color: mainColor }} className="text-lg" />
-              <span className="text-slate-700 dark:text-slate-200">Dark</span>
+              <Moon className="w-3.5 h-3.5 text-indigo-600" />
+              <span className="hidden sm:inline">Dark</span>
             </>
           )}
-        </div>
+        </button>
 
-        {/* 👤 USER INFO & DROPDOWN */}
+        {/* 👤 USER PROFILE & THEME PALETTE DROPDOWN */}
         {log.islogin && (
           <div className="relative" ref={dropdownRef}>
-            <div
-              className="flex items-center gap-3 cursor-pointer p-1 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+            <button
               onClick={() => setIsProfileOpen(!isProfileOpen)}
+              className="flex items-center gap-2.5 p-1 rounded-2xl hover:bg-slate-100 dark:hover:bg-slate-800/80 transition-colors cursor-pointer border border-transparent hover:border-slate-200 dark:hover:border-slate-700"
             >
-              <div className="hidden md:flex flex-col text-right leading-tight">
-                <span className="text-sm font-semibold">
-                  {useralldetail?.user?.name}
+              <div className="hidden md:flex flex-col text-right leading-tight min-w-0">
+                <span className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-100 truncate max-w-[130px]">
+                  {useralldetail?.user?.name || "Account"}
                 </span>
-                <span className="text-xs text-gray-500 dark:text-gray-400 capitalize">
-                  {useralldetail?.user?.userType}
+                <span className="text-[10px] text-slate-400 dark:text-slate-500 capitalize font-medium">
+                  {useralldetail?.user?.userType || "User"}
                 </span>
               </div>
 
-              <div
-                className={`w-12 h-12 rounded-full border-1 border-dashed border-[var(--maincolor)] overflow-hidden transition-all duration-300 ${isProfileOpen ? 'scale-110 shadow-lg' : ''}`}
-                style={{ borderColor: mainColor }}
-              >
+              <div className="relative w-8 h-8 sm:w-9 sm:h-9 rounded-full overflow-hidden ring-2 ring-indigo-500/20 dark:ring-indigo-400/20 shrink-0">
                 <img
                   src={
                     useralldetail?.profilepic
@@ -154,61 +134,79 @@ const Navbar = () => {
                   className="w-full h-full object-cover"
                 />
               </div>
-            </div>
 
-            {/* Profile Dropdown */}
+              <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 hidden sm:block ${isProfileOpen ? 'rotate-180' : ''}`} />
+            </button>
+
+            {/* Profile & Color Customizer Dropdown */}
             <AnimatePresence>
               {isProfileOpen && (
                 <motion.div
-                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                  initial={{ opacity: 0, y: 8, scale: 0.96 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                  className="absolute right-0 mt-3 w-72 bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden z-[100]"
+                  exit={{ opacity: 0, y: 8, scale: 0.96 }}
+                  transition={{ duration: 0.15 }}
+                  className="absolute right-0 mt-2 w-64 sm:w-72 bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 overflow-hidden z-[100]"
                 >
-                  <div className="p-4 border-b border-slate-100 dark:border-slate-800">
-                    <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Profile & Theme</p>
-                    
+                  {/* Account Header */}
+                  <div className="p-3.5 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 ring-1 ring-slate-200 dark:ring-slate-700">
+                        <img
+                          src={useralldetail?.profilepic || defaultprofile}
+                          alt="Avatar"
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-100 truncate">
+                          {useralldetail?.user?.name}
+                        </p>
+                        <p className="text-[11px] text-slate-400 truncate">
+                          {useralldetail?.user?.email}
+                        </p>
+                      </div>
+                    </div>
+
                     <NavLink
                       to="/photo"
                       onClick={() => setIsProfileOpen(false)}
-                      className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                      className="mt-3 flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition"
                     >
-                      <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300">
-                        <User size={20} />
-                      </div>
-                      <div>
-                        <p className="text-sm font-bold text-slate-800 dark:text-white">Account Settings</p>
-                        <p className="text-xs text-slate-500 dark:text-slate-400">View and edit profile</p>
-                      </div>
+                      <User size={13} /> Edit Profile Photo
                     </NavLink>
                   </div>
 
-                  <div className="p-4">
-                    <div className="flex items-center gap-2 mb-4 text-slate-800 dark:text-white">
-                      <Palette size={16} style={{ color: mainColor }} />
-                      <span className="text-sm font-bold">Brand Color</span>
+                  {/* Brand Color Swatches */}
+                  <div className="p-3.5 space-y-2.5">
+                    <div className="flex items-center justify-between text-xs font-bold text-slate-700 dark:text-slate-200">
+                      <div className="flex items-center gap-1.5">
+                        <Palette size={14} style={{ color: mainColor }} />
+                        <span>Accent Color</span>
+                      </div>
+                      <span className="text-[10px] text-slate-400 font-mono uppercase">{mainColor}</span>
                     </div>
 
-                    <div className="grid grid-cols-4 gap-2 mb-4">
-                      {presets.map((color) => (
+                    <div className="grid grid-cols-4 gap-2">
+                      {presets.map((item) => (
                         <button
-                          key={color}
-                          onClick={() => dispatch(setMainColor(color))}
-                          className="w-full aspect-square rounded-lg border-2 border-white dark:border-slate-800 shadow-sm relative overflow-hidden transition-transform hover:scale-110 cursor-pointer"
-                          style={{ backgroundColor: color }}
+                          key={item.color}
+                          onClick={() => dispatch(setMainColor(item.color))}
+                          title={item.name}
+                          className="w-full h-7 rounded-lg border border-slate-200/80 dark:border-slate-700 shadow-xs relative overflow-hidden transition-transform hover:scale-105 cursor-pointer flex items-center justify-center"
+                          style={{ backgroundColor: item.color }}
                         >
-                          {mainColor === color && (
-                            <div className="absolute inset-0 flex items-center justify-center bg-black/10">
-                              <Check size={14} className="text-white" />
-                            </div>
+                          {mainColor.toLowerCase() === item.color.toLowerCase() && (
+                            <Check size={13} className="text-white drop-shadow-sm" />
                           )}
                         </button>
                       ))}
                     </div>
 
-                    <div className="flex items-center gap-3 pt-3 border-t border-slate-100 dark:border-slate-800">
-                      <span className="text-xs font-medium text-slate-500 dark:text-slate-400">Custom:</span>
-                      <div className="relative flex-1 h-8">
+                    {/* Custom Color Input */}
+                    <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800 text-xs">
+                      <span className="text-slate-400 font-medium text-[11px]">Custom Hex:</span>
+                      <div className="relative w-7 h-7 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700">
                         <input
                           type="color"
                           value={mainColor}
@@ -216,7 +214,7 @@ const Navbar = () => {
                           className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                         />
                         <div
-                          className="w-full h-full rounded-lg border border-slate-200 dark:border-slate-700 shadow-inner"
+                          className="w-full h-full shadow-inner"
                           style={{ backgroundColor: mainColor }}
                         />
                       </div>

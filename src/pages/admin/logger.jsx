@@ -17,8 +17,8 @@ import {
   BarChart2,
   Play
 } from 'lucide-react';
-import { toast } from 'react-toastify';
-import swal from 'sweetalert';
+import { toast } from '../../utils/toast';
+import { confirmDialog } from '../../utils/confirm';
 import { useApi } from '../../utils/useApi';
 
 dayjs.extend(relativeTime);
@@ -121,7 +121,7 @@ const Logger = () => {
 
   // Clear logs SAFELY without wiping localStorage tokens!
   const handleClearLogs = async () => {
-    const confirm = await swal({
+    const confirm = await confirmDialog({
       title: 'Clear API Logs?',
       text: 'This will remove all recorded API performance logs from local storage.',
       icon: 'warning',

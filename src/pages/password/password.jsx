@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import TextField from '@mui/material/TextField';
 import { useSelector } from 'react-redux';
 import { useState } from 'react';
-import { toast } from "react-toastify";
+import { toast } from "../../utils/toast";
 
 const PasswordReset = () => {
     const { token } = useParams();

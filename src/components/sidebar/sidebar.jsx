@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Leaf, ChevronDown, ChevronUp, Banknote, Lock, LayoutDashboard, Truck, LogOut, User, Landmark, BarChart, Hourglass, Server, Book, Activity } from 'lucide-react';
+import { Leaf, ChevronDown, ChevronUp, Banknote, Lock, LayoutDashboard, Truck, LogOut, User, Landmark, BarChart, Hourglass, Server, Book, Activity, MessageSquare } from 'lucide-react';
 
 import { Link, NavLink, useNavigate, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import swal from "sweetalert";
-import { toast } from "react-toastify";
+import { confirmDialog } from "../../utils/confirm";
+import { toast } from "../../utils/toast";
 import { header } from "../../store/login";
 
 const Sidebar = () => {
@@ -35,19 +35,20 @@ const Sidebar = () => {
         { name: "Report", link: "/report", icon: <BarChart /> }
     ];
 
-    const logoutHandler = () => {
-        swal({
+    const logoutHandler = async () => {
+        const confirm = await confirmDialog({
             title: "Are you sure to Logout?",
+            text: "You will be redirected to the login page.",
             icon: "warning",
-            buttons: true,
+            buttons: ["Cancel", "Logout"],
             dangerMode: true
-        }).then((confirm) => {
-            if (confirm) {
-                dispatch(header("Login"));
-                toast.success("Logout successful", { autoClose: 1300 });
-                navigate("/logout");
-            }
         });
+
+        if (confirm) {
+            dispatch(header("Login"));
+            toast.success("Logout successful", { autoClose: 1300 });
+            navigate("/logout");
+        }
     };
 
     const getNavLinkClass = (isActive) =>
@@ -155,6 +156,11 @@ const Sidebar = () => {
                                 <NavLink to="/admin/logs" className={({ isActive }) => getNavLinkClass(isActive)} style={({ isActive }) => getNavLinkStyle(isActive)}>
                                     <span className="text-lg min-w-[24px] flex justify-center"><Activity /></span>
                                     <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100 ml-3"}`}>Logs</span>
+                                </NavLink>
+
+                                <NavLink to="/admin/contacts" className={({ isActive }) => getNavLinkClass(isActive)} style={({ isActive }) => getNavLinkStyle(isActive)}>
+                                    <span className="text-lg min-w-[24px] flex justify-center"><MessageSquare /></span>
+                                    <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100 ml-3"}`}>Inquiries</span>
                                 </NavLink>
 
                                 <NavLink to="/admin/tip" className={({ isActive }) => getNavLinkClass(isActive)} style={({ isActive }) => getNavLinkStyle(isActive)}>

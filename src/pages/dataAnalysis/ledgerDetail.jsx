@@ -6,7 +6,11 @@ import DataTableComponent from "react-data-table-component";
 const DataTable = DataTableComponent.default || DataTableComponent;
 import { motion } from "framer-motion";
 import { CSVLink } from "react-csv";
-import { Download, Printer } from "lucide-react";
+import { 
+  Download, 
+  Printer, 
+  ArrowLeft 
+} from "lucide-react";
 import { setnarrow } from "../../store/login";
 import { getLedgerDetailColumns } from "./ledgerDetailColumns";
 import { useTableStyles } from "../../components/dataTableStyle";
@@ -110,40 +114,31 @@ const VoucherDetail = () => {
       transition={{ duration: 0.3 }}
       className="p-2 lg:p-4 md:p-6 space-y-8"
     >
-      <div className="bg-gradient-to-r from-indigo-600 to-cyan-500 print:hidden text-white rounded-2xl shadow-xl p-2 md:p-3 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        {/* LEFT SIDE */}
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-6 items-end">
+      {/* ---------- REDESIGNED UPPER HEADER ONLY ---------- */}
+      <div className="relative overflow-hidden rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 p-4 shadow-sm backdrop-blur-xl print:hidden flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        {/* Left: Back Button & Title Info */}
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => navigate("/data_analysis")}
+            aria-label="Back to Analysis"
+            className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-indigo-50 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 hover:text-indigo-600 border border-slate-200/60 dark:border-slate-700/60 transition cursor-pointer shrink-0"
+            title="Back to Monthly Analysis"
+          >
+            <ArrowLeft className="w-4 h-4" />
+          </button>
 
-          {/* Ledger */}
           <div>
-            <p className="text-xs uppercase tracking-wide opacity-70">
-              Ledger
-            </p>
-            <p className="text-2xl md:text-2xl font-bold capitalize mt-1">
+            <h1 className="text-xl sm:text-2xl font-bold capitalize tracking-tight text-slate-800 dark:text-slate-100">
               {ledgerName}
-            </p>
-          </div>
-
-          {/* Period */}
-          <div>
-            <p className="text-xs uppercase tracking-wide opacity-70">
-              Period
-            </p>
-            <p className="text-base md:text-lg font-semibold mt-1">
-              {displayMonth} {year}
+            </h1>
+            <p className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-0.5">
+              Period: {displayMonth} {year}
             </p>
           </div>
         </div>
 
-        {/* RIGHT SIDE */}
-        <div className="grid grid-cols-3 sm:flex sm:items-center gap-1.5 sm:gap-2 w-full sm:w-auto">
-          <button
-            onClick={() => navigate("/data_analysis")}
-            className="w-full sm:w-auto flex items-center justify-center px-2 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm rounded-lg sm:rounded-xl bg-white text-indigo-600 font-semibold hover:bg-gray-100 transition shadow-md whitespace-nowrap"
-          >
-            Return
-          </button>
-
+        {/* Right Side: Actions (CSV & Print) */}
+        <div className="flex items-center gap-2 w-full sm:w-auto">
           <CSVLink
             data={filteredData}
             headers={[
@@ -155,22 +150,21 @@ const VoucherDetail = () => {
             filename={`${ledgerName || "all-ledger"}-${displayMonth}-${year}-record.csv`}
             className="w-full sm:w-auto"
           >
-            <button className="w-full sm:w-auto flex items-center justify-center gap-1 sm:gap-2 px-2 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm rounded-lg sm:rounded-xl bg-white text-indigo-600 font-semibold hover:bg-gray-100 transition shadow-md whitespace-nowrap">
-              <Download className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> CSV
+            <button className="w-full sm:w-auto h-8 px-3 flex items-center justify-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-sm text-xs font-bold transition cursor-pointer">
+              <Download size={13} /> Export CSV
             </button>
           </CSVLink>
 
           <button
             onClick={handlePrint}
-            className="w-full sm:w-auto flex items-center justify-center gap-1 sm:gap-2 px-2 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm rounded-lg sm:rounded-xl bg-white text-indigo-600 font-semibold hover:bg-gray-100 transition shadow-md whitespace-nowrap"
+            className="w-full sm:w-auto h-8 px-3 flex items-center justify-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl shadow-sm text-xs font-bold transition cursor-pointer"
           >
-            <Printer className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> Print
+            <Printer size={13} /> Print
           </button>
         </div>
-
       </div>
 
-      {/* ---------------- TABLE ---------------- */}
+      {/* ---------------- TABLE (ORIGINAL EXACT CODE & SUMMARY ROW) ---------------- */}
       <div className="bg-white rounded-xs md:rounded-xl shadow-lg p-0 md:p-4 lg:p-6">
         <div className="flex hidden print:flex justify-center gap-4 border-b border-border-subtle p-2">
           <div>

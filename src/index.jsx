@@ -9,14 +9,14 @@ import { Provider } from 'react-redux';
 import store from './store/store';
 import { PersistGate } from 'redux-persist/integration/react';
 import { persistStore } from 'redux-persist';
-import { ToastContainer } from 'react-toastify';
+import { Toaster } from 'sonner';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 let persistor = persistStore(store);
 root.render(
   // <React.StrictMode>
   <Provider store={store}>
-    <ToastContainer closeOnClick={true} pauseOnFocusLoss={false} autoClose={2000} />
+    <Toaster position="top-right" richColors closeButton duration={3500} />
     <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <PersistGate loading={<Preloader />} persistor={persistor}>
         <App />

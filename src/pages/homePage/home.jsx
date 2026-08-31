@@ -5,11 +5,11 @@ import {
   Wallet,
   Scale,
   Clock,
-  CalendarDays,
-  ChartColumnBig,
+  BarChart3,
+  LineChart as LineChartIcon,
 } from "lucide-react";
 
-import { useSelector, useDispatch, shallowEqual } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { header, setloader } from "../../store/login";
 import { motion } from "framer-motion";
 import { Bar, Line } from "react-chartjs-2";
@@ -32,7 +32,7 @@ import isBetween from "dayjs/plugin/isBetween";
 
 dayjs.extend(isBetween);
 
-/* ✅ REQUIRED REGISTRATION (Fixes your error) */
+/* ✅ REQUIRED REGISTRATION */
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -44,7 +44,7 @@ ChartJS.register(
   Legend
 );
 
-/* ✅ CUSTOM PLUGIN FOR BAR LABELS */
+/* ✅ CUSTOM PLUGIN FOR IN-BAR DATA LABELS */
 const barDataLabelsPlugin = {
   id: "barDataLabels",
   afterDatasetsDraw(chart) {
@@ -55,29 +55,26 @@ const barDataLabelsPlugin = {
     const meta = chart.getDatasetMeta(0);
     meta.data.forEach((bar, index) => {
       const value = data.datasets[0].data[index];
-      if (!value) return;
+      if (!value || typeof value !== "number") return;
 
-      const { x, y, base } = bar;
+      const { x, y, base, width } = bar;
       const barHeight = base - y;
 
-      // Don't draw if bar is too short for vertical text
-      if (barHeight < 30) return;
+      if (barHeight < 24 || width < 12) return;
 
       ctx.save();
-      // Position slightly below the top of the bar
-      ctx.translate(x, y + 12);
+      ctx.translate(x, y + (barHeight > 45 ? 12 : barHeight / 2));
       ctx.rotate(-Math.PI / 2);
 
-      ctx.font = "600 11px Inter, sans-serif";
+      const fontSize = width < 20 ? "9px" : "11px";
+      ctx.font = `700 ${fontSize} Inter, sans-serif`;
       ctx.fillStyle = "rgba(255, 255, 255, 0.95)";
-      ctx.textAlign = "right";
+      ctx.textAlign = barHeight > 45 ? "right" : "center";
       ctx.textBaseline = "middle";
+      ctx.shadowColor = "rgba(0, 0, 0, 0.4)";
+      ctx.shadowBlur = 3;
 
-      // Draw shadow for better readability
-      ctx.shadowColor = "rgba(0, 0, 0, 0.3)";
-      ctx.shadowBlur = 2;
-
-      ctx.fillText(value.toLocaleString(), 0, 0);
+      ctx.fillText(value.toLocaleString("en-IN"), 0, 0);
       ctx.restore();
     });
     ctx.restore();
@@ -88,34 +85,29 @@ const Home = () => {
   const dispatch = useDispatch();
   const { request, loading: apiLoading } = useApi();
 
-  const mode = useSelector((state) => state.theme.mode);
+  const mode = useSelector((state) => state.theme?.mode || "light");
 
-  // Fetched once (per month/year window) from the server - not derived by
-  // scanning the user's whole expense history in the browser.
   const [sums, setSums] = useState({});
   const [monthlyData, setMonthlyData] = useState([]);
   const [recent, setRecent] = useState([]);
 
-  const [monthsToShow, setMonthsToShow] = useState(12);
-  const [chartType, setChartType] = useState(() => {
-    const chartStored = localStorage.getItem("ShowChartType");
-    return chartStored && ["bar", "line"].includes(chartStored) ? chartStored : "bar";
-  });
   const [isMobileView, setIsMobileView] = useState(() =>
     typeof window !== "undefined" ? window.innerWidth < 768 : false
   );
 
+  const [monthsToShow, setMonthsToShow] = useState(() => {
+    const stored = localStorage.getItem("ShowChartMonth");
+    if (stored) return Number(stored);
+    return typeof window !== "undefined" && window.innerWidth < 768 ? 6 : 12;
+  });
+
+  const [chartType, setChartType] = useState(() => {
+    const chartStored = localStorage.getItem("ShowChartType");
+    return chartStored && ["bar", "line"].includes(chartStored) ? chartStored : "bar";
+  });
+
   useEffect(() => {
     dispatch(header("Dashboard"));
-
-    const stored = localStorage.getItem("ShowChartMonth");
-    if (stored) setMonthsToShow(Number(stored));
-    const chartStored = localStorage.getItem("ShowChartType");
-    if (chartStored && ["bar", "line"].includes(chartStored)) {
-      setChartType(chartStored);
-    } else {
-      setChartType("bar");
-    }
   }, [dispatch]);
 
   useEffect(() => {
@@ -132,17 +124,19 @@ const Home = () => {
         setMonthlyData(res?.monthlyData || []);
         setRecent(res?.recent || []);
       } catch (error) {
-        // useApi already surfaces a toast on failure
+        // Handled by useApi
       }
     })();
     return () => {
       cancelled = true;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    const handleResize = () => setIsMobileView(window.innerWidth < 768);
+    const handleResize = () => {
+      const isMob = window.innerWidth < 768;
+      setIsMobileView(isMob);
+    };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
@@ -152,71 +146,78 @@ const Home = () => {
     [monthlyData, monthsToShow]
   );
 
-  const monthOptions = [
-    { value: 3, label: "Last 3 months" },
-    { value: 6, label: "Last 6 months" },
-    { value: 12, label: "Last 12 months" },
-  ];
-
-  const chartTypeOptions = [
-    { value: "bar", label: "Bar Chart" },
-    { value: "line", label: "Line Chart" },
-  ];
-
-  /* ================= CHART ================= */
-  const chartData = useMemo(
-    () => {
-      const labels = filteredMonths.map((m) => m.month);
-      const values = filteredMonths.map((m) => m.total);
-      const palette = ["#6366f1", "#22c55e", "#f59e0b", "#06b6d4", "#ef4444", "#8b5cf6", "#14b8a6", "#f97316"];
-
-      if (chartType === "line") {
-        return {
-          labels,
-          datasets: [
-            {
-              label: "Expenses",
-              data: values,
-              borderColor: "#4f46e5",
-              backgroundColor: "rgba(79, 70, 229, 0.16)",
-              tension: 0.35,
-              fill: true,
-              pointRadius: 3,
-              pointHoverRadius: 5,
-            },
-          ],
-        };
+  /* ================= CHART CONFIGURATION ================= */
+  const chartData = useMemo(() => {
+    const labels = filteredMonths.map((m) => {
+      if (isMobileView && m.month) {
+        const parts = m.month.split(" ");
+        return parts[0];
       }
+      return m.month;
+    });
 
+    const values = filteredMonths.map((m) => m.total);
 
+    if (chartType === "line") {
       return {
         labels,
         datasets: [
           {
-            label: "Expenses",
+            label: "Monthly Expenses",
             data: values,
-            borderRadius: 8,
+            borderColor: "#6366f1",
+            borderWidth: isMobileView ? 2.5 : 3,
             backgroundColor: (context) => {
               const { chart } = context;
               const { ctx, chartArea } = chart;
-              if (!chartArea) return "#6366f1";
+              if (!chartArea) return "rgba(99, 102, 241, 0.15)";
 
-              const gradient = ctx.createLinearGradient(
-                0,
-                chartArea.top,
-                0,
-                chartArea.bottom
-              );
-              gradient.addColorStop(0, "#6366f1");
-              gradient.addColorStop(1, "#06b6d4");
+              const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+              gradient.addColorStop(0, "rgba(99, 102, 241, 0.35)");
+              gradient.addColorStop(0.7, "rgba(6, 182, 212, 0.1)");
+              gradient.addColorStop(1, "rgba(6, 182, 212, 0.0)");
               return gradient;
             },
+            tension: 0.35,
+            fill: true,
+            pointBackgroundColor: "#6366f1",
+            pointBorderColor: mode === "dark" ? "#0f172a" : "#ffffff",
+            pointBorderWidth: 2,
+            pointRadius: isMobileView ? 3 : 4,
+            pointHoverRadius: 6,
           },
         ],
       };
-    },
-    [filteredMonths, chartType, mode]
-  );
+    }
+
+    return {
+      labels,
+      datasets: [
+        {
+          label: "Monthly Expenses",
+          data: values,
+          borderRadius: {
+            topLeft: isMobileView ? 6 : 8,
+            topRight: isMobileView ? 6 : 8,
+            bottomLeft: 0,
+            bottomRight: 0,
+          },
+          borderSkipped: "bottom",
+          maxBarThickness: isMobileView ? 32 : 48,
+          backgroundColor: (context) => {
+            const { chart } = context;
+            const { ctx, chartArea } = chart;
+            if (!chartArea) return "#6366f1";
+
+            const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+            gradient.addColorStop(0, "#6366f1");
+            gradient.addColorStop(1, "#06b6d4");
+            return gradient;
+          },
+        },
+      ],
+    };
+  }, [filteredMonths, chartType, mode, isMobileView]);
 
   const chartOptions = useMemo(
     () => ({
@@ -224,26 +225,40 @@ const Home = () => {
       maintainAspectRatio: false,
       layout: {
         padding: {
-          left: isMobileView ? 8 : 0,
-          right: isMobileView ? 4 : 0,
+          top: 14,
+          bottom: 0,
+          left: isMobileView ? 2 : 0,
+          right: isMobileView ? 2 : 0,
         },
       },
       animation: {
-        duration: 600,
+        duration: 450,
         easing: "easeOutQuart",
       },
       plugins: {
         legend: {
-          position: "top",
-          labels: { color: mode === "dark" ? "#e5e7eb" : "#374151" },
+          display: false,
+        },
+        tooltip: {
+          backgroundColor: mode === "dark" ? "rgba(15, 23, 42, 0.95)" : "rgba(30, 41, 59, 0.95)",
+          titleColor: "#ffffff",
+          bodyColor: "#38bdf8",
+          padding: 8,
+          cornerRadius: 8,
+          callbacks: {
+            label: (context) => ` ₹ ${context.parsed.y?.toLocaleString("en-IN")}`,
+          },
         },
       },
       scales: {
         x: {
           display: true,
           ticks: {
-            color: mode === "dark" ? "#9ca3af" : "#6b7280",
-            font: { size: isMobileView ? 10 : 12 },
+            color: mode === "dark" ? "#94a3b8" : "#64748b",
+            font: { size: isMobileView ? 9.5 : 11, weight: "600" },
+            maxRotation: 0,
+            autoSkip: true,
+            autoSkipPadding: 4,
           },
           grid: { display: false },
         },
@@ -251,41 +266,50 @@ const Home = () => {
           display: true,
           ticks: {
             display: !isMobileView,
-            color: mode === "dark" ? "#9ca3af" : "#6b7280",
-            font: { size: isMobileView ? 10 : 12 },
-            padding: isMobileView ? 4 : 8,
-            maxTicksLimit: isMobileView ? 5 : 8,
+            color: mode === "dark" ? "#94a3b8" : "#64748b",
+            font: { size: 10.5, weight: "500" },
+            padding: 6,
+            maxTicksLimit: 5,
+            callback: (val) => `₹${val >= 1000 ? `${val / 1000}k` : val}`,
           },
-          grid: { color: mode === "dark" ? "#374151" : "#e5e7eb" },
+          grid: { 
+            color: mode === "dark" ? "rgba(255, 255, 255, 0.06)" : "rgba(0, 0, 0, 0.06)",
+            drawBorder: false,
+          },
         },
       },
     }),
-    [mode, isMobileView, chartType]
+    [mode, isMobileView]
   );
 
-  /* ================= RECENT ================= */
+  const fmt = (n) =>
+    typeof n === "number"
+      ? n.toLocaleString("en-IN", { maximumFractionDigits: 2 })
+      : n || 0;
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="min-h-screen bg-transparent p-2 lg:p-4 lg:p-6"
+      className="min-h-screen bg-transparent p-2.5 sm:p-4 lg:p-6"
     >
-      {/* CARDS */}
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 mb-8">
+      {/* 1-per-row on small mobile, 2 on tablet, 4 on desktop */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6">
         {[
           {
             amt: sums.todaysum,
             label: "Today",
-            icon: <IndianRupee />,
+            subtitle: "Current day spend",
+            icon: <IndianRupee className="w-4 h-4 sm:w-5 sm:h-5" />,
             iconBg: "from-indigo-500 to-purple-500",
             border: 'border-indigo-400'
           },
           {
             amt: sums.weeksum,
             label: "Last Week",
-            icon: <ShoppingBag />,
+            subtitle: "Past 7 days spend",
+            icon: <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5" />,
             iconBg: "from-yellow-400 to-orange-500",
             border: 'border-yellow-400'
           },
@@ -294,7 +318,7 @@ const Home = () => {
             label: "Last Month",
             avg: sums.dailyAvg,
             avgLabel: "Daily Avg",
-            icon: <Wallet />,
+            icon: <Wallet className="w-4 h-4 sm:w-5 sm:h-5" />,
             iconBg: "from-cyan-500 to-blue-500",
             border: 'border-cyan-400',
           },
@@ -303,139 +327,179 @@ const Home = () => {
             label: "Last Year",
             avg: sums.monthlyAvg,
             avgLabel: "Monthly Avg",
-            icon: <Scale />,
+            icon: <Scale className="w-4 h-4 sm:w-5 sm:h-5" />,
             iconBg: "from-emerald-500 to-green-600",
             border: 'border-emerald-400'
           },
         ].map((item, i) => (
           <div
             key={i}
-            className={`bg-white dark:bg-slate-900 rounded-xl border-l-4 ${item.border} p-5 pb-2 shadow-[0_4px_20px_0_rgba(0,0,0,0.1)] dark:shadow-none dark:border-white/5 hover:shadow-lg dark:hover:bg-slate-800 transition-all duration-300`}
+            className={`bg-white dark:bg-slate-900 rounded-2xl border-l-4 ${item.border} px-3 py-2 sm:p-4 shadow-sm dark:shadow-none dark:border-white/5 hover:shadow-md transition-all duration-300 flex flex-col justify-between`}
           >
             {/* Top Section */}
-            <div className="flex justify-between items-start">
-              <div>
-                <p className="text-sm text-gray-500 dark:text-gray-400">{item.label}</p>
-                <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mt-1">
-                  ₹ {item.amt || 0}
+            <div className="flex justify-between items-center sm:items-start">
+              <div className="min-w-0 pr-1">
+                <p className="text-[10px] sm:text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider truncate">{item.label}</p>
+                <h2 className="text-base sm:text-2xl font-black text-slate-800 dark:text-slate-100 mt-0.5 truncate">
+                  ₹ {fmt(item.amt)}
                 </h2>
               </div>
 
               <div
-                className={`text-white text-lg p-3 rounded-xl bg-gradient-to-br ${item.iconBg}`}
+                className={`text-white p-1.5 sm:p-2.5 rounded-xl bg-gradient-to-br ${item.iconBg} shadow-sm shrink-0`}
               >
                 {item.icon}
               </div>
             </div>
 
-            {/* Average Badge */}
-            {item.avg !== undefined && (
-              <div className="mt-1 inline-flex items-center gap-1 text-xs font-medium px-3 py-1 rounded-lg bg-indigo-50 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400">
-                {item.avgLabel}: ₹ {item.avg}
-              </div>
-            )}
+            {/* Bottom Footer Section */}
+            <div className="mt-1.5 sm:mt-3 pt-1 sm:pt-2 border-t border-slate-100 dark:border-slate-800/80">
+              {item.avg !== undefined ? (
+                <div className="flex items-center justify-between text-[10px] sm:text-[11px]">
+                  <span className="text-slate-400 dark:text-slate-500 font-medium truncate">{item.avgLabel}:</span>
+                  <span className="font-extrabold text-indigo-600 dark:text-indigo-400 font-mono">
+                    ₹ {fmt(item.avg)}
+                  </span>
+                </div>
+              ) : (
+                <div className="text-[10px] sm:text-[11px] text-slate-400 dark:text-slate-500 truncate font-medium">
+                  {item.subtitle}
+                </div>
+              )}
+            </div>
           </div>
         ))}
       </div>
 
-      {/* CHART + RECENT */}
-      <div className="grid lg:grid-cols-3 gap-6">
-        <div className="bg-white dark:bg-slate-900 shadow-[0_4px_20px_0_rgba(0,0,0,0.2)] dark:shadow-none border border-slate-200 dark:border-white/5 rounded-xl p-3 sm:p-4 lg:col-span-2">
-          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-4">
-            <h3 className="font-semibold text-sm sm:text-base text-gray-700 dark:text-gray-200">
-              Monthly Expense Overview
-            </h3>
+      {/* CHART + RECENT SECTION */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+        {/* RESPONSIVE CHART CARD */}
+        <div className="bg-white dark:bg-slate-900 shadow-sm dark:shadow-none border border-slate-200/80 dark:border-slate-800 rounded-2xl p-3 sm:p-4 lg:col-span-2 flex flex-col justify-between">
+          {/* Header & Controls */}
+          <div className="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-slate-100 dark:border-slate-800/80">
+            <div>
+              <h3 className="font-bold text-sm sm:text-base text-slate-800 dark:text-slate-100">
+                Monthly Expense Trend
+              </h3>
+              <p className="text-[11px] text-slate-400 dark:text-slate-500">
+                Spending overview & pattern
+              </p>
+            </div>
 
-            <div className="flex w-full sm:w-auto flex-col sm:flex-row gap-2">
-              <div className="relative w-full sm:w-[170px]">
-                <CalendarDays className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500 dark:text-slate-300" />
-                <select
-                  className="w-full appearance-none rounded-xl border border-slate-300/90 dark:border-white/10 bg-gradient-to-b from-white to-slate-50 dark:from-slate-800 dark:to-slate-900 pl-9 pr-3 py-2 text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-100 shadow-sm transition-all duration-200 hover:border-indigo-400 dark:hover:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                  value={monthsToShow}
-                  onChange={(e) => {
-                    const val = Number(e.target.value);
-                    localStorage.setItem("ShowChartMonth", val);
-                    setMonthsToShow(val);
-                  }}
-                >
-                  {monthOptions.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
+            {/* Responsive Controls */}
+            <div className="flex items-center gap-1.5">
+              {/* Month Presets */}
+              <div className="flex items-center gap-0.5 bg-slate-100 dark:bg-slate-800/90 p-0.5 rounded-xl border border-slate-200/60 dark:border-slate-700/60 text-xs">
+                {[
+                  { value: 3, label: "3M" },
+                  { value: 6, label: "6M" },
+                  { value: 12, label: "12M" },
+                ].map((opt) => (
+                  <button
+                    key={opt.value}
+                    type="button"
+                    onClick={() => {
+                      localStorage.setItem("ShowChartMonth", opt.value);
+                      setMonthsToShow(opt.value);
+                    }}
+                    className={`px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-lg font-semibold transition cursor-pointer text-[10px] sm:text-xs ${
+                      monthsToShow === opt.value
+                        ? "bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 shadow-sm"
+                        : "text-slate-500 dark:text-slate-400 hover:text-slate-700"
+                    }`}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
               </div>
 
-              <div className="relative w-full sm:w-[170px]">
-                <ChartColumnBig className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500 dark:text-slate-300" />
-                <select
-                  className="w-full appearance-none rounded-xl border border-slate-300/90 dark:border-white/10 bg-gradient-to-b from-white to-slate-50 dark:from-slate-800 dark:to-slate-900 pl-9 pr-3 py-2 text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-100 shadow-sm transition-all duration-200 hover:border-indigo-400 dark:hover:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                  value={chartType}
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    localStorage.setItem("ShowChartType", val);
-                    setChartType(val);
+              {/* Chart Type Toggle */}
+              <div className="flex items-center gap-0.5 bg-slate-100 dark:bg-slate-800/90 p-0.5 rounded-xl border border-slate-200/60 dark:border-slate-700/60 text-xs">
+                <button
+                  type="button"
+                  onClick={() => {
+                    localStorage.setItem("ShowChartType", "bar");
+                    setChartType("bar");
                   }}
+                  className={`p-1 sm:px-2 sm:py-1 rounded-lg font-semibold transition cursor-pointer flex items-center gap-1 text-[10px] sm:text-xs ${
+                    chartType === "bar"
+                      ? "bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 shadow-sm"
+                      : "text-slate-500 dark:text-slate-400 hover:text-slate-700"
+                  }`}
+                  title="Bar Chart"
                 >
-                  {chartTypeOptions.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
+                  <BarChart3 className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                  <span className="hidden sm:inline">Bar</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    localStorage.setItem("ShowChartType", "line");
+                    setChartType("line");
+                  }}
+                  className={`p-1 sm:px-2 sm:py-1 rounded-lg font-semibold transition cursor-pointer flex items-center gap-1 text-[10px] sm:text-xs ${
+                    chartType === "line"
+                      ? "bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 shadow-sm"
+                      : "text-slate-500 dark:text-slate-400 hover:text-slate-700"
+                  }`}
+                  title="Line Chart"
+                >
+                  <LineChartIcon className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                  <span className="hidden sm:inline">Line</span>
+                </button>
               </div>
             </div>
           </div>
 
-          <div className="h-[240px] sm:h-[320px] w-full">
+          {/* Chart Responsive Canvas Container */}
+          <div className="h-[210px] sm:h-[270px] lg:h-[300px] w-full pt-1">
             {chartType === "line" && <Line data={chartData} options={chartOptions} />}
             {chartType === "bar" && <Bar data={chartData} options={chartOptions} plugins={[barDataLabelsPlugin]} />}
           </div>
         </div>
 
-        {/* RECENT */}
-        <div className="bg-white dark:bg-slate-900 shadow-[0_4px_20px_0_rgba(0,0,0,0.2)] dark:shadow-none border border-slate-200 dark:border-white/5 rounded-xl p-1 sm:p-4 overflow-hidden">
-          <div className="flex items-center gap-2 mb-4">
-            <div className="p-2 rounded-lg bg-indigo-50 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400">
-              <Clock className="text-lg" />
+        {/* RECENT SPEND FEED */}
+        <div className="bg-white dark:bg-slate-900 shadow-sm dark:shadow-none border border-slate-200/80 dark:border-slate-800 rounded-2xl p-3.5 sm:p-4 overflow-hidden">
+          <div className="flex items-center gap-2 mb-3 pb-2 border-b border-slate-100 dark:border-slate-800/80">
+            <div className="p-1.5 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400">
+              <Clock className="w-4 h-4" />
             </div>
-            <h3 className="font-semibold text-gray-700 dark:text-gray-200">
+            <h3 className="font-bold text-sm sm:text-base text-slate-800 dark:text-slate-100">
               Recent Spend
             </h3>
           </div>
 
           {recent.length > 0 ? (
-            <div className="space-y-1">
+            <div className="space-y-1.5">
               {recent.map((item, index) => (
                 <div
                   key={index}
-                  className="flex justify-between items-start gap-2 p-2.5 sm:p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition"
+                  className="flex justify-between items-start gap-2 p-2 sm:p-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/80 transition"
                 >
                   <div className="min-w-0 flex-1">
-                    <p className="text-[11px] sm:text-xs font-medium text-gray-800 dark:text-gray-200 flex flex-wrap items-center gap-1">
-                      <span className="mr-2">{dayjs(item.date).format('DD/MM/YY')}</span>
-                      <span>• </span>
-                      <span className=" capitalize"> {item?.ledger?.ledger}</span>
+                    <p className="text-[11px] sm:text-xs font-semibold text-slate-800 dark:text-slate-200 flex flex-wrap items-center gap-1">
+                      <span className="text-slate-500 dark:text-slate-400">{dayjs(item.date).format('DD/MM/YY')}</span>
+                      <span className="text-slate-300 dark:text-slate-600">•</span>
+                      <span className="capitalize font-bold text-slate-800 dark:text-slate-100">{item?.ledger?.ledger}</span>
                     </p>
 
-                    <p className="text-[11px] sm:text-xs font-medium text-gray-500 dark:text-gray-400 truncate">
-                      {item.narration}
+                    <p className="text-[10.5px] sm:text-[11px] font-medium text-slate-500 dark:text-slate-400 truncate mt-0.5">
+                      {item.narration || "No narration"}
                     </p>
-
                   </div>
 
-                  <div className="text-xs sm:text-sm min-w-[78px] sm:min-w-[90px] text-end font-semibold text-indigo-600 dark:text-indigo-400 shrink-0">
-                    ₹ {item.amount}
+                  <div className="text-xs sm:text-sm font-extrabold text-slate-800 dark:text-slate-100 font-mono shrink-0">
+                    ₹ {fmt(item.amount)}
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-            <div className="flex flex-col items-center justify-center py-12 text-gray-400 dark:text-gray-500">
-              <div className="flex items-center justify-center w-12 h-12 mb-2 rounded-full bg-purple-100 dark:bg-purple-900/30">
-                <Clock className="text-2xl text-purple-500 dark:text-purple-400" />
+            <div className="flex flex-col items-center justify-center py-10 text-slate-400 dark:text-slate-500">
+              <div className="flex items-center justify-center w-10 h-10 mb-2 rounded-full bg-indigo-50 dark:bg-indigo-950/40">
+                <Clock className="w-5 h-5 text-indigo-500" />
               </div>
-              <p className="text-sm font-medium">
+              <p className="text-xs font-semibold">
                 No recent transactions
               </p>
             </div>

@@ -4,8 +4,8 @@ import { SquarePlus, RefreshCw, Pencil, Trash2, X } from 'lucide-react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setloader } from '../../store/login';
 import { userdata } from '../../store/api';
-import { toast } from 'react-toastify';
-import swal from 'sweetalert';
+import { toast } from '../../utils/toast';
+import { confirmDialog } from '../../utils/confirm';
 import TextField from '@mui/material/TextField';
 import LoadingButton from '../../components/LoadingButton';
 
@@ -121,47 +121,47 @@ const LedgerModal = ({ setdisable, isledupdate, setisledupdate }) => {
   };
 
   const deletee = async (id) => {
-    swal({
+    const willDelete = await confirmDialog({
       title: 'Are you sure?',
       text: 'Once deleted, you will not be able to recover this Data!',
       icon: 'warning',
-      buttons: true,
+      buttons: ['Cancel', 'Delete'],
       dangerMode: true,
-    }).then(async (willDelete) => {
-      if (willDelete) {
-        try {
-          const toastId = toast.loading("Deleting ledger...");
-          const res = await request({
-            url: 'deleteledger',
-            method: 'POST',
-            body: { ledgerid: id },
-          });
-
-          toast.update(toastId, { 
-            render: res.message || "Ledger Deleted Successfully", 
-            type: "success", 
-            isLoading: false, 
-            autoClose: 1300 
-          });
-          dispatch(userdata());
-        } catch (error) {
-          toast.update(toastId, { 
-            render: error?.message || "Failed to delete ledger", 
-            type: "error", 
-            isLoading: false, 
-            autoClose: 3000 
-          });
-          console.error(error);
-        }
-      }
     });
+
+    if (willDelete) {
+      try {
+        const toastId = toast.loading("Deleting ledger...");
+        const res = await request({
+          url: 'deleteledger',
+          method: 'POST',
+          body: { ledgerid: id },
+        });
+
+        toast.update(toastId, { 
+          render: res.message || "Ledger Deleted Successfully", 
+          type: "success", 
+          isLoading: false, 
+          autoClose: 1300 
+        });
+        dispatch(userdata());
+      } catch (error) {
+        toast.update(toastId, { 
+          render: error?.message || "Failed to delete ledger", 
+          type: "error", 
+          isLoading: false, 
+          autoClose: 3000 
+        });
+        console.error(error);
+      }
+    }
   };
 
   const setledgerininput = (id, ledgerName, budget) => {
     setledinp({
       ind: id,
       ledger: ledgerName,
-      budget: budget
+      budget: budget !== undefined && budget !== null && !isNaN(budget) ? budget : ""
     });
     setinsupdat(true);
   };
@@ -177,7 +177,7 @@ const LedgerModal = ({ setdisable, isledupdate, setisledupdate }) => {
     },
     {
       name: 'Budget',
-      selector: row => `₹${row.budget}`,
+      selector: row => (row.budget !== undefined && row.budget !== null && !isNaN(row.budget) && Number(row.budget) > 0 ? `₹${Number(row.budget).toLocaleString()}` : "-"),
       sortable: true,
     },
     {
@@ -267,7 +267,7 @@ const LedgerModal = ({ setdisable, isledupdate, setisledupdate }) => {
           </div>
 
           {/* Table Section */}
-          <div className="w-[95%] flex-1 rounded-[20px] border-2 border-dotted border-[var(--theme-border)] overflow-hidden min-h-0">
+          <div className="w-[95%] flex-1 rounded-sm border-2 border-dotted border-[var(--theme-border)] overflow-hidden min-h-0">
 
             <DataTable
               columns={columns}

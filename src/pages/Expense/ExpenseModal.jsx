@@ -2,8 +2,8 @@ import React, { useEffect } from 'react'
 import { RefreshCcw, Save, RefreshCw } from 'lucide-react';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { userdata } from '../../store/api'
-import { toast } from 'react-toastify';
+import { userdata } from '../../store/api';
+import { toast } from '../../utils/toast';
 import TextField from '@mui/material/TextField';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';

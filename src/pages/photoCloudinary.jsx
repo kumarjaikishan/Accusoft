@@ -5,7 +5,7 @@ import { Navigate } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
 import { header } from '../store/login';
 import { profilepicupdtae, profiledetailupdtae } from '../store/api';
-import { toast } from 'react-toastify';
+import { toast } from '../utils/toast';
 import { Button } from '@mui/material';
 
 // Helper function to convert image URL to File
@@ -49,8 +49,8 @@ const Photo = () => {
 
     const handleImageUpload1 = (e) => {
         if (e.target.files && e.target.files.length > 0) {
-            const file = event.target.files[0];
-            setSelectedFile(e.target.files[0])
+            const file = e.target.files[0];
+            setSelectedFile(e.target.files[0]);
 
             const reader = new FileReader();
             reader.onload = function (e) {

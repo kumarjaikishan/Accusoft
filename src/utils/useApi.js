@@ -1,7 +1,7 @@
 // utils/useApi.js
 
 import { useCallback, useState } from "react";
-import { toast } from "react-toastify";
+import { toast } from "./toast";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { apiClient } from "./apiClient";

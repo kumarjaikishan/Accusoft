@@ -3,7 +3,7 @@ import Navbar from '../components/navbar/navbar'
 import { Outlet, useLocation } from 'react-router-dom'
 import Sidebar from '../components/sidebar/sidebar'
 import Preloader from '../preloader'
-import { Heart, Github, Linkedin, Globe } from 'lucide-react'
+import { Heart, Github, Linkedin, Globe, Sparkles } from 'lucide-react'
 
 const InnerLayout = ({ sidebarclose, log }) => {
     const location = useLocation();
@@ -33,22 +33,67 @@ const InnerLayout = ({ sidebarclose, log }) => {
                     </Suspense>
                 </div>
 
-                <footer className="py-2  mt-auto print:hidden">
-                    <div className=" pt-2 pb-2 pr-2 fill-slate-200 border-t border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-end gap-6 text-[13px] font-semibold text-slate-500 dark:text-slate-300">
-                        <div className="flex items-center gap-1.5">
-                            Made with <Heart size={14} className="text-rose-500 fill-rose-500" /> by Jai Kishan
+                {/* ---------- MODERN FOOTER ---------- */}
+                <footer className="py-2 px-3 sm:px-6 mt-auto print:hidden">
+                    <div className="pt-2 pb-1 border-t border-slate-200/80 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-2 text-[10.5px] sm:text-xs font-medium text-slate-500 dark:text-slate-400">
+                        {/* Brand & Copyright */}
+                        <div className="flex items-center gap-1.5 text-slate-400 dark:text-slate-500">
+                            <span>© {new Date().getFullYear()}</span>
+                            <span className="font-bold text-slate-700 dark:text-slate-200">Accusoft</span>
+                            <span>• Expense Management</span>
                         </div>
-                        <div className="w-px h-4 bg-slate-300 dark:bg-slate-700 hidden sm:block"></div>
-                        <div className="flex items-center gap-4">
-                            <a href="https://github.com/dev-kishan" target="_blank" rel="noreferrer" className="hover:text-indigo-500 transition-colors" aria-label="GitHub">
-                                <Github size={16} />
-                            </a>
-                            <a href="https://www.linkedin.com/in/dev-kishan/" target="_blank" rel="noreferrer" className="hover:text-indigo-500 transition-colors" aria-label="LinkedIn">
-                                <Linkedin size={16} />
-                            </a>
-                            <a href="https://portfolio.battlefiesta.in/" target="_blank" rel="noreferrer" title="Portfolio" className="hover:text-indigo-500 transition-colors" aria-label="Portfolio">
-                                <Globe size={16} />
-                            </a>
+
+                        {/* Author Tag & Socials */}
+                        <div className="flex items-center gap-2.5 sm:gap-4">
+                            <div className="flex items-center gap-1 text-slate-600 dark:text-slate-300">
+                                <span>Made with</span>
+                                <Heart size={11} className="text-rose-500 fill-rose-500 animate-pulse inline" />
+                                <span>by</span>
+                                <a 
+                                    href="https://portfolio.battlefiesta.in/" 
+                                    target="_blank" 
+                                    rel="noreferrer" 
+                                    className="font-bold text-slate-800 dark:text-slate-100 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+                                >
+                                    Jai Kishan
+                                </a>
+                            </div>
+
+                            <div className="w-px h-3 bg-slate-200 dark:bg-slate-700"></div>
+
+                            {/* Social Icons */}
+                            <div className="flex items-center gap-3">
+                                <a 
+                                    href="https://github.com/kumarjaikishan" 
+                                    target="_blank" 
+                                    rel="noreferrer" 
+                                    className="text-slate-400 hover:text-slate-800 dark:hover:text-white transition-colors" 
+                                    aria-label="GitHub"
+                                    title="GitHub"
+                                >
+                                    <Github size={15} />
+                                </a>
+                                <a 
+                                    href="https://www.linkedin.com/in/dev-kishan/" 
+                                    target="_blank" 
+                                    rel="noreferrer" 
+                                    className="text-slate-400 hover:text-[#0a66c2] transition-colors" 
+                                    aria-label="LinkedIn"
+                                    title="LinkedIn"
+                                >
+                                    <Linkedin size={15} />
+                                </a>
+                                <a 
+                                    href="https://portfolio.battlefiesta.in/" 
+                                    target="_blank" 
+                                    rel="noreferrer" 
+                                    className="text-slate-400 hover:text-indigo-500 transition-colors" 
+                                    aria-label="Portfolio"
+                                    title="Portfolio"
+                                >
+                                    <Globe size={15} />
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </footer>
@@ -59,4 +104,3 @@ const InnerLayout = ({ sidebarclose, log }) => {
 }
 
 export default InnerLayout
-

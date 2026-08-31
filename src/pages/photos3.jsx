@@ -4,7 +4,7 @@ import { Frown, Undo, Pencil, CloudUpload } from 'lucide-react';
 import { useSelector, useDispatch } from 'react-redux';
 import { header } from '../store/login';
 import { profilepicupdtae, profiledetailupdtae } from '../store/api';
-import { toast } from 'react-toastify';
+import { toast } from '../utils/toast';
 
 // Helper function to convert image URL to File
 const urlToFile = (url, filename) => {

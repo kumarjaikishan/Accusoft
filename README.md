@@ -1,46 +1,16 @@
-# Expense Management System - Efficiently Manage Your Finances
+# React + Vite
 
-Welcome to the Expense Management System! This system allows users to efficiently manage their
-expenses by providing features such as adding, deleting, updating, and managing expense data. 
-Additionally, it offers comprehensive reporting options for day,week,month,year, and ledger-wise insights.
+This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
 
-# Live
-Running At- https://accusoft.battlefiesta.in
+Currently, two official plugins are available:
 
-## Key Features
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
-- **Add Expense:** Users can add new expenses with details like category, amount, and date.
-- **Delete Expense:** Remove unwanted expenses from the system.
-- **Update Expense:** Modify existing expense details.
-- **Manage Expenses:** View and organize expenses efficiently.
-- **User Authentication:**
-  - **Signup:** New users can create accounts with email and password.
-  - **Login:** Existing users can log in securely.
-  - **Email Verification:** Users receive a verification email upon signup for account confirmation.
+## React Compiler
 
-## Reporting
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-- **Day-wise Reporting:** Analyze expenses on a daily basis.
-- **Week-wise Reporting:** Track expenses on a weekly basis.
-- **Month-wise Reporting:** Get insights into monthly expenditure.
-- **Year-wise Reporting:** Review yearly expenditure.
-- **Ledger-wise Reporting:** Detailed ledger-wise reporting for a more granular view.
+## Expanding the Oxlint configuration
 
-## Technologies and Dependencies
-
-This project leverages the power of:
-
-- [React](https://reactjs.org/): A JavaScript library for building user interfaces.
-- [Vite](https://vitejs.dev/): A fast, opinionated frontend build tool.
-- [Redux](https://redux.js.org/): A predictable state container for JavaScript apps.
-- [Redux Persist](https://github.com/rt2zz/redux-persist): Persist and rehydrate a Redux store.
-- [React Toastify](https://fkhadra.github.io/react-toastify/): A notification library for React.
-- [SweetAlert](https://sweetalert.js.org/): A beautiful, responsive, customizable, accessible replacement for JavaScript's popup boxes.
-
-
-## Getting Started
-
-1. Clone the repository:
-
-   ```bash
-   git clone https://github.com/kumarjaikishan/frontend.git
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.

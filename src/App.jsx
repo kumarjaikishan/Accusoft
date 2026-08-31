@@ -2,7 +2,7 @@ import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { useEffect, lazy, Suspense } from 'react';
 import Preloader from './preloader';
 import { useSelector, useDispatch } from 'react-redux';
-import { setnarrow } from '../src/store/login';
+import { setnarrow } from './store/login';
 import ProtectedRoutes from './utils/protectedRoute';
 import AdminRoute from './utils/adminRoute';
 import { AnimatePresence } from 'framer-motion';

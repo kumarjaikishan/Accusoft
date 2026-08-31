@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@config "../tailwind.config.js";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -26,11 +27,6 @@
 }
 
 * {
-  /* margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  scroll-behavior: smooth; */
-
   &::-webkit-scrollbar {
     width: 4px;
     height: 4px;
@@ -44,7 +40,6 @@
     background-color: var(--maincolor);
   }
 }
-
 
 :root {
   --navheight: 70px;
@@ -95,7 +90,6 @@
   --tableevenbackground: #3737378f;
 }
 
-
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -106,15 +100,9 @@ body {
   position: relative;
   color: var(--contrast);
   width: 100%;
-  /* font-size: 18px; */
   height: 100vh;
   overflow-x: hidden;
   user-select: none;
-
-  >#print-container {
-    /* color: #d6d8d985; */
-    /* border: 2px solid red; */
-  }
 }
 
 :root {
@@ -124,7 +112,6 @@ body {
   --default-color-pink: #E01563;
   --default-color-orange: #E9A820;
 
-  /* Dot */
   --dot-width: 20px;
   --dot-opacity: 0.75;
 }
@@ -169,9 +156,7 @@ body {
   width: 100%;
   height: 100%;
   background: rgba(255, 255, 255, 0.1);
-  /* border: 2px solid red; */
   backdrop-filter: blur(5px);
-
 
   & .box {
     position: absolute;
@@ -186,7 +171,6 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-
 
     & h1 {
       width: 100%;
@@ -229,18 +213,13 @@ body {
       width: 100%;
       display: flex;
       justify-content: space-around;
-      /* border: 1px solid red; */
     }
-
-
   }
 
   & .box.shake {
     animation: aniok 0.4s linear forwards;
   }
 }
-
-
 
 @media print {
   * {

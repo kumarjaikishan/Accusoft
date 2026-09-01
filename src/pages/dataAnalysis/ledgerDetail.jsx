@@ -149,9 +149,9 @@ const VoucherDetail = () => {
         </div>
       </div>
 
-      {/* ---------------- TABLE (ORIGINAL EXACT CODE & SUMMARY ROW) ---------------- */}
-      <div className="bg-white rounded-xs md:rounded-xl shadow-lg p-0 md:p-4 lg:p-6">
-        <div className="flex hidden print:flex justify-center gap-4 border-b border-border-subtle p-2">
+      {/* ---------------- TABLE CONTAINER (MATCHES REPORT PAGE) ---------------- */}
+      <div className="bg-white dark:bg-slate-900/90 rounded-2xl shadow-sm border border-slate-200/80 dark:border-slate-800 overflow-hidden overflow-x-auto">
+        <div className="hidden print:flex justify-center gap-4 border-b border-border-subtle p-2">
           <div>
             <span className="text-sm font-medium">Ledger : </span>
             <span className="text-sm font-medium capitalize"> {ledgerName}</span>
@@ -168,8 +168,9 @@ const VoucherDetail = () => {
           highlightOnHover
           striped
           noDataComponent={
-            <div className="py-6 text-gray-500">
-              No Record Found
+            <div className="py-12 text-center text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-900">
+              <div className="text-4xl mb-2 opacity-30">📂</div>
+              <p className="font-semibold text-sm text-slate-700 dark:text-slate-300">No Record Found</p>
             </div>
           }
         />

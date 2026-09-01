@@ -8,20 +8,33 @@ function Breadcrumbs() {
   const mainColor = useSelector((state) => state.theme?.mainColor || "#4f46e5");
 
   const breadcrumbs = useMemo(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const ledgerName = searchParams.get("ledgerName");
     const segments = location.pathname.split("/").filter(Boolean);
 
     return segments.map((segment, index) => {
-      const formattedName = segment
-        .replace(/_/g, " ")
-        .replace(/-/g, " ")
-        .replace(/\b\w/g, (char) => char.toUpperCase());
+      // If segment is a 24-char hex Mongo ObjectId and ledgerName is present, display ledgerName
+      let formattedName = segment;
+      if (/^[0-9a-fA-F]{24}$/.test(segment) && ledgerName) {
+        formattedName = decodeURIComponent(ledgerName);
+      } else if (segment.toLowerCase() === "all" && ledgerName) {
+        formattedName = decodeURIComponent(ledgerName);
+      } else {
+        formattedName = segment
+          .replace(/_/g, " ")
+          .replace(/-/g, " ")
+          .replace(/\b\w/g, (char) => char.toUpperCase());
+      }
+
+      // Capitalize first letter if needed
+      formattedName = formattedName.charAt(0).toUpperCase() + formattedName.slice(1);
 
       return {
         name: formattedName,
         path: "/" + segments.slice(0, index + 1).join("/")
       };
     });
-  }, [location.pathname]);
+  }, [location.pathname, location.search]);
 
   if (breadcrumbs.length === 0) {
     return (

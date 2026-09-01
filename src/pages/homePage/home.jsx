@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, lazy, Suspense } from "react";
 import {
   IndianRupee,
   ShoppingBag,
@@ -12,74 +12,15 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import { header, setloader } from "../../store/login";
 import { motion } from "framer-motion";
-import { Bar, Line } from "react-chartjs-2";
 import { useApi } from "../../utils/useApi";
-
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  LineElement,
-  PointElement,
-  Filler,
-  Tooltip,
-  Legend,
-} from "chart.js";
 
 import dayjs from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
 
 dayjs.extend(isBetween);
 
-/* ✅ REQUIRED REGISTRATION */
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  LineElement,
-  PointElement,
-  Filler,
-  Tooltip,
-  Legend
-);
-
-/* ✅ CUSTOM PLUGIN FOR IN-BAR DATA LABELS */
-const barDataLabelsPlugin = {
-  id: "barDataLabels",
-  afterDatasetsDraw(chart) {
-    const { ctx, data } = chart;
-    if (chart.config.type !== "bar") return;
-
-    ctx.save();
-    const meta = chart.getDatasetMeta(0);
-    meta.data.forEach((bar, index) => {
-      const value = data.datasets[0].data[index];
-      if (!value || typeof value !== "number") return;
-
-      const { x, y, base, width } = bar;
-      const barHeight = base - y;
-
-      if (barHeight < 24 || width < 12) return;
-
-      ctx.save();
-      ctx.translate(x, y + (barHeight > 45 ? 12 : barHeight / 2));
-      ctx.rotate(-Math.PI / 2);
-
-      const fontSize = width < 20 ? "9px" : "11px";
-      ctx.font = `700 ${fontSize} Inter, sans-serif`;
-      ctx.fillStyle = "rgba(255, 255, 255, 0.95)";
-      ctx.textAlign = barHeight > 45 ? "right" : "center";
-      ctx.textBaseline = "middle";
-      ctx.shadowColor = "rgba(0, 0, 0, 0.4)";
-      ctx.shadowBlur = 3;
-
-      ctx.fillText(value.toLocaleString("en-IN"), 0, 0);
-      ctx.restore();
-    });
-    ctx.restore();
-  },
-};
+// 🚀 LAZY LOAD HEAVY CHART ENGINE (~191 kB)
+const ExpenseTrendChart = lazy(() => import("./ExpenseTrendChart"));
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -140,147 +81,6 @@ const Home = () => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
-  const filteredMonths = useMemo(
-    () => monthlyData.slice(-monthsToShow),
-    [monthlyData, monthsToShow]
-  );
-
-  /* ================= CHART CONFIGURATION ================= */
-  const chartData = useMemo(() => {
-    const labels = filteredMonths.map((m) => {
-      if (isMobileView && m.month) {
-        const parts = m.month.split(" ");
-        return parts[0];
-      }
-      return m.month;
-    });
-
-    const values = filteredMonths.map((m) => m.total);
-
-    if (chartType === "line") {
-      return {
-        labels,
-        datasets: [
-          {
-            label: "Monthly Expenses",
-            data: values,
-            borderColor: "#6366f1",
-            borderWidth: isMobileView ? 2.5 : 3,
-            backgroundColor: (context) => {
-              const { chart } = context;
-              const { ctx, chartArea } = chart;
-              if (!chartArea) return "rgba(99, 102, 241, 0.15)";
-
-              const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
-              gradient.addColorStop(0, "rgba(99, 102, 241, 0.35)");
-              gradient.addColorStop(0.7, "rgba(6, 182, 212, 0.1)");
-              gradient.addColorStop(1, "rgba(6, 182, 212, 0.0)");
-              return gradient;
-            },
-            tension: 0.35,
-            fill: true,
-            pointBackgroundColor: "#6366f1",
-            pointBorderColor: mode === "dark" ? "#0f172a" : "#ffffff",
-            pointBorderWidth: 2,
-            pointRadius: isMobileView ? 3 : 4,
-            pointHoverRadius: 6,
-          },
-        ],
-      };
-    }
-
-    return {
-      labels,
-      datasets: [
-        {
-          label: "Monthly Expenses",
-          data: values,
-          borderRadius: {
-            topLeft: isMobileView ? 6 : 8,
-            topRight: isMobileView ? 6 : 8,
-            bottomLeft: 0,
-            bottomRight: 0,
-          },
-          borderSkipped: "bottom",
-          maxBarThickness: isMobileView ? 32 : 48,
-          backgroundColor: (context) => {
-            const { chart } = context;
-            const { ctx, chartArea } = chart;
-            if (!chartArea) return "#6366f1";
-
-            const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
-            gradient.addColorStop(0, "#6366f1");
-            gradient.addColorStop(1, "#06b6d4");
-            return gradient;
-          },
-        },
-      ],
-    };
-  }, [filteredMonths, chartType, mode, isMobileView]);
-
-  const chartOptions = useMemo(
-    () => ({
-      responsive: true,
-      maintainAspectRatio: false,
-      layout: {
-        padding: {
-          top: 14,
-          bottom: 0,
-          left: isMobileView ? 2 : 0,
-          right: isMobileView ? 2 : 0,
-        },
-      },
-      animation: {
-        duration: 450,
-        easing: "easeOutQuart",
-      },
-      plugins: {
-        legend: {
-          display: false,
-        },
-        tooltip: {
-          backgroundColor: mode === "dark" ? "rgba(15, 23, 42, 0.95)" : "rgba(30, 41, 59, 0.95)",
-          titleColor: "#ffffff",
-          bodyColor: "#38bdf8",
-          padding: 8,
-          cornerRadius: 8,
-          callbacks: {
-            label: (context) => ` ₹ ${context.parsed.y?.toLocaleString("en-IN")}`,
-          },
-        },
-      },
-      scales: {
-        x: {
-          display: true,
-          ticks: {
-            color: mode === "dark" ? "#94a3b8" : "#64748b",
-            font: { size: isMobileView ? 9.5 : 11, weight: "600" },
-            maxRotation: 0,
-            autoSkip: true,
-            autoSkipPadding: 4,
-          },
-          grid: { display: false },
-        },
-        y: {
-          display: true,
-          ticks: {
-            display: !isMobileView,
-            color: mode === "dark" ? "#94a3b8" : "#64748b",
-            font: { size: 10.5, weight: "500" },
-            padding: 6,
-            maxTicksLimit: 5,
-            callback: (val) => `₹${val >= 1000 ? `${val / 1000}k` : val}`,
-          },
-          grid: { 
-            color: mode === "dark" ? "rgba(255, 255, 255, 0.06)" : "rgba(0, 0, 0, 0.06)",
-            drawBorder: false,
-          },
-        },
-      },
-    }),
-    [mode, isMobileView]
-  );
 
   const fmt = (n) =>
     typeof n === "number"
@@ -452,10 +252,20 @@ const Home = () => {
           </div>
 
           {/* Chart Responsive Canvas Container */}
-          <div className="h-[210px] sm:h-[270px] lg:h-[300px] w-full pt-1">
-            {chartType === "line" && <Line data={chartData} options={chartOptions} />}
-            {chartType === "bar" && <Bar data={chartData} options={chartOptions} plugins={[barDataLabelsPlugin]} />}
-          </div>
+          <Suspense
+            fallback={
+              <div className="h-[210px] sm:h-[270px] lg:h-[300px] w-full flex items-center justify-center bg-slate-50/50 dark:bg-slate-800/30 rounded-xl animate-pulse">
+                <span className="text-xs font-semibold text-slate-400">Loading chart...</span>
+              </div>
+            }
+          >
+            <ExpenseTrendChart
+              filteredMonths={monthlyData.slice(-monthsToShow)}
+              chartType={chartType}
+              mode={mode}
+              isMobileView={isMobileView}
+            />
+          </Suspense>
         </div>
 
         {/* RECENT SPEND FEED */}

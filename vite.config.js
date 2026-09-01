@@ -1,19 +1,24 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import svgrPlugin from "vite-plugin-svgr";
 import tailwindcss from "@tailwindcss/vite";
+import viteCompression from "vite-plugin-compression";
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     react(),
     tailwindcss(),
-    svgrPlugin({
-      include: "**/*.svg?react",
-      svgrOptions: {
-        icon: true,
-      },
+    // 🗜️ Pre-compress build assets (Gzip)
+    viteCompression({
+      algorithm: "gzip",
+      ext: ".gz",
+      threshold: 1024,
     }),
+    // viteCompression({
+    //   algorithm: "brotliCompress",
+    //   ext: ".br",
+    //   threshold: 1024,
+    // }),
   ],
   optimizeDeps: {
     include: [
@@ -23,9 +28,6 @@ export default defineConfig({
       "@reduxjs/toolkit",
       "react-redux",
       "redux-persist",
-      "@mui/material",
-      "@emotion/react",
-      "@emotion/styled",
       "framer-motion",
       "lucide-react",
       "sonner",
@@ -60,9 +62,6 @@ export default defineConfig({
             }
             if (id.includes("chart.js") || id.includes("react-chartjs-2")) {
               return "charts";
-            }
-            if (id.includes("@mui") || id.includes("@emotion")) {
-              return "mui";
             }
             if (
               id.includes("framer-motion") ||

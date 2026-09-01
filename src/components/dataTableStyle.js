@@ -48,11 +48,11 @@ const getCustomDataTableStyles = (mode, mainColor) => ({
     style: {
       backgroundColor: 'transparent',
       color: mode === 'dark' ? '#f1f5f9' : '#334155',
-      minHeight: '44px',
+      minHeight: '48px',
       '&:not(:last-child)': {
         borderBottomStyle: 'solid',
         borderBottomWidth: '1px',
-        borderBottomColor: mode === 'dark' ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)',
+        borderBottomColor: mode === 'dark' ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.12)',
       },
     },
     highlightOnHoverStyle: {

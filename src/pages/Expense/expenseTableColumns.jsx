@@ -14,6 +14,7 @@ const getDesktopColumns = ({ setDataForEdit, deleteExpense, paginationContext })
     sortable: true,
     width: '140px',
     cell: (row) => <span className="capitalize text-content font-medium">{row.ledger?.ledger}</span>,
+    footer: () => <span className="uppercase text-[11px] font-black tracking-wider text-slate-500 dark:text-slate-400">Total:</span>,
   },
   {
     name: 'Amt',
@@ -21,6 +22,10 @@ const getDesktopColumns = ({ setDataForEdit, deleteExpense, paginationContext })
     sortable: true,
     width: '100px',
     cell: (row) => <span className="font-mono font-semibold text-content">₹{row.amount}</span>,
+    footer: ({ displayData }) => {
+      const total = displayData.reduce((sum, item) => sum + (parseFloat(item.amount) || 0), 0);
+      return <span className="font-mono font-bold text-blue-600 dark:text-blue-400 text-xs">₹{total.toLocaleString()}</span>;
+    },
   },
   {
     name: 'Narration',
@@ -66,6 +71,7 @@ const getMobileColumns = ({ setDataForEdit, deleteExpense, paginationContext }) 
     sortable: true,
     width: '95px',
     cell: (row) => <span className="capitalize text-content font-medium text-xs">{row.ledger?.ledger}</span>,
+    footer: () => <span className="uppercase text-[10px] font-black tracking-wider text-slate-500 dark:text-slate-400">Total:</span>,
   },
   {
     name: '₹',
@@ -73,6 +79,10 @@ const getMobileColumns = ({ setDataForEdit, deleteExpense, paginationContext }) 
     sortable: true,
     width: '60px',
     cell: (row) => <span className="font-mono font-semibold text-content text-xs"> {row.amount}</span>,
+    footer: ({ displayData }) => {
+      const total = displayData.reduce((sum, item) => sum + (parseFloat(item.amount) || 0), 0);
+      return <span className="font-mono font-bold text-blue-600 dark:text-blue-400 text-[11px]">₹{total.toLocaleString()}</span>;
+    },
   },
   {
     name: 'Narration',

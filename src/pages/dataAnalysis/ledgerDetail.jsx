@@ -2,8 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import dayjs from "dayjs";
-import DataTableComponent from "react-data-table-component";
-const DataTable = DataTableComponent.default || DataTableComponent;
+import DataTable from "../../components/common/DataTable";
 import { motion } from "framer-motion";
 import { CSVLink } from "react-csv";
 import { 
@@ -85,23 +84,7 @@ const VoucherDetail = () => {
     }
   }, [month, year]);
 
-  const SummaryRow = () => (
-    <div className="flex items-center flex-nowrap whitespace-nowrap bg-surface border-t border-border-subtle font-bold text-content min-h-[40px] px-2">
-      <div
-        style={{ width: isMobile ? '125px' : '130px' }}
-        className="shrink-0 flex justify-end pr-2 text-[10px] md:text-xs uppercase tracking-wider opacity-70 whitespace-nowrap"
-      >
-        Total :
-      </div>
-      <div
-        style={{ width: isMobile ? '80px' : '70px' }}
-        className="shrink-0 font-mono text-blue-600 dark:text-blue-400 px-1 text-xs md:text-sm whitespace-nowrap"
-      >
-        ₹{totalAmount.toLocaleString()}
-      </div>
-      <div className="flex-1" />
-    </div>
-  );
+
 
   /* ---------------- TABLE COLUMNS ---------------- */
 
@@ -188,7 +171,6 @@ const VoucherDetail = () => {
             </div>
           }
         />
-        <SummaryRow />
       </div>
     </motion.div>
   );

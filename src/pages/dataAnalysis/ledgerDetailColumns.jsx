@@ -19,6 +19,7 @@ const getDesktopColumns = () => [
     selector: (row) => row.ledger?.ledger,
     cell: (row) => <div className="capitalize text-content font-medium text-xs">{row.ledger?.ledger}</div>,
     width: "90px",
+    footer: () => <span className="uppercase text-[11px] font-black tracking-wider text-slate-500 dark:text-slate-400">Total:</span>,
   },
   {
     name: "₹",
@@ -26,6 +27,10 @@ const getDesktopColumns = () => [
     sortable: true,
     right: true,
     width: "70px",
+    footer: ({ displayData }) => {
+      const total = displayData.reduce((sum, item) => sum + (parseFloat(item.amount) || 0), 0);
+      return <span className="font-mono font-bold text-blue-600 dark:text-blue-400 text-xs">₹{total.toLocaleString()}</span>;
+    },
   },
   {
     name: "Narration",
@@ -51,6 +56,7 @@ const getMobileColumns = () => [
     selector: (row) => row.ledger?.ledger,
     cell: (row) => <div className="capitalize text-content font-medium text-xs">{row.ledger?.ledger}</div>,
     width: "90px",
+    footer: () => <span className="uppercase text-[10px] font-black tracking-wider text-slate-500 dark:text-slate-400">Total:</span>,
   },
   {
     name: "₹",
@@ -58,6 +64,10 @@ const getMobileColumns = () => [
     sortable: true,
     right: true,
     width: "80px",
+    footer: ({ displayData }) => {
+      const total = displayData.reduce((sum, item) => sum + (parseFloat(item.amount) || 0), 0);
+      return <span className="font-mono font-bold text-blue-600 dark:text-blue-400 text-[11px]">₹{total.toLocaleString()}</span>;
+    },
   },
   {
     name: "Narration",

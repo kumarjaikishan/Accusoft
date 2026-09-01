@@ -11,8 +11,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { CSVLink } from "react-csv";
 import { setnarrow, setloader } from "../../store/login";
 import { motion } from "framer-motion";
-import DataTableComponent from "react-data-table-component";
-const DataTable = DataTableComponent.default || DataTableComponent;
+import DataTable from "../../components/common/DataTable";
 import dayjs from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
 dayjs.extend(isBetween);
@@ -329,21 +328,6 @@ const Report = () => {
                         </div>
                     }
                 />
-
-                {/* Single Polished Total Footer Strip Below Table */}
-                {filteredData.length > 0 && (
-                    <div className="flex items-center justify-between bg-slate-50 dark:bg-slate-900/90 border-t border-slate-200/80 dark:border-slate-800 px-5 py-3">
-                        <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                            Records : {filteredData.length}
-                        </span>
-                        <div className="flex items-center gap-1.5">
-                            <span className="text-xs text-slate-400 font-medium">Grand Total:</span>
-                            <span className="text-base sm:text-lg font-black text-indigo-600 dark:text-indigo-400 font-mono">
-                                ₹ {fmt(sumAmount)}
-                            </span>
-                        </div>
-                    </div>
-                )}
             </div>
         </motion.div>
     );

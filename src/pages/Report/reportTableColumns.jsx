@@ -11,10 +11,11 @@ const getDesktopColumns = ({ paginationContext }) => [
   },
   {
     name: "Ledger",
-    selector: (row) => row.ledger.ledger,
+    selector: (row) => row.ledger?.ledger,
     sortable: true,
     width: "100px",
-    cell: (row) => <span className="capitalize text-content font-medium">{row.ledger.ledger}</span>,
+    cell: (row) => <span className="capitalize text-content font-medium">{row.ledger?.ledger}</span>,
+    footer: () => <span className="uppercase text-[11px] font-black tracking-wider text-slate-500 dark:text-slate-400">Total:</span>,
   },
   {
     name: "₹",
@@ -22,6 +23,10 @@ const getDesktopColumns = ({ paginationContext }) => [
     sortable: true,
     width: "80px",
     cell: (row) => <span className="font-mono font-semibold text-content">₹{row.amount}</span>,
+    footer: ({ displayData }) => {
+      const total = displayData.reduce((sum, item) => sum + (parseFloat(item.amount) || 0), 0);
+      return <span className="font-mono font-bold text-blue-600 dark:text-blue-400 text-xs">₹{total.toLocaleString()}</span>;
+    },
   },
   {
     name: "Narration",
@@ -45,10 +50,11 @@ const getMobileColumns = ({ paginationContext }) => [
   },
   {
     name: "Ledger",
-    selector: (row) => row.ledger.ledger,
+    selector: (row) => row.ledger?.ledger,
     sortable: true,
     width: "90px",
-    cell: (row) => <span className="capitalize text-[11px] ">{row.ledger.ledger}</span>,
+    cell: (row) => <span className="capitalize text-[11px] ">{row.ledger?.ledger}</span>,
+    footer: () => <span className="uppercase text-[10px] font-black tracking-wider text-slate-500 dark:text-slate-400">Total:</span>,
   },
   {
     name: "₹",
@@ -56,6 +62,10 @@ const getMobileColumns = ({ paginationContext }) => [
     sortable: true,
     width: "65px",
     cell: (row) => <span className="text-xs font-semibold">₹{row.amount}</span>,
+    footer: ({ displayData }) => {
+      const total = displayData.reduce((sum, item) => sum + (parseFloat(item.amount) || 0), 0);
+      return <span className="font-mono font-bold text-blue-600 dark:text-blue-400 text-[11px]">₹{total.toLocaleString()}</span>;
+    },
   },
   {
     name: "Narration",

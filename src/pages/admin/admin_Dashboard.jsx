@@ -8,8 +8,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { setloader } from "../../store/login";
 import { motion } from "framer-motion";
-import DataTableComponent from "react-data-table-component";
-const DataTable = DataTableComponent.default || DataTableComponent;
+import DataTable from "../../components/common/DataTable";
 import { confirmDialog } from "../../utils/confirm";
 import { toast } from "../../utils/toast";
 import Useredit from "./usereditmodal";

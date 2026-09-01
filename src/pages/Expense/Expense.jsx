@@ -3,8 +3,7 @@ import { SquarePlus, Trash2, X, Book, Settings } from 'lucide-react';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { AnimatePresence, motion } from 'framer-motion';
-import DataTableComponent from 'react-data-table-component';
-const DataTable = DataTableComponent.default || DataTableComponent;
+import DataTable from '../../components/common/DataTable';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc.js';
 import timezone from 'dayjs/plugin/timezone.js';
@@ -253,37 +252,7 @@ const Expense = () => {
     setSelectedRowIds(selectedRows.map(e => e._id));
   }, []);
 
-  // Page total = sum of just the rows currently on screen (matches the
-  // original client-side behaviour, which summed the paginated slice).
-  // sumAmount from the server (everything matching the current search) is
-  // still fetched but intentionally not used here.
-  const totalAmount = useMemo(
-    () => rows.reduce((sum, item) => sum + (parseFloat(item.amount) || 0), 0),
-    [rows]
-  );
 
-  const SummaryRow = () => (
-    <div className="flex items-center flex-nowrap whitespace-nowrap bg-surface border-t border-border-subtle font-bold text-content min-h-[40px] px-2">
-      {/* 
-          Alignment Logic:
-          - Desktop prefix: 48px (selectable) + 70px (S.No) + 140px (Ledger) = 258px
-          - Mobile prefix: 95px (Ledger)
-      */}
-      <div
-        style={{ width: isMobile ? '95px' : '258px' }}
-        className="shrink-0 flex justify-end pr-2 text-[10px] md:text-xs uppercase tracking-wider opacity-70 whitespace-nowrap"
-      >
-        Page Total :
-      </div>
-      <div
-        style={{ width: isMobile ? '60px' : '100px' }}
-        className="shrink-0 font-mono text-blue-600 dark:text-blue-400 px-1 text-xs md:text-sm whitespace-nowrap"
-      >
-        ₹{totalAmount.toLocaleString()}
-      </div>
-      <div className="flex-1" />
-    </div>
-  );
 
   const TableSkeleton = () => (
     <div className="w-full p-4 space-y-3 bg-surface animate-pulse">
@@ -452,7 +421,6 @@ const Expense = () => {
                 }
               />
             </div>
-            <SummaryRow />
           </div>
 
           {/* Modals */}

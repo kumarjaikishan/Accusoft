@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import dayjs from "dayjs";
 import DataTable from "../../components/common/DataTable";
 import { motion } from "framer-motion";
-import { CSVLink } from "react-csv";
+import { downloadCSV } from "../../utils/csvExport";
 import { 
   Download, 
   Printer, 
@@ -122,21 +122,23 @@ const VoucherDetail = () => {
 
         {/* Right Side: Actions (CSV & Print) */}
         <div className="flex items-center gap-2 w-full sm:w-auto">
-          <CSVLink
-            data={filteredData}
-            headers={[
-              { label: "Ledger", key: "ledger.ledger" },
-              { label: "Amount", key: "amount" },
-              { label: "Date", key: "date" },
-              { label: "Narration", key: "narration" },
-            ]}
-            filename={`${ledgerName || "all-ledger"}-${displayMonth}-${year}-record.csv`}
-            className="w-full sm:w-auto"
+          <button
+            onClick={() =>
+              downloadCSV(
+                filteredData,
+                [
+                  { label: "Ledger", key: "ledger.ledger" },
+                  { label: "Amount", key: "amount" },
+                  { label: "Date", key: "date" },
+                  { label: "Narration", key: "narration" },
+                ],
+                `${ledgerName || "all-ledger"}-${displayMonth}-${year}-record`
+              )
+            }
+            className="w-full sm:w-auto h-8 px-3 flex items-center justify-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-sm text-xs font-bold transition cursor-pointer"
           >
-            <button className="w-full sm:w-auto h-8 px-3 flex items-center justify-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-sm text-xs font-bold transition cursor-pointer">
-              <Download size={13} /> Export CSV
-            </button>
-          </CSVLink>
+            <Download size={13} /> Export CSV
+          </button>
 
           <button
             onClick={handlePrint}

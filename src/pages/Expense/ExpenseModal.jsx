@@ -1,18 +1,14 @@
-import React, { useEffect } from 'react'
+import React from 'react';
 import { RefreshCcw, Save, RefreshCw } from 'lucide-react';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { userdata } from '../../store/api';
 import { toast } from '../../utils/toast';
-import TextField from '@mui/material/TextField';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import Autocomplete from '@mui/material/Autocomplete';
-import Button from '@mui/material/Button';
-import InputAdornment from '@mui/material/InputAdornment';
 import { useApi } from '../../utils/useApi';
 import Modalbox from '../../components/custommodal/Modalbox';
-import LoadingButton from '../../components/LoadingButton';
+import TextInput from '../../components/common/TextInput';
+import AutocompleteSelect from '../../components/common/AutocompleteSelect';
+import Button from '../../components/common/Button';
 
 const ExpenseModalbox = ({ modal, disable, handlechange, fields, isupdate, sub, setmodal, setisupdate, reset, onSuccess }) => {
     const useralldetail = useSelector((state) => state.userexplist);
@@ -60,7 +56,18 @@ const ExpenseModalbox = ({ modal, disable, handlechange, fields, isupdate, sub, 
         return capitalizedWords.join(' ');
     };
 
-    const selectedLedgerOption = useralldetail?.ledgerlist?.find(val => val._id === fields?.ledger) || null;
+    const handleAmountChange = (e) => {
+        const val = e.target.value;
+        // Allow only numeric digits
+        if (/^\d*$/.test(val)) {
+            handlechange(e);
+        }
+    };
+
+    const ledgerOptions = (useralldetail?.ledgerlist || []).map(item => ({
+        value: item._id,
+        label: item.ledger ? item.ledger.charAt(0).toUpperCase() + item.ledger.slice(1) : ''
+    }));
 
     return (
         <Modalbox open={modal} onClose={() => setmodal(false)}>
@@ -69,89 +76,79 @@ const ExpenseModalbox = ({ modal, disable, handlechange, fields, isupdate, sub, 
                     {isupdate ? "Update Voucher" : "Add Voucher"}
                 </h1>
 
-                <span className="flex flex-col rounded-t-[30px] border-t border-white/20 pt-[5px] bg-surface items-center w-full pb-[20px] max-sm:pb-[15px]">
-                    <Autocomplete
-                        options={useralldetail?.ledgerlist || []}
-                        getOptionLabel={(option) => option.ledger ? option.ledger.charAt(0).toUpperCase() + option.ledger.slice(1) : ''}
-                        value={selectedLedgerOption}
-                        onChange={(event, newValue) => {
-                            handlechange({
-                                target: {
-                                    name: 'ledger',
-                                    value: newValue ? newValue._id : ''
-                                }
-                            });
-                        }}
-                        sx={{ width: '90%', mt: 2, mb: 2 }}
-                        renderInput={(params) => (
-                            <TextField
-                                {...params}
-                                label="Ledger"
-                                placeholder="Type or select ledger..."
-                            />
-                        )}
+                <div className="flex flex-col rounded-t-[30px] border-t border-white/20 pt-4 bg-surface items-center w-full px-6 pb-6 gap-3.5">
+                    <AutocompleteSelect
+                        label="Ledger"
+                        name="ledger"
+                        value={fields?.ledger || ''}
+                        onChange={handlechange}
+                        options={ledgerOptions}
+                        placeholder="Type or search ledger..."
+                        required
                     />
 
-                    <TextField
-                        type='date'
+                    <TextInput
+                        type="date"
                         label="Date"
-                        value={fields?.date}
                         name="date"
+                        value={fields?.date || ''}
                         onChange={handlechange}
-                        sx={{ width: '90%', mt: 2, mb: 2 }} />
+                        required
+                    />
 
-                    <TextField sx={{ width: '90%', mt: 2, mb: 2 }} id="voucher-amount" label="Amount" name="amount"
-                        onKeyPress={(event) => { if (!/[0-9]/.test(event.key)) { event.preventDefault(); } }}
-                        type="tel" value={fields?.amount}
+                    <TextInput
+                        id="voucher-amount"
+                        label="Amount"
+                        name="amount"
+                        type="text"
+                        inputMode="numeric"
+                        pattern="[0-9]*"
+                        value={fields?.amount || ''}
+                        onChange={handleAmountChange}
+                        startAdornment={<span className="font-semibold text-slate-500">₹</span>}
+                        placeholder="0"
+                        required
+                    />
+
+                    <TextInput
+                        multiline
+                        rows={3.5}
+                        id="voucher-narration"
+                        label="Narration"
+                        name="narration"
+                        value={fields?.narration || ''}
                         onChange={handlechange}
-                        InputProps={{
-                            startAdornment: <InputAdornment position="start">₹</InputAdornment>,
-                        }}
-                        variant="outlined" />
+                        placeholder="Enter description or details..."
+                        inputClassName="min-h-[85px]"
+                    />
 
-                    <TextField multiline rows={2} sx={{ width: '90%', mt: 2, mb: 2 }} id="voucher-narration" label="Narration"
-                        name="narration" value={fields?.narration} type="text"
-                        onChange={handlechange}
-                        variant="outlined" />
-
-                    <div className='w-full flex justify-around mt-4 max-sm:flex-col max-sm:gap-2 max-sm:px-4'>
-                        {isupdate ? (
-                            <LoadingButton
-                                loading={loading}
-                                onClick={() => updatee(fields._id)}
-                                icon={RefreshCw}
-                                className="w-[45%] max-sm:w-full"
-                            >
-                                Update
-                            </LoadingButton>
-                        ) : (
-                            <LoadingButton
-                                loading={loading}
-                                onClick={sub}
-                                icon={Save}
-                                className="w-[45%] max-sm:w-full"
-                            >
-                                Submit
-                            </LoadingButton>
-                        )}
+                    <div className="w-full flex justify-between items-center gap-3 mt-3">
+                        <Button
+                            loading={loading}
+                            onClick={isupdate ? () => updatee(fields._id) : sub}
+                            icon={isupdate ? RefreshCw : Save}
+                            className="flex-1"
+                        >
+                            {isupdate ? "Update" : "Submit"}
+                        </Button>
 
                         <Button
+                            variant="outline"
                             onClick={() => {
                                 setmodal(false);
                                 setisupdate(false);
                                 reset();
                             }}
-                            className='w-[45%] max-sm:w-full text-slate-600 border-slate-300' 
-                            variant="outlined" 
-                            startIcon={<RefreshCcw size={18} />}
+                            icon={RefreshCcw}
+                            className="flex-1"
                         >
                             Cancel
                         </Button>
                     </div>
-                </span>
+                </div>
             </div>
         </Modalbox>
-    )
-}
+    );
+};
 
 export default ExpenseModalbox;

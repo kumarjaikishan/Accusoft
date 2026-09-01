@@ -8,9 +8,9 @@ import {
     Filter
 } from 'lucide-react';
 import { useSelector, useDispatch } from "react-redux";
-import { CSVLink } from "react-csv";
 import { setnarrow, setloader } from "../../store/login";
 import { motion } from "framer-motion";
+import { downloadCSV } from "../../utils/csvExport";
 import DataTable from "../../components/common/DataTable";
 import dayjs from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
@@ -214,20 +214,23 @@ const Report = () => {
 
                     {/* Right: Export & Print Buttons */}
                     <div className="flex items-center gap-2">
-                        <CSVLink
-                            data={filteredData}
-                            headers={[
-                                { label: "Ledger", key: "ledger.ledger" },
-                                { label: "Amount", key: "amount" },
-                                { label: "Date", key: "date" },
-                                { label: "Narration", key: "narration" },
-                            ]}
-                            filename={`${user?.name || 'Expense'}-Report`}
+                        <button
+                            onClick={() =>
+                                downloadCSV(
+                                    filteredData,
+                                    [
+                                        { label: "Ledger", key: "ledger.ledger" },
+                                        { label: "Amount", key: "amount" },
+                                        { label: "Date", key: "date" },
+                                        { label: "Narration", key: "narration" },
+                                    ],
+                                    `${user?.name || 'Expense'}-Report`
+                                )
+                            }
+                            className="h-8 px-3 flex items-center justify-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-sm text-xs font-bold transition cursor-pointer"
                         >
-                            <button className="h-8 px-3 flex items-center justify-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-sm text-xs font-bold transition cursor-pointer">
-                                <Download size={13} /> Export CSV
-                            </button>
-                        </CSVLink>
+                            <Download size={13} /> Export CSV
+                        </button>
 
                         <button
                             onClick={handlePrint}

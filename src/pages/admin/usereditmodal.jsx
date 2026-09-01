@@ -1,18 +1,13 @@
-import React, { useEffect } from 'react'
+import React, { useEffect } from 'react';
 import { RefreshCcw, Save } from 'lucide-react';
-
 import { useDispatch } from 'react-redux';
 import { setloader } from '../../store/login';
 import { toast } from '../../utils/toast';
-import TextField from '@mui/material/TextField';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-import Button from '@mui/material/Button';
-import LoadingButton from '../../components/LoadingButton';
-
 import { useApi } from '../../utils/useApi';
+import Modalbox from '../../components/custommodal/Modalbox';
+import TextInput from '../../components/common/TextInput';
+import SelectInput from '../../components/common/SelectInput';
+import Button from '../../components/common/Button';
 
 const Useredit = ({ inp, setinp, modal, setmodal, handler, fetche }) => {
     const dispatch = useDispatch();
@@ -27,7 +22,8 @@ const Useredit = ({ inp, setinp, modal, setmodal, handler, fetche }) => {
             handler(e);
         } else if (setinp) {
             const { name, value } = e.target;
-            setinp((prev) => ({ ...prev, [name]: value }));
+            const parsedVal = value === "true" ? true : value === "false" ? false : value;
+            setinp((prev) => ({ ...prev, [name]: parsedVal }));
         }
     };
 
@@ -55,75 +51,88 @@ const Useredit = ({ inp, setinp, modal, setmodal, handler, fetche }) => {
     const currentVerified = inp?.verified !== undefined ? inp.verified : (inp?.isverified || false);
 
     return (
-        <div className="modal" style={{ display: modal ? "block" : "none" }}>
-            <div className="box">
-                <h1 className="text-white">User Detail</h1>
-                <span className="wrapper">
-                    <TextField sx={{ width: '90%', mt: 3, mb: 1 }} id="name" label="Name"
-                        name="name" value={inp.name || ''} type="text" onChange={handleChange}
-                        variant="outlined" />
-                    <TextField sx={{ width: '90%', mt: 1, mb: 1 }} id="phone" label="Phone" name="phone"
-                        onKeyPress={(event) => { if (!/[0-9]/.test(event.key)) { event.preventDefault(); } }}
-                        type="tel" value={inp.phone || ''}
+        <Modalbox open={modal} onClose={() => setmodal(false)}>
+            <div className="w-[460px] max-sm:w-[94vw] rounded-2xl overflow-hidden bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl flex flex-col">
+                <div className="bg-[var(--maincolor)] px-5 py-3.5 text-white">
+                    <h2 className="text-lg font-bold">Edit User Details</h2>
+                </div>
+
+                <div className="p-5 flex flex-col gap-3.5">
+                    <TextInput
+                        id="name"
+                        label="Full Name"
+                        name="name"
+                        value={inp.name || ''}
                         onChange={handleChange}
-                        variant="outlined" />
+                        placeholder="User name"
+                        required
+                    />
 
-                    <TextField disabled sx={{ width: '90%', mt: 1, mb: 1 }} id="email" label="Email"
-                        name="email" value={inp?.email || ''} type="text"
-                        variant="outlined" />
+                    <TextInput
+                        id="phone"
+                        label="Phone"
+                        name="phone"
+                        type="tel"
+                        value={inp.phone || ''}
+                        onChange={handleChange}
+                        placeholder="Phone number"
+                    />
 
-                    <FormControl className='caps' sx={{ width: '90%', mt: 1, mb: 1 }}>
-                        <InputLabel id="type-label">Type</InputLabel>
-                        <Select
-                            name="admin"
-                            labelId="type-label"
-                            onChange={handleChange}
-                            value={currentAdmin}
-                            id="type-select"
-                            label="Type"
-                        >
-                            <MenuItem className='caps' value={false}>User</MenuItem>
-                            <MenuItem className='caps' value={true}>Admin</MenuItem>
-                        </Select>
-                    </FormControl>
-                    
-                    <FormControl className='caps' sx={{ width: '90%', mt: 1, mb: 2 }}>
-                        <InputLabel id="verified-label">Verified</InputLabel>
-                        <Select
-                            name="verified"
-                            labelId="verified-label"
-                            onChange={handleChange}
-                            value={currentVerified}
-                            id="verified-select"
-                            label="Verified"
-                        >
-                            <MenuItem className='caps' value={true}>Verified</MenuItem>
-                            <MenuItem className='caps' value={false}>Unverified</MenuItem>
-                        </Select>
-                    </FormControl>
+                    <TextInput
+                        disabled
+                        id="email"
+                        label="Email Address"
+                        name="email"
+                        value={inp?.email || ''}
+                    />
 
-                    <div className='flex justify-around w-full gap-2 px-4'>
-                        <LoadingButton
+                    <SelectInput
+                        id="type-select"
+                        label="Role / Type"
+                        name="admin"
+                        value={String(currentAdmin)}
+                        onChange={handleChange}
+                        options={[
+                            { value: "false", label: "User" },
+                            { value: "true", label: "Admin" },
+                        ]}
+                    />
+
+                    <SelectInput
+                        id="verified-select"
+                        label="Verification Status"
+                        name="verified"
+                        value={String(currentVerified)}
+                        onChange={handleChange}
+                        options={[
+                            { value: "true", label: "Verified" },
+                            { value: "false", label: "Unverified" },
+                        ]}
+                    />
+
+                    <div className="flex justify-between items-center gap-3 mt-3">
+                        <Button
                             loading={loading}
                             onClick={editdetail}
                             icon={Save}
-                            className="w-1/2"
+                            className="flex-1"
                         >
-                            Submit
-                        </LoadingButton>
+                            Save Changes
+                        </Button>
+
                         <Button
+                            variant="outline"
                             onClick={() => setmodal(false)}
-                            className='w-1/2 bg-gray-200 dark:bg-slate-700 text-slate-800 dark:text-gray-100' 
-                            variant="outlined" 
-                            startIcon={<RefreshCcw size={18} />}
+                            icon={RefreshCcw}
+                            className="flex-1"
                         >
                             Cancel
                         </Button>
                     </div>
-                </span>
+                </div>
             </div>
-        </div>
-    )
-}
+        </Modalbox>
+    );
+};
 
 export default Useredit;

@@ -6,7 +6,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { header } from '../store/login';
 import { profilepicupdtae, profiledetailupdtae } from '../store/api';
 import { toast } from '../utils/toast';
-import { Button } from '@mui/material';
+import Button from '../components/common/Button';
 
 // Helper function to convert image URL to File
 const urlToFile = (url, filename) => {
@@ -284,8 +284,8 @@ const Photo = () => {
                                 <div className="bg-indigo-600 dark:bg-cyan-400 h-2 rounded-full transition-all duration-500" style={{ width: `${progress}%` }}></div>
                             </div>
                             <div className="mt-2 flex gap-4 w-full justify-center">
-                                <Button color='error' onClick={resetForm} startIcon={<Undo />} variant="outlined">Reset</Button>
-                                <Button onClick={handleUpload1} startIcon={<Upload />} variant="contained">Upload</Button>
+                                <Button variant="outline" onClick={resetForm} icon={Undo}>Reset</Button>
+                                <Button variant="primary" onClick={handleUpload1} icon={Upload}>Upload</Button>
                             </div>
                         </div>
                     }

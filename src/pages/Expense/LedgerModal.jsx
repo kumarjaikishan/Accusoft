@@ -6,7 +6,7 @@ import { setloader } from '../../store/login';
 import { userdata } from '../../store/api';
 import { toast } from '../../utils/toast';
 import { confirmDialog } from '../../utils/confirm';
-import TextField from '@mui/material/TextField';
+import TextInput from '../../components/common/TextInput';
 import LoadingButton from '../../components/LoadingButton';
 
 import { useApi } from '../../utils/useApi';
@@ -221,28 +221,25 @@ const LedgerModal = ({ setdisable, isledupdate, setisledupdate }) => {
         <div className="w-full flex flex-col flex-1 items-center pt-[5px] pb-[20px] rounded-t-[30px] border-t border-white/20 bg-surface min-h-0">
 
           {/* Input Row */}
-          <div className="flex w-[95%] h-[60px] items-center justify-around gap-[5px] p-[8px] rounded-[20px] mb-[15px]">
+          <div className="flex w-[95%] items-center justify-around gap-2 px-3 py-2 rounded-2xl mb-3">
+            <div className="flex-1">
+              <TextInput
+                placeholder="Enter Ledger name"
+                value={ledinp.ledger}
+                onChange={handleLedger}
+                inputClassName="!py-2"
+              />
+            </div>
 
-            <TextField
-              label="Enter Ledger"
-              size="small"
-              variant="outlined"
-              style={{ width: "250px" }}
-              value={ledinp.ledger}
-              onChange={handleLedger}
-              className="inpe"
-            />
-
-            <TextField
-              label="Budget"
-              size="small"
-              variant="outlined"
-              value={ledinp.budget}
-              style={{ width: "100px" }}
-              onChange={handleBudget}
-              className="inpe"
-              type="number"
-            />
+            <div className="w-28">
+              <TextInput
+                placeholder="Budget"
+                value={ledinp.budget}
+                onChange={handleBudget}
+                type="number"
+                inputClassName="!py-2"
+              />
+            </div>
 
             {isupda ? (
               <LoadingButton

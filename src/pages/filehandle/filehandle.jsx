@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { Pencil, Trash2, Save, RefreshCw } from 'lucide-react';
 import { toast } from '../../utils/toast';
 import { confirmDialog } from '../../utils/confirm';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
+import TextInput from '../../components/common/TextInput';
+import Button from '../../components/common/Button';
 
 const Filehandle = () => {
     const [files, setfiles] = useState([]);
@@ -340,12 +340,12 @@ const Filehandle = () => {
 
     return (
         <div className="w-full h-full overflow-hidden relative p-[5px]">
-            <div style={{ margin: '5px 0px', display: 'flex', justifyContent: 'center' }}>
-                <Button className='muibtn' sx={{ mr: 5 }} onClick={() => setmodalopen(true)} disabled={disable} variant="contained" startIcon={<RefreshCw />}>
+            <div className="my-2 flex justify-center gap-4">
+                <Button onClick={() => setmodalopen(true)} disabled={disable} icon={RefreshCw}>
                     Create New
                 </Button>
-                <Button className='muibtn outlined' onClick={() => updateTimerall()} variant="outlined" startIcon={<Save />}>
-                    update timer
+                <Button variant="outline" onClick={() => updateTimerall()} icon={Save}>
+                    Update Timer
                 </Button>
             </div>
 
@@ -424,43 +424,53 @@ const Filehandle = () => {
                         <input className="w-full text-center" type="file" multiple onChange={handleFileChange} />
                     </div>
                 
-                    <div className="px-[10px] py-[5px] text-center mt-[5px]">
-                        <TextField fullWidth id="outlined-basic" label="Email Recipients" name="email"
+                    <div className="px-4 py-2">
+                        <TextInput
+                            label="Email Recipients"
+                            name="email"
                             value={emails}
                             onChange={handleEmailChange}
                             helperText="Add multiple Emails with comma-separated"
-                            size="small"
-                            variant="outlined" />
+                            placeholder="e.g. user@example.com, admin@test.com"
+                        />
                     </div>
 
-                    <div className="px-[10px] py-[5px] text-center mt-[5px]">
-                        <TextField fullWidth id="outlined-basic" label="Days" name="days"
-                            onKeyPress={(event) => { if (!/[0-9]/.test(event.key)) { event.preventDefault(); } }}
-                            type="tel" value={days}
+                    <div className="px-4 py-2">
+                        <TextInput
+                            label="Days"
+                            name="days"
+                            type="tel"
+                            value={days}
                             onChange={handledayChange}
                             helperText="Number of days you want"
-                            size="small"
-                            variant="outlined" />
+                            placeholder="e.g. 30"
+                        />
                     </div>
-                    <div className="px-[10px] py-[5px] text-center mt-[5px]">
-                        <TextField fullWidth id="outlined-basic" label="Message" name="message"
+
+                    <div className="px-4 py-2">
+                        <TextInput
+                            label="Message"
+                            name="message"
                             multiline
-                            rows={4}
+                            rows={3}
                             value={messagee}
                             onChange={handlemessageChange}
-                            helperText="Message For Your relatives"
-                            size="small"
-                            variant="outlined" />
+                            helperText="Message for your recipients"
+                            placeholder="Write your note..."
+                        />
                     </div>
 
-                    <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-                        {isupdate ? <Button className='muibtn' disabled={disable} onClick={update} variant="contained" startIcon={<RefreshCw />}>
-                            Update
-                        </Button> : <Button className='muibtn' disabled={disable} type="submit" variant="contained" startIcon={<RefreshCw />}>
-                            Create Job
-                        </Button>}
-
-                        <Button className='muibtn outlined' onClick={reset} variant="outlined" startIcon={<Save />}>
+                    <div className="flex justify-around px-4 py-3 gap-2">
+                        {isupdate ? (
+                            <Button disabled={disable} onClick={update} icon={RefreshCw} className="flex-1">
+                                Update
+                            </Button>
+                        ) : (
+                            <Button disabled={disable} type="submit" icon={RefreshCw} className="flex-1">
+                                Create Job
+                            </Button>
+                        )}
+                        <Button variant="outline" onClick={() => { setmodalopen(false); reset(); }} className="flex-1">
                             Cancel
                         </Button>
                     </div>

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Send } from 'lucide-react';
-import TextField from '@mui/material/TextField';
 import { toast } from '../../utils/toast';
 import { useSelector } from 'react-redux';
+import TextInput from '../../components/common/TextInput';
+import Button from '../../components/common/Button';
 
 const SlowPage = () => {
     const useralldetail = useSelector((state) => state.userexplist);
@@ -24,14 +25,10 @@ const SlowPage = () => {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`,
                 },
-                body: JSON.stringify({ delay })
+                body: JSON.stringify({ delay }),
             });
             const data = await res.json();
-            if (res.ok) {
-                toast.success(data.message, { autoClose: 1300 });
-            } else {
-                toast.warn(data.message ? data.message : "Error Occurred", { autoClose: 1500 });
-            }
+            toast.success(data.message, { autoClose: 1500 });
             setdisable(false);
         } catch (error) {
             setdisable(false);
@@ -41,25 +38,25 @@ const SlowPage = () => {
     };
 
     return (
-        <div className="w-full h-[calc(100vh-var(--navheight))] gap-[1.2rem] flex justify-center items-center flex-col">
-            <h2>Slowdown the whole Server</h2>
-            <form className="w-[200px] h-[100px] gap-[1.2rem] flex flex-col" onSubmit={submit}>
-                <TextField
+        <div className="w-full h-[calc(100vh-var(--navheight))] gap-4 flex justify-center items-center flex-col p-4">
+            <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100">Slowdown the whole Server</h2>
+            <form className="w-full max-w-[280px] gap-3 flex flex-col" onSubmit={submit}>
+                <TextInput
                     label="Delay (In MilliSecond)"
                     required
-                    type='tel'
-                    className='filled'
+                    type="tel"
                     onChange={handle}
                     name="delay"
                     value={delay}
                 />
-                <button
+                <Button
                     type="submit"
-                    disabled={disable}
-                    className="w-full bg-[var(--maincolor)] hover:bg-[var(--maincolor)]/90 text-white font-bold py-2 px-4 rounded transition-opacity disabled:opacity-70 flex items-center justify-center gap-2 uppercase tracking-wide shadow-md"
+                    loading={disable}
+                    icon={Send}
+                    className="w-full mt-1"
                 >
-                    {disable ? "Submitting..." : <><Send /> Submit</>}
-                </button>
+                    Submit
+                </Button>
             </form>
         </div>
     );

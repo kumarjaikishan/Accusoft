@@ -1,6 +1,5 @@
 import React from "react";
 import dayjs from "dayjs";
-import { Avatar } from "@mui/material";
 import { 
   Pencil, 
   Trash2, 
@@ -21,14 +20,13 @@ const getDesktopColumns = ({ setForm, setModal, deleteUser }) => [
     selector: (row) => row.name,
     cell: (row) => (
       <div className="flex items-center gap-3 py-1">
-        <Avatar
-          src={row?.imgsrc}
-          alt={row?.name || "User Avatar"}
-          sx={{ width: 34, height: 34 }}
-          className="ring-2 ring-slate-100 dark:ring-slate-800"
-        >
-          {!row?.imgsrc && <User className="w-4 h-4 text-slate-500" />}
-        </Avatar>
+        <div className="w-[34px] h-[34px] rounded-full overflow-hidden shrink-0 ring-2 ring-slate-100 dark:ring-slate-800 bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
+          {row?.imgsrc ? (
+            <img src={row.imgsrc} alt={row?.name || "User Avatar"} className="w-full h-full object-cover" />
+          ) : (
+            <User className="w-4 h-4 text-slate-500" />
+          )}
+        </div>
         <div className="min-w-0">
           <div className="flex items-center gap-1.5">
             <p className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-100 truncate">
@@ -136,13 +134,13 @@ const getMobileColumns = ({ setForm, setModal, deleteUser }) => [
     selector: (row) => row.name,
     cell: (row) => (
       <div className="flex items-center gap-2 py-1">
-        <Avatar
-          src={row?.imgsrc}
-          alt={row?.name || "User Avatar"}
-          sx={{ width: 28, height: 28 }}
-        >
-          {!row?.imgsrc && <User className="w-3 h-3 text-slate-500" />}
-        </Avatar>
+        <div className="w-7 h-7 rounded-full overflow-hidden shrink-0 bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
+          {row?.imgsrc ? (
+            <img src={row.imgsrc} alt={row?.name || "User Avatar"} className="w-full h-full object-cover" />
+          ) : (
+            <User className="w-3.5 h-3.5 text-slate-500" />
+          )}
+        </div>
         <div className="min-w-0">
           <div className="flex items-center gap-1">
             <p className="text-[11px] font-bold text-slate-800 dark:text-slate-100 truncate">

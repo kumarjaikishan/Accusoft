@@ -27,7 +27,7 @@ export const Button = ({
 
   const variantClasses = {
     primary:
-      'bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white shadow-xs focus-visible:ring-2 focus-visible:ring-indigo-500/50',
+      'bg-[var(--maincolor,#4f46e5)] hover:opacity-90 active:opacity-95 text-white shadow-xs focus-visible:ring-2 focus-visible:ring-[var(--maincolor)]/50',
     secondary:
       'bg-slate-100 hover:bg-slate-200 active:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 focus-visible:ring-2 focus-visible:ring-slate-400/50',
     danger:

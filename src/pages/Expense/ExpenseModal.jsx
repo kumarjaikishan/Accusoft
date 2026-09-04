@@ -8,10 +8,12 @@ import { useApi } from '../../utils/useApi';
 import Modalbox from '../../components/custommodal/Modalbox';
 import TextInput from '../../components/common/TextInput';
 import AutocompleteSelect from '../../components/common/AutocompleteSelect';
+import DatePicker from '../../components/common/DatePicker';
 import Button from '../../components/common/Button';
 
 const ExpenseModalbox = ({ modal, disable, handlechange, fields, isupdate, sub, setmodal, setisupdate, reset, onSuccess }) => {
     const useralldetail = useSelector((state) => state.userexplist);
+    const mainColor = useSelector((state) => state.theme?.mainColor);
     const dispatch = useDispatch();
     const { request, loading } = useApi();
 
@@ -71,12 +73,12 @@ const ExpenseModalbox = ({ modal, disable, handlechange, fields, isupdate, sub, 
 
     return (
         <Modalbox open={modal} onClose={() => setmodal(false)}>
-            <div className="w-[500px] h-max rounded-[20px] overflow-hidden flex flex-col items-center max-sm:w-[96vw] bg-[var(--maincolor)]">
-                <h1 className="w-full h-[50px] leading-[50px] text-[aliceblue] tracking-[2px] font-bold text-2xl text-center max-sm:text-[1.5em] max-sm:tracking-[1px] bg-[var(--maincolor)]">
+            <div className="w-[500px] h-max rounded-[20px] flex flex-col items-center max-sm:w-[96vw] bg-[var(--maincolor)] shadow-2xl">
+                <h1 className="w-full h-[50px] leading-[50px] text-[aliceblue] tracking-[2px] font-bold text-2xl text-center max-sm:text-[1.5em] max-sm:tracking-[1px] bg-[var(--maincolor)] rounded-t-[20px]">
                     {isupdate ? "Update Voucher" : "Add Voucher"}
                 </h1>
 
-                <div className="flex flex-col rounded-t-[30px] border-t border-white/20 pt-4 bg-surface items-center w-full px-6 pb-6 gap-3.5">
+                <div className="flex flex-col rounded-t-[30px] rounded-b-[20px] border-t border-white/20 pt-4 bg-surface items-center w-full px-6 pb-6 gap-3.5 relative">
                     <AutocompleteSelect
                         label="Ledger"
                         name="ledger"
@@ -87,8 +89,7 @@ const ExpenseModalbox = ({ modal, disable, handlechange, fields, isupdate, sub, 
                         required
                     />
 
-                    <TextInput
-                        type="date"
+                    <DatePicker
                         label="Date"
                         name="date"
                         value={fields?.date || ''}
@@ -127,7 +128,8 @@ const ExpenseModalbox = ({ modal, disable, handlechange, fields, isupdate, sub, 
                             loading={loading}
                             onClick={isupdate ? () => updatee(fields._id) : sub}
                             icon={isupdate ? RefreshCw : Save}
-                            className="flex-1"
+                            style={{ backgroundColor: mainColor || 'var(--maincolor)' }}
+                            className="flex-1 text-white hover:opacity-90 shadow-md transition-all duration-200"
                         >
                             {isupdate ? "Update" : "Submit"}
                         </Button>

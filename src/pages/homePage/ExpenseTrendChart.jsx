@@ -27,7 +27,7 @@ ChartJS.register(
 // Plugin for Bar data labels
 const barDataLabelsPlugin = {
   id: "barDataLabels",
-  afterDatasetsDraw(chart) {
+  afterDatasetsDraw(chart, args, options) {
     const {
       ctx,
       data,
@@ -42,27 +42,46 @@ const barDataLabelsPlugin = {
     const isMobile = window.innerWidth < 640;
     ctx.font = `600 ${isMobile ? "9px" : "10.5px"} sans-serif`;
 
+    const amountFormat = options?.amountFormat || "compact";
+
     const meta = chart.getDatasetMeta(0);
     meta.data.forEach((bar, index) => {
       const val = data.datasets[0].data[index];
       if (val === undefined || val === null || val <= 0) return;
 
-      const formatted =
-        val >= 1000 ? `${(val / 1000).toFixed(val >= 10000 ? 0 : 1)}k` : `${val}`;
+      let formatted = "";
+      if (amountFormat === "full") {
+        formatted = `${Math.round(val).toLocaleString("en-IN")}`;
+      } else {
+        // Compact format: show 1 decimal for thousands (e.g. 11.5k, 17.6k)
+        if (val >= 1000) {
+          const inK = val / 1000;
+          const kFormatted = inK >= 100 ? inK.toFixed(0) : inK.toFixed(1).replace(/\.0$/, '');
+          formatted = `${kFormatted}k`;
+        } else {
+          formatted = `${val}`;
+        }
+      }
 
       const { x: barX, y: barY, base } = bar;
       const barHeight = Math.abs(base - barY);
+      const textWidth = ctx.measureText(formatted).width;
+      const topPadding = isMobile ? 8 : 10;
 
-      if (barHeight > (isMobile ? 24 : 32)) {
+      if (barHeight > textWidth + topPadding + 10) {
         ctx.fillStyle = "rgba(255, 255, 255, 0.95)";
         ctx.save();
-        ctx.translate(barX, barY + (isMobile ? 12 : 14));
+        ctx.textAlign = "right";
+        ctx.textBaseline = "middle";
+        ctx.translate(barX, barY + topPadding);
         ctx.rotate(-Math.PI / 2);
         ctx.fillText(formatted, 0, 0);
         ctx.restore();
       } else {
         ctx.fillStyle = "#64748b";
-        ctx.fillText(formatted, barX, barY - 6);
+        ctx.textAlign = "center";
+        ctx.textBaseline = "bottom";
+        ctx.fillText(formatted, barX, barY - 4);
       }
     });
 
@@ -70,7 +89,7 @@ const barDataLabelsPlugin = {
   },
 };
 
-const ExpenseTrendChart = ({ filteredMonths, chartType, mode, isMobileView }) => {
+const ExpenseTrendChart = ({ filteredMonths, chartType, mode, isMobileView, amountFormat = "compact" }) => {
   const chartData = useMemo(() => {
     const labels = filteredMonths.map((d) => d.month);
     const values = filteredMonths.map((d) => d.total);
@@ -153,6 +172,9 @@ const ExpenseTrendChart = ({ filteredMonths, chartType, mode, isMobileView }) =>
         easing: "easeOutQuart",
       },
       plugins: {
+        barDataLabels: {
+          amountFormat,
+        },
         legend: {
           display: false,
         },
@@ -207,7 +229,7 @@ const ExpenseTrendChart = ({ filteredMonths, chartType, mode, isMobileView }) =>
         },
       },
     }),
-    [mode, isMobileView]
+    [mode, isMobileView, amountFormat]
   );
 
   return (

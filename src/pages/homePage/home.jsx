@@ -47,6 +47,11 @@ const Home = () => {
     return chartStored && ["bar", "line"].includes(chartStored) ? chartStored : "bar";
   });
 
+  const [amountFormat, setAmountFormat] = useState(() => {
+    const stored = localStorage.getItem("ShowChartAmountFormat");
+    return stored && ["compact", "full"].includes(stored) ? stored : "compact";
+  });
+
   useEffect(() => {
     dispatch(header("Dashboard"));
   }, [dispatch]);
@@ -248,6 +253,40 @@ const Home = () => {
                   <span className="hidden sm:inline">Line</span>
                 </button>
               </div>
+
+              {/* Amount Format Toggle (Short vs Full) */}
+              <div className="flex items-center gap-0.5 bg-slate-100 dark:bg-slate-800/90 p-0.5 rounded-xl border border-slate-200/60 dark:border-slate-700/60 text-xs">
+                <button
+                  type="button"
+                  onClick={() => {
+                    localStorage.setItem("ShowChartAmountFormat", "compact");
+                    setAmountFormat("compact");
+                  }}
+                  className={`px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-lg font-semibold transition cursor-pointer text-[10px] sm:text-xs ${
+                    amountFormat === "compact"
+                      ? "bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 shadow-sm"
+                      : "text-slate-500 dark:text-slate-400 hover:text-slate-700"
+                  }`}
+                  title="Short format (e.g. 11.5k, 17.6k)"
+                >
+                  Short
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    localStorage.setItem("ShowChartAmountFormat", "full");
+                    setAmountFormat("full");
+                  }}
+                  className={`px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-lg font-semibold transition cursor-pointer text-[10px] sm:text-xs ${
+                    amountFormat === "full"
+                      ? "bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 shadow-sm"
+                      : "text-slate-500 dark:text-slate-400 hover:text-slate-700"
+                  }`}
+                  title="Full format (e.g. 11,580)"
+                >
+                  Full
+                </button>
+              </div>
             </div>
           </div>
 
@@ -264,6 +303,7 @@ const Home = () => {
               chartType={chartType}
               mode={mode}
               isMobileView={isMobileView}
+              amountFormat={amountFormat}
             />
           </Suspense>
         </div>

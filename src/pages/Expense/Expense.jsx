@@ -48,6 +48,26 @@ const Expense = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
+  const baseTableStyles = useTableStyles();
+  const customTableStyles = useMemo(() => ({
+    ...baseTableStyles,
+    rows: {
+      ...baseTableStyles?.rows,
+      style: {
+        ...baseTableStyles?.rows?.style,
+        minHeight: '38px',
+      },
+    },
+    cells: {
+      ...baseTableStyles?.cells,
+      style: {
+        ...baseTableStyles?.cells?.style,
+        paddingTop: '8px',
+        paddingBottom: '8px',
+      },
+    },
+  }), [baseTableStyles]);
+
   const init = {
     _id: '',
     ledger: '',
@@ -375,7 +395,7 @@ const Expense = () => {
           <div className="bg-surface rounded-b-xl shadow-md border border-border-subtle overflow-hidden overflow-x-auto relative">
             {tableLoading && rows.length > 0 && (
               <div className="absolute top-0 left-0 right-0 h-[3px] bg-indigo-100 dark:bg-indigo-950/50 overflow-hidden z-30 pointer-events-none">
-                <div 
+                <div
                   className="h-full bg-gradient-to-r from-indigo-500 via-sky-400 to-indigo-600 rounded-r-full shadow-[0_0_8px_rgba(99,102,241,0.8)]"
                   style={{
                     animation: 'tableTopProgress 1.2s ease-in-out infinite'
@@ -411,7 +431,7 @@ const Expense = () => {
                   setCurrentPage(1);
                 }}
                 highlightOnHover
-                customStyles={useTableStyles()}
+                customStyles={customTableStyles}
                 noDataComponent={
                   <div className="py-12 text-center text-content bg-surface">
                     <div className="text-4xl mb-2 opacity-20">📂</div>

@@ -38,8 +38,9 @@ const getCustomDataTableStyles = (mode, mainColor) => ({
     style: {
       fontWeight: '700',
       fontSize: '11px',
-      paddingLeft: '6px',
-      paddingRight: '6px',
+      paddingLeft: '10px',
+      paddingRight: '10px',
+      firstCellPaddingLeft: '18px',
       textTransform: 'uppercase',
       letterSpacing: '0.04em',
     },
@@ -70,8 +71,9 @@ const getCustomDataTableStyles = (mode, mainColor) => ({
   },
   cells: {
     style: {
-      paddingLeft: '6px',
-      paddingRight: '6px',
+      paddingLeft: '10px',
+      paddingRight: '10px',
+      firstCellPaddingLeft: '18px',
     },
   },
 });

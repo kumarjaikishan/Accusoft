@@ -1,5 +1,17 @@
-import React, { useState, useMemo, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, ArrowUpDown, ArrowUp, ArrowDown, Loader2, Check, Minus } from 'lucide-react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
+import {
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+  ChevronDown,
+  ArrowUpDown,
+  ArrowUp,
+  ArrowDown,
+  Loader2,
+  Check,
+  Minus
+} from 'lucide-react';
 
 /**
  * Native, Lightweight & High-Performance DataTable Component
@@ -207,6 +219,35 @@ export const DataTable = ({
     }
   };
 
+  // ── Rows Per Page Custom Dropdown State & Ref ──
+  const [isRowsDropdownOpen, setIsRowsDropdownOpen] = useState(false);
+  const rowsDropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (rowsDropdownRef.current && !rowsDropdownRef.current.contains(event.target)) {
+        setIsRowsDropdownOpen(false);
+      }
+    };
+    if (isRowsDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('touchstart', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
+  }, [isRowsDropdownOpen]);
+
+  const selectRowsPerPage = (newRows) => {
+    setRowsPerPage(newRows);
+    setCurrentPage(1);
+    setIsRowsDropdownOpen(false);
+    if (onChangeRowsPerPage) {
+      onChangeRowsPerPage(newRows, 1);
+    }
+  };
+
   const isAllDisplayedSelected = displayData.length > 0 && displayData.every((r, i) => selectedRowKeys.has(getRowKey(r, i)));
   const isSomeDisplayedSelected = displayData.some((r, i) => selectedRowKeys.has(getRowKey(r, i))) && !isAllDisplayedSelected;
 
@@ -247,7 +288,7 @@ export const DataTable = ({
               }}
             >
               {selectableRows && (
-                <th className="w-10 px-3 py-2.5 text-center">
+                <th className="w-10 pl-4 sm:pl-5 pr-2 py-2.5 text-center">
                   <label className="relative inline-flex items-center justify-center cursor-pointer group">
                     <input
                       type="checkbox"
@@ -265,9 +306,8 @@ export const DataTable = ({
                         <Check
                           size={11}
                           strokeWidth={3.5}
-                          className={`text-teal-950 transition-transform duration-150 ${
-                            isAllDisplayedSelected ? 'scale-100 opacity-100' : 'scale-50 opacity-0'
-                          }`}
+                          className={`text-teal-950 transition-transform duration-150 ${isAllDisplayedSelected ? 'scale-100 opacity-100' : 'scale-50 opacity-0'
+                            }`}
                         />
                       )}
                     </div>
@@ -280,19 +320,23 @@ export const DataTable = ({
                 const widthStyle = col.width ? { width: col.width, minWidth: col.width } : col.minWidth ? { minWidth: col.minWidth } : {};
                 const alignClass = col.right ? 'text-right justify-end' : col.center ? 'text-center justify-center' : 'text-left justify-start';
 
+                const isFirstCol = idx === 0 && !selectableRows;
+                const isLastCol = idx === columns.length - 1;
+                const padLeft = isFirstCol ? (headCellsStyle.firstCellPaddingLeft || '18px') : (headCellsStyle.paddingLeft || '10px');
+                const padRight = isLastCol ? (headCellsStyle.lastCellPaddingRight || '18px') : (headCellsStyle.paddingRight || '10px');
+
                 return (
                   <th
                     key={col.id || col.name || idx}
                     style={{
                       ...widthStyle,
-                      paddingLeft: headCellsStyle.paddingLeft || '12px',
-                      paddingRight: headCellsStyle.paddingRight || '12px',
+                      paddingLeft: padLeft,
+                      paddingRight: padRight,
                       fontWeight: headCellsStyle.fontWeight || '700',
                       fontSize: headCellsStyle.fontSize || '11px',
                     }}
-                    className={`py-3 text-[11px] font-black uppercase tracking-wider ${
-                      col.sortable ? 'cursor-pointer hover:opacity-90' : ''
-                    }`}
+                    className={`py-3 text-[11px] font-black uppercase tracking-wider ${col.sortable ? 'cursor-pointer hover:opacity-90' : ''
+                      }`}
                     onClick={() => col.sortable && handleSort(col)}
                   >
                     <div className={`flex items-center gap-1.5 ${alignClass}`}>
@@ -352,11 +396,9 @@ export const DataTable = ({
                       ...rowStyleOverride,
                     }}
                     onClick={() => onRowClicked && onRowClicked(row)}
-                    className={`transition-colors ${dense ? 'py-1' : 'py-2'} ${
-                      isSelected ? 'bg-teal-50/60 dark:bg-teal-900/20' : striped && rowIdx % 2 === 1 ? 'bg-slate-50/50 dark:bg-slate-800/30' : 'bg-transparent'
-                    } ${highlightOnHover ? 'hover:bg-slate-50 dark:hover:bg-slate-800/40' : ''} ${
-                      pointerOnHover || onRowClicked ? 'cursor-pointer' : ''
-                    }`}
+                    className={`transition-colors ${dense ? 'py-1' : 'py-2'} ${isSelected ? 'bg-teal-50/60 dark:bg-teal-900/20' : striped && rowIdx % 2 === 1 ? 'bg-slate-50/50 dark:bg-slate-800/30' : 'bg-transparent'
+                      } ${highlightOnHover ? 'hover:bg-slate-50 dark:hover:bg-slate-800/40' : ''} ${pointerOnHover || onRowClicked ? 'cursor-pointer' : ''
+                      }`}
                   >
                     {selectableRows && (
                       <td
@@ -364,7 +406,7 @@ export const DataTable = ({
                           paddingTop: cellsStyle.paddingTop,
                           paddingBottom: cellsStyle.paddingBottom,
                         }}
-                        className="w-10 px-3 py-1.5 text-center"
+                        className="w-10 pl-4 sm:pl-5 pr-2 py-1.5 text-center"
                         onClick={(e) => e.stopPropagation()}
                       >
                         <label className="relative inline-flex items-center justify-center cursor-pointer group">
@@ -375,18 +417,16 @@ export const DataTable = ({
                             className="peer sr-only"
                           />
                           <div
-                            className={`w-4 h-4 rounded-[5px] border flex items-center justify-center transition-all duration-150 shadow-xs ${
-                              isSelected
-                                ? 'bg-teal-600 border-teal-600 text-white shadow-teal-500/20'
-                                : 'border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800/80 group-hover:border-teal-500'
-                            }`}
+                            className={`w-4 h-4 rounded-[5px] border flex items-center justify-center transition-all duration-150 shadow-xs ${isSelected
+                              ? 'bg-teal-600 border-teal-600 text-white shadow-teal-500/20'
+                              : 'border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800/80 group-hover:border-teal-500'
+                              }`}
                           >
                             <Check
                               size={11}
                               strokeWidth={3.5}
-                              className={`transition-transform duration-150 ${
-                                isSelected ? 'scale-100 opacity-100' : 'scale-50 opacity-0'
-                              }`}
+                              className={`transition-transform duration-150 ${isSelected ? 'scale-100 opacity-100' : 'scale-50 opacity-0'
+                                }`}
                             />
                           </div>
                         </label>
@@ -397,13 +437,18 @@ export const DataTable = ({
                       const alignClass = col.right ? 'text-right' : col.center ? 'text-center' : 'text-left';
                       const cellValue = typeof col.selector === 'function' ? col.selector(row, absoluteIndex) : row[col.name];
 
+                      const isFirstCol = colIdx === 0 && !selectableRows;
+                      const isLastCol = colIdx === columns.length - 1;
+                      const padLeft = isFirstCol ? (cellsStyle.firstCellPaddingLeft || '18px') : (cellsStyle.paddingLeft || '10px');
+                      const padRight = isLastCol ? (cellsStyle.lastCellPaddingRight || '18px') : (cellsStyle.paddingRight || '10px');
+
                       return (
                         <td
                           key={col.id || col.name || colIdx}
                           style={{
                             ...(col.width ? { width: col.width, minWidth: col.width } : col.minWidth ? { minWidth: col.minWidth } : {}),
-                            paddingLeft: cellsStyle.paddingLeft || '12px',
-                            paddingRight: cellsStyle.paddingRight || '12px',
+                            paddingLeft: padLeft,
+                            paddingRight: padRight,
                             paddingTop: cellsStyle.paddingTop,
                             paddingBottom: cellsStyle.paddingBottom,
                           }}
@@ -430,7 +475,7 @@ export const DataTable = ({
                 )
               ) : (
                 <tr>
-                  {selectableRows && <td className="w-10 px-3 py-2.5" />}
+                  {selectableRows && <td className="w-10 pl-4 sm:pl-5 pr-2 py-2.5" />}
                   {columns.map((col, colIdx) => {
                     const alignClass = col.right ? 'text-right' : col.center ? 'text-center' : 'text-left';
                     const footerValue =
@@ -438,13 +483,18 @@ export const DataTable = ({
                         ? col.footer({ data, displayData, column: col })
                         : col.footer;
 
+                    const isFirstCol = colIdx === 0 && !selectableRows;
+                    const isLastCol = colIdx === columns.length - 1;
+                    const padLeft = isFirstCol ? (cellsStyle.firstCellPaddingLeft || '18px') : (cellsStyle.paddingLeft || '10px');
+                    const padRight = isLastCol ? (cellsStyle.lastCellPaddingRight || '18px') : (cellsStyle.paddingRight || '10px');
+
                     return (
                       <td
                         key={`foot-${col.id || col.name || colIdx}`}
                         style={{
                           ...(col.width ? { width: col.width, minWidth: col.width } : col.minWidth ? { minWidth: col.minWidth } : {}),
-                          paddingLeft: cellsStyle.paddingLeft || '12px',
-                          paddingRight: cellsStyle.paddingRight || '12px',
+                          paddingLeft: padLeft,
+                          paddingRight: padRight,
                         }}
                         className={`py-2.5 ${alignClass} text-xs ${col.footerClassName || ''}`}
                       >
@@ -463,7 +513,7 @@ export const DataTable = ({
       {pagination && (
         <div
           style={paginationStyle}
-          className="px-3 sm:px-4 py-2.5 bg-white dark:bg-slate-900/60 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between sm:justify-end gap-2 sm:gap-6 text-xs text-slate-500 dark:text-slate-400 font-sans select-none min-h-[44px]"
+          className="px-3.5 sm:px-5 py-2.5 bg-white dark:bg-slate-900/80 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between sm:justify-end gap-2 sm:gap-6 text-xs text-slate-500 dark:text-slate-400 font-sans select-none min-h-[46px]"
         >
           {/* Mobile Navigation Icons: [|<] [<] on left */}
           <div className="flex sm:hidden items-center gap-1">
@@ -474,7 +524,7 @@ export const DataTable = ({
               className="p-1 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 disabled:opacity-20 disabled:cursor-not-allowed transition cursor-pointer flex items-center justify-center"
               title="First Page"
             >
-              <ChevronsLeft size={19} strokeWidth={1.8} />
+              <ChevronsLeft size={18} strokeWidth={1.8} />
             </button>
             <button
               type="button"
@@ -483,33 +533,61 @@ export const DataTable = ({
               className="p-1 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 disabled:opacity-20 disabled:cursor-not-allowed transition cursor-pointer flex items-center justify-center"
               title="Previous Page"
             >
-              <ChevronLeft size={19} strokeWidth={1.8} />
+              <ChevronLeft size={18} strokeWidth={1.8} />
             </button>
           </div>
 
-          {/* Rows per page selector */}
-          <div className="flex items-center gap-1 text-slate-500 dark:text-slate-400">
-            <span className="hidden sm:inline text-xs font-normal">Rows per page:</span>
-            <div className="relative inline-flex items-center">
-              <select
-                value={rowsPerPage}
-                onChange={handleRowsPerPageChange}
-                className="appearance-none bg-transparent hover:bg-slate-50 dark:hover:bg-slate-800 border-none outline-none py-1 pl-1 pr-4 text-xs font-normal text-slate-600 dark:text-slate-300 cursor-pointer focus:ring-0 focus:outline-none"
+          {/* Rows per page selector - Custom UI/UX Dropdown */}
+          <div className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400">
+            <span className="hidden sm:inline text-xs font-medium text-slate-500 dark:text-slate-400">Rows per page:</span>
+            <div className="relative" ref={rowsDropdownRef}>
+              <button
+                type="button"
+                onClick={() => setIsRowsDropdownOpen(!isRowsDropdownOpen)}
+                className={`flex items-center gap-3 px-1.5 py-0.5 bg-transparent border-none text-xs font-normal text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white cursor-pointer transition-colors select-none ${isRowsDropdownOpen ? 'text-teal-600 dark:text-teal-400 font-medium' : ''
+                  }`}
+                title="Select number of rows per page"
               >
-                {paginationRowsPerPageOptions.map((opt) => (
-                  <option key={opt} value={opt} className="dark:bg-slate-900">
-                    {opt}
-                  </option>
-                ))}
-              </select>
-              <span className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 text-slate-400 text-[9px]">
-                ▼
-              </span>
+                <span>{rowsPerPage}</span>
+                <ChevronDown
+                  size={11}
+                  className={`transition-transform duration-200 text-slate-400 dark:text-slate-500 ${isRowsDropdownOpen ? 'rotate-180 text-teal-500 dark:text-teal-400' : ''
+                    }`}
+                />
+              </button>
+
+              {/* Dropdown Menu (Drops Upward from footer) */}
+              {isRowsDropdownOpen && (
+                <div className="absolute bottom-full mb-1.5 left-1/2 -translate-x-1/2 sm:translate-x-0 sm:left-auto sm:right-0 min-w-[65px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-750 rounded-xl shadow-xl shadow-slate-900/10 dark:shadow-black/40 py-1 z-50 overflow-hidden backdrop-blur-md animate-in fade-in zoom-in-95 duration-100">
+                  <div className="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 border-b border-slate-100 dark:border-slate-800/80">
+                    Rows
+                  </div>
+                  {paginationRowsPerPageOptions.map((opt) => {
+                    const isSelected = rowsPerPage === opt;
+                    return (
+                      <button
+                        key={opt}
+                        type="button"
+                        onClick={() => selectRowsPerPage(opt)}
+                        className={`w-full px-2.5 py-1.5 text-xs text-left flex items-center justify-between gap-2 font-medium cursor-pointer transition-colors ${isSelected
+                          ? 'bg-teal-50 dark:bg-teal-950/60 text-teal-700 dark:text-teal-300 font-bold'
+                          : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100/80 dark:hover:bg-slate-800/80'
+                          }`}
+                      >
+                        <span>{opt} </span>
+                        {isSelected && (
+                          <Check size={13} strokeWidth={2.5} className="text-teal-600 dark:text-teal-400 shrink-0" />
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           </div>
 
           {/* Range: "1-3 of 3" (Desktop) */}
-          <span className="hidden sm:inline text-slate-600 dark:text-slate-300 text-xs font-normal whitespace-nowrap">
+          <span className="hidden sm:inline text-slate-600 dark:text-slate-300 text-xs font-semibold whitespace-nowrap">
             {totalItems > 0 ? (
               `${(currentPage - 1) * rowsPerPage + 1}-${Math.min(currentPage * rowsPerPage, totalItems)} of ${totalItems}`
             ) : (
@@ -523,37 +601,37 @@ export const DataTable = ({
               type="button"
               disabled={currentPage <= 1 || progressPending}
               onClick={() => handlePageChange(1)}
-              className="p-1 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-full disabled:opacity-20 disabled:cursor-not-allowed transition cursor-pointer flex items-center justify-center"
+              className="p-1.5 hover:text-slate-800 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg disabled:opacity-20 disabled:cursor-not-allowed transition cursor-pointer flex items-center justify-center border border-transparent hover:border-slate-200 dark:hover:border-slate-700"
               title="First Page"
             >
-              <ChevronsLeft size={19} strokeWidth={1.8} />
+              <ChevronsLeft size={16} strokeWidth={2} />
             </button>
             <button
               type="button"
               disabled={currentPage <= 1 || progressPending}
               onClick={() => handlePageChange(currentPage - 1)}
-              className="p-1 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-full disabled:opacity-20 disabled:cursor-not-allowed transition cursor-pointer flex items-center justify-center"
+              className="p-1.5 hover:text-slate-800 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg disabled:opacity-20 disabled:cursor-not-allowed transition cursor-pointer flex items-center justify-center border border-transparent hover:border-slate-200 dark:hover:border-slate-700"
               title="Previous Page"
             >
-              <ChevronLeft size={19} strokeWidth={1.8} />
+              <ChevronLeft size={16} strokeWidth={2} />
             </button>
             <button
               type="button"
               disabled={currentPage >= totalPages || progressPending}
               onClick={() => handlePageChange(currentPage + 1)}
-              className="p-1 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-full disabled:opacity-20 disabled:cursor-not-allowed transition cursor-pointer flex items-center justify-center"
+              className="p-1.5 hover:text-slate-800 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg disabled:opacity-20 disabled:cursor-not-allowed transition cursor-pointer flex items-center justify-center border border-transparent hover:border-slate-200 dark:hover:border-slate-700"
               title="Next Page"
             >
-              <ChevronRight size={19} strokeWidth={1.8} />
+              <ChevronRight size={16} strokeWidth={2} />
             </button>
             <button
               type="button"
               disabled={currentPage >= totalPages || progressPending}
               onClick={() => handlePageChange(totalPages)}
-              className="p-1 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-full disabled:opacity-20 disabled:cursor-not-allowed transition cursor-pointer flex items-center justify-center"
+              className="p-1.5 hover:text-slate-800 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg disabled:opacity-20 disabled:cursor-not-allowed transition cursor-pointer flex items-center justify-center border border-transparent hover:border-slate-200 dark:hover:border-slate-700"
               title="Last Page"
             >
-              <ChevronsRight size={19} strokeWidth={1.8} />
+              <ChevronsRight size={16} strokeWidth={2} />
             </button>
           </div>
 
@@ -566,7 +644,7 @@ export const DataTable = ({
               className="p-1 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 disabled:opacity-20 disabled:cursor-not-allowed transition cursor-pointer flex items-center justify-center"
               title="Next Page"
             >
-              <ChevronRight size={19} strokeWidth={1.8} />
+              <ChevronRight size={18} strokeWidth={1.8} />
             </button>
             <button
               type="button"
@@ -575,7 +653,7 @@ export const DataTable = ({
               className="p-1 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 disabled:opacity-20 disabled:cursor-not-allowed transition cursor-pointer flex items-center justify-center"
               title="Last Page"
             >
-              <ChevronsRight size={19} strokeWidth={1.8} />
+              <ChevronsRight size={18} strokeWidth={1.8} />
             </button>
           </div>
         </div>

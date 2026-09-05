@@ -12,7 +12,7 @@ const getDesktopColumns = ({ setForm, setModal, deleteUser }) => [
   { 
     name: "#", 
     selector: (_, i) => i + 1, 
-    width: "45px",
+    width: "60px",
     cell: (_, i) => <span className="text-xs font-semibold text-slate-400">{i + 1}</span>
   },
   {

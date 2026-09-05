@@ -152,6 +152,19 @@ const AdminPanel = () => {
         </div>
     );
 
+    const baseTableStyles = useTableStyles();
+    const customTableStyles = useMemo(() => ({
+        ...baseTableStyles,
+        headRow: {
+            ...baseTableStyles?.headRow,
+            style: {
+                ...baseTableStyles?.headRow?.style,
+                borderTopLeftRadius: '0px',
+                borderTopRightRadius: '0px',
+            },
+        },
+    }), [baseTableStyles]);
+
     return (
         <motion.div
             initial={{ opacity: 0, y: 10 }}
@@ -199,9 +212,9 @@ const AdminPanel = () => {
             </div>
 
             {/* ---------------- 2. USER MANAGEMENT TABLE CONTAINER ---------------- */}
-            <div className="bg-white dark:bg-slate-900/90 rounded-2xl shadow-sm border border-slate-200/80 dark:border-slate-800 p-3.5 sm:p-4 overflow-hidden overflow-x-auto space-y-3">
+            <div className="bg-white dark:bg-slate-900/90 rounded-2xl shadow-sm border border-slate-200/80 dark:border-slate-800 overflow-hidden">
                 {/* Header Toolbar: Search, Filters & Refresh */}
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5 pb-2.5 border-b border-slate-100 dark:border-slate-800/80">
+                <div className="p-3.5 sm:p-4 pb-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5 border-b border-slate-100 dark:border-slate-800/80">
                     {/* Left: Section Title & Status Chips */}
                     <div className="flex flex-wrap items-center gap-2">
                         <h2 className="text-sm sm:text-base font-bold text-slate-800 dark:text-slate-100 mr-1">
@@ -284,7 +297,8 @@ const AdminPanel = () => {
                 <DataTable
                     columns={columns}
                     data={filteredUsers}
-                    customStyles={useTableStyles()}
+                    customStyles={customTableStyles}
+                    className="border-0 shadow-none rounded-none bg-transparent dark:bg-transparent"
                     pagination
                     progressPending={loading}
                     progressComponent={<TableSkeleton />}

@@ -7,7 +7,7 @@ const getDesktopColumns = ({ paginationContext }) => [
   { 
     name: "#", 
     cell: (row, i) => (paginationContext.currentPage - 1) * paginationContext.rowsPerPage + i + 1, 
-    width: "40px" 
+    width: "60px" 
   },
   {
     name: "Ledger",
@@ -46,7 +46,7 @@ const getMobileColumns = ({ paginationContext }) => [
   {
     name: "#",
     cell: (_, i) => <span className="text-xs">{(paginationContext.currentPage - 1) * paginationContext.rowsPerPage + i + 1}</span>,
-    width: "40px",
+    width: "55px",
   },
   {
     name: "Ledger",

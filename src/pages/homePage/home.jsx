@@ -52,6 +52,11 @@ const Home = () => {
     return stored && ["compact", "full"].includes(stored) ? stored : "compact";
   });
 
+  const [amountPosition, setAmountPosition] = useState(() => {
+    const stored = localStorage.getItem("ShowChartAmountPosition");
+    return stored && ["top", "inside"].includes(stored) ? stored : "top";
+  });
+
   useEffect(() => {
     dispatch(header("Dashboard"));
   }, [dispatch]);
@@ -254,6 +259,42 @@ const Home = () => {
                 </button>
               </div>
 
+              {/* Amount Position Toggle (Top vs Inside) - Bar chart only */}
+              {chartType === "bar" && (
+                <div className="flex items-center gap-0.5 bg-slate-100 dark:bg-slate-800/90 p-0.5 rounded-xl border border-slate-200/60 dark:border-slate-700/60 text-xs">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      localStorage.setItem("ShowChartAmountPosition", "top");
+                      setAmountPosition("top");
+                    }}
+                    className={`px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-lg font-semibold transition cursor-pointer text-[10px] sm:text-xs ${
+                      amountPosition === "top"
+                        ? "bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 shadow-sm"
+                        : "text-slate-500 dark:text-slate-400 hover:text-slate-700"
+                    }`}
+                    title="Display amount on top of bar"
+                  >
+                    Top
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      localStorage.setItem("ShowChartAmountPosition", "inside");
+                      setAmountPosition("inside");
+                    }}
+                    className={`px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-lg font-semibold transition cursor-pointer text-[10px] sm:text-xs ${
+                      amountPosition === "inside"
+                        ? "bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 shadow-sm"
+                        : "text-slate-500 dark:text-slate-400 hover:text-slate-700"
+                    }`}
+                    title="Display amount inside bar"
+                  >
+                    Inside
+                  </button>
+                </div>
+              )}
+
               {/* Amount Format Toggle (Short vs Full) */}
               <div className="flex items-center gap-0.5 bg-slate-100 dark:bg-slate-800/90 p-0.5 rounded-xl border border-slate-200/60 dark:border-slate-700/60 text-xs">
                 <button
@@ -267,7 +308,7 @@ const Home = () => {
                       ? "bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 shadow-sm"
                       : "text-slate-500 dark:text-slate-400 hover:text-slate-700"
                   }`}
-                  title="Short format (e.g. 11.5k, 17.6k)"
+                  title="Short format (e.g. ₹54k, ₹2.0L)"
                 >
                   Short
                 </button>
@@ -282,7 +323,7 @@ const Home = () => {
                       ? "bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 shadow-sm"
                       : "text-slate-500 dark:text-slate-400 hover:text-slate-700"
                   }`}
-                  title="Full format (e.g. 11,580)"
+                  title="Full format (e.g. ₹11,580)"
                 >
                   Full
                 </button>
@@ -304,6 +345,7 @@ const Home = () => {
               mode={mode}
               isMobileView={isMobileView}
               amountFormat={amountFormat}
+              amountPosition={amountPosition}
             />
           </Suspense>
         </div>

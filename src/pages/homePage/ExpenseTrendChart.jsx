@@ -31,18 +31,17 @@ const barDataLabelsPlugin = {
     const {
       ctx,
       data,
-      scales: { x, y },
     } = chart;
     if (!data.datasets?.[0]) return;
 
     ctx.save();
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
 
     const isMobile = window.innerWidth < 640;
-    ctx.font = `600 ${isMobile ? "9px" : "10.5px"} sans-serif`;
+    ctx.font = `600 ${isMobile ? "9.5px" : "11px"} sans-serif`;
 
     const amountFormat = options?.amountFormat || "compact";
+    const amountPosition = options?.amountPosition || "top";
+    const mode = options?.mode || "light";
 
     const meta = chart.getDatasetMeta(0);
     meta.data.forEach((bar, index) => {
@@ -51,15 +50,23 @@ const barDataLabelsPlugin = {
 
       let formatted = "";
       if (amountFormat === "full") {
-        formatted = `${Math.round(val).toLocaleString("en-IN")}`;
+        formatted = `₹${Math.round(val).toLocaleString("en-IN")}`;
       } else {
-        // Compact format: show 1 decimal for thousands (e.g. 11.5k, 17.6k)
-        if (val >= 1000) {
+        // Compact format in Indian numbering
+        if (val >= 10000000) {
+          const inCr = val / 10000000;
+          const crFormatted = inCr >= 10 ? inCr.toFixed(0) : inCr.toFixed(1).replace(/\.0$/, "");
+          formatted = `₹${crFormatted}Cr`;
+        } else if (val >= 100000) {
+          const inL = val / 100000;
+          const lFormatted = inL >= 10 ? inL.toFixed(0) : inL.toFixed(1).replace(/\.0$/, "");
+          formatted = `₹${lFormatted}L`;
+        } else if (val >= 1000) {
           const inK = val / 1000;
-          const kFormatted = inK >= 100 ? inK.toFixed(0) : inK.toFixed(1).replace(/\.0$/, '');
-          formatted = `${kFormatted}k`;
+          const kFormatted = inK >= 100 ? inK.toFixed(0) : inK.toFixed(1).replace(/\.0$/, "");
+          formatted = `₹${kFormatted}k`;
         } else {
-          formatted = `${val}`;
+          formatted = `₹${Math.round(val)}`;
         }
       }
 
@@ -68,17 +75,25 @@ const barDataLabelsPlugin = {
       const textWidth = ctx.measureText(formatted).width;
       const topPadding = isMobile ? 8 : 10;
 
-      if (barHeight > textWidth + topPadding + 10) {
-        ctx.fillStyle = "rgba(255, 255, 255, 0.95)";
-        ctx.save();
-        ctx.textAlign = "right";
-        ctx.textBaseline = "middle";
-        ctx.translate(barX, barY + topPadding);
-        ctx.rotate(-Math.PI / 2);
-        ctx.fillText(formatted, 0, 0);
-        ctx.restore();
+      if (amountPosition === "inside") {
+        if (barHeight > textWidth + topPadding + 10) {
+          ctx.fillStyle = "rgba(255, 255, 255, 0.95)";
+          ctx.save();
+          ctx.textAlign = "right";
+          ctx.textBaseline = "middle";
+          ctx.translate(barX, barY + topPadding);
+          ctx.rotate(-Math.PI / 2);
+          ctx.fillText(formatted, 0, 0);
+          ctx.restore();
+        } else {
+          ctx.fillStyle = mode === "dark" ? "#cbd5e1" : "#64748b";
+          ctx.textAlign = "center";
+          ctx.textBaseline = "bottom";
+          ctx.fillText(formatted, barX, barY - 4);
+        }
       } else {
-        ctx.fillStyle = "#64748b";
+        // Top position (always above bar)
+        ctx.fillStyle = mode === "dark" ? "#cbd5e1" : "#475569";
         ctx.textAlign = "center";
         ctx.textBaseline = "bottom";
         ctx.fillText(formatted, barX, barY - 4);
@@ -89,7 +104,14 @@ const barDataLabelsPlugin = {
   },
 };
 
-const ExpenseTrendChart = ({ filteredMonths, chartType, mode, isMobileView, amountFormat = "compact" }) => {
+const ExpenseTrendChart = ({
+  filteredMonths,
+  chartType,
+  mode,
+  isMobileView,
+  amountFormat = "compact",
+  amountPosition = "top",
+}) => {
   const chartData = useMemo(() => {
     const labels = filteredMonths.map((d) => d.month);
     const values = filteredMonths.map((d) => d.total);
@@ -161,7 +183,7 @@ const ExpenseTrendChart = ({ filteredMonths, chartType, mode, isMobileView, amou
       maintainAspectRatio: false,
       layout: {
         padding: {
-          top: 14,
+          top: amountPosition === "top" ? 22 : 14,
           bottom: 0,
           left: isMobileView ? 2 : 0,
           right: isMobileView ? 2 : 0,
@@ -174,6 +196,8 @@ const ExpenseTrendChart = ({ filteredMonths, chartType, mode, isMobileView, amou
       plugins: {
         barDataLabels: {
           amountFormat,
+          amountPosition,
+          mode,
         },
         legend: {
           display: false,
@@ -208,11 +232,16 @@ const ExpenseTrendChart = ({ filteredMonths, chartType, mode, isMobileView, amou
         y: {
           display: true,
           position: "left",
+          grace: amountPosition === "top" ? "14%" : "6%",
           ticks: {
             color: mode === "dark" ? "#94a3b8" : "#64748b",
             font: { size: isMobileView ? 9 : 10.5, weight: "500" },
             callback: (val) =>
-              val >= 1000 ? `₹${(val / 1000).toFixed(0)}k` : `₹${val}`,
+              val >= 100000
+                ? `₹${(val / 100000).toFixed(0)}L`
+                : val >= 1000
+                ? `₹${(val / 1000).toFixed(0)}k`
+                : `₹${val}`,
             maxTicksLimit: isMobileView ? 4 : 5,
           },
           grid: {
@@ -229,7 +258,7 @@ const ExpenseTrendChart = ({ filteredMonths, chartType, mode, isMobileView, amou
         },
       },
     }),
-    [mode, isMobileView, amountFormat]
+    [mode, isMobileView, amountFormat, amountPosition]
   );
 
   return (

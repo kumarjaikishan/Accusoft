@@ -35,7 +35,6 @@ const getDesktopColumns = ({ setDataForEdit, deleteExpense, paginationContext })
   {
     name: 'Date',
     selector: (row) => dayjs(row.date).format('DD MMM, YYYY'),
-    sortable: true,
     width: '120px',
   },
   {
@@ -94,7 +93,6 @@ const getMobileColumns = ({ setDataForEdit, deleteExpense, paginationContext }) 
   {
     name: 'Date',
     selector: (row) => dayjs(row.date).format('DD MMM, YYYY'),
-    sortable: true,
     width: '90px',
     cell: (row) => <span className="text-[10px]">{dayjs(row.date).format('DD MMM, YYYY')}</span>,
   },

@@ -1,0 +1,5 @@
+import{n as o}from"./rolldown-runtime-Dik6OG8R.js";import{f as s,p as l}from"./charts-CgdZtXbb.js";import{a as c,en as m}from"./ui-DMR9gQf3.js";var u=o(l(),1),p=o(m(),1),r=s(),g=({open:e,onClose:i,children:n,shadow:a=!0})=>((0,u.useEffect)(()=>{if(e){const d=window.innerWidth-document.documentElement.clientWidth;return document.body.style.overflowY="hidden",document.body.style.paddingRight=`${d}px`,()=>{setTimeout(()=>{document.body.style.overflowY="scroll",document.body.style.paddingRight="0px"},100)}}},[e]),e?(0,p.createPortal)((0,r.jsx)("div",{onClick:i,className:`\r
+        fixed inset-0 z-1000 \r
+        bg-black/50 backdrop-blur-[5px]\r
+        flex items-center justify-center \r
+      `,children:(0,r.jsx)(c.div,{onClick:t=>t.stopPropagation(),className:"relative bg-surface rounded-[15px] modalboxe",style:a?{boxShadow:"0 10px 20px rgba(0,0,0,0.4)"}:void 0,initial:{scale:.1},animate:{scale:1},transition:{type:"spring",stiffness:350,damping:17,bounce:.5,duration:.5},children:n})}),document.body):null);export{g as t};

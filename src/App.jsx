@@ -41,6 +41,7 @@ const TipSender = lazy(() => import('./pages/admin/streamelement'));
 const Filehandle = lazy(() => import('./pages/filehandle/filehandle'));
 const SlowPage = lazy(() => import('./pages/serverTest/slow'));
 const SlowWorkerPage = lazy(() => import('./pages/serverTest/workerSlow'));
+const Vault = lazy(() => import('./pages/admin/vault/Vault'));
 
 function App() {
   const dispatch = useDispatch();
@@ -106,6 +107,7 @@ function App() {
                 <Route path="filehandle" element={<Filehandle />} />
                 <Route path="slow" element={<SlowPage />} />
                 <Route path="slowworker" element={<SlowWorkerPage />} />
+                <Route path="vault" element={<Vault />} />
               </Route>
             </Route>
           </Route>

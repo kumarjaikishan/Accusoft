@@ -180,15 +180,15 @@ const Login = () => {
                         </div>
 
                         {/* Sliding Carousel (0% Height Shift, Smooth Left-Right Slide) */}
-                        <div className="relative w-full max-w-sm mx-auto overflow-hidden h-[290px]">
+                        <div className="relative w-full max-w-sm mx-auto overflow-hidden min-h-[295px] p-1">
                             <div 
                                 className="w-[200%] h-full flex transition-transform duration-300 ease-in-out"
                                 style={{ transform: isLoginTab ? 'translateX(0%)' : 'translateX(-50%)' }}
                             >
-                                <div className="w-1/2 h-full pr-1.5 flex flex-col justify-between">
+                                <div className="w-1/2 h-full px-2 flex flex-col justify-between">
                                     <Signin />
                                 </div>
-                                <div className="w-1/2 h-full pl-1.5 flex flex-col justify-between">
+                                <div className="w-1/2 h-full px-2 flex flex-col justify-between">
                                     <Signup setlog={setIsLoginTab} />
                                 </div>
                             </div>

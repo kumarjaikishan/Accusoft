@@ -167,6 +167,11 @@ const Sidebar = () => {
                                     <span className="text-lg min-w-[24px] flex justify-center"><Banknote /></span>
                                     <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100 ml-3"}`}>StreamElement</span>
                                 </NavLink>
+
+                                <NavLink to="/admin/vault" className={({ isActive }) => getNavLinkClass(isActive)} style={({ isActive }) => getNavLinkStyle(isActive)}>
+                                    <span className="text-lg min-w-[24px] flex justify-center"><Lock /></span>
+                                    <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100 ml-3"}`}>Password Vault</span>
+                                </NavLink>
                             </div>
                         </div>
                     </>

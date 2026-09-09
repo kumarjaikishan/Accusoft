@@ -168,12 +168,12 @@ const Datanalysis = () => {
           <div className="flex flex-wrap items-center gap-2">
             {/* Total Metric Tag */}
             <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-100/90 dark:bg-slate-800/90 border border-slate-200/60 dark:border-slate-700/60 text-[11px]">
-              <span className="text-slate-500 dark:text-slate-400 font-medium">Total:</span>
-              <span className="font-bold text-slate-800 dark:text-slate-100">₹ {fmt(overallTotal)}</span>
+              <span className="text-slate-400 dark:text-slate-400 font-medium">Total:</span>
+              <span className="font-bold text-slate-700 dark:text-slate-200">₹ {fmt(overallTotal)}</span>
               {showbudget && overallBudget > 0 && (
                 <>
                   <span className="text-slate-300 dark:text-slate-600">|</span>
-                  <span className="text-slate-500 dark:text-slate-400 font-medium">Budget:</span>
+                  <span className="text-slate-400 dark:text-slate-400 font-medium">Budget:</span>
                   <span className="font-bold text-slate-600 dark:text-slate-300">₹ {fmt(overallBudget)}</span>
                 </>
               )}
@@ -277,11 +277,11 @@ const Datanalysis = () => {
                 {/* Top Section: Title & Prominent Circular Gauge */}
                 <div className="flex items-center justify-between gap-2">
                   <div className="min-w-0 pr-1">
-                    <h3 className="text-sm sm:text-base font-bold capitalize tracking-tight truncate text-slate-800 dark:text-slate-100">
+                    <h3 className="text-sm sm:text-base font-bold capitalize tracking-tight truncate text-slate-700 dark:text-slate-200">
                       {data.ledger}
                     </h3>
                     <div className="mt-0.5">
-                      <span className="text-lg sm:text-xl font-extrabold tracking-tight text-slate-800 dark:text-slate-100">
+                      <span className="text-lg sm:text-xl font-bold tracking-tight text-slate-700 dark:text-slate-200">
                         ₹ {fmt(total)}
                       </span>
                     </div>
@@ -300,7 +300,7 @@ const Datanalysis = () => {
                       }}
                     />
                     <div className="absolute inset-1 rounded-full flex items-center justify-center bg-white dark:bg-slate-900 shadow-inner">
-                      <span className="text-xs font-bold text-slate-800 dark:text-slate-100">
+                      <span className="text-xs font-semibold text-slate-700 dark:text-slate-200">
                         {spendPercentage}%
                       </span>
                     </div>

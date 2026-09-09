@@ -149,8 +149,8 @@ const Home = () => {
             {/* Top Section */}
             <div className="flex justify-between items-center sm:items-start">
               <div className="min-w-0 pr-1">
-                <p className="text-[10px] sm:text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider truncate">{item.label}</p>
-                <h2 className="text-base sm:text-2xl font-black text-slate-800 dark:text-slate-100 mt-0.5 truncate">
+                <p className="text-[10px] sm:text-xs font-semibold text-slate-400 dark:text-slate-400 uppercase tracking-wider truncate">{item.label}</p>
+                <h2 className="text-base sm:text-2xl font-bold text-slate-700 dark:text-slate-200 mt-0.5 truncate tracking-tight">
                   ₹ {fmt(item.amt)}
                 </h2>
               </div>

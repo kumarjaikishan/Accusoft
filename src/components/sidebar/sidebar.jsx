@@ -52,13 +52,13 @@ const Sidebar = () => {
     };
 
     const getNavLinkClass = (isActive) =>
-        `group relative flex w-full items-center ${log.narrow ? "justify-center px-0" : "px-3 lg:px-4"} py-2 lg:py-3 rounded-lg transition-all duration-300
+        `group relative flex w-full items-center ${log.narrow ? "justify-center px-0" : "px-2.5"} py-2.5 rounded-lg transition-all duration-300
      ${isActive
             ? "" // Dynamic colors handled via style prop
             : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/10 hover:text-gray-900 dark:hover:text-white"
         }`;
 
-    const getNavLinkStyle = (isActive) => 
+    const getNavLinkStyle = (isActive) =>
         isActive ? {
             backgroundColor: mode === 'dark' ? `${mainColor}22` : `${mainColor}11`,
             color: mainColor,
@@ -69,7 +69,7 @@ const Sidebar = () => {
         } : {};
 
     const getSubmenuHeaderClass = (isActive) =>
-        `flex items-center w-full ${log.narrow ? "justify-center px-0" : "justify-between px-3 lg:px-4"} py-2 lg:py-3 rounded-lg transition-all duration-300 ${isActive
+        `flex items-center w-full ${log.narrow ? "justify-center px-0" : "justify-between px-2.5"} py-2.5 rounded-lg transition-all duration-300 ${isActive
             ? "font-medium shadow-[inset_0_1px_4px_rgba(0,0,0,0.05)]"
             : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/10 hover:text-gray-900 dark:hover:text-white"
         }`;
@@ -96,16 +96,16 @@ const Sidebar = () => {
         >
             {/* Logo */}
             <Link to="/">
-                <div className="h-[var(--navheightmobile)] lg:h-[var(--navheight)] flex items-center px-6 border-b border-gray-200 dark:border-white/10">
+                <div className="h-[var(--navheightmobile)] lg:h-[var(--navheight)] flex items-center px-4 border-b border-gray-200 dark:border-white/10">
                     <Leaf size={40} style={{ color: mainColor }} />
-                    <span className={`text-lg font-bold tracking-wide whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100 ml-3"}`} style={{ color: mainColor }}>
+                    <span className={`text-lg font-bold tracking-wide whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100 ml-2.5"}`} style={{ color: mainColor }}>
                         Accusoft
                     </span>
                 </div>
             </Link>
 
             {/* Menu */}
-            <div className="flex-1 overflow-y-auto p-2 lg:p-4 space-y-2">
+            <div className="flex-1 overflow-y-auto px-2 py-3 space-y-1.5 thin-scrollbar">
 
                 {log.islogin &&
                     menu.map((item, index) => (
@@ -147,7 +147,7 @@ const Sidebar = () => {
                             className={`overflow-hidden transition-all duration-300 ${adminOpen ? "max-h-96 mt-1" : "max-h-0"
                                 }`}
                         >
-                            <div className="ml-2 space-y-1">
+                            <div className="ml-1.5 space-y-1">
                                 <NavLink to="/admin/dashboard" className={({ isActive }) => getNavLinkClass(isActive)} style={({ isActive }) => getNavLinkStyle(isActive)}>
                                     <span className="text-lg min-w-[24px] flex justify-center"><LayoutDashboard /></span>
                                     <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100 ml-3"}`}>Dashboard</span>
@@ -170,7 +170,7 @@ const Sidebar = () => {
 
                                 <NavLink to="/admin/vault" className={({ isActive }) => getNavLinkClass(isActive)} style={({ isActive }) => getNavLinkStyle(isActive)}>
                                     <span className="text-lg min-w-[24px] flex justify-center"><Lock /></span>
-                                    <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100 ml-3"}`}>Password Vault</span>
+                                    <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100 ml-3"}`}>Vault</span>
                                 </NavLink>
                             </div>
                         </div>
@@ -201,7 +201,7 @@ const Sidebar = () => {
                             className={`overflow-hidden transition-all duration-300 ${serverOpen ? "max-h-40 mt-1" : "max-h-0"
                                 }`}
                         >
-                            <div className="ml-2 space-y-1">
+                            <div className="ml-1.5 space-y-1">
                                 <NavLink to="/admin/slow" className={({ isActive }) => getNavLinkClass(isActive)} style={({ isActive }) => getNavLinkStyle(isActive)}>
                                     <span className="text-lg min-w-[24px] flex justify-center"><Hourglass /></span>
                                     <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100 ml-3"}`}>Server Slow</span>
@@ -218,11 +218,11 @@ const Sidebar = () => {
             </div>
 
             {/* Footer */}
-            <div className="p-4 border-t border-gray-200 dark:border-white/10">
+            <div className="px-2 py-3 border-t border-gray-200 dark:border-white/10">
                 {log.islogin ? (
                     <button
                         onClick={logoutHandler}
-                        className={`w-full flex cursor-pointer items-center ${log.narrow ? 'justify-center px-0' : 'px-3 lg:px-4'} py-2 lg:py-3 rounded-lg 
+                        className={`w-full flex cursor-pointer items-center ${log.narrow ? 'justify-center px-0' : 'px-2.5'} py-2.5 rounded-lg 
             bg-red-50 dark:bg-gray-500/10 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-gray-500/20 transition-all duration-200`}
                     >
                         <span className="text-lg min-w-[24px] flex justify-center"><LogOut /></span>

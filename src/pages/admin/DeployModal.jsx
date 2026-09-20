@@ -334,9 +334,34 @@ const DeployModal = ({ isOpen, onClose }) => {
               )}
             </div>
 
-            <div className="relative rounded-xl bg-slate-950 text-slate-200 p-3.5 font-mono text-[11px] sm:text-xs leading-relaxed max-h-56 overflow-y-auto border border-slate-800 shadow-inner">
+            <div className="relative rounded-xl bg-slate-950 text-slate-200 p-3.5 font-mono text-[11px] sm:text-xs leading-relaxed max-h-60 overflow-y-auto border border-slate-800 shadow-inner">
               {logs ? (
-                <pre className="whitespace-pre-wrap font-mono">{logs}</pre>
+                <div className="space-y-0.5">
+                  {logs
+                    .replace(/\u001b\[[0-9;]*[a-zA-Z]/g, "")
+                    .replace(/\[\d+m/g, "")
+                    .split("\n")
+                    .map((line, idx) => {
+                      let colorClass = "text-slate-300";
+                      if (line.includes("✅") || line.includes("✓")) {
+                        colorClass = "text-emerald-400 font-semibold";
+                      } else if (line.includes("🚀") || line.includes("📦") || line.includes("🌐") || line.includes("⚙️") || line.includes("🔄")) {
+                        colorClass = "text-indigo-300 font-medium";
+                      } else if (line.includes("❌") || line.includes("Error") || line.includes("STDERR") || line.includes("failed")) {
+                        colorClass = "text-rose-400 font-semibold";
+                      } else if (line.includes("⚠️") || line.includes("warning")) {
+                        colorClass = "text-amber-400";
+                      } else if (line.startsWith("Target Script:") || line.startsWith("===")) {
+                        colorClass = "text-slate-500";
+                      }
+
+                      return (
+                        <div key={idx} className={`${colorClass} whitespace-pre-wrap break-all`}>
+                          {line}
+                        </div>
+                      );
+                    })}
+                </div>
               ) : (
                 <div className="text-slate-500 italic">
                   Select a target application above and press "Trigger Deployment" to execute.

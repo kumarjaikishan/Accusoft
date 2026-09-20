@@ -212,7 +212,7 @@ const DeployModal = ({ isOpen, onClose }) => {
                   {target === "accusoft" && <CheckCircle2 className="w-3.5 h-3.5 text-indigo-500" />}
                 </div>
                 <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
-                  /var/www/accusoft (PM2: 0)
+                  /var/www/accusoft (PM2: 2)
                 </p>
               </button>
 
@@ -297,7 +297,7 @@ const DeployModal = ({ isOpen, onClose }) => {
               <div>
                 <span className="font-semibold text-slate-700 dark:text-slate-200">4. PM2 Process Restart</span>
                 <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                  pm2 restart {target === "ems" ? "1 (ems)" : target === "all" ? "0 & 1" : "0 (accusoft)"}
+                  pm2 restart {target === "ems" ? "1 (ems)" : target === "all" ? "2 & 1" : "2 (accusoft)"}
                 </p>
               </div>
             </div>

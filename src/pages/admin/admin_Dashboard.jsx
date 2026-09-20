@@ -3,7 +3,8 @@ import {
   Users, 
   Receipt, 
   Search, 
-  RefreshCw
+  RefreshCw,
+  Rocket
 } from 'lucide-react';
 import { useDispatch, useSelector } from "react-redux";
 import { setloader } from "../../store/login";
@@ -12,6 +13,7 @@ import DataTable from "../../components/common/DataTable";
 import { confirmDialog } from "../../utils/confirm";
 import { toast } from "../../utils/toast";
 import Useredit from "./usereditmodal";
+import DeployModal from "./DeployModal";
 import { useApi } from "../../utils/useApi";
 import { useTableStyles } from "../../components/dataTableStyle";
 import { getAdminTableColumns } from "./AdminTableColumns";
@@ -23,6 +25,7 @@ const AdminPanel = () => {
 
     const [search, setSearch] = useState("");
     const [modal, setModal] = useState(false);
+    const [deployModal, setDeployModal] = useState(false);
     const [form, setForm] = useState({});
     const [filterType, setFilterType] = useState("all"); // all, verified, unverified, admin
 
@@ -290,6 +293,16 @@ const AdminPanel = () => {
                         >
                             <RefreshCw className="w-3.5 h-3.5" />
                         </button>
+
+                        {/* Deploy Server Button */}
+                        <button
+                            onClick={() => setDeployModal(true)}
+                            title="Deploy updates on Oracle VPS"
+                            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 active:scale-[0.98] text-white text-xs font-bold shadow-sm shadow-indigo-500/20 transition cursor-pointer shrink-0"
+                        >
+                            <Rocket className="w-3.5 h-3.5" />
+                            <span className="hidden sm:inline">Deploy Server</span>
+                        </button>
                     </div>
                 </div>
 
@@ -313,7 +326,7 @@ const AdminPanel = () => {
                 />
             </div>
 
-            {/* Modal */}
+            {/* Modals */}
             {modal && Object.keys(form).length > 0 && (
                 <Useredit
                     inp={form}
@@ -323,6 +336,11 @@ const AdminPanel = () => {
                     fetche={refetchUsers}
                 />
             )}
+
+            <DeployModal
+                isOpen={deployModal}
+                onClose={() => setDeployModal(false)}
+            />
         </motion.div>
     );
 };

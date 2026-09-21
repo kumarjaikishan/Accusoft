@@ -131,93 +131,38 @@ const DeployModal = ({ isOpen, onClose }) => {
     }
   }, [logs]);
 
-  // Fetch initial status when modal opens
-  useEffect(() => {
-    if (isOpen) {
-      fetchDeployStatus();
-    }
-  }, [isOpen]);
-
-  const fetchDeployStatus = async () => {
-    try {
-      const data = await request({
-        url: "admin/deploy/status",
-        method: "GET",
-      });
-      if (data?.state) {
-        setDeployState(data.state);
-        if (data.state.target) {
-          setTarget(data.state.target);
-        }
-        if (data.state.output) {
-          setLogs(data.state.output);
-        }
-      }
-    } catch (err) {
-      console.log("Could not fetch deployment status:", err);
-    }
-  };
-
-  // Poll server health after PM2 restart using centralized API client
-  const pollServerHealth = async (retries = 15) => {
-    setIsReconnecting(true);
-    for (let i = 0; i < retries; i++) {
-      await new Promise((r) => setTimeout(r, 2000));
-      try {
-        const data = await request({
-          url: "admin/deploy/status",
-          method: "GET",
-        });
-        if (data?.state) {
-          setIsReconnecting(false);
-          setDeploying(false);
-          setDeployState(data.state);
-          setLogs(data.state.output || "Deployment completed successfully & server is back online!");
-          toast.success("Server restarted and back online!");
-          return;
-        }
-      } catch (e) {
-        // Process still reloading...
-      }
-    }
-    setIsReconnecting(false);
-    setDeploying(false);
-  };
-
   const handleStartDeploy = async () => {
     setDeploying(true);
     const targetLabel = selectedProject.name;
-    setLogs(`🚀 Initiating deployment request for [${targetLabel}] (/home/ubuntu/scripts/${selectedProject.script}) to Oracle VPS...\n`);
+    const initialLog = `🚀 Initiating deployment for [${targetLabel}] (bash /home/ubuntu/scripts/${selectedProject.script})...\n⏳ Running script on server...\n`;
+    setLogs(initialLog);
     setDeployState({ status: "running", target });
 
     try {
       const data = await request({
-        url: "admin/deploy",
+        url: `admin/deploy/${target}`,
         method: "POST",
         body: { target },
       });
 
       if (data && (data.success || data.logs || data.output)) {
-        const responseLogs = data.output || data.logs || data.message || "Deployment triggered successfully.";
+        const responseLogs = data.output || data.logs || data.message || `✅ Deployed ${targetLabel} successfully!`;
         setLogs((prev) => prev + `\n${responseLogs}\n`);
-        setDeployState(data.state || { status: "success", target });
-        toast.success(data.message || `Deployment started for ${targetLabel}!`);
-        
-        // Wait and reconnect to verify PM2 process reload
-        setTimeout(() => {
-          pollServerHealth();
-        }, 3000);
+        setDeployState({ status: "success", target });
+        toast.success(data.message || `Deployed ${targetLabel} successfully!`);
       } else {
-        setDeploying(false);
         setDeployState({ status: "failed", target });
-        const errMsg = data?.message || "Failed to trigger deployment";
-        setLogs((prev) => prev + `\n❌ Error: ${errMsg}\n`);
+        const errMsg = data?.message || "Failed to execute deployment script";
+        setLogs((prev) => prev + `\n❌ Error: ${errMsg}\n${data?.logs || ''}\n`);
         toast.error(errMsg);
       }
     } catch (err) {
-      // If server restarts immediately, network drops briefly
-      setLogs((prev) => prev + `\n🔄 Server process reloading... Polling server health...\n`);
-      pollServerHealth();
+      setDeployState({ status: "failed", target });
+      const errMsg = err?.response?.data?.message || err?.message || "Server connection error during deployment";
+      setLogs((prev) => prev + `\n❌ Deployment Error: ${errMsg}\n`);
+      toast.error(errMsg);
+    } finally {
+      setDeploying(false);
     }
   };
 

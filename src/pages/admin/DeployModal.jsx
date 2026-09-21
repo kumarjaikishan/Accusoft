@@ -2,31 +2,114 @@ import React, { useState, useEffect, useRef } from "react";
 import { 
   Rocket, 
   CheckCircle2, 
-  AlertTriangle, 
   X, 
   Terminal, 
   Loader2, 
   Copy, 
   Check, 
   Server, 
-  RefreshCw,
-  GitBranch,
-  ShieldAlert,
-  Layers,
-  Building2,
-  Sparkles
+  RefreshCw, 
+  GitBranch, 
+  ShieldAlert, 
+  Layers, 
+  Building2, 
+  Sparkles,
+  Gamepad2,
+  Briefcase,
+  GraduationCap,
+  Globe,
+  Flame
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "../../utils/toast";
 
+// Configured list of projects matching the VPS shell scripts in /home/ubuntu/scripts/:
+// key matches `/home/ubuntu/scripts/<key>.sh`
+const DEPLOY_PROJECTS = [
+  {
+    key: "accusoft",
+    name: "Accusoft",
+    desc: "Expense Management System",
+    path: "/var/www/accusoft",
+    script: "accusoft.sh",
+    icon: Sparkles,
+    color: "indigo"
+  },
+  {
+    key: "goodnature_ems",
+    name: "Goodnature EMS",
+    desc: "Employee Attendance & Payroll",
+    path: "/var/www/goodnatureoffice",
+    script: "goodnature_ems.sh",
+    icon: Building2,
+    color: "emerald"
+  },
+  {
+    key: "battlefiesta",
+    name: "BattleFiesta",
+    desc: "Gaming & Tournament Platform",
+    path: "/var/www/battlefiesta",
+    script: "battlefiesta.sh",
+    icon: Gamepad2,
+    color: "purple"
+  },
+  {
+    key: "office",
+    name: "Office Portal",
+    desc: "Internal Management & ERP",
+    path: "/var/www/office",
+    script: "office.sh",
+    icon: Briefcase,
+    color: "amber"
+  },
+  {
+    key: "riseown",
+    name: "Riseown",
+    desc: "Production Platform",
+    path: "/var/www/riseown",
+    script: "riseown.sh",
+    icon: Flame,
+    color: "rose"
+  },
+  {
+    key: "studynotes",
+    name: "StudyNotes",
+    desc: "Student Education & Notes Hub",
+    path: "/var/www/studynotes",
+    script: "studynotes.sh",
+    icon: GraduationCap,
+    color: "blue"
+  },
+  {
+    key: "portfolio",
+    name: "Portfolio",
+    desc: "Personal Developer Showcase",
+    path: "/var/www/portfolio",
+    script: "portfolio.sh",
+    icon: Globe,
+    color: "teal"
+  },
+  {
+    key: "all",
+    name: "Deploy All",
+    desc: "Sequential Batch Deployment",
+    path: "All Web Services",
+    script: "deploy-all.sh",
+    icon: Layers,
+    color: "violet"
+  }
+];
+
 const DeployModal = ({ isOpen, onClose }) => {
-  const [target, setTarget] = useState("accusoft"); // 'accusoft' | 'ems' | 'all'
+  const [target, setTarget] = useState("accusoft");
   const [deploying, setDeploying] = useState(false);
   const [deployState, setDeployState] = useState(null);
   const [logs, setLogs] = useState("");
   const [copied, setCopied] = useState(false);
   const [isReconnecting, setIsReconnecting] = useState(false);
   const terminalEndRef = useRef(null);
+
+  const selectedProject = DEPLOY_PROJECTS.find((p) => p.key === target) || DEPLOY_PROJECTS[0];
 
   // Auto-scroll logs terminal
   useEffect(() => {
@@ -35,7 +118,7 @@ const DeployModal = ({ isOpen, onClose }) => {
     }
   }, [logs]);
 
-  // Fetch initial status if modal opens
+  // Fetch initial status when modal opens
   useEffect(() => {
     if (isOpen) {
       fetchDeployStatus();
@@ -89,7 +172,7 @@ const DeployModal = ({ isOpen, onClose }) => {
           return;
         }
       } catch (e) {
-        // Still restarting...
+        // Process still reloading...
       }
     }
     setIsReconnecting(false);
@@ -98,8 +181,8 @@ const DeployModal = ({ isOpen, onClose }) => {
 
   const handleStartDeploy = async () => {
     setDeploying(true);
-    const targetLabel = target === "all" ? "ALL APPS (Accusoft & EMS)" : target.toUpperCase();
-    setLogs(`🚀 Initiating deployment request for [${targetLabel}] to Oracle VPS...\n`);
+    const targetLabel = selectedProject.name;
+    setLogs(`🚀 Initiating deployment request for [${targetLabel}] (/home/ubuntu/scripts/${selectedProject.script}) to Oracle VPS...\n`);
     setDeployState({ status: "running", target });
 
     try {
@@ -115,11 +198,12 @@ const DeployModal = ({ isOpen, onClose }) => {
       const data = await res.json();
 
       if (res.ok && data.success) {
-        setLogs((prev) => prev + `\n${data.output || data.message || "Deployment triggered successfully."}\n`);
+        const responseLogs = data.output || data.logs || data.message || "Deployment triggered successfully.";
+        setLogs((prev) => prev + `\n${responseLogs}\n`);
         setDeployState(data.state || { status: "success", target });
         toast.success(data.message || `Deployment started for ${targetLabel}!`);
         
-        // Check if status is still running or if server will restart
+        // Wait and reconnect to verify PM2 process reload
         setTimeout(() => {
           pollServerHealth();
         }, 3000);
@@ -131,8 +215,8 @@ const DeployModal = ({ isOpen, onClose }) => {
         toast.error(errMsg);
       }
     } catch (err) {
-      // Network drop often happens when PM2 restarts the server immediately
-      setLogs((prev) => prev + `\n🔄 Server process restarting (PM2)... Checking reconnection...\n`);
+      // If server restarts immediately, network drops briefly
+      setLogs((prev) => prev + `\n🔄 Server process reloading... Polling server health...\n`);
       pollServerHealth();
     }
   };
@@ -154,7 +238,7 @@ const DeployModal = ({ isOpen, onClose }) => {
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 15 }}
         transition={{ duration: 0.2 }}
-        className="relative w-full max-w-2xl bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col max-h-[92vh]"
+        className="relative w-full max-w-3xl bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col max-h-[94vh]"
       >
         {/* Modal Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-900/50">
@@ -164,13 +248,13 @@ const DeployModal = ({ isOpen, onClose }) => {
             </div>
             <div>
               <h3 className="text-base sm:text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
-                Oracle VPS Multi-App Deployment
+                Oracle VPS Project Deployment
                 <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
                   Live
                 </span>
               </h3>
               <p className="text-xs text-slate-500 dark:text-slate-400">
-                Trigger git pull, build sync, npm install & PM2 reload for Accusoft & EMS
+                Execute Git pull, Rsync build, NPM install & PM2 reload directly on Oracle VPS
               </p>
             </div>
           </div>
@@ -187,80 +271,47 @@ const DeployModal = ({ isOpen, onClose }) => {
         {/* Modal Body */}
         <div className="p-5 space-y-4 overflow-y-auto thin-scrollbar">
           
-          {/* Target Application Selector */}
+          {/* Target Project Selector Grid */}
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">
-              Select Target Application
-            </label>
-            <div className="grid grid-cols-3 gap-2">
-              {/* Accusoft Card */}
-              <button
-                type="button"
-                onClick={() => setTarget("accusoft")}
-                disabled={deploying}
-                className={`p-3 rounded-xl border text-left transition cursor-pointer flex flex-col justify-between ${
-                  target === "accusoft"
-                    ? "bg-indigo-50 dark:bg-indigo-950/40 border-indigo-500/50 text-indigo-900 dark:text-indigo-200 shadow-xs ring-1 ring-indigo-500/30"
-                    : "bg-slate-50/70 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700/60 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
-                }`}
-              >
-                <div className="flex items-center justify-between mb-1.5">
-                  <span className="text-xs font-bold flex items-center gap-1.5">
-                    <Sparkles className="w-3.5 h-3.5 text-indigo-500" />
-                    Accusoft
-                  </span>
-                  {target === "accusoft" && <CheckCircle2 className="w-3.5 h-3.5 text-indigo-500" />}
-                </div>
-                <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
-                  /var/www/accusoft (PM2: 2)
-                </p>
-              </button>
+            <div className="flex items-center justify-between mb-2">
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                Select Target Project ({DEPLOY_PROJECTS.length} Available)
+              </label>
+              <span className="text-[11px] font-mono text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/60 px-2 py-0.5 rounded-md border border-indigo-200/50 dark:border-indigo-800/50 font-bold">
+                Script: /home/ubuntu/scripts/{selectedProject.script}
+              </span>
+            </div>
 
-              {/* EMS Card */}
-              <button
-                type="button"
-                onClick={() => setTarget("ems")}
-                disabled={deploying}
-                className={`p-3 rounded-xl border text-left transition cursor-pointer flex flex-col justify-between ${
-                  target === "ems"
-                    ? "bg-emerald-50 dark:bg-emerald-950/40 border-emerald-500/50 text-emerald-900 dark:text-emerald-200 shadow-xs ring-1 ring-emerald-500/30"
-                    : "bg-slate-50/70 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700/60 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
-                }`}
-              >
-                <div className="flex items-center justify-between mb-1.5">
-                  <span className="text-xs font-bold flex items-center gap-1.5">
-                    <Building2 className="w-3.5 h-3.5 text-emerald-500" />
-                    EMS
-                  </span>
-                  {target === "ems" && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />}
-                </div>
-                <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
-                  /var/www/ems (PM2: 1)
-                </p>
-              </button>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              {DEPLOY_PROJECTS.map((proj) => {
+                const IconComponent = proj.icon;
+                const isSelected = target === proj.key;
 
-              {/* All Card */}
-              <button
-                type="button"
-                onClick={() => setTarget("all")}
-                disabled={deploying}
-                className={`p-3 rounded-xl border text-left transition cursor-pointer flex flex-col justify-between ${
-                  target === "all"
-                    ? "bg-purple-50 dark:bg-purple-950/40 border-purple-500/50 text-purple-900 dark:text-purple-200 shadow-xs ring-1 ring-purple-500/30"
-                    : "bg-slate-50/70 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700/60 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
-                }`}
-              >
-                <div className="flex items-center justify-between mb-1.5">
-                  <span className="text-xs font-bold flex items-center gap-1.5">
-                    <Layers className="w-3.5 h-3.5 text-purple-500" />
-                    Deploy All
-                  </span>
-                  {target === "all" && <CheckCircle2 className="w-3.5 h-3.5 text-purple-500" />}
-                </div>
-                <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
-                  Accusoft + EMS Sequence
-                </p>
-              </button>
+                return (
+                  <button
+                    key={proj.key}
+                    type="button"
+                    onClick={() => setTarget(proj.key)}
+                    disabled={deploying}
+                    className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between relative ${
+                      isSelected
+                        ? "bg-indigo-50 dark:bg-indigo-950/50 border-indigo-500 text-indigo-950 dark:text-indigo-200 shadow-sm ring-1 ring-indigo-500/40"
+                        : "bg-slate-50/70 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700/60 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 hover:border-slate-300"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-xs font-bold flex items-center gap-1.5 truncate">
+                        <IconComponent className={`w-3.5 h-3.5 shrink-0 ${isSelected ? "text-indigo-600 dark:text-indigo-400" : "text-slate-400"}`} />
+                        {proj.name}
+                      </span>
+                      {isSelected && <CheckCircle2 className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400 shrink-0" />}
+                    </div>
+                    <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
+                      {proj.path}
+                    </p>
+                  </button>
+                );
+              })}
             </div>
           </div>
 
@@ -269,17 +320,17 @@ const DeployModal = ({ isOpen, onClose }) => {
             <div className="flex items-start gap-2 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/60 dark:border-slate-700/60">
               <GitBranch className="w-4 h-4 text-indigo-500 shrink-0 mt-0.5" />
               <div>
-                <span className="font-semibold text-slate-700 dark:text-slate-200">1. Git Pull (Frontend & Client)</span>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400">Fetch latest code for {target.toUpperCase()}</p>
+                <span className="font-semibold text-slate-700 dark:text-slate-200">1. Git Pull Repository</span>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400">Fetch latest branch code for {selectedProject.name}</p>
               </div>
             </div>
 
             <div className="flex items-start gap-2 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/60 dark:border-slate-700/60">
               <Server className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
               <div>
-                <span className="font-semibold text-slate-700 dark:text-slate-200">2. Sync to /var/www</span>
+                <span className="font-semibold text-slate-700 dark:text-slate-200">2. Sync to Web Root</span>
                 <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                  Rsync build to {target === "ems" ? "/var/www/ems" : target === "all" ? "/var/www/accusoft & /ems" : "/var/www/accusoft"}
+                  Rsync static frontend build to {selectedProject.path}
                 </p>
               </div>
             </div>
@@ -287,8 +338,8 @@ const DeployModal = ({ isOpen, onClose }) => {
             <div className="flex items-start gap-2 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/60 dark:border-slate-700/60">
               <RefreshCw className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
               <div>
-                <span className="font-semibold text-slate-700 dark:text-slate-200">3. Server & NPM Update</span>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400">Git pull server & install packages</p>
+                <span className="font-semibold text-slate-700 dark:text-slate-200">3. NPM Dependencies</span>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400">Install/update server packages with npm i</p>
               </div>
             </div>
 
@@ -297,7 +348,7 @@ const DeployModal = ({ isOpen, onClose }) => {
               <div>
                 <span className="font-semibold text-slate-700 dark:text-slate-200">4. PM2 Process Restart</span>
                 <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                  pm2 restart {target === "ems" ? "1 (ems)" : target === "all" ? "2 & 1" : "2 (accusoft)"}
+                  Restart PM2 microservice without downtime
                 </p>
               </div>
             </div>
@@ -308,11 +359,11 @@ const DeployModal = ({ isOpen, onClose }) => {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-700 dark:text-slate-300">
                 <Terminal className="w-3.5 h-3.5 text-slate-400" />
-                <span>Execution Output</span>
+                <span>Execution Output Logs</span>
                 {deploying && (
                   <span className="flex items-center gap-1 text-[11px] text-indigo-500 font-medium ml-2">
                     <Loader2 className="w-3 h-3 animate-spin" />
-                    {isReconnecting ? "Server Restarting..." : `Deploying ${target.toUpperCase()}...`}
+                    {isReconnecting ? "Server Restarting..." : `Deploying ${selectedProject.name}...`}
                   </span>
                 )}
                 {!deploying && deployState?.status === "success" && (
@@ -343,7 +394,7 @@ const DeployModal = ({ isOpen, onClose }) => {
                     .split("\n")
                     .map((line, idx) => {
                       let colorClass = "text-slate-300";
-                      if (line.includes("✅") || line.includes("✓")) {
+                      if (line.includes("✅") || line.includes("✓") || line.includes("successfully")) {
                         colorClass = "text-emerald-400 font-semibold";
                       } else if (line.includes("🚀") || line.includes("📦") || line.includes("🌐") || line.includes("⚙️") || line.includes("🔄")) {
                         colorClass = "text-indigo-300 font-medium";
@@ -364,18 +415,18 @@ const DeployModal = ({ isOpen, onClose }) => {
                 </div>
               ) : (
                 <div className="text-slate-500 italic">
-                  Select a target application above and press "Trigger Deployment" to execute.
+                  Select a project above and click &quot;Deploy {selectedProject.name}&quot; to run /home/ubuntu/scripts/{selectedProject.script}.
                 </div>
               )}
               <div ref={terminalEndRef} />
             </div>
           </div>
 
-          {/* Warning Banner */}
+          {/* Execution Path Card */}
           <div className="flex items-start gap-2.5 p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-700 dark:text-amber-400 text-xs">
             <ShieldAlert className="w-4 h-4 shrink-0 mt-0.5" />
             <div>
-              <span className="font-bold">Production Execution:</span> This executes <code className="bg-amber-200/50 dark:bg-amber-900/50 px-1.5 py-0.5 rounded font-mono text-[11px] font-bold">deploy-{target === 'all' ? 'all' : target}.sh</code> directly on Oracle VPS.
+              <span className="font-bold">Production Script Path:</span> Executes <code className="bg-amber-200/50 dark:bg-amber-900/50 px-1.5 py-0.5 rounded font-mono text-[11px] font-bold">/home/ubuntu/scripts/{selectedProject.script}</code> on Oracle Linux VPS.
             </div>
           </div>
         </div>
@@ -411,12 +462,12 @@ const DeployModal = ({ isOpen, onClose }) => {
               {deploying ? (
                 <>
                   <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                  <span>Deploying {target.toUpperCase()}...</span>
+                  <span>Deploying {selectedProject.name}...</span>
                 </>
               ) : (
                 <>
                   <Rocket className="w-3.5 h-3.5" />
-                  <span>Deploy {target === "all" ? "All Apps" : target.toUpperCase()}</span>
+                  <span>Deploy {selectedProject.name}</span>
                 </>
               )}
             </button>

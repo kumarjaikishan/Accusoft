@@ -42,7 +42,23 @@ const parseResponse = async (response) => {
     }
 
     const text = await response.text();
-    return text ? { message: text } : {};
+    if (!text) return {};
+
+    // If the server / Nginx returned raw HTML (e.g. 502 Bad Gateway, 504 Gateway Timeout, 404 Nginx)
+    if (text.includes("<html") || text.includes("<!DOCTYPE") || text.includes("<head>")) {
+        if (text.includes("502 Bad Gateway")) {
+            return { message: "502 Bad Gateway: Server is temporarily reloading/unavailable." };
+        }
+        if (text.includes("504 Gateway Time-out") || text.includes("504 Gateway Timeout")) {
+            return { message: "504 Gateway Timeout: Server took too long to respond." };
+        }
+        if (text.includes("503 Service Temporarily Unavailable") || text.includes("503 Service Unavailable")) {
+            return { message: "503 Service Unavailable: Server is starting up." };
+        }
+        return { message: `Server HTTP ${response.status}: ${response.statusText || 'Error'}` };
+    }
+
+    return { message: text };
 };
 
 const getResponseMessage = (data, fallback) => {

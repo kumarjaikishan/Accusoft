@@ -152,15 +152,21 @@ const DeployModal = ({ isOpen, onClose }) => {
         toast.success(data.message || `Deployed ${targetLabel} successfully!`);
       } else {
         setDeployState({ status: "failed", target });
-        const errMsg = data?.message || "Failed to execute deployment script";
-        setLogs((prev) => prev + `\n❌ Error: ${errMsg}\n${data?.logs || ''}\n`);
-        toast.error(errMsg);
+        const rawErr = data?.message || data?.error || "Deployment failed";
+        const cleanErr = typeof rawErr === 'string' && rawErr.includes("<html")
+          ? "502 Bad Gateway: Server is restarting or temporarily unavailable."
+          : (typeof rawErr === 'string' ? rawErr : "Deployment failed");
+        setLogs((prev) => prev + `\n❌ Error: ${cleanErr}\n${data?.logs || ''}\n`);
+        toast.error(cleanErr);
       }
     } catch (err) {
       setDeployState({ status: "failed", target });
-      const errMsg = err?.response?.data?.message || err?.message || "Server connection error during deployment";
-      setLogs((prev) => prev + `\n❌ Deployment Error: ${errMsg}\n`);
-      toast.error(errMsg);
+      const rawMsg = err?.payload?.message || err?.message || "Deployment error";
+      const cleanMsg = typeof rawMsg === 'string' && (rawMsg.includes("<html") || rawMsg.includes("502"))
+        ? "502 Bad Gateway: Server is temporarily reloading/unavailable."
+        : (typeof rawMsg === 'string' ? rawMsg : "Deployment error");
+      setLogs((prev) => prev + `\n❌ Deployment Error: ${cleanMsg}\n`);
+      toast.error(cleanMsg);
     } finally {
       setDeploying(false);
     }
@@ -182,29 +188,54 @@ const DeployModal = ({ isOpen, onClose }) => {
         {/* Modal Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-900/50">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20">
-              <Rocket className="w-5 h-5" />
+            <div className={`p-2 rounded-xl border transition-colors ${
+              deploying 
+                ? "bg-amber-500/10 text-amber-500 border-amber-500/30 animate-pulse" 
+                : "bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border-indigo-500/20"
+            }`}>
+              {deploying ? <Loader2 className="w-5 h-5 animate-spin" /> : <Rocket className="w-5 h-5" />}
             </div>
             <div>
               <h3 className="text-base sm:text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
                 Oracle VPS Project Deployment
-                <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
-                  Live
-                </span>
+                {deploying ? (
+                  <span className="flex items-center gap-1.5 text-[10px] uppercase font-bold px-2.5 py-0.5 rounded-full bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30 animate-pulse">
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-ping"></span>
+                    Running...
+                  </span>
+                ) : deployState?.status === "success" ? (
+                  <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                    Deployed
+                  </span>
+                ) : (
+                  <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-slate-500/10 text-slate-600 dark:text-slate-400 border border-slate-500/20">
+                    Ready
+                  </span>
+                )}
               </h3>
               <p className="text-xs text-slate-500 dark:text-slate-400">
-                Execute Git pull, Rsync build, NPM install & PM2 reload directly on Oracle VPS
+                {deploying 
+                  ? `Executing ${selectedProject.script} on server... Please wait.` 
+                  : "Execute Git pull, Rsync build, NPM install & PM2 reload directly on Oracle VPS"}
               </p>
             </div>
           </div>
 
-          <button
-            onClick={onClose}
-            disabled={deploying}
-            className="p-1.5 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer disabled:opacity-50"
-          >
-            <X className="w-5 h-5" />
-          </button>
+          <div className="flex items-center gap-2">
+            {deploying && (
+              <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-600 dark:text-amber-400 text-xs font-semibold">
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                <span>Deploying...</span>
+              </div>
+            )}
+            <button
+              onClick={onClose}
+              disabled={deploying}
+              className="p-1.5 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer disabled:opacity-50"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
         </div>
 
         {/* Modal Body */}

@@ -20,8 +20,9 @@ import {
   Globe,
   Flame
 } from "lucide-react";
-import { motion } from "framer-motion";
 import { toast } from "../../utils/toast";
+import { useApi } from "../../utils/useApi";
+import Modalbox from "../../components/custommodal/Modalbox";
 
 // Configured list of projects matching the VPS shell scripts in /home/ubuntu/scripts/:
 // key matches `/home/ubuntu/scripts/<key>.sh`
@@ -34,6 +35,15 @@ const DEPLOY_PROJECTS = [
     script: "accusoft.sh",
     icon: Sparkles,
     color: "indigo"
+  },
+  {
+    key: "ems",
+    name: "EMS",
+    desc: "Employee Management System",
+    path: "/var/www/ems",
+    script: "ems.sh",
+    icon: Building2,
+    color: "emerald"
   },
   {
     key: "goodnature_ems",
@@ -109,6 +119,9 @@ const DeployModal = ({ isOpen, onClose }) => {
   const [isReconnecting, setIsReconnecting] = useState(false);
   const terminalEndRef = useRef(null);
 
+  // Use centralized project API hook with automatic token refresh
+  const { request } = useApi();
+
   const selectedProject = DEPLOY_PROJECTS.find((p) => p.key === target) || DEPLOY_PROJECTS[0];
 
   // Auto-scroll logs terminal
@@ -127,21 +140,17 @@ const DeployModal = ({ isOpen, onClose }) => {
 
   const fetchDeployStatus = async () => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_ADDRESS}admin/deploy/status`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
+      const data = await request({
+        url: "admin/deploy/status",
+        method: "GET",
       });
-      if (res.ok) {
-        const data = await res.json();
-        if (data?.state) {
-          setDeployState(data.state);
-          if (data.state.target) {
-            setTarget(data.state.target);
-          }
-          if (data.state.output) {
-            setLogs(data.state.output);
-          }
+      if (data?.state) {
+        setDeployState(data.state);
+        if (data.state.target) {
+          setTarget(data.state.target);
+        }
+        if (data.state.output) {
+          setLogs(data.state.output);
         }
       }
     } catch (err) {
@@ -149,25 +158,21 @@ const DeployModal = ({ isOpen, onClose }) => {
     }
   };
 
-  // Poll server health after PM2 restart
+  // Poll server health after PM2 restart using centralized API client
   const pollServerHealth = async (retries = 15) => {
     setIsReconnecting(true);
     for (let i = 0; i < retries; i++) {
       await new Promise((r) => setTimeout(r, 2000));
       try {
-        const res = await fetch(`${import.meta.env.VITE_API_ADDRESS}admin/deploy/status`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
+        const data = await request({
+          url: "admin/deploy/status",
+          method: "GET",
         });
-        if (res.ok) {
-          const data = await res.json();
+        if (data?.state) {
           setIsReconnecting(false);
           setDeploying(false);
-          if (data?.state) {
-            setDeployState(data.state);
-            setLogs(data.state.output || "Deployment completed successfully & server is back online!");
-          }
+          setDeployState(data.state);
+          setLogs(data.state.output || "Deployment completed successfully & server is back online!");
           toast.success("Server restarted and back online!");
           return;
         }
@@ -186,18 +191,13 @@ const DeployModal = ({ isOpen, onClose }) => {
     setDeployState({ status: "running", target });
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_ADDRESS}admin/deploy`, {
+      const data = await request({
+        url: "admin/deploy",
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify({ target }),
+        body: { target },
       });
 
-      const data = await res.json();
-
-      if (res.ok && data.success) {
+      if (data && (data.success || data.logs || data.output)) {
         const responseLogs = data.output || data.logs || data.message || "Deployment triggered successfully.";
         setLogs((prev) => prev + `\n${responseLogs}\n`);
         setDeployState(data.state || { status: "success", target });
@@ -210,7 +210,7 @@ const DeployModal = ({ isOpen, onClose }) => {
       } else {
         setDeploying(false);
         setDeployState({ status: "failed", target });
-        const errMsg = data.message || "Failed to trigger deployment";
+        const errMsg = data?.message || "Failed to trigger deployment";
         setLogs((prev) => prev + `\n❌ Error: ${errMsg}\n`);
         toast.error(errMsg);
       }
@@ -232,14 +232,8 @@ const DeployModal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-sm">
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95, y: 15 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.95, y: 15 }}
-        transition={{ duration: 0.2 }}
-        className="relative w-full max-w-3xl bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col max-h-[94vh]"
-      >
+    <Modalbox open={isOpen} onClose={onClose}>
+      <div className="w-[780px] max-w-[94vw] bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col max-h-[90vh]">
         {/* Modal Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-900/50">
           <div className="flex items-center gap-3">
@@ -269,7 +263,7 @@ const DeployModal = ({ isOpen, onClose }) => {
         </div>
 
         {/* Modal Body */}
-        <div className="p-5 space-y-4 overflow-y-auto thin-scrollbar">
+        <div className="p-5 space-y-4 overflow-y-auto thin-scrollbar flex-1">
           
           {/* Target Project Selector Grid */}
           <div>
@@ -473,8 +467,8 @@ const DeployModal = ({ isOpen, onClose }) => {
             </button>
           </div>
         </div>
-      </motion.div>
-    </div>
+      </div>
+    </Modalbox>
   );
 };
 

@@ -138,18 +138,25 @@ const DeployModal = ({ isOpen, onClose }) => {
     setLogs(initialLog);
     setDeployState({ status: "running", target });
 
+    const toastId = toast.loading(`Deploying ${targetLabel} on Oracle VPS...`);
+
     try {
       const data = await request({
         url: `admin/deploy/${target}`,
         method: "POST",
         body: { target },
+        suppressToast: true,
       });
 
       if (data && (data.success || data.logs || data.output)) {
         const responseLogs = data.output || data.logs || data.message || `✅ Deployed ${targetLabel} successfully!`;
         setLogs((prev) => prev + `\n${responseLogs}\n`);
         setDeployState({ status: "success", target });
-        toast.success(data.message || `Deployed ${targetLabel} successfully!`);
+        toast.update(toastId, {
+          render: data.message || `Deployed ${targetLabel} successfully!`,
+          type: "success",
+          autoClose: 3500
+        });
       } else {
         setDeployState({ status: "failed", target });
         const rawErr = data?.message || data?.error || "Deployment failed";
@@ -157,7 +164,11 @@ const DeployModal = ({ isOpen, onClose }) => {
           ? "502 Bad Gateway: Server is restarting or temporarily unavailable."
           : (typeof rawErr === 'string' ? rawErr : "Deployment failed");
         setLogs((prev) => prev + `\n❌ Error: ${cleanErr}\n${data?.logs || ''}\n`);
-        toast.error(cleanErr);
+        toast.update(toastId, {
+          render: cleanErr,
+          type: "error",
+          autoClose: 4500
+        });
       }
     } catch (err) {
       setDeployState({ status: "failed", target });
@@ -166,7 +177,11 @@ const DeployModal = ({ isOpen, onClose }) => {
         ? "502 Bad Gateway: Server is temporarily reloading/unavailable."
         : (typeof rawMsg === 'string' ? rawMsg : "Deployment error");
       setLogs((prev) => prev + `\n❌ Deployment Error: ${cleanMsg}\n`);
-      toast.error(cleanMsg);
+      toast.update(toastId, {
+        render: cleanMsg,
+        type: "error",
+        autoClose: 4500
+      });
     } finally {
       setDeploying(false);
     }

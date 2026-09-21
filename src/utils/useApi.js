@@ -78,7 +78,7 @@ export const useApi = () => {
             const toastId = isSessionFailure ? "auth-toast" : `api-${err?.code || err?.status || "error"}`;
             const toastOptions = { autoClose: 2500, toastId };
 
-            if (!isLogoutPage) {
+            if (!isLogoutPage && !config.suppressToast && !config.silent) {
                 if (err?.code === "NETWORK_ERROR" || err?.code === "CONFIG_ERROR" || err?.code === "INVALID_RESPONSE") {
                     toast.error(message, toastOptions);
                 } else if (err?.isApiError) {

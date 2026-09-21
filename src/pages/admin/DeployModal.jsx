@@ -98,15 +98,6 @@ const DEPLOY_PROJECTS = [
     script: "portfolio.sh",
     icon: Globe,
     color: "teal"
-  },
-  {
-    key: "all",
-    name: "Deploy All",
-    desc: "Sequential Batch Deployment",
-    path: "All Web Services",
-    script: "deploy-all.sh",
-    icon: Layers,
-    color: "violet"
   }
 ];
 
@@ -275,44 +266,7 @@ const DeployModal = ({ isOpen, onClose }) => {
             </div>
           </div>
 
-          {/* Steps Overview */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-            <div className="flex items-start gap-2 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/60 dark:border-slate-700/60">
-              <GitBranch className="w-4 h-4 text-indigo-500 shrink-0 mt-0.5" />
-              <div>
-                <span className="font-semibold text-slate-700 dark:text-slate-200">1. Git Pull Repository</span>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400">Fetch latest branch code for {selectedProject.name}</p>
-              </div>
-            </div>
 
-            <div className="flex items-start gap-2 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/60 dark:border-slate-700/60">
-              <Server className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
-              <div>
-                <span className="font-semibold text-slate-700 dark:text-slate-200">2. Sync to Web Root</span>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                  Rsync static frontend build to {selectedProject.path}
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-2 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/60 dark:border-slate-700/60">
-              <RefreshCw className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
-              <div>
-                <span className="font-semibold text-slate-700 dark:text-slate-200">3. NPM Dependencies</span>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400">Install/update server packages with npm i</p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-2 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/60 dark:border-slate-700/60">
-              <Rocket className="w-4 h-4 text-rose-500 shrink-0 mt-0.5" />
-              <div>
-                <span className="font-semibold text-slate-700 dark:text-slate-200">4. PM2 Process Restart</span>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                  Restart PM2 microservice without downtime
-                </p>
-              </div>
-            </div>
-          </div>
 
           {/* Terminal Logs Output */}
           <div className="space-y-1.5">

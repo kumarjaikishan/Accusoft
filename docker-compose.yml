@@ -21,7 +21,7 @@ services:
     #   - "5000:5000"
 
   frontend:
-    build: ./frontend
+    build: ./client
     image: kumarjaikishan/accusoft-frontend:latest
     container_name: accufrontend
     restart: always

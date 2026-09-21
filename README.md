@@ -118,9 +118,14 @@ Accusoft/
 │   ├── index.js                # Server entry point
 │   └── package.json
 │
-├── STRUCTURE.md                # Detailed file & architectural map
-├── SECURITY.md                 # Cryptographic specs & security model
-└── THEME.md                    # Color tokens & theme system
+├── docs/                    # Architectural specs & documentation
+│   ├── STRUCTURE.md         # Detailed file & architectural map
+│   ├── SECURITY.md          # Cryptographic specs & security model
+│   ├── THEME.md             # Color tokens & theme system
+│   └── MEMORY.md            # Roadmap & project memory
+│
+├── AGENTS.md                # Agent instruction entrypoint
+└── GEMINI.md                # Engine directives
 ```
 
 ---

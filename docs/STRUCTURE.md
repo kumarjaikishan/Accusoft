@@ -4,7 +4,7 @@
 
 ```
 Accusoft/
-├── Frontend/                 # React 19 + Vite Frontend SPA
+├── Frontend/                 # React 19 + Vite Frontend SPA (mapped to client/)
 │   ├── public/              # Static assets, icons, manifest
 │   ├── src/
 │   │   ├── assets/          # Images, logos, icons, SVGs
@@ -87,10 +87,12 @@ Accusoft/
 │       ├── architecture-and-structure.md
 │       └── security-and-crypto.md
 │
-├── AGENTS.md                # Agent instruction entrypoint
-├── GEMINI.md                # Engine directives
-├── MEMORY.md                # Current project memory & roadmap
-├── STRUCTURE.md             # This structural breakdown
-├── THEME.md                 # Design tokens & color system
-└── SECURITY.md              # Zero-Knowledge cryptography & auth architecture
+├── docs/                    # Reference Documentation & System Specs
+│   ├── STRUCTURE.md         # This structural breakdown
+│   ├── THEME.md             # Design tokens & color system
+│   ├── SECURITY.md          # Zero-Knowledge cryptography & auth architecture
+│   └── MEMORY.md            # Current project memory & roadmap
+│
+├── AGENTS.md                # Agent master instruction entrypoint
+└── GEMINI.md                # Engine directives
 ```

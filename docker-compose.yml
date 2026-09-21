@@ -1,0 +1,35 @@
+services:
+  mongodb:
+    image: mongo:8
+    container_name: Accusoftmongodb
+    restart: always
+    volumes:
+      - accu_mongo_data:/data/db
+    # ports:
+    #   - "27018:27017"
+
+  backend:
+    build: ./server
+    image: kumarjaikishan/accusoft-backend:latest
+    container_name: server
+    restart: always
+    env_file:
+      - ./server/.env
+    depends_on:
+      - mongodb
+    # ports:
+    #   - "5000:5000"
+
+  frontend:
+    build: ./frontend
+    image: kumarjaikishan/accusoft-frontend:latest
+    container_name: accufrontend
+    restart: always
+    ports:
+      - "81:80"
+    depends_on:
+      - backend
+
+volumes:
+  accu_mongo_data:
+

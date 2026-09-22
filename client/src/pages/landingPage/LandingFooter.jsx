@@ -13,14 +13,14 @@ export const LandingFooter = ({ theme, subtextClass }) => {
         <div className="flex flex-col md:flex-row justify-between items-center gap-6">
           {/* Logo & Brand statement */}
           <Link to="/" className="flex items-center gap-2.5">
-            <div 
-              className="p-1.5 rounded-xl text-white shadow-sm"
-              style={{ backgroundColor: mainColor }}
-            >
-              <Leaf className="w-4 h-4" />
-            </div>
-            <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
-              Accusoft
+            <img 
+              src="/logo.webp" 
+              alt="Accusoft" 
+              className="w-7 h-7 object-contain rounded-lg shadow-sm" 
+            />
+            <span className="text-xl font-black tracking-tight">
+              <span className="text-[#0B1B3D] dark:text-white">Accu</span>
+              <span className="text-[#0070F3] dark:text-[#2E90FA]">soft</span>
             </span>
           </Link>
 

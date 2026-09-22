@@ -96,10 +96,15 @@ const Sidebar = () => {
         >
             {/* Logo */}
             <Link to="/">
-                <div className="h-[var(--navheightmobile)] lg:h-[var(--navheight)] flex items-center px-4 border-b border-gray-200 dark:border-white/10">
-                    <Leaf size={40} style={{ color: mainColor }} />
-                    <span className={`text-lg font-bold tracking-wide whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100 ml-2.5"}`} style={{ color: mainColor }}>
-                        Accusoft
+                <div className="h-[var(--navheightmobile)] lg:h-[var(--navheight)] flex items-center px-4 border-b border-gray-200 dark:border-white/10 gap-2.5">
+                    <img 
+                        src="/logo.webp" 
+                        alt="Accusoft" 
+                        className="w-8 h-8 object-contain shrink-0 rounded-lg" 
+                    />
+                    <span className={`text-xl font-black tracking-tight whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100"}`}>
+                        <span className="text-[#0B1B3D] dark:text-white">Accu</span>
+                        <span className="text-[#0070F3] dark:text-[#2E90FA]">soft</span>
                     </span>
                 </div>
             </Link>

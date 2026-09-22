@@ -17,14 +17,14 @@ export const LandingNav = ({ theme, toggleTheme, isScrolled }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
         {/* Brand Logo */}
         <Link to="/" className="flex items-center gap-2.5 group">
-          <div 
-            className="p-2 rounded-xl text-white shadow-md transition-transform group-hover:scale-105"
-            style={{ backgroundColor: mainColor }}
-          >
-            <Leaf className="w-5 h-5" />
-          </div>
-          <span className="text-xl sm:text-2xl font-black tracking-tight text-slate-900 dark:text-white">
-            Accusoft
+          <img 
+            src="/logo.webp" 
+            alt="Accusoft" 
+            className="w-9 h-9 object-contain rounded-xl shadow-sm transition-transform group-hover:scale-105" 
+          />
+          <span className="text-xl sm:text-2xl font-black tracking-tight">
+            <span className="text-[#0B1B3D] dark:text-white">Accu</span>
+            <span className="text-[#0070F3] dark:text-[#2E90FA]">soft</span>
           </span>
         </Link>
 

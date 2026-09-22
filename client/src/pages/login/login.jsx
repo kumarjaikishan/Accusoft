@@ -78,10 +78,15 @@ const Login = () => {
                         {/* Brand Top */}
                         <div className="relative z-10">
                             <Link to="/" className="inline-flex items-center gap-2.5 group">
-                                <div className="p-2 bg-indigo-600 rounded-xl shadow-md shadow-indigo-500/30 group-hover:scale-105 transition-transform">
-                                    <Wallet className="w-5 h-5 text-white" />
-                                </div>
-                                <span className="text-xl font-extrabold tracking-tight text-white">Accusoft</span>
+                                <img 
+                                    src="/logo.webp" 
+                                    alt="Accusoft" 
+                                    className="w-9 h-9 object-contain rounded-xl shadow-md group-hover:scale-105 transition-transform" 
+                                />
+                                <span className="text-xl font-black tracking-tight">
+                                    <span className="text-white">Accu</span>
+                                    <span className="text-[#38BDF8]">soft</span>
+                                </span>
                             </Link>
                             <p className="mt-2 text-xs text-slate-300 leading-relaxed">
                                 Next-gen financial analytics, smart multi-ledger accounting, and effortless expense management.
@@ -108,10 +113,11 @@ const Login = () => {
 
                         {/* Footer Trust Badge */}
                         <div className="relative z-10 pt-3 border-t border-white/10 flex items-center justify-between text-[11px] text-slate-400">
-                            <span className="flex items-center gap-1 text-emerald-400 font-medium">
-                                <CheckCircle className="w-3.5 h-3.5" /> 100% Free & Secure
+                            <span>End-to-End Encrypted</span>
+                            <span className="flex items-center gap-1">
+                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                                System Online
                             </span>
-                            <span>v2.0 Modern</span>
                         </div>
                     </div>
 
@@ -119,10 +125,15 @@ const Login = () => {
                     <div className="lg:col-span-7 p-5 sm:p-7 flex flex-col justify-between overflow-hidden">
                         {/* Mobile Brand Logo */}
                         <div className="lg:hidden flex items-center justify-center gap-2 mb-2">
-                            <div className="p-1.5 bg-indigo-600 rounded-lg shadow-md">
-                                <Wallet className="w-4 h-4 text-white" />
-                            </div>
-                            <span className="text-lg font-bold tracking-tight text-slate-900 dark:text-white">Accusoft</span>
+                            <img 
+                                src="/logo.webp" 
+                                alt="Accusoft" 
+                                className="w-7 h-7 object-contain rounded-lg shadow-sm" 
+                            />
+                            <span className="text-lg font-black tracking-tight">
+                                <span className="text-[#0B1B3D] dark:text-white">Accu</span>
+                                <span className="text-[#0070F3] dark:text-[#2E90FA]">soft</span>
+                            </span>
                         </div>
 
                         {/* Header & Toggle */}

@@ -27,13 +27,13 @@ export const LandingNav = ({ theme, toggleTheme, isScrolled }) => {
               <span className="text-[#0B1B3D] dark:text-white">Accu</span>
               <span className="text-[#0070F3] dark:text-[#2E90FA]">soft</span>
             </span>
-            <span className="text-[8px] sm:text-[9.5px] font-bold tracking-[0.14em] sm:tracking-[0.18em] uppercase text-slate-500 dark:text-slate-400 mt-0.5 leading-none select-none">
+            <span className="hidden sm:inline-block text-[9.5px] font-bold tracking-[0.14em] uppercase text-slate-500 dark:text-slate-400 mt-0.5 leading-none select-none">
               <span>ACCOUNTS</span>
-              <span className="text-[#0070F3] dark:text-[#2E90FA] font-black mx-1 sm:mx-1.5">|</span>
+              <span className="text-[#0070F3] dark:text-[#2E90FA] font-black mx-1">|</span>
               <span>EXPENSES</span>
-              <span className="text-[#0070F3] dark:text-[#2E90FA] font-black mx-1 sm:mx-1.5">|</span>
+              <span className="text-[#0070F3] dark:text-[#2E90FA] font-black mx-1">|</span>
               <span>INVENTORY</span>
-              <span className="text-[#0070F3] dark:text-[#2E90FA] font-black mx-1 sm:mx-1.5">|</span>
+              <span className="text-[#0070F3] dark:text-[#2E90FA] font-black mx-1">|</span>
               <span>REPORTS</span>
             </span>
           </div>

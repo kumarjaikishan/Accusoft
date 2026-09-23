@@ -43,12 +43,6 @@ const Hero = ({ theme, subtextClass }) => {
           transition={{ duration: 0.5, ease: "easeOut" }}
           className="space-y-4 sm:space-y-6 text-center lg:text-left"
         >
-          {/* Chip */}
-          <div className="inline-flex items-center gap-1.5 sm:gap-2 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-bold border border-indigo-200/60 dark:border-indigo-800/60 shadow-xs">
-            <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-indigo-600 dark:text-indigo-400 fill-current" />
-            Next-Gen Expense Intelligence
-          </div>
-
           <h1 className="text-3xl sm:text-5xl lg:text-6xl xl:text-7xl font-black tracking-tight leading-[1.12] text-slate-900 dark:text-white">
             Master your spending. <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-indigo-500 to-cyan-400">

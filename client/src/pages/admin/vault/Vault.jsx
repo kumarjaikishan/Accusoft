@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { 
     Lock, Unlock, KeyRound, Shield, ShieldCheck, Eye, EyeOff, 
     Copy, Check, Plus, Search, Trash2, Edit3, RefreshCw, 
@@ -457,9 +456,8 @@ const Vault = () => {
     if (!isUnlocked) {
         return (
             <div className="max-w-md mx-auto my-14 p-6 sm:p-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl">
-                <motion.div
-                    animate={shakeUnlock ? { x: [-10, 10, -10, 10, 0] } : {}}
-                    transition={{ duration: 0.4 }}
+                <div
+                    className={`transition-all duration-200 ${shakeUnlock ? "animate-shake" : ""}`}
                 >
                     <div className="flex flex-col items-center text-center mb-6">
                         <div className="p-4 rounded-3xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 mb-3 shadow-inner">
@@ -517,7 +515,7 @@ const Vault = () => {
                             {isUnlocking ? "Decrypting..." : "Unlock Vault"}
                         </button>
                     </form>
-                </motion.div>
+                </div>
             </div>
         );
     }
@@ -658,11 +656,8 @@ const Vault = () => {
                         const isPassCopied = copiedMap[passKey];
 
                         return (
-                            <motion.div
+                            <div
                                 key={item._id}
-                                layout
-                                initial={{ opacity: 0, scale: 0.98 }}
-                                animate={{ opacity: 1, scale: 1 }}
                                 className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-xs hover:shadow-md hover:border-indigo-300 dark:hover:border-indigo-900/60 transition-all flex flex-col justify-between"
                             >
                                 <div className="space-y-3.5">
@@ -808,7 +803,7 @@ const Vault = () => {
                                         </div>
                                     )}
                                 </div>
-                            </motion.div>
+                            </div>
                         );
                     })}
                 </div>
@@ -823,11 +818,8 @@ const Vault = () => {
                         const isPassCopied = copiedMap[passKey];
 
                         return (
-                            <motion.div
+                            <div
                                 key={item._id}
-                                layout
-                                initial={{ opacity: 0, y: 5 }}
-                                animate={{ opacity: 1, y: 0 }}
                                 className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xs hover:shadow-md hover:border-indigo-300 dark:hover:border-indigo-900/60 transition-all flex flex-col lg:flex-row lg:items-center justify-between gap-4"
                             >
                                 {/* Left: Name & Note */}
@@ -963,7 +955,7 @@ const Vault = () => {
                                         <Trash2 className="w-4 h-4" />
                                     </button>
                                 </div>
-                            </motion.div>
+                            </div>
                         );
                     })}
                 </div>

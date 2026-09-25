@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { X, Copy, Check, RefreshCw, KeyRound, Sparkles } from 'lucide-react';
 import { generateSecurePassword, calculatePasswordStrength } from '../../../utils/cryptoVault';
 import { toast } from 'sonner';
@@ -45,15 +44,10 @@ const PasswordGenModal = ({ isOpen, onClose, onSelectPassword }) => {
     if (!isOpen) return null;
 
     return (
-        <AnimatePresence>
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.95, y: 15 }}
-                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.95, y: 15 }}
-                    transition={{ duration: 0.2 }}
-                    className="w-full max-w-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col"
-                >
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-150">
+            <div
+                className="w-full max-w-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col transition-all animate-in zoom-in-95 fade-in duration-150"
+            >
                     {/* Header */}
                     <div className="flex items-center justify-between px-5 py-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50">
                         <div className="flex items-center gap-2.5">
@@ -180,9 +174,8 @@ const PasswordGenModal = ({ isOpen, onClose, onSelectPassword }) => {
                             </button>
                         )}
                     </div>
-                </motion.div>
             </div>
-        </AnimatePresence>
+        </div>
     );
 };
 

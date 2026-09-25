@@ -9,7 +9,6 @@ import {
 } from 'lucide-react';
 import { useSelector, useDispatch } from "react-redux";
 import { setnarrow, setloader } from "../../store/login";
-import { motion } from "framer-motion";
 import { downloadCSV } from "../../utils/csvExport";
 import DataTable from "../../components/common/DataTable";
 import dayjs from "dayjs";
@@ -167,11 +166,8 @@ const Report = () => {
     );
 
     return (
-        <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.25 }}
-            className="min-h-screen bg-[#f8fafc] dark:bg-[#0b1120] p-3 sm:p-5 space-y-3.5 transition-colors duration-300 font-sans text-slate-700 dark:text-slate-200"
+        <div
+            className="min-h-screen bg-[#f8fafc] dark:bg-[#0b1120] p-3 sm:p-5 space-y-3.5 transition-colors duration-300 font-sans text-slate-700 dark:text-slate-200 animate-in fade-in duration-200"
         >
             {/* ---------------- FILTER & PRESETS BAR ---------------- */}
             <div className="bg-white dark:bg-slate-900/90 rounded-2xl shadow-sm border border-slate-200/80 dark:border-slate-800 p-4 print:hidden space-y-3">
@@ -332,7 +328,7 @@ const Report = () => {
                     }
                 />
             </div>
-        </motion.div>
+        </div>
     );
 };
 

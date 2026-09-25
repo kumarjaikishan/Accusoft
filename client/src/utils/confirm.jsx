@@ -1,6 +1,5 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
-import { motion, AnimatePresence } from "framer-motion";
 import { AlertTriangle, Info, CheckCircle2, HelpCircle, X } from "lucide-react";
 
 /**
@@ -27,79 +26,70 @@ const ConfirmModal = ({
     question: <HelpCircle className="w-12 h-12 text-blue-500" />,
   };
 
+  if (!isOpen) return null;
+
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
-          {/* Backdrop */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={onCancel}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
-          />
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+      {/* Backdrop */}
+      <div
+        onClick={onCancel}
+        className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity animate-in fade-in duration-200"
+      />
 
-          {/* Modal Card */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            transition={{ type: "spring", stiffness: 350, damping: 25 }}
-            className="relative w-full max-w-md bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-gray-100 dark:border-white/10 p-6 overflow-hidden z-10 text-center"
-          >
-            <button
-              onClick={onCancel}
-              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors p-1"
-            >
-              <X size={18} />
-            </button>
+      {/* Modal Card */}
+      <div
+        className="relative w-full max-w-md bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-gray-100 dark:border-white/10 p-6 overflow-hidden z-10 text-center transition-all animate-in zoom-in-95 fade-in duration-200"
+      >
+        <button
+          onClick={onCancel}
+          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors p-1 cursor-pointer"
+        >
+          <X size={18} />
+        </button>
 
-            <div className="flex justify-center mb-4">
-              <div className="p-3 bg-gray-50 dark:bg-slate-800/80 rounded-2xl">
-                {iconMap[icon] || iconMap.warning}
-              </div>
-            </div>
-
-            {title && (
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-                {title}
-              </h3>
-            )}
-
-            {text && (
-              <p className="text-sm text-gray-500 dark:text-gray-400 mb-6 leading-relaxed">
-                {text}
-              </p>
-            )}
-
-            <div className="flex items-center justify-center gap-3">
-              {!isAlert && (
-                <button
-                  type="button"
-                  onClick={onCancel}
-                  className="flex-1 py-2.5 px-4 rounded-xl text-sm font-semibold text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-slate-700 transition active:scale-95"
-                >
-                  {cancelText}
-                </button>
-              )}
-
-              <button
-                type="button"
-                onClick={onConfirm}
-                className={`flex-1 py-2.5 px-4 rounded-xl text-sm font-semibold text-white transition shadow-sm active:scale-95 ${
-                  isDanger
-                    ? "bg-rose-600 hover:bg-rose-700 shadow-rose-500/20"
-                    : "bg-indigo-600 hover:bg-indigo-700 shadow-indigo-500/20"
-                }`}
-              >
-                {confirmText}
-              </button>
-            </div>
-          </motion.div>
+        <div className="flex justify-center mb-4">
+          <div className="p-3 bg-gray-50 dark:bg-slate-800/80 rounded-2xl">
+            {iconMap[icon] || iconMap.warning}
+          </div>
         </div>
-      )}
-    </AnimatePresence>
+
+        {title && (
+          <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+            {title}
+          </h3>
+        )}
+
+        {text && (
+          <p className="text-sm text-gray-500 dark:text-gray-400 mb-6 leading-relaxed">
+            {text}
+          </p>
+        )}
+
+        <div className="flex items-center justify-center gap-3">
+          {!isAlert && (
+            <button
+              type="button"
+              onClick={onCancel}
+              className="flex-1 py-2.5 px-4 rounded-xl text-sm font-semibold text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-slate-700 transition active:scale-95 cursor-pointer"
+            >
+              {cancelText}
+            </button>
+          )}
+
+          <button
+            type="button"
+            onClick={onConfirm}
+            className={`flex-1 py-2.5 px-4 rounded-xl text-sm font-semibold text-white transition shadow-sm active:scale-95 cursor-pointer ${
+              isDanger
+                ? "bg-rose-600 hover:bg-rose-700 shadow-rose-500/20"
+                : "bg-indigo-600 hover:bg-indigo-700 shadow-indigo-500/20"
+            }`}
+          >
+            {confirmText}
+          </button>
+        </div>
+      </div>
+    </div>
   );
 };
 

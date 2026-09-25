@@ -11,7 +11,6 @@ import {
 
 import { useSelector, useDispatch } from "react-redux";
 import { header, setloader } from "../../store/login";
-import { motion } from "framer-motion";
 import { useApi } from "../../utils/useApi";
 
 import dayjs from "dayjs";
@@ -98,10 +97,7 @@ const Home = () => {
       : n || 0;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 15 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
+    <div
       className="min-h-screen bg-transparent p-2.5 sm:p-4 lg:p-6"
     >
       {/* 1-per-row on small mobile, 2 on tablet, 4 on desktop */}
@@ -144,7 +140,8 @@ const Home = () => {
         ].map((item, i) => (
           <div
             key={i}
-            className={`bg-white dark:bg-slate-900 rounded-2xl border-l-4 ${item.border} px-3 py-2 sm:p-4 shadow-sm dark:shadow-none dark:border-white/5 hover:shadow-md transition-all duration-300 flex flex-col justify-between`}
+            style={{ animationDelay: `${i * 100}ms` }}
+            className={`bg-white dark:bg-slate-900 rounded-2xl border-l-4 ${item.border} px-3 py-2 sm:p-4 shadow-sm dark:shadow-none dark:border-white/5 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between animate-fade-in-up`}
           >
             {/* Top Section */}
             <div className="flex justify-between items-center sm:items-start">
@@ -156,7 +153,7 @@ const Home = () => {
               </div>
 
               <div
-                className={`text-white p-1.5 sm:p-2.5 rounded-xl bg-gradient-to-br ${item.iconBg} shadow-sm shrink-0`}
+                className={`text-white p-1.5 sm:p-2.5 rounded-xl bg-linear-to-br ${item.iconBg} shadow-sm shrink-0`}
               >
                 {item.icon}
               </div>
@@ -184,7 +181,7 @@ const Home = () => {
       {/* CHART + RECENT SECTION */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
         {/* RESPONSIVE CHART CARD */}
-        <div className="bg-white dark:bg-slate-900 shadow-sm dark:shadow-none border border-slate-200/80 dark:border-slate-800 rounded-2xl p-3 sm:p-4 lg:col-span-2 flex flex-col justify-between">
+        <div className="bg-white dark:bg-slate-900 shadow-sm dark:shadow-none border border-slate-200/80 dark:border-slate-800 rounded-2xl p-3 sm:p-4 lg:col-span-2 flex flex-col justify-between animate-fade-in-up delay-200">
           {/* Header & Controls */}
           <div className="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-slate-100 dark:border-slate-800/80">
             <div>
@@ -351,7 +348,7 @@ const Home = () => {
         </div>
 
         {/* RECENT SPEND FEED */}
-        <div className="bg-white dark:bg-slate-900 shadow-sm dark:shadow-none border border-slate-200/80 dark:border-slate-800 rounded-2xl p-3.5 sm:p-4 overflow-hidden">
+        <div className="bg-white dark:bg-slate-900 shadow-sm dark:shadow-none border border-slate-200/80 dark:border-slate-800 rounded-2xl p-3.5 sm:p-4 overflow-hidden animate-fade-in-up delay-300">
           <div className="flex items-center gap-2 mb-3 pb-2 border-b border-slate-100 dark:border-slate-800/80">
             <div className="p-1.5 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400">
               <Clock className="w-4 h-4" />
@@ -366,7 +363,8 @@ const Home = () => {
               {recent.map((item, index) => (
                 <div
                   key={index}
-                  className="flex justify-between items-start gap-2 p-2 sm:p-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/80 transition"
+                  style={{ animationDelay: `${(index + 1) * 70}ms` }}
+                  className="flex justify-between items-start gap-2 p-2 sm:p-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/80 transition duration-200 hover:translate-x-0.5 animate-fade-in-up"
                 >
                   <div className="min-w-0 flex-1">
                     <p className="text-[11px] sm:text-xs font-semibold text-slate-800 dark:text-slate-200 flex flex-wrap items-center gap-1">
@@ -387,7 +385,7 @@ const Home = () => {
               ))}
             </div>
           ) : (
-            <div className="flex flex-col items-center justify-center py-10 text-slate-400 dark:text-slate-500">
+            <div className="flex flex-col items-center justify-center py-10 text-slate-400 dark:text-slate-500 animate-fade-in">
               <div className="flex items-center justify-center w-10 h-10 mb-2 rounded-full bg-indigo-50 dark:bg-indigo-950/40">
                 <Clock className="w-5 h-5 text-indigo-500" />
               </div>
@@ -398,7 +396,7 @@ const Home = () => {
           )}
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 };
 

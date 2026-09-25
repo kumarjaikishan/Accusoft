@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
 import { Wallet, ShieldCheck, Zap, ArrowLeft, CheckCircle, Sparkles, Moon, Sun } from 'lucide-react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
@@ -155,17 +154,10 @@ const Login = () => {
                                     onClick={() => setIsLoginTab(true)}
                                     className={`relative flex-1 py-1.5 text-xs font-bold rounded-lg transition-all duration-200 flex items-center justify-center gap-1.5 z-10 cursor-pointer ${
                                         isLoginTab 
-                                            ? "text-white shadow-sm shadow-indigo-500/20" 
+                                            ? "bg-indigo-600 text-white shadow-sm shadow-indigo-500/20" 
                                             : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                                     }`}
                                 >
-                                    {isLoginTab && (
-                                        <motion.div
-                                            layoutId="activeTabPill"
-                                            className="absolute inset-0 bg-indigo-600 rounded-lg -z-10 shadow-sm"
-                                            transition={{ type: "spring", stiffness: 500, damping: 40 }}
-                                        />
-                                    )}
                                     Sign In
                                 </button>
 
@@ -174,17 +166,10 @@ const Login = () => {
                                     onClick={() => setIsLoginTab(false)}
                                     className={`relative flex-1 py-1.5 text-xs font-bold rounded-lg transition-all duration-200 flex items-center justify-center gap-1.5 z-10 cursor-pointer ${
                                         !isLoginTab 
-                                            ? "text-white shadow-sm shadow-indigo-500/20" 
+                                            ? "bg-indigo-600 text-white shadow-sm shadow-indigo-500/20" 
                                             : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                                     }`}
                                 >
-                                    {!isLoginTab && (
-                                        <motion.div
-                                            layoutId="activeTabPill"
-                                            className="absolute inset-0 bg-indigo-600 rounded-lg -z-10 shadow-sm"
-                                            transition={{ type: "spring", stiffness: 500, damping: 40 }}
-                                        />
-                                    )}
                                     Register
                                 </button>
                             </div>

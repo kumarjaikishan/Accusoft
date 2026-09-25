@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { header } from "../store/login";
-import { motion } from "framer-motion";
 import { Home, ArrowLeft, Compass } from "lucide-react";
 
 export const Errorpage = () => {
@@ -19,19 +18,14 @@ export const Errorpage = () => {
   }, []);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.4, ease: "easeOut" }}
-      className="flex-1 min-h-[calc(100vh-var(--navheight)-40px)] flex items-center justify-center px-4 overflow-hidden py-4"
+    <div
+      className="flex-1 min-h-[calc(100vh-var(--navheight)-40px)] flex items-center justify-center px-4 overflow-hidden py-4 animate-in zoom-in-95 fade-in duration-300"
     >
       <div className="max-w-2xl w-full text-center flex flex-col items-center">
 
         {/* Floating Animated Illustration with Glow */}
-        <motion.div
-          animate={{ y: [0, -10, 0] }}
-          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-          className="relative mb-6 flex justify-center"
+        <div
+          className="relative mb-6 flex justify-center animate-accu-float"
         >
           <div
             className="absolute inset-0 blur-3xl opacity-20 dark:opacity-30 rounded-full"
@@ -42,7 +36,7 @@ export const Errorpage = () => {
             alt="404 Not Found"
             className="w-64 sm:w-80 md:w-96 max-h-[60vh] object-contain relative z-10 drop-shadow-md transition-transform hover:scale-105 duration-300"
           />
-        </motion.div>
+        </div>
 
         {/* Badge Indicator */}
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-slate-200/60 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 mb-4 border border-slate-300/50 dark:border-slate-700/50 backdrop-blur-sm">
@@ -80,6 +74,6 @@ export const Errorpage = () => {
           </button>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 };

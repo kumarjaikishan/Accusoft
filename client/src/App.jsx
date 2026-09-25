@@ -5,7 +5,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setnarrow } from './store/login';
 import ProtectedRoutes from './utils/protectedRoute';
 import AdminRoute from './utils/adminRoute';
-import { AnimatePresence } from 'framer-motion';
 import { useUserApi } from './store/apicalls';
 
 // 🚀 CORE LAZY LOADED ROUTE CHUNKS (Optimized so only visited pages load)
@@ -82,54 +81,52 @@ function App() {
   };
 
   return (
-    <AnimatePresence mode="wait">
-      <Suspense fallback={<Preloader />}>
-        <Routes location={location} key={location.pathname}>
+    <Suspense fallback={<Preloader />}>
+      <Routes location={location} key={location.pathname}>
 
-          {/* 🔐 AUTHENTICATED USER ROUTES */}
-          <Route element={<InnerLayout sidebarclose={sidebarclose} />}>
-            <Route element={<ProtectedRoutes />}>
-              <Route path="/dashboard" element={<Home />} />
-              <Route path="/expense" element={<Expense />} />
-              <Route path="/photo" element={<Photo />} />
-              <Route path="/voucher" element={<Officeexp />} />
-              <Route path="/data_analysis/ledgerDetail/:id" element={<VoucherDetail />} />
-              <Route path="/data_analysis" element={<Datanalysis />} />
-              <Route path="/report" element={<Report />} />
+        {/* 🔐 AUTHENTICATED USER ROUTES */}
+        <Route element={<InnerLayout sidebarclose={sidebarclose} />}>
+          <Route element={<ProtectedRoutes />}>
+            <Route path="/dashboard" element={<Home />} />
+            <Route path="/expense" element={<Expense />} />
+            <Route path="/photo" element={<Photo />} />
+            <Route path="/voucher" element={<Officeexp />} />
+            <Route path="/data_analysis/ledgerDetail/:id" element={<VoucherDetail />} />
+            <Route path="/data_analysis" element={<Datanalysis />} />
+            <Route path="/report" element={<Report />} />
 
-              {/* 🛡️ ADMIN ONLY ROUTES (Isolated lazy chunk) */}
-              <Route path="/admin" element={<AdminRoute />}>
-                <Route index element={<Admin_Dashboard />} />
-                <Route path="dashboard" element={<Admin_Dashboard />} />
-                <Route path="contacts" element={<AdminContacts />} />
-                <Route path="logs" element={<Logger />} />
-                <Route path="tip" element={<TipSender />} />
-                <Route path="filehandle" element={<Filehandle />} />
-                <Route path="slow" element={<SlowPage />} />
-                <Route path="slowworker" element={<SlowWorkerPage />} />
-                <Route path="vault" element={<Vault />} />
-              </Route>
+            {/* 🛡️ ADMIN ONLY ROUTES (Isolated lazy chunk) */}
+            <Route path="/admin" element={<AdminRoute />}>
+              <Route index element={<Admin_Dashboard />} />
+              <Route path="dashboard" element={<Admin_Dashboard />} />
+              <Route path="contacts" element={<AdminContacts />} />
+              <Route path="logs" element={<Logger />} />
+              <Route path="tip" element={<TipSender />} />
+              <Route path="filehandle" element={<Filehandle />} />
+              <Route path="slow" element={<SlowPage />} />
+              <Route path="slowworker" element={<SlowWorkerPage />} />
+              <Route path="vault" element={<Vault />} />
             </Route>
           </Route>
+        </Route>
 
-          {/* 🌐 PUBLIC / MARKETING / COMPLIANCE ROUTES */}
-          <Route path="/setpassword/:token" element={<PasswordReset />} />
-          <Route path="/resetpassword/:token" element={<PasswordReset />} />
-          <Route path="/logout" element={<Logout />} />
-          <Route path="/login" element={log.islogin ? <Navigate to="/dashboard" replace /> : <Login />} />
-          <Route path="/test" element={<Test />} />
-          <Route path="*" element={<Errorpage />} />
+        {/* 🌐 PUBLIC / MARKETING / COMPLIANCE ROUTES */}
+        <Route path="/setpassword/:token" element={<PasswordReset />} />
+        <Route path="/resetpassword/:token" element={<PasswordReset />} />
+        <Route path="/logout" element={<Logout />} />
+        <Route path="/login" element={log.islogin ? <Navigate to="/dashboard" replace /> : <Login />} />
+        <Route path="/test" element={<Test />} />
+        <Route path="*" element={<Errorpage />} />
 
-          <Route element={<LandingLayout />}>
-            <Route path="/" element={<LandingBody />} />
-            <Route path="/terms" element={<Terms />} />
-            <Route path="/privacy" element={<Privacy />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/about" element={<About />} />
-          </Route>
-        </Routes>
-      </Suspense>
-    </AnimatePresence>
+        <Route element={<LandingLayout />}>
+          <Route path="/" element={<LandingBody />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/about" element={<About />} />
+        </Route>
+      </Routes>
+    </Suspense>
   );
 };
 

@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Menu, Sun, Moon, Leaf, User, Palette, Check, ChevronDown } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { setnarrow } from "../../store/login";
@@ -139,90 +138,84 @@ const Navbar = () => {
             </button>
 
             {/* Profile & Color Customizer Dropdown */}
-            <AnimatePresence>
-              {isProfileOpen && (
-                <motion.div
-                  initial={{ opacity: 0, y: 8, scale: 0.96 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 8, scale: 0.96 }}
-                  transition={{ duration: 0.15 }}
-                  className="absolute right-0 mt-2 w-64 sm:w-72 bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 overflow-hidden z-[100]"
-                >
-                  {/* Account Header */}
-                  <div className="p-3.5 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 ring-1 ring-slate-200 dark:ring-slate-700">
-                        <img
-                          src={useralldetail?.profilepic || defaultprofile}
-                          alt="Avatar"
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                      <div className="min-w-0">
-                        <p className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-100 truncate">
-                          {useralldetail?.user?.name}
-                        </p>
-                        <p className="text-[11px] text-slate-400 truncate">
-                          {useralldetail?.user?.email}
-                        </p>
-                      </div>
+            {isProfileOpen && (
+              <div
+                className="absolute right-0 mt-2 w-64 sm:w-72 bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 overflow-hidden z-[100] transition-all animate-in zoom-in-95 fade-in duration-150"
+              >
+                {/* Account Header */}
+                <div className="p-3.5 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 ring-1 ring-slate-200 dark:ring-slate-700">
+                      <img
+                        src={useralldetail?.profilepic || defaultprofile}
+                        alt="Avatar"
+                        className="w-full h-full object-cover"
+                      />
                     </div>
-
-                    <NavLink
-                      to="/photo"
-                      onClick={() => setIsProfileOpen(false)}
-                      className="mt-3 flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition"
-                    >
-                      <User size={13} /> Edit Profile Photo
-                    </NavLink>
-                  </div>
-
-                  {/* Brand Color Swatches */}
-                  <div className="p-3.5 space-y-2.5">
-                    <div className="flex items-center justify-between text-xs font-bold text-slate-700 dark:text-slate-200">
-                      <div className="flex items-center gap-1.5">
-                        <Palette size={14} style={{ color: mainColor }} />
-                        <span>Accent Color</span>
-                      </div>
-                      <span className="text-[10px] text-slate-400 font-mono uppercase">{mainColor}</span>
-                    </div>
-
-                    <div className="grid grid-cols-4 gap-2">
-                      {presets.map((item) => (
-                        <button
-                          key={item.color}
-                          onClick={() => dispatch(setMainColor(item.color))}
-                          title={item.name}
-                          className="w-full h-7 rounded-lg border border-slate-200/80 dark:border-slate-700 shadow-xs relative overflow-hidden transition-transform hover:scale-105 cursor-pointer flex items-center justify-center"
-                          style={{ backgroundColor: item.color }}
-                        >
-                          {mainColor.toLowerCase() === item.color.toLowerCase() && (
-                            <Check size={13} className="text-white drop-shadow-sm" />
-                          )}
-                        </button>
-                      ))}
-                    </div>
-
-                    {/* Custom Color Input */}
-                    <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800 text-xs">
-                      <span className="text-slate-400 font-medium text-[11px]">Custom Hex:</span>
-                      <div className="relative w-7 h-7 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700">
-                        <input
-                          type="color"
-                          value={mainColor}
-                          onChange={(e) => dispatch(setMainColor(e.target.value))}
-                          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
-                        />
-                        <div
-                          className="w-full h-full shadow-inner"
-                          style={{ backgroundColor: mainColor }}
-                        />
-                      </div>
+                    <div className="min-w-0">
+                      <p className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-100 truncate">
+                        {useralldetail?.user?.name}
+                      </p>
+                      <p className="text-[11px] text-slate-400 truncate">
+                        {useralldetail?.user?.email}
+                      </p>
                     </div>
                   </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+
+                  <NavLink
+                    to="/photo"
+                    onClick={() => setIsProfileOpen(false)}
+                    className="mt-3 flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition"
+                  >
+                    <User size={13} /> Edit Profile Photo
+                  </NavLink>
+                </div>
+
+                {/* Brand Color Swatches */}
+                <div className="p-3.5 space-y-2.5">
+                  <div className="flex items-center justify-between text-xs font-bold text-slate-700 dark:text-slate-200">
+                    <div className="flex items-center gap-1.5">
+                      <Palette size={14} style={{ color: mainColor }} />
+                      <span>Accent Color</span>
+                    </div>
+                    <span className="text-[10px] text-slate-400 font-mono uppercase">{mainColor}</span>
+                  </div>
+
+                  <div className="grid grid-cols-4 gap-2">
+                    {presets.map((item) => (
+                      <button
+                        key={item.color}
+                        onClick={() => dispatch(setMainColor(item.color))}
+                        title={item.name}
+                        className="w-full h-7 rounded-lg border border-slate-200/80 dark:border-slate-700 shadow-xs relative overflow-hidden transition-transform hover:scale-105 cursor-pointer flex items-center justify-center"
+                        style={{ backgroundColor: item.color }}
+                      >
+                        {mainColor.toLowerCase() === item.color.toLowerCase() && (
+                          <Check size={13} className="text-white drop-shadow-sm" />
+                        )}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Custom Color Input */}
+                  <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800 text-xs">
+                    <span className="text-slate-400 font-medium text-[11px]">Custom Hex:</span>
+                    <div className="relative w-7 h-7 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700">
+                      <input
+                        type="color"
+                        value={mainColor}
+                        onChange={(e) => dispatch(setMainColor(e.target.value))}
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                      />
+                      <div
+                        className="w-full h-full shadow-inner"
+                        style={{ backgroundColor: mainColor }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>

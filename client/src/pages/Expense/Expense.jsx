@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef, useCallback, useMemo } from 'react'
 import { SquarePlus, Trash2, X, Book, Settings } from 'lucide-react';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { AnimatePresence, motion } from 'framer-motion';
 import DataTable from '../../components/common/DataTable';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc.js';
@@ -301,12 +300,8 @@ const Expense = () => {
         .animate-shake { animation: shake 0.2s ease-in-out 0s 2; }
       `}</style>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.3 }}
-          className="w-full mx-auto space-y-1"
+        <div
+          className="w-full mx-auto space-y-1 animate-in fade-in duration-200"
         >
           {/* Consolidated Header: Search & Action Buttons */}
           <div className="shake-box bg-(--maincolor) dark:bg-slate-900 border-b border-white/5 text-white p-3 rounded-t-xl flex flex-wrap items-center justify-between gap-4">
@@ -349,20 +344,16 @@ const Expense = () => {
                 )}
               </div>
 
-              <AnimatePresence>
-                {selectedRowIds.length > 0 && (
-                  <motion.button
-                    initial={{ scale: 0.8, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    exit={{ scale: 0.8, opacity: 0 }}
-                    onClick={() => sendDeleteRequest(selectedRowIds)}
-                    className="flex items-center gap-2 px-3 py-2 bg-red-600 text-white rounded-lg shadow-sm hover:bg-red-700 transition-colors font-semibold text-xs whitespace-nowrap"
-                  >
-                    <Trash2 size={16} />
-                    Delete Selected ({selectedRowIds.length})
-                  </motion.button>
-                )}
-              </AnimatePresence>
+              {selectedRowIds.length > 0 && (
+                <button
+                  type="button"
+                  onClick={() => sendDeleteRequest(selectedRowIds)}
+                  className="flex items-center gap-2 px-3 py-2 bg-red-600 text-white rounded-lg shadow-sm hover:bg-red-700 active:scale-95 transition-all font-semibold text-xs whitespace-nowrap cursor-pointer animate-in zoom-in-95 duration-150"
+                >
+                  <Trash2 size={16} />
+                  Delete Selected ({selectedRowIds.length})
+                </button>
+              )}
             </div>
 
             {/* Right side: Action Buttons */}
@@ -462,7 +453,7 @@ const Expense = () => {
 
           {/* <Ledpage navigate={navigate} setmodal={setIsModalOpen} setdisable={setdisable} disable={disable} setisledupdate={setIsLedgerUpdate} isledupdate={isLedgerUpdate} /> */}
 
-        </motion.div>
+        </div>
         <LedgerModal
           setdisable={setdisable}
           disable={disable}

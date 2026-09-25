@@ -18,6 +18,9 @@
 | **Admin Dashboard** | Active | `Frontend/src/pages/admin/` | User management, contact queries, logs |
 | **Cloudinary Photos** | Active | `Frontend/src/pages/photoCloudinary.jsx` | Cloud image uploads |
 | **Password Vault** | Active | `Frontend/src/pages/admin/vault/`, `server/modals/vault_schema.js` | 🔒 Zero-Knowledge E2EE Credential Vault (Admin Only) with AES-256-GCM, PBKDF2 (100k rounds), 1-click copy for ID & Password, masked display, and password generator. |
+| **App Starting Loader** | Active | `client/src/preloader.jsx`, `client/src/index.css` | 💫 Ultra-lightweight pure Tailwind & CSS 3D logo animation featuring floating levitation, light shimmer sweep, ascending financial growth micro-bars, sonar aura ripples, zero-JS fallback, and light/dark mode support. |
+| **Animation Engine** | Active | `client/src/index.css`, Tailwind CSS v4 | ⚡ Pure Tailwind CSS & CSS keyframe animations (zero runtime JS overhead, `framer-motion` fully uninstalled). |
+| **Server Benchmark Suite** | Active | `client/src/pages/serverTest/` | ⏱️ Concurrency & stress testing suite comparing Event Loop Blocking (`/admin/slow`) vs Worker Threads (`/admin/slowworker`) with live API ping & latency metrics. |
 
 ---
 

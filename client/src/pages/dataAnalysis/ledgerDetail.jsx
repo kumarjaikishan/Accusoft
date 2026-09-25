@@ -3,7 +3,6 @@ import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import dayjs from "dayjs";
 import DataTable from "../../components/common/DataTable";
-import { motion } from "framer-motion";
 import { downloadCSV } from "../../utils/csvExport";
 import { 
   Download, 
@@ -91,11 +90,8 @@ const VoucherDetail = () => {
   const columns = getLedgerDetailColumns({ isMobile });
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 40 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-      className="p-2 lg:p-4 md:p-6 space-y-8"
+    <div
+      className="p-2 lg:p-4 md:p-6 space-y-8 animate-in fade-in duration-200"
     >
       {/* ---------- REDESIGNED UPPER HEADER ONLY ---------- */}
       <div className="relative overflow-hidden rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 p-4 shadow-sm backdrop-blur-xl print:hidden flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -175,7 +171,7 @@ const VoucherDetail = () => {
           }
         />
       </div>
-    </motion.div>
+    </div>
   );
 };
 

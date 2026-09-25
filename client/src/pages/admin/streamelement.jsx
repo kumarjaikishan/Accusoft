@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { toast } from '../../utils/toast';
 import { Send, Banknote, Sparkles, CheckCircle2, AlertCircle } from 'lucide-react';
-import { motion } from 'framer-motion';
 
 const TipSender = () => {
     const [username, setUsername] = useState('Kishan');
@@ -65,11 +64,8 @@ const TipSender = () => {
     };
 
     return (
-        <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.25 }}
-            className="min-h-screen bg-[#f8fafc] dark:bg-[#0b1120] p-4 sm:p-6 flex items-center justify-center font-sans text-slate-700 dark:text-slate-200"
+        <div
+            className="min-h-screen bg-[#f8fafc] dark:bg-[#0b1120] p-4 sm:p-6 flex items-center justify-center font-sans text-slate-700 dark:text-slate-200 animate-in fade-in duration-200"
         >
             <div className="w-full max-w-md bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-sm backdrop-blur-xl space-y-5">
                 {/* Header */}
@@ -158,7 +154,7 @@ const TipSender = () => {
                     </div>
                 )}
             </div>
-        </motion.div>
+        </div>
     );
 };
 

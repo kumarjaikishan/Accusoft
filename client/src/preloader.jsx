@@ -1,83 +1,90 @@
-import React from 'react';
-import { Wallet, Coins } from 'lucide-react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+
+const LOADING_STEPS = [
+  'Initializing workspace...',
+  'Securing financial ledger...',
+  'Syncing accounts & analytics...',
+  'Preparing your dashboard...'
+];
 
 const Preloader = () => {
-  return (
-    <div className="preloader-overlay">
-      <div className="preloader-container">
-        <div className="relative">
-          {/* Main Wallet Icon */}
-          <motion.div
-            initial={{ scale: 0.5, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ 
-              type: "spring",
-              stiffness: 260,
-              damping: 20 
-            }}
-            className="wallet-wrapper"
-          >
-            <motion.div
-              animate={{ 
-                rotate: [0, -5, 5, 0],
-                y: [0, -4, 0]
-              }}
-              transition={{ 
-                duration: 4, 
-                repeat: Infinity, 
-                ease: "easeInOut" 
-              }}
-            >
-              <Wallet size={80} strokeWidth={1.5} className="text-blue-600 dark:text-blue-400 drop-shadow-xl" />
-            </motion.div>
-          </motion.div>
+  const [stepIndex, setStepIndex] = useState(0);
+  const themeMode = useSelector((state) => state.theme?.mode) || localStorage.getItem('theme') || 'light';
+  const isDark = themeMode === 'dark';
 
-          {/* Falling Coins */}
-          <div className="coins-spawn-area">
-            {[0, 1, 2].map((i) => (
-              <motion.div
-                key={i}
-                className="absolute"
-                initial={{ y: -60, x: i * 20 - 20, opacity: 0, scale: 0.6 }}
-                animate={{ 
-                  y: [null, -10, 20],
-                  opacity: [0, 1, 0],
-                  scale: [0.5, 1, 0.5]
-                }}
-                transition={{ 
-                  duration: 2, 
-                  repeat: Infinity, 
-                  delay: i * 0.6,
-                  ease: "easeInOut"
-                }}
-              >
-                <Coins size={20} className="text-amber-500 fill-amber-500/20" />
-              </motion.div>
-            ))}
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setStepIndex((prev) => (prev + 1) % LOADING_STEPS.length);
+    }, 1800);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className={`preloader-overlay ${isDark ? 'dark bg-[#0f172a]' : 'bg-[#f1f5f9]'}`}>
+      {/* Subtle Ambient Background Glows (Clean Blue / Indigo only) */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden flex items-center justify-center">
+        <div className="absolute w-80 h-80 sm:w-96 sm:h-96 rounded-full bg-linear-to-tr from-blue-500/20 via-indigo-400/15 to-transparent blur-3xl animate-accu-aurora" />
+        <div className="absolute w-72 h-72 sm:w-88 sm:h-88 rounded-full bg-linear-to-br from-cyan-500/15 via-blue-400/10 to-transparent blur-3xl animate-accu-aurora [animation-delay:2s]" />
+      </div>
+
+      <div className="preloader-container px-4">
+        {/* Floating Brand Logo - Clean, No Border, No Background */}
+        <div className="relative flex items-center justify-center">
+          {/* Subtle Sonar Ripple Rings (Clean Blue / Cyan) */}
+          <div className="absolute w-32 h-32 sm:w-40 sm:h-40 rounded-full border border-blue-500/20 dark:border-blue-400/15 pointer-events-none animate-accu-sonar" />
+          <div className="absolute w-32 h-32 sm:w-40 sm:h-40 rounded-full border border-cyan-500/20 dark:border-cyan-400/15 pointer-events-none animate-accu-sonar [animation-delay:1.4s]" />
+
+          {/* Pure Floating Logo (No Card, No Box, No Border) */}
+          <div className="relative z-10 animate-accu-float">
+            <div className="relative flex items-center justify-center">
+              {/* Accusoft 3D Logo Image without any border or background */}
+              <div className="relative w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center overflow-hidden">
+                <img
+                  src="/logo.webp"
+                  alt="Accusoft Logo"
+                  className="w-full h-full object-contain filter drop-shadow-[0_10px_20px_rgba(0,112,243,0.25)] dark:drop-shadow-[0_12px_24px_rgba(0,112,243,0.35)] select-none"
+                />
+
+                {/* Shimmer Specular Sweep */}
+                <div className="absolute inset-0 w-full h-full bg-linear-to-r from-transparent via-white/40 dark:via-white/20 to-transparent pointer-events-none animate-accu-shimmer" />
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Text Section */}
-        <div className="mt-8 text-center space-y-2">
-          <motion.h2 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="text-2xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-500 dark:from-blue-400 dark:to-indigo-300"
-          >
-            ACCUSOFT
-          </motion.h2>
-          <motion.div 
-            className="flex items-center gap-1 justify-center"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
-          >
-            <div className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-blue-400 animate-pulse" />
-            <span className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
-              Loading your finances
+        {/* Brand Name & Typography */}
+        <div className="mt-6 text-center space-y-2 flex flex-col items-center transition-all duration-300">
+          <div className="flex items-center gap-1.5">
+            <span className="text-2xl sm:text-3xl font-black tracking-tight leading-none">
+              <span className="text-[#0B1B3D] dark:text-white">Accu</span>
+              <span className="text-[#0070F3] dark:text-[#2E90FA]">soft</span>
             </span>
-          </motion.div>
+          </div>
+
+          {/* Feature Pill Subtitle */}
+          <div className="inline-flex items-center gap-1.5 text-[9.5px] sm:text-[10px] font-bold tracking-[0.14em] uppercase text-slate-500 dark:text-slate-400 select-none">
+            <span>ACCOUNTS</span>
+            <span className="text-[#0070F3] dark:text-[#2E90FA] font-black">•</span>
+            <span>EXPENSES</span>
+            <span className="text-[#0070F3] dark:text-[#2E90FA] font-black">•</span>
+            <span>INVENTORY</span>
+            <span className="text-[#0070F3] dark:text-[#2E90FA] font-black">•</span>
+            <span>REPORTS</span>
+          </div>
+
+          {/* Indeterminate Gradient Loading Bar */}
+          <div className="w-44 sm:w-52 h-1.5 bg-slate-200/90 dark:bg-slate-800 rounded-full overflow-hidden mt-3.5 relative">
+            <div className="absolute top-0 bottom-0 w-20 rounded-full bg-linear-to-r from-blue-600 via-cyan-400 to-indigo-600 shadow-xs shadow-blue-400/50 animate-accu-indeterminate" />
+          </div>
+
+          {/* Dynamic Status Text */}
+          <div className="h-5 flex items-center justify-center mt-1.5">
+            <div className="flex items-center gap-1.5 text-xs font-medium text-slate-500 dark:text-slate-400 transition-opacity duration-300">
+              <div className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-ping" />
+              <span>{LOADING_STEPS[stepIndex]}</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>

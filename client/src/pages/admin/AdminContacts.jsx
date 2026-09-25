@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { MessageSquare, Mail, User, Clock, Trash2, CheckCircle2, RefreshCw, Eye, Search, AlertCircle, Sparkles } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
 import dayjs from "dayjs";
 import { useApi } from "../../utils/useApi";
 import { toast } from "../../utils/toast";
@@ -85,11 +84,8 @@ const AdminContacts = () => {
   const unreadCount = contacts.filter((c) => c.status === "unread").length;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 15 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.25 }}
-      className="min-h-screen bg-[#f8fafc] dark:bg-[#0b1120] p-3 sm:p-5 space-y-4 font-sans text-slate-700 dark:text-slate-200"
+    <div
+      className="min-h-screen bg-[#f8fafc] dark:bg-[#0b1120] p-3 sm:p-5 space-y-4 font-sans text-slate-700 dark:text-slate-200 animate-in fade-in duration-200"
     >
       {/* ---------- 1. HEADER BAR ---------- */}
       <div className="relative overflow-hidden rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 p-4 shadow-sm backdrop-blur-xl flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
@@ -297,7 +293,7 @@ const AdminContacts = () => {
           )}
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 };
 

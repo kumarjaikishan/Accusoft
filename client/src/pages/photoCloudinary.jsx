@@ -19,7 +19,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { header } from '../store/login';
 import { profilepicupdtae, profiledetailupdtae } from '../store/api';
 import { toast } from '../utils/toast';
-import { motion, AnimatePresence } from 'framer-motion';
 import Button from '../components/common/Button';
 import TextInput from '../components/common/TextInput';
 
@@ -256,11 +255,8 @@ const Photo = () => {
       <div className="w-full max-w-4xl flex flex-col gap-6">
 
         {/* 🌟 HERO PROFILE CARD */}
-        <motion.div 
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
-          className="relative overflow-hidden rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm"
+        <div 
+          className="relative overflow-hidden rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm animate-in fade-in duration-200"
         >
           {/* Pure Tailwind Abstract Cover Banner with Overlapping Circles */}
           <div className="h-24 sm:h-32 w-full relative overflow-hidden bg-slate-900 flex items-start sm:items-center p-3.5 sm:p-5 select-none">
@@ -356,17 +352,14 @@ const Photo = () => {
               )}
             </div>
           </div>
-        </motion.div>
+        </div>
 
         {/* 📋 DETAILS & SECURITY GRID */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
           {/* PERSONAL DETAILS CARD */}
-          <motion.div 
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: 0.1 }}
-            className="lg:col-span-2 bg-white dark:bg-slate-900 rounded-3xl p-5 sm:p-7 border border-slate-200/80 dark:border-slate-800 shadow-sm flex flex-col justify-between"
+          <div 
+            className="lg:col-span-2 bg-white dark:bg-slate-900 rounded-3xl p-5 sm:p-7 border border-slate-200/80 dark:border-slate-800 shadow-sm flex flex-col justify-between animate-in fade-in duration-200"
           >
             <div>
               <div className="flex items-center justify-between pb-4 mb-5 border-b border-slate-100 dark:border-slate-800">
@@ -430,14 +423,11 @@ const Photo = () => {
                 )}
               </form>
             </div>
-          </motion.div>
+          </div>
 
           {/* SECURITY & AUTHENTICATION CARD */}
-          <motion.div 
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: 0.2 }}
-            className="bg-white dark:bg-slate-900 rounded-3xl p-5 sm:p-7 border border-slate-200/80 dark:border-slate-800 shadow-sm flex flex-col justify-between"
+          <div 
+            className="bg-white dark:bg-slate-900 rounded-3xl p-5 sm:p-7 border border-slate-200/80 dark:border-slate-800 shadow-sm flex flex-col justify-between animate-in fade-in duration-200"
           >
             <div>
               <div className="flex items-center gap-2.5 pb-4 mb-5 border-b border-slate-100 dark:border-slate-800">
@@ -474,19 +464,15 @@ const Photo = () => {
                 Send Reset Password Link
               </Button>
             </div>
-          </motion.div>
+          </div>
         </div>
 
         {/* 📷 UPLOAD AVATAR MODAL */}
-        <AnimatePresence>
-          {showPhotoModal && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
-              <motion.div
-                initial={{ scale: 0.95, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.95, opacity: 0 }}
-                className="relative w-full max-w-md rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden"
-              >
+        {showPhotoModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
+            <div
+              className="relative w-full max-w-md rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200"
+            >
                 {/* Modal Header */}
                 <div className="px-6 py-4 bg-indigo-600 text-white flex items-center justify-between">
                   <div className="flex items-center gap-2">
@@ -574,10 +560,9 @@ const Photo = () => {
                     </div>
                   )}
                 </div>
-              </motion.div>
+              </div>
             </div>
           )}
-        </AnimatePresence>
 
       </div>
     </div>

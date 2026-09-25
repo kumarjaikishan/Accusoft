@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect, forwardRef, useMemo } from 'react';
 import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, X, RotateCcw } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
 import dayjs from 'dayjs';
 
 /**
@@ -256,20 +255,16 @@ export const DatePicker = forwardRef(({
       </div>
 
       {/* Popover Calendar */}
-      <AnimatePresence>
-        {isOpen && !disabled && (
-          <motion.div
-            initial={{ opacity: 0, y: -6, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -6, scale: 0.98 }}
-            transition={{ duration: 0.15, ease: 'easeOut' }}
-            className="
-              absolute top-[calc(100%+6px)] left-0 sm:left-auto right-0 sm:right-auto
-              w-full sm:w-[320px] min-w-[280px] max-w-[calc(100vw-32px)]
-              bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800
-              rounded-2xl shadow-2xl z-50 p-3 sm:p-3.5 select-none font-sans touch-manipulation
-            "
-          >
+      {isOpen && !disabled && (
+        <div
+          className="
+            absolute top-[calc(100%+6px)] left-0 sm:left-auto right-0 sm:right-auto
+            w-full sm:w-[320px] min-w-[280px] max-w-[calc(100vw-32px)]
+            bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800
+            rounded-2xl shadow-2xl z-50 p-3 sm:p-3.5 select-none font-sans touch-manipulation
+            transition-all animate-in zoom-in-95 fade-in duration-150
+          "
+        >
             {/* Calendar Header */}
             <div className="flex items-center justify-between gap-1 pb-2.5 sm:pb-3 mb-2 border-b border-slate-100 dark:border-slate-800">
               <div className="flex items-center gap-1">
@@ -439,9 +434,8 @@ export const DatePicker = forwardRef(({
                 Close
               </button>
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+        </div>
+      )}
 
       {helperText && (
         <span className={`text-[11px] ${error ? 'text-rose-500 font-medium' : 'text-slate-400'}`}>

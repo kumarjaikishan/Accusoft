@@ -21,6 +21,19 @@
   <title>Accusoft - Expense Management Solutions</title>
   <link rel="canonical" href="https://accusoft.battlefiesta.in" />
 
+  <script>
+    (function() {
+      try {
+        var theme = localStorage.getItem('theme') || 'light';
+        if (theme === 'dark') {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      } catch (e) {}
+    })();
+  </script>
+
   <link rel="prefetch" as="image"
     href="https://res.cloudinary.com/dusxlxlvm/image/upload/v1720767933/accusoft/assets/404_page_1_kjlifa.svg" />
 
@@ -28,7 +41,36 @@
 
 <body class="light-theme">
   <noscript>You need to enable JavaScript to run this app.</noscript>
-  <div id="root"></div>
+  <div id="root">
+    <div id="pre-mount-loader" style="position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#f1f5f9;font-family:system-ui,-apple-system,sans-serif;user-select:none;z-index:99999;">
+      <div style="position:relative;display:flex;align-items:center;justify-content:center;">
+        <img src="/logo.webp" alt="Accusoft" style="width:84px;height:84px;object-fit:contain;animation:accuPulse 2s ease-in-out infinite alternate;" />
+      </div>
+      <div style="margin-top:24px;text-align:center;">
+        <div style="font-size:24px;font-weight:900;letter-spacing:-0.03em;">
+          <span style="color:#0B1B3D;">Accu</span><span style="color:#0070F3;">soft</span>
+        </div>
+        <div style="font-size:9.5px;font-weight:700;letter-spacing:0.14em;color:#64748b;margin-top:4px;">
+          ACCOUNTS • EXPENSES • INVENTORY • REPORTS
+        </div>
+      </div>
+      <style>
+        @keyframes accuPulse {
+          0% { transform: translateY(0px) scale(0.98); }
+          100% { transform: translateY(-6px) scale(1.02); }
+        }
+        .dark #pre-mount-loader {
+          background: #0f172a !important;
+        }
+        .dark #pre-mount-loader span:first-child {
+          color: #ffffff !important;
+        }
+        .dark #pre-mount-loader div:last-child {
+          color: #94a3b8 !important;
+        }
+      </style>
+    </div>
+  </div>
   <div id="print-container"></div>
   <script type="module" src="/src/index.jsx"></script>
 </body>

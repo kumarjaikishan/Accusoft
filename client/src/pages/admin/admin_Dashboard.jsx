@@ -8,7 +8,6 @@ import {
 } from 'lucide-react';
 import { useDispatch, useSelector } from "react-redux";
 import { setloader } from "../../store/login";
-import { motion } from "framer-motion";
 import DataTable from "../../components/common/DataTable";
 import { confirmDialog } from "../../utils/confirm";
 import { toast } from "../../utils/toast";
@@ -169,11 +168,8 @@ const AdminPanel = () => {
     }), [baseTableStyles]);
 
     return (
-        <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.25 }}
-            className="min-h-screen bg-[#f8fafc] dark:bg-[#0b1120] p-2.5 sm:p-5 space-y-3 transition-colors duration-300 font-sans text-slate-700 dark:text-slate-200"
+        <div
+            className="min-h-screen bg-[#f8fafc] dark:bg-[#0b1120] p-2.5 sm:p-5 space-y-3 transition-colors duration-300 font-sans text-slate-700 dark:text-slate-200 animate-in fade-in duration-200"
         >
             {/* ---------------- 1. STATS OVERVIEW (2 CARDS IN 1 ROW ON ALL SCREENS) ---------------- */}
             <div className="grid grid-cols-2 gap-2.5 sm:gap-4">
@@ -341,7 +337,7 @@ const AdminPanel = () => {
                 isOpen={deployModal}
                 onClose={() => setDeployModal(false)}
             />
-        </motion.div>
+        </div>
     );
 };
 

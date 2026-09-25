@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setloader } from "../../store/login";
-import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { 
   PieChart as PieIcon, 
@@ -137,11 +136,8 @@ const Datanalysis = () => {
   ];
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.25 }}
-      className="min-h-screen bg-[#f8fafc] dark:bg-[#0b1120] p-3 sm:p-5 space-y-3.5 transition-colors duration-300 font-sans text-slate-700 dark:text-slate-200"
+    <div
+      className="min-h-screen bg-[#f8fafc] dark:bg-[#0b1120] p-3 sm:p-5 space-y-3.5 transition-colors duration-300 font-sans text-slate-700 dark:text-slate-200 animate-in fade-in duration-200"
     >
       {/* ---------- MODERN HERO BAR & CONTROLS ---------- */}
       <div className="relative overflow-hidden rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 p-3.5 sm:p-4 shadow-sm backdrop-blur-xl">
@@ -166,19 +162,6 @@ const Datanalysis = () => {
 
           {/* Controls */}
           <div className="flex flex-wrap items-center gap-2">
-            {/* Total Metric Tag */}
-            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-100/90 dark:bg-slate-800/90 border border-slate-200/60 dark:border-slate-700/60 text-[11px]">
-              <span className="text-slate-400 dark:text-slate-400 font-medium">Total:</span>
-              <span className="font-bold text-slate-700 dark:text-slate-200">₹ {fmt(overallTotal)}</span>
-              {showbudget && overallBudget > 0 && (
-                <>
-                  <span className="text-slate-300 dark:text-slate-600">|</span>
-                  <span className="text-slate-400 dark:text-slate-400 font-medium">Budget:</span>
-                  <span className="font-bold text-slate-600 dark:text-slate-300">₹ {fmt(overallBudget)}</span>
-                </>
-              )}
-            </div>
-
             {/* Date Dropdowns */}
             <div className="flex items-center gap-1 bg-slate-100/90 dark:bg-slate-800/90 p-0.5 rounded-xl border border-slate-200/60 dark:border-slate-700/60">
               <select
@@ -268,11 +251,10 @@ const Datanalysis = () => {
             const isOverBudget = remainingBudget < 0;
 
             return (
-              <motion.div
+              <div
                 key={ledgerId}
-                whileHover={{ y: -2, transition: { duration: 0.15 } }}
                 onClick={() => detail(ledgerId)}
-                className="group relative overflow-hidden rounded-2xl p-3.5 transition-all duration-150 cursor-pointer border bg-white/95 dark:bg-slate-900/85 hover:bg-white dark:hover:bg-slate-900 border-slate-200/80 dark:border-slate-800/90 shadow-sm hover:shadow-md hover:border-indigo-500/40 dark:hover:border-indigo-500/40 text-slate-700 dark:text-slate-200"
+                className="group relative overflow-hidden rounded-2xl p-3.5 transition-all duration-150 cursor-pointer border bg-white/95 dark:bg-slate-900/85 hover:bg-white dark:hover:bg-slate-900 border-slate-200/80 dark:border-slate-800/90 shadow-sm hover:shadow-md hover:border-indigo-500/40 dark:hover:border-indigo-500/40 hover:-translate-y-0.5 text-slate-700 dark:text-slate-200"
               >
                 {/* Top Section: Title & Prominent Circular Gauge */}
                 <div className="flex items-center justify-between gap-2">
@@ -339,13 +321,11 @@ const Datanalysis = () => {
 
                         {/* Linear Progress Bar */}
                         <div className="w-full h-1 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
-                          <motion.div
-                            initial={{ width: 0 }}
-                            animate={{
+                          <div
+                            style={{
                               width: `${Math.min(budgetPercent, 100)}%`,
                             }}
-                            transition={{ duration: 0.6, ease: "easeOut" }}
-                            className={`h-full rounded-full ${
+                            className={`h-full rounded-full transition-all duration-500 ${
                               isOverBudget
                                 ? "bg-rose-500"
                                 : budgetPercent > 80
@@ -365,12 +345,12 @@ const Datanalysis = () => {
                     )}
                   </div>
                 )}
-              </motion.div>
+              </div>
             );
           })
         )}
       </div>
-    </motion.div>
+    </div>
   );
 };
 

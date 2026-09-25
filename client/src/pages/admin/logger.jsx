@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { motion, AnimatePresence } from 'framer-motion';
 import {
   Activity,
   Clock,
@@ -240,11 +239,8 @@ const Logger = () => {
   }, [displayedLogs]);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-      className="w-full p-2 md:p-6 space-y-6 text-gray-800 dark:text-gray-100 min-h-[calc(100vh-var(--navheight))]"
+    <div
+      className="w-full p-2 md:p-6 space-y-6 text-gray-800 dark:text-gray-100 min-h-[calc(100vh-var(--navheight))] animate-in fade-in duration-200"
     >
       {/* ---------------- TITLE & TOP ACTIONS ---------------- */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border border-gray-200/80 dark:border-white/10 shadow-sm">
@@ -459,61 +455,55 @@ const Logger = () => {
           </div>
 
           <div className="space-y-3 max-h-[600px] overflow-y-auto pr-1">
-            <AnimatePresence mode="popLayout">
-              {displayedLogs.map((log) => {
-                const percentage = Math.min(100, Math.max(5, (log.durationMs / maxLogLatency) * 100));
+            {displayedLogs.map((log) => {
+              const percentage = Math.min(100, Math.max(5, (log.durationMs / maxLogLatency) * 100));
 
-                return (
-                  <motion.div
-                    key={log.id}
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.95 }}
-                    transition={{ duration: 0.2 }}
-                    className="p-3.5 rounded-xl border border-gray-100 dark:border-white/5 bg-slate-50/80 dark:bg-slate-800/50 hover:bg-slate-100/80 dark:hover:bg-slate-800 transition shadow-2xs space-y-2.5"
-                  >
-                    <div className="flex flex-wrap items-center justify-between gap-2">
-                      <div className="flex items-center gap-2">
-                        <MethodBadge method={log.method} />
-                        <span className="font-mono text-sm font-bold text-gray-800 dark:text-gray-200">
-                          /{log.endpoint}
-                        </span>
-                      </div>
-
-                      <div className="flex items-center gap-2">
-                        <StatusBadge status={log.status} success={log.success} />
-                        <LatencyBadge timeStr={log.time} durationMs={log.durationMs} />
-                      </div>
+              return (
+                <div
+                  key={log.id}
+                  className="p-3.5 rounded-xl border border-gray-100 dark:border-white/5 bg-slate-50/80 dark:bg-slate-800/50 hover:bg-slate-100/80 dark:hover:bg-slate-800 transition shadow-2xs space-y-2.5 animate-in fade-in duration-150"
+                >
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <div className="flex items-center gap-2">
+                      <MethodBadge method={log.method} />
+                      <span className="font-mono text-sm font-bold text-gray-800 dark:text-gray-200">
+                        /{log.endpoint}
+                      </span>
                     </div>
 
-                    {/* Relative latency visualization bar */}
-                    <div className="w-full bg-gray-200 dark:bg-slate-700/60 h-1.5 rounded-full overflow-hidden">
-                      <div
-                        className={`h-full rounded-full transition-all duration-500 ${
-                          log.durationMs > 500
-                            ? 'bg-rose-500'
-                            : log.durationMs > 200
-                            ? 'bg-amber-500'
-                            : 'bg-emerald-500'
-                        }`}
-                        style={{ width: `${percentage}%` }}
-                      />
+                    <div className="flex items-center gap-2">
+                      <StatusBadge status={log.status} success={log.success} />
+                      <LatencyBadge timeStr={log.time} durationMs={log.durationMs} />
                     </div>
+                  </div>
 
-                    <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
-                      <span>{dayjs(log.timestamp).fromNow()}</span>
-                      <span className="font-mono">{dayjs(log.timestamp).format('hh:mm:ss A · DD/MM/YYYY')}</span>
+                  {/* Relative latency visualization bar */}
+                  <div className="w-full bg-gray-200 dark:bg-slate-700/60 h-1.5 rounded-full overflow-hidden">
+                    <div
+                      className={`h-full rounded-full transition-all duration-500 ${
+                        log.durationMs > 500
+                          ? 'bg-rose-500'
+                          : log.durationMs > 200
+                          ? 'bg-amber-500'
+                          : 'bg-emerald-500'
+                      }`}
+                      style={{ width: `${percentage}%` }}
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
+                    <span>{dayjs(log.timestamp).fromNow()}</span>
+                    <span className="font-mono">{dayjs(log.timestamp).format('hh:mm:ss A · DD/MM/YYYY')}</span>
+                  </div>
+
+                  {log.error && (
+                    <div className="text-xs p-2 rounded-lg bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20 font-mono">
+                      Error: {log.error}
                     </div>
-
-                    {log.error && (
-                      <div className="text-xs p-2 rounded-lg bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20 font-mono">
-                        Error: {log.error}
-                      </div>
-                    )}
-                  </motion.div>
-                );
-              })}
-            </AnimatePresence>
+                  )}
+                </div>
+              );
+            })}
 
             {displayedLogs.length === 0 && (
               <div className="text-center py-12 space-y-3">
@@ -534,7 +524,7 @@ const Logger = () => {
           </div>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 };
 

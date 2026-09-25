@@ -28,7 +28,6 @@ export default defineConfig({
       "@reduxjs/toolkit",
       "react-redux",
       "redux-persist",
-      "framer-motion",
       "lucide-react",
       "sonner",
       "chart.js",
@@ -64,7 +63,6 @@ export default defineConfig({
               return "charts";
             }
             if (
-              id.includes("framer-motion") ||
               id.includes("lucide-react") ||
               id.includes("sonner")
             ) {

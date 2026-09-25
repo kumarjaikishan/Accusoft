@@ -1,5 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { Leaf, ChevronDown, ChevronUp, Banknote, Lock, LayoutDashboard, Truck, LogOut, User, Landmark, BarChart, Hourglass, Server, Book, Activity, MessageSquare } from 'lucide-react';
+import {
+    ChevronDown,
+    LayoutDashboard,
+    LogOut,
+    User,
+    Landmark,
+    BarChart,
+    Hourglass,
+    Server,
+    Book,
+    Activity,
+    MessageSquare,
+    Shield,
+    Radio,
+    Lock,
+    Zap
+} from 'lucide-react';
 
 import { Link, NavLink, useNavigate, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -16,23 +32,23 @@ const Sidebar = () => {
     const user = useSelector((state) => state.userexplist?.user);
     const { mode, mainColor } = useSelector((state) => state.theme);
 
-    const isAdminActive = location.pathname.startsWith("/admin");
-    const isServerActive = location.pathname.startsWith("/slow") || location.pathname.startsWith("/slowworker");
+    const isAdminActive = location.pathname.startsWith("/admin") && !location.pathname.startsWith("/admin/slow");
+    const isServerActive = location.pathname.startsWith("/admin/slow") || location.pathname.startsWith("/admin/slowworker");
 
     const [adminOpen, setAdminOpen] = useState(isAdminActive);
     const [serverOpen, setServerOpen] = useState(isServerActive);
 
-    // Keep submenus alive dynamically based on route switching
+    // Keep submenus open dynamically based on route switching
     useEffect(() => {
         if (isAdminActive) setAdminOpen(true);
         if (isServerActive) setServerOpen(true);
     }, [isAdminActive, isServerActive]);
 
     const menu = [
-        { name: "Dashboard", link: "/dashboard", icon: <LayoutDashboard /> },
-        { name: "Expenses", link: "/expense", icon: <Landmark /> },
-        { name: "Analysis", link: "/data_analysis", icon: <Book /> },
-        { name: "Report", link: "/report", icon: <BarChart /> }
+        { name: "Dashboard", link: "/dashboard", icon: <LayoutDashboard size={18} /> },
+        { name: "Expenses", link: "/expense", icon: <Landmark size={18} /> },
+        { name: "Analysis", link: "/data_analysis", icon: <Book size={18} /> },
+        { name: "Report", link: "/report", icon: <BarChart size={18} /> }
     ];
 
     const logoutHandler = async () => {
@@ -51,40 +67,49 @@ const Sidebar = () => {
         }
     };
 
+    // Top-Level Main Navigation Style (Semantic & Plain Color)
     const getNavLinkClass = (isActive) =>
-        `group relative flex w-full items-center ${log.narrow ? "justify-center px-0" : "px-2.5"} py-2.5 rounded-lg transition-all duration-300
+        `group relative flex w-full items-center ${log.narrow ? "justify-center px-0" : "px-3"} py-2.5 rounded-xl text-[13.5px] font-semibold transition-all duration-200
      ${isActive
-            ? "" // Dynamic colors handled via style prop
-            : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/10 hover:text-gray-900 dark:hover:text-white"
+            ? "text-indigo-600 dark:text-indigo-400 bg-indigo-50/80 dark:bg-indigo-950/60 shadow-xs"
+            : "text-slate-600 dark:text-slate-300 hover:bg-slate-100/90 dark:hover:bg-slate-800/80 hover:text-slate-900 dark:hover:text-white"
         }`;
 
     const getNavLinkStyle = (isActive) =>
         isActive ? {
-            backgroundColor: mode === 'dark' ? `${mainColor}22` : `${mainColor}11`,
+            backgroundColor: mode === 'dark' ? `${mainColor}22` : `${mainColor}15`,
             color: mainColor,
-            borderLeft: `4px solid ${mainColor}`,
-            borderTopLeftRadius: '0px',
-            borderBottomLeftRadius: '0px',
-            fontWeight: '600'
+            borderLeft: `3px solid ${mainColor}`,
+            borderTopLeftRadius: '4px',
+            borderBottomLeftRadius: '4px',
         } : {};
 
-    const getSubmenuHeaderClass = (isActive) =>
-        `flex items-center w-full ${log.narrow ? "justify-center px-0" : "justify-between px-2.5"} py-2.5 rounded-lg transition-all duration-300 ${isActive
-            ? "font-medium shadow-[inset_0_1px_4px_rgba(0,0,0,0.05)]"
-            : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/10 hover:text-gray-900 dark:hover:text-white"
+    // Submenu Group Header (Parent Button - Semantic & Plain Color)
+    const getSubmenuHeaderClass = (isOpen, isChildActive) =>
+        `flex items-center w-full ${log.narrow ? "justify-center px-0" : "justify-between px-3"} py-2.5 rounded-xl text-[13.5px] font-semibold transition-all duration-200 cursor-pointer ${isChildActive
+            ? "text-indigo-600 dark:text-indigo-400 bg-indigo-50/50 dark:bg-indigo-950/30"
+            : "text-slate-600 dark:text-slate-300 hover:bg-slate-100/90 dark:hover:bg-slate-800/80 hover:text-slate-900 dark:hover:text-white"
         }`;
 
-    const getSubmenuHeaderStyle = (isActive) =>
+    // Submenu Item (Child Links - Semantic & Plain Color)
+    const getSubmenuLinkClass = (isActive) =>
+        `group relative flex w-full items-center ${log.narrow ? "justify-center px-0" : "px-2.5"} py-2 rounded-lg text-[13px] transition-all duration-150
+     ${isActive
+            ? "font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/70 shadow-xs"
+            : "font-normal text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-slate-100 hover:translate-x-0.5"
+        }`;
+
+    const getSubmenuLinkStyle = (isActive) =>
         isActive ? {
-            backgroundColor: mode === 'dark' ? `${mainColor}22` : `${mainColor}11`,
             color: mainColor,
+            backgroundColor: mode === 'dark' ? `${mainColor}25` : `${mainColor}18`,
         } : {};
 
     return (
         <div
             className={`fixed top-0 left-0 h-screen z-[102] print:hidden
-            bg-white dark:bg-gradient-to-b dark:from-slate-900 dark:via-slate-800 dark:to-slate-900
-            backdrop-blur-xl border-r border-gray-200 dark:border-white/10
+            bg-white dark:bg-slate-900
+            backdrop-blur-xl border-r border-slate-200 dark:border-slate-800
             transition-all duration-300 flex flex-col overflow-x-hidden
 
             w-[var(--sidebarwidemobile)]
@@ -94,13 +119,13 @@ const Sidebar = () => {
                 }
             `}
         >
-            {/* Logo */}
+            {/* Logo Header */}
             <Link to="/">
-                <div className="h-[var(--navheightmobile)] lg:h-[var(--navheight)] flex items-center px-4 border-b border-gray-200 dark:border-white/10 gap-2.5">
-                    <img 
-                        src="/logo.webp" 
-                        alt="Accusoft" 
-                        className="w-8 h-8 object-contain shrink-0 rounded-lg" 
+                <div className="h-[var(--navheightmobile)] lg:h-[var(--navheight)] flex items-center px-4 border-b border-slate-200 dark:border-slate-800 gap-2.5">
+                    <img
+                        src="/logo.webp"
+                        alt="Accusoft"
+                        className="w-8 h-8 object-contain shrink-0 rounded-lg"
                     />
                     <span className={`text-xl font-black tracking-tight whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100"}`}>
                         <span className="text-[#0B1B3D] dark:text-white">Accu</span>
@@ -109,8 +134,8 @@ const Sidebar = () => {
                 </div>
             </Link>
 
-            {/* Menu */}
-            <div className="flex-1 overflow-y-auto px-2 py-3 space-y-1.5 thin-scrollbar">
+            {/* Menu Body */}
+            <div className="flex-1 overflow-y-auto px-3 py-3 space-y-1 thin-scrollbar">
 
                 {log.islogin &&
                     menu.map((item, index) => (
@@ -121,121 +146,158 @@ const Sidebar = () => {
                             style={({ isActive }) => getNavLinkStyle(isActive)}
                             onClick={() => dispatch(header(item.name))}
                         >
-                            <span className="text-lg min-w-[24px] flex justify-center">{item.icon}</span>
+                            <span className="min-w-[20px] flex justify-center">{item.icon}</span>
                             <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100 ml-3"}`}>
                                 {item.name}
                             </span>
                         </NavLink>
                     ))}
 
-                {/* Admin Section */}
+                {/* 🛡️ Admin Parent Dropdown */}
                 {log.islogin && user?.isadmin && (
-                    <>
+                    <div className="space-y-0.5">
                         <button
                             type="button"
                             onClick={() => setAdminOpen(!adminOpen)}
-                            className={getSubmenuHeaderClass(isAdminActive)}
-                            style={getSubmenuHeaderStyle(isAdminActive)}
+                            className={getSubmenuHeaderClass(adminOpen, isAdminActive)}
                         >
                             <div className="flex items-center">
-                                <span className="text-lg min-w-[24px] flex justify-center"><Lock /></span>
+                                <span className="min-w-[20px] flex justify-center">
+                                    <Shield size={18} />
+                                </span>
                                 <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100 ml-3"}`}>
                                     Admin
                                 </span>
                             </div>
-                            <span className={`transition-all duration-300 overflow-hidden ${log.narrow ? "max-w-0 opacity-0" : "opacity-100"}`}>
-                                {adminOpen ? <ChevronUp /> : <ChevronDown />}
+                            <span className={`transition-transform duration-200 overflow-hidden text-slate-400 ${log.narrow ? "max-w-0 opacity-0" : "opacity-100"} ${adminOpen ? "rotate-180" : ""}`}>
+                                <ChevronDown size={15} />
                             </span>
                         </button>
 
+                        {/* ↳ Submenu Items with Tree Guide Line */}
                         <div
-                            className={`overflow-hidden transition-all duration-300 ${adminOpen ? "max-h-96 mt-1" : "max-h-0"
-                                }`}
+                            className={`overflow-hidden transition-all duration-200 ${adminOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"}`}
                         >
-                            <div className="ml-1.5 space-y-1">
-                                <NavLink to="/admin/dashboard" className={({ isActive }) => getNavLinkClass(isActive)} style={({ isActive }) => getNavLinkStyle(isActive)}>
-                                    <span className="text-lg min-w-[24px] flex justify-center"><LayoutDashboard /></span>
-                                    <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100 ml-3"}`}>Dashboard</span>
+                            <div className="ml-4.5 pl-2.5 my-1 border-l-2 border-slate-200 dark:border-slate-800 space-y-1">
+                                <NavLink
+                                    to="/admin/dashboard"
+                                    className={({ isActive }) => getSubmenuLinkClass(isActive)}
+                                    style={({ isActive }) => getSubmenuLinkStyle(isActive)}
+                                    onClick={() => dispatch(header("Admin Dashboard"))}
+                                >
+                                    <LayoutDashboard size={15} className="shrink-0" />
+                                    <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100 ml-2"}`}>Dashboard</span>
                                 </NavLink>
 
-                                <NavLink to="/admin/logs" className={({ isActive }) => getNavLinkClass(isActive)} style={({ isActive }) => getNavLinkStyle(isActive)}>
-                                    <span className="text-lg min-w-[24px] flex justify-center"><Activity /></span>
-                                    <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100 ml-3"}`}>Logs</span>
+                                <NavLink
+                                    to="/admin/logs"
+                                    className={({ isActive }) => getSubmenuLinkClass(isActive)}
+                                    style={({ isActive }) => getSubmenuLinkStyle(isActive)}
+                                    onClick={() => dispatch(header("System Logs"))}
+                                >
+                                    <Activity size={15} className="shrink-0" />
+                                    <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100 ml-2"}`}>Logs</span>
                                 </NavLink>
 
-                                <NavLink to="/admin/contacts" className={({ isActive }) => getNavLinkClass(isActive)} style={({ isActive }) => getNavLinkStyle(isActive)}>
-                                    <span className="text-lg min-w-[24px] flex justify-center"><MessageSquare /></span>
-                                    <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100 ml-3"}`}>Inquiries</span>
+                                <NavLink
+                                    to="/admin/contacts"
+                                    className={({ isActive }) => getSubmenuLinkClass(isActive)}
+                                    style={({ isActive }) => getSubmenuLinkStyle(isActive)}
+                                    onClick={() => dispatch(header("User Inquiries"))}
+                                >
+                                    <MessageSquare size={15} className="shrink-0" />
+                                    <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100 ml-2"}`}>Inquiries</span>
                                 </NavLink>
 
-                                <NavLink to="/admin/tip" className={({ isActive }) => getNavLinkClass(isActive)} style={({ isActive }) => getNavLinkStyle(isActive)}>
-                                    <span className="text-lg min-w-[24px] flex justify-center"><Banknote /></span>
-                                    <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100 ml-3"}`}>StreamElement</span>
+                                <NavLink
+                                    to="/admin/tip"
+                                    className={({ isActive }) => getSubmenuLinkClass(isActive)}
+                                    style={({ isActive }) => getSubmenuLinkStyle(isActive)}
+                                    onClick={() => dispatch(header("StreamElement"))}
+                                >
+                                    <Radio size={15} className="shrink-0" />
+                                    <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100 ml-2"}`}>StreamElement</span>
                                 </NavLink>
 
-                                <NavLink to="/admin/vault" className={({ isActive }) => getNavLinkClass(isActive)} style={({ isActive }) => getNavLinkStyle(isActive)}>
-                                    <span className="text-lg min-w-[24px] flex justify-center"><Lock /></span>
-                                    <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100 ml-3"}`}>Vault</span>
+                                <NavLink
+                                    to="/admin/vault"
+                                    className={({ isActive }) => getSubmenuLinkClass(isActive)}
+                                    style={({ isActive }) => getSubmenuLinkStyle(isActive)}
+                                    onClick={() => dispatch(header("Credential Vault"))}
+                                >
+                                    <Lock size={15} className="shrink-0" />
+                                    <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100 ml-2"}`}>Vault</span>
                                 </NavLink>
                             </div>
                         </div>
-                    </>
+                    </div>
                 )}
 
-                {/* Server Section */}
+                {/* ⚙️ Server Testing Parent Dropdown */}
                 {log.islogin && user?.isadmin && (
-                    <>
+                    <div className="space-y-0.5">
                         <button
                             type="button"
                             onClick={() => setServerOpen(!serverOpen)}
-                            className={getSubmenuHeaderClass(isServerActive)}
-                            style={getSubmenuHeaderStyle(isServerActive)}
+                            className={getSubmenuHeaderClass(serverOpen, isServerActive)}
                         >
                             <div className="flex items-center">
-                                <span className="text-lg min-w-[24px] flex justify-center"><Server /></span>
+                                <span className="min-w-[20px] flex justify-center">
+                                    <Server size={18} />
+                                </span>
                                 <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100 ml-3"}`}>
-                                    Server
+                                    Benchmarks
                                 </span>
                             </div>
-                            <span className={`transition-all duration-300 overflow-hidden ${log.narrow ? "max-w-0 opacity-0" : "opacity-100"}`}>
-                                {serverOpen ? <ChevronUp /> : <ChevronDown />}
+                            <span className={`transition-transform duration-200 overflow-hidden text-slate-400 ${log.narrow ? "max-w-0 opacity-0" : "opacity-100"} ${serverOpen ? "rotate-180" : ""}`}>
+                                <ChevronDown size={15} />
                             </span>
                         </button>
 
+                        {/* ↳ Submenu Items with Tree Guide Line */}
                         <div
-                            className={`overflow-hidden transition-all duration-300 ${serverOpen ? "max-h-40 mt-1" : "max-h-0"
-                                }`}
+                            className={`overflow-hidden transition-all duration-200 ${serverOpen ? "max-h-40 opacity-100" : "max-h-0 opacity-0"}`}
                         >
-                            <div className="ml-1.5 space-y-1">
-                                <NavLink to="/admin/slow" className={({ isActive }) => getNavLinkClass(isActive)} style={({ isActive }) => getNavLinkStyle(isActive)}>
-                                    <span className="text-lg min-w-[24px] flex justify-center"><Hourglass /></span>
-                                    <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100 ml-3"}`}>Server Slow</span>
+                            <div className="ml-4.5 pl-2.5 my-1 border-l-2 border-slate-200 dark:border-slate-800 space-y-1">
+                                <NavLink
+                                    to="/admin/slow"
+                                    className={({ isActive }) => getSubmenuLinkClass(isActive)}
+                                    style={({ isActive }) => getSubmenuLinkStyle(isActive)}
+                                    onClick={() => dispatch(header("Server Stress (Loop)"))}
+                                >
+                                    <Hourglass size={15} className="shrink-0" />
+                                    <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100 ml-2"}`}>Server Slow</span>
                                 </NavLink>
 
-                                <NavLink to="/admin/slowworker" className={({ isActive }) => getNavLinkClass(isActive)} style={({ isActive }) => getNavLinkStyle(isActive)}>
-                                    <span className="text-lg min-w-[24px] flex justify-center"><Truck /></span>
-                                    <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100 ml-3"}`}>Worker Fast</span>
+                                <NavLink
+                                    to="/admin/slowworker"
+                                    className={({ isActive }) => getSubmenuLinkClass(isActive)}
+                                    style={({ isActive }) => getSubmenuLinkStyle(isActive)}
+                                    onClick={() => dispatch(header("Worker Threads"))}
+                                >
+                                    <Zap size={15} className="shrink-0" />
+                                    <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100 ml-2"}`}>Worker Fast</span>
                                 </NavLink>
                             </div>
                         </div>
-                    </>
+                    </div>
                 )}
             </div>
 
             {/* Footer */}
-            <div className="px-2 py-3 border-t border-gray-200 dark:border-white/10">
+            <div className="px-3 py-3 border-t border-slate-200 dark:border-slate-800">
                 {log.islogin ? (
                     <button
                         onClick={logoutHandler}
-                        className={`w-full flex cursor-pointer items-center ${log.narrow ? 'justify-center px-0' : 'px-2.5'} py-2.5 rounded-lg 
-            bg-red-50 dark:bg-gray-500/10 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-gray-500/20 transition-all duration-200`}
+                        className={`w-full flex cursor-pointer items-center ${log.narrow ? 'justify-center px-0' : 'px-3'} py-2.5 rounded-xl 
+            bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-900/50 transition-all duration-200 text-[13.5px] font-bold`}
                     >
-                        <span className="text-lg min-w-[24px] flex justify-center"><LogOut /></span>
+                        <span className="min-w-[20px] flex justify-center"><LogOut size={18} /></span>
                         <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100 ml-3"}`}>Logout</span>
                     </button>
                 ) : (
                     <NavLink to="/login" className={({ isActive }) => getNavLinkClass(isActive)} style={({ isActive }) => getNavLinkStyle(isActive)}>
-                        <span className="text-lg min-w-[24px] flex justify-center"><User /></span>
+                        <span className="min-w-[20px] flex justify-center"><User size={18} /></span>
                         <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100 ml-3"}`}>Login</span>
                     </NavLink>
                 )}

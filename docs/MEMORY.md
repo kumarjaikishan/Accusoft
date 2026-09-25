@@ -21,6 +21,7 @@
 | **App Starting Loader** | Active | `client/src/preloader.jsx`, `client/src/index.css` | 💫 Ultra-lightweight pure Tailwind & CSS 3D logo animation featuring floating levitation, light shimmer sweep, ascending financial growth micro-bars, sonar aura ripples, zero-JS fallback, and light/dark mode support. |
 | **Animation Engine** | Active | `client/src/index.css`, Tailwind CSS v4 | ⚡ Pure Tailwind CSS & CSS keyframe animations (zero runtime JS overhead, `framer-motion` fully uninstalled). |
 | **Server Benchmark Suite** | Active | `client/src/pages/serverTest/` | ⏱️ Concurrency & stress testing suite comparing Event Loop Blocking (`/admin/slow`) vs Worker Threads (`/admin/slowworker`) with live API ping & latency metrics. |
+| **Branded Email System** | Active | `server/utils/emailTemplates.js`, `server/middleware/email_auth.js` | ✉️ Modern, high-conversion email verification, password reset, and verification landing page matching Accusoft's brand theme (`#0B1B3D`, `#0070F3`). |
 
 ---
 

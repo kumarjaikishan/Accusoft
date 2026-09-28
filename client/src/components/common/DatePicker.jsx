@@ -221,14 +221,14 @@ export const DatePicker = forwardRef(({
           hover:border-slate-300 dark:hover:border-slate-600
           cursor-pointer select-none flex items-center justify-between gap-2
           transition-all duration-150 outline-none
-          ${isOpen ? 'border-[var(--maincolor,#6366f1)] ring-2 ring-[var(--maincolor,#6366f1)]/20' : ''}
-          ${error ? '!border-rose-500 !ring-rose-500/20' : ''}
+          ${isOpen ? 'border-(--maincolor,#6366f1) ring-2 ring-(--maincolor,#6366f1)/20' : ''}
+          ${error ? 'border-rose-500! ring-rose-500/20!' : ''}
           ${disabled ? 'opacity-50 bg-slate-100 dark:bg-slate-800/50 cursor-not-allowed' : ''}
           ${className}
         `}
       >
         <div className="flex items-center gap-2.5 flex-1 min-w-0">
-          <CalendarIcon size={16} className="text-[var(--maincolor,#6366f1)] shrink-0" />
+          <CalendarIcon size={16} className="text-(--maincolor,#6366f1) shrink-0" />
           {displayFormattedDate ? (
             <span className="truncate font-semibold text-slate-800 dark:text-slate-100">
               {displayFormattedDate}
@@ -259,7 +259,7 @@ export const DatePicker = forwardRef(({
         <div
           className="
             absolute top-[calc(100%+6px)] left-0 sm:left-auto right-0 sm:right-auto
-            w-full sm:w-[320px] min-w-[280px] max-w-[calc(100vw-32px)]
+            w-full sm:w-[320px] min-w-70 max-w-[calc(100vw-32px)]
             bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800
             rounded-2xl shadow-2xl z-50 p-3 sm:p-3.5 select-none font-sans touch-manipulation
             transition-all animate-in zoom-in-95 fade-in duration-150
@@ -290,7 +290,7 @@ export const DatePicker = forwardRef(({
               <button
                 type="button"
                 onClick={() => setViewMode((prev) => (prev === 'days' ? 'months' : 'days'))}
-                className="px-2.5 py-1 text-xs font-bold text-slate-800 dark:text-slate-100 hover:bg-[var(--maincolor)]/10 hover:text-[var(--maincolor)] rounded-lg transition"
+                className="px-2.5 py-1 text-xs font-bold text-slate-800 dark:text-slate-100 hover:bg-(--maincolor)/10 hover:text-(--maincolor) rounded-lg transition"
               >
                 {viewDate.format('MMMM YYYY')}
               </button>
@@ -350,9 +350,9 @@ export const DatePicker = forwardRef(({
                           h-8.5 sm:h-8 text-xs font-semibold rounded-xl flex items-center justify-center relative transition-all duration-150 cursor-pointer active:scale-95 touch-manipulation
                           ${
                             isSelected
-                              ? 'bg-[var(--maincolor,#4f46e5)] text-white font-black shadow-md shadow-[var(--maincolor)]/30 scale-105'
+                              ? 'bg-(--maincolor,#4f46e5) text-white font-black shadow-md shadow-(--maincolor)/30 scale-105'
                               : isToday
-                              ? 'bg-[var(--maincolor)]/10 text-[var(--maincolor)] font-bold border border-[var(--maincolor)]/30'
+                              ? 'bg-(--maincolor)/10 text-(--maincolor) font-bold border border-(--maincolor)/30'
                               : isCurrent
                               ? 'text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 active:bg-slate-200 dark:active:bg-slate-700'
                               : 'text-slate-300 dark:text-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800/40'
@@ -361,7 +361,7 @@ export const DatePicker = forwardRef(({
                       >
                         {item.date.date()}
                         {isToday && !isSelected && (
-                          <span className="absolute bottom-1 w-1 h-1 bg-[var(--maincolor)] rounded-full" />
+                          <span className="absolute bottom-1 w-1 h-1 bg-(--maincolor) rounded-full" />
                         )}
                       </button>
                     );
@@ -389,9 +389,9 @@ export const DatePicker = forwardRef(({
                         py-2 text-xs font-bold rounded-xl transition cursor-pointer active:scale-95 touch-manipulation
                         ${
                           isCurrentMonth
-                            ? 'bg-[var(--maincolor,#4f46e5)] text-white shadow-sm'
+                            ? 'bg-(--maincolor,#4f46e5) text-white shadow-sm'
                             : isThisMonth
-                            ? 'bg-[var(--maincolor)]/10 text-[var(--maincolor)] border border-[var(--maincolor)]/30'
+                            ? 'bg-(--maincolor)/10 text-(--maincolor) border border-(--maincolor)/30'
                             : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
                         }
                       `}
@@ -417,7 +417,7 @@ export const DatePicker = forwardRef(({
                 <button
                   type="button"
                   onClick={selectToday}
-                  className="px-2.5 py-1 rounded-lg bg-[var(--maincolor)]/10 text-[var(--maincolor)] hover:bg-[var(--maincolor)]/20 active:scale-95 font-bold transition text-[11px] cursor-pointer touch-manipulation"
+                  className="px-2.5 py-1 rounded-lg bg-(--maincolor)/10 text-(--maincolor) hover:bg-(--maincolor)/20 active:scale-95 font-bold transition text-[11px] cursor-pointer touch-manipulation"
                 >
                   Today
                 </button>

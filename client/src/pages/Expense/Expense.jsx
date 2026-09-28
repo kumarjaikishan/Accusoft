@@ -320,8 +320,8 @@ const Expense = () => {
                     text-slate-800 dark:text-slate-200
                     border border-slate-300 dark:border-slate-600
                     rounded-lg py-2 pl-3 pr-10
-                    focus:ring-2 focus:ring-[var(--maincolor)]
-                    focus:border-[var(--maincolor)]
+                    focus:ring-2 focus:ring-(--maincolor)
+                    focus:border-(--maincolor)
                     outline-none transition-all
                     placeholder:text-slate-400 dark:placeholder:text-slate-500
                     text-sm
@@ -375,7 +375,7 @@ const Expense = () => {
                 onClick={() => { setIsLedgerUpdate(true) }}
                 className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-3 sm:px-4 py-2 bg-white/10 text-white border border-white/20 rounded-lg cursor-pointer shadow-sm hover:bg-white/20 transition-colors font-bold text-xs sm:text-sm whitespace-nowrap"
               >
-                <Book size={16} className="sm:w-[18px] sm:h-[18px]" />
+                <Book size={16} className="sm:w-4.5 sm:h-4.5" />
                 <span className="hidden sm:inline">Ledger</span>
                 <span className="sm:hidden">Ledger</span>
               </button>
@@ -385,9 +385,9 @@ const Expense = () => {
           {/* Data Table */}
           <div className="bg-surface rounded-b-xl shadow-md border border-border-subtle overflow-hidden overflow-x-auto relative">
             {tableLoading && rows.length > 0 && (
-              <div className="absolute top-0 left-0 right-0 h-[3px] bg-indigo-100 dark:bg-indigo-950/50 overflow-hidden z-30 pointer-events-none">
+              <div className="absolute top-0 left-0 right-0 h-0.75 bg-indigo-100 dark:bg-indigo-950/50 overflow-hidden z-30 pointer-events-none">
                 <div
-                  className="h-full bg-gradient-to-r from-indigo-500 via-sky-400 to-indigo-600 rounded-r-full shadow-[0_0_8px_rgba(99,102,241,0.8)]"
+                  className="h-full bg-linear-to-r from-indigo-500 via-sky-400 to-indigo-600 rounded-r-full shadow-[0_0_8px_rgba(99,102,241,0.8)]"
                   style={{
                     animation: 'tableTopProgress 1.2s ease-in-out infinite'
                   }}

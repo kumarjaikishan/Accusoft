@@ -331,7 +331,7 @@ const Home = () => {
           {/* Chart Responsive Canvas Container */}
           <Suspense
             fallback={
-              <div className="h-[210px] sm:h-[270px] lg:h-[300px] w-full flex items-center justify-center bg-slate-50/50 dark:bg-slate-800/30 rounded-xl animate-pulse">
+              <div className="h-52.5 sm:h-67.5 lg:h-75 w-full flex items-center justify-center bg-slate-50/50 dark:bg-slate-800/30 rounded-xl animate-pulse">
                 <span className="text-xs font-semibold text-slate-400">Loading chart...</span>
               </div>
             }

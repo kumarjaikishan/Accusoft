@@ -524,7 +524,7 @@ const Vault = () => {
     // RENDER: 3. UNLOCKED DASHBOARD
     // ==========================================
     return (
-        <div className="w-full p-[10px] space-y-4 pb-16">
+        <div className="w-full p-2.5 space-y-4 pb-16">
             {/* Header / Top Bar */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 sm:p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs">
                 <div>
@@ -843,9 +843,9 @@ const Vault = () => {
                                 <div className="flex flex-wrap items-center gap-3 flex-1">
                                     {/* ID / Username */}
                                     {item.decrypted?.id && (
-                                        <div className="flex flex-col gap-1 min-w-[150px] max-w-xs">
+                                        <div className="flex flex-col gap-1 min-w-37.5 max-w-xs">
                                             <div className="flex items-center justify-between gap-2 px-3 py-1.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-100 dark:border-slate-800/80">
-                                                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider truncate max-w-[80px]">
+                                                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider truncate max-w-20">
                                                     {item.decrypted?.idLabel || "ID"}
                                                 </span>
                                                 <span className="font-mono text-xs text-slate-700 dark:text-slate-200 truncate select-all">
@@ -869,9 +869,9 @@ const Vault = () => {
 
                                     {/* Password */}
                                     {item.decrypted?.password && (
-                                        <div className="flex flex-col gap-1 min-w-[170px] max-w-xs">
+                                        <div className="flex flex-col gap-1 min-w-42.5 max-w-xs">
                                             <div className="flex items-center justify-between gap-2 px-3 py-1.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-100 dark:border-slate-800/80">
-                                                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider truncate max-w-[80px]">
+                                                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider truncate max-w-20">
                                                     {item.decrypted?.passwordLabel || "PASS"}
                                                 </span>
                                                 <span className="font-mono text-xs text-slate-700 dark:text-slate-200 truncate select-all">
@@ -907,9 +907,9 @@ const Vault = () => {
                                         const fieldKey = `custom-${item._id}-${fIdx}`;
                                         const isFieldCopied = copiedMap[fieldKey];
                                         return (
-                                            <div key={field.id || fIdx} className="flex flex-col gap-1 min-w-[140px] max-w-xs">
+                                            <div key={field.id || fIdx} className="flex flex-col gap-1 min-w-35 max-w-xs">
                                                 <div className="flex items-center justify-between gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-50/60 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-900/40 text-xs">
-                                                    <span className="font-semibold text-indigo-600 dark:text-indigo-400 truncate max-w-[80px]">
+                                                    <span className="font-semibold text-indigo-600 dark:text-indigo-400 truncate max-w-20">
                                                         {field.label}:
                                                     </span>
                                                     <span className="font-mono text-slate-700 dark:text-slate-200 truncate select-all">
@@ -974,7 +974,7 @@ const Vault = () => {
 
             {/* Delete Confirmation Modal */}
             <Modalbox open={Boolean(deleteConfirmItem)} onClose={() => setDeleteConfirmItem(null)}>
-                <div className="w-[90vw] sm:w-[380px] max-w-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-2xl space-y-4">
+                <div className="w-[90vw] sm:w-95 max-w-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-2xl space-y-4">
                     <div className="flex items-center gap-3 text-rose-600 dark:text-rose-400">
                         <div className="p-2 rounded-xl bg-rose-500/10">
                             <Trash2 className="w-5 h-5" />

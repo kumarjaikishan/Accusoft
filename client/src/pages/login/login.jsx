@@ -67,12 +67,12 @@ const Login = () => {
                 <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-indigo-500/15 dark:bg-indigo-600/20 rounded-full blur-3xl pointer-events-none -z-10" />
                 <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-80 h-80 bg-cyan-500/15 dark:bg-cyan-600/15 rounded-full blur-3xl pointer-events-none -z-10" />
 
-                <div className="w-full max-w-4xl grid grid-cols-1 lg:grid-cols-12 rounded-3xl overflow-hidden bg-white/95 dark:bg-slate-900/95 backdrop-blur-2xl border border-slate-200/80 dark:border-slate-800 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.08)] dark:shadow-[0_20px_50px_-15px_rgba(0,0,0,0.5)] my-auto min-h-[480px] max-h-[92vh] flex-shrink-0">
+                <div className="w-full max-w-4xl grid grid-cols-1 lg:grid-cols-12 rounded-3xl overflow-hidden bg-white/95 dark:bg-slate-900/95 backdrop-blur-2xl border border-slate-200/80 dark:border-slate-800 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.08)] dark:shadow-[0_20px_50px_-15px_rgba(0,0,0,0.5)] my-auto min-h-120 max-h-[92vh] shrink-0">
                     
                     {/* Left Showcase Hero Panel (Desktop) */}
-                    <div className="hidden lg:flex lg:col-span-5 flex-col justify-between p-7 bg-gradient-to-br from-indigo-900 via-slate-900 to-slate-950 text-white relative overflow-hidden">
+                    <div className="hidden lg:flex lg:col-span-5 flex-col justify-between p-7 bg-linear-to-br from-indigo-900 via-slate-900 to-slate-950 text-white relative overflow-hidden">
                         {/* Mesh texture */}
-                        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-indigo-500/20 via-transparent to-transparent pointer-events-none" />
+                        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,var(--tw-gradient-stops))] from-indigo-500/20 via-transparent to-transparent pointer-events-none" />
 
                         {/* Brand Top */}
                         <div className="relative z-10">
@@ -176,7 +176,7 @@ const Login = () => {
                         </div>
 
                         {/* Sliding Carousel (0% Height Shift, Smooth Left-Right Slide) */}
-                        <div className="relative w-full max-w-sm mx-auto overflow-hidden min-h-[295px] p-1">
+                        <div className="relative w-full max-w-sm mx-auto overflow-hidden min-h-73.75 p-1">
                             <div 
                                 className="w-[200%] h-full flex transition-transform duration-300 ease-in-out"
                                 style={{ transform: isLoginTab ? 'translateX(0%)' : 'translateX(-50%)' }}

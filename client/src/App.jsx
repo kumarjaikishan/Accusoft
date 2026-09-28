@@ -73,6 +73,39 @@ function App() {
     }
   }, []);
 
+  // Initialize & handle sidebar layout based on screen width and user settings
+  useEffect(() => {
+    const handleSidebarLayout = () => {
+      const isDesktop = window.innerWidth >= 1024;
+      if (isDesktop) {
+        const desktopCollapsed = localStorage.getItem("desktop_sidebar_collapsed");
+        if (desktopCollapsed === "true") {
+          dispatch(setnarrow(true));
+        } else {
+          // Default to expanded view on large screens if user hasn't set it to collapse
+          dispatch(setnarrow(false));
+        }
+      } else {
+        // Closed by default on mobile/tablet
+        dispatch(setnarrow(true));
+      }
+    };
+
+    handleSidebarLayout();
+
+    let timeoutId;
+    const onResize = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(handleSidebarLayout, 150);
+    };
+
+    window.addEventListener("resize", onResize);
+    return () => {
+      clearTimeout(timeoutId);
+      window.removeEventListener("resize", onResize);
+    };
+  }, [dispatch]);
+
   // Auto close sidebar on mobile/tablet
   const sidebarclose = () => {
     if (window.innerWidth < 1024) {

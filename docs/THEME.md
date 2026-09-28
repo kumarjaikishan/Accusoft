@@ -44,9 +44,9 @@ Accusoft uses a cohesive, modern UI featuring:
 
 In React components, leverage Tailwind's `dark:` variant and CSS custom properties:
 ```jsx
-<div className="bg-[var(--theme-surface)] text-[var(--theme-content)] border border-[var(--theme-border)] rounded-2xl p-6 shadow-lg transition-colors duration-300">
-  <h2 className="text-xl font-semibold text-[var(--contrast)]">Component Title</h2>
-  <button className="bg-[var(--maincolor)] hover:opacity-90 text-white px-4 py-2 rounded-xl transition-all">
+<div className="bg-(--theme-surface) text-(--theme-content) border border-(--theme-border) rounded-2xl p-6 shadow-lg transition-colors duration-300">
+  <h2 className="text-xl font-semibold text-(--contrast)">Component Title</h2>
+  <button className="bg-(--maincolor) hover:opacity-90 text-white px-4 py-2 rounded-xl transition-all">
     Action
   </button>
 </div>

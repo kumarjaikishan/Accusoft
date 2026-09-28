@@ -45,7 +45,11 @@ const Navbar = () => {
 
   const toggleSidebar = (e) => {
     e?.stopPropagation();
-    dispatch(setnarrow(!log.narrow));
+    const nextNarrow = !log.narrow;
+    if (window.innerWidth >= 1024) {
+      localStorage.setItem("desktop_sidebar_collapsed", nextNarrow ? "true" : "false");
+    }
+    dispatch(setnarrow(nextNarrow));
   };
 
   const handleTheme = () => {
@@ -54,10 +58,10 @@ const Navbar = () => {
 
   return (
     <nav
-      className={`fixed top-0 h-[var(--navheightmobile)] lg:h-[var(--navheight)] w-full left-0 print:hidden
+      className={`fixed top-0 h-(--navheightmobile) lg:h-(--navheight) w-full left-0 print:hidden
       ${isLoginPage ? "w-full" : log.narrow
-          ? "lg:w-[calc(100%-var(--sidebarnarrow))] lg:left-[var(--sidebarnarrow)]"
-          : "lg:w-[calc(100%-var(--sidebarwide))] lg:left-[var(--sidebarwide)]"
+          ? "lg:w-[calc(100%-var(--sidebarnarrow))] lg:left-(--sidebarnarrow)"
+          : "lg:w-[calc(100%-var(--sidebarwide))] lg:left-(--sidebarwide)"
         }
       bg-white/80 dark:bg-slate-900/80 backdrop-blur-md
       border-b border-slate-200/80 dark:border-slate-800
@@ -114,7 +118,7 @@ const Navbar = () => {
               className="flex items-center gap-2.5 p-1 rounded-2xl hover:bg-slate-100 dark:hover:bg-slate-800/80 transition-colors cursor-pointer border border-transparent hover:border-slate-200 dark:hover:border-slate-700"
             >
               <div className="hidden md:flex flex-col text-right leading-tight min-w-0">
-                <span className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-100 truncate max-w-[130px]">
+                <span className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-100 truncate max-w-32.5">
                   {useralldetail?.user?.name || "Account"}
                 </span>
                 <span className="text-[10px] text-slate-400 dark:text-slate-500 capitalize font-medium">
@@ -140,7 +144,7 @@ const Navbar = () => {
             {/* Profile & Color Customizer Dropdown */}
             {isProfileOpen && (
               <div
-                className="absolute right-0 mt-2 w-64 sm:w-72 bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 overflow-hidden z-[100] transition-all animate-in zoom-in-95 fade-in duration-150"
+                className="absolute right-0 mt-2 w-64 sm:w-72 bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 overflow-hidden z-100 transition-all animate-in zoom-in-95 fade-in duration-150"
               >
                 {/* Account Header */}
                 <div className="p-3.5 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50">

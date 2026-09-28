@@ -144,7 +144,7 @@ const Hero = ({ theme, subtextClass }) => {
 
           {/* Floating Badges with Pure CSS Levitation */}
           <div
-            className="absolute -top-3 -left-3 bg-white/95 dark:bg-slate-900/95 border border-slate-200/80 dark:border-slate-700 p-2 sm:p-3 rounded-2xl shadow-xl flex items-center gap-2.5 backdrop-blur-md hidden sm:flex animate-float-slow"
+            className="absolute -top-3 -left-3 bg-white/95 dark:bg-slate-900/95 border border-slate-200/80 dark:border-slate-700 p-2 sm:p-3 rounded-2xl shadow-xl hidden sm:flex items-center gap-2.5 backdrop-blur-md animate-float-slow"
           >
             <div className="p-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600">
               <CheckCircle2 className="w-4 h-4" />
@@ -156,7 +156,7 @@ const Hero = ({ theme, subtextClass }) => {
           </div>
 
           <div
-            className="absolute -bottom-3 -right-3 bg-white/95 dark:bg-slate-900/95 border border-slate-200/80 dark:border-slate-700 p-2 sm:p-3 rounded-2xl shadow-xl flex items-center gap-2.5 backdrop-blur-md hidden sm:flex animate-float-delayed"
+            className="absolute -bottom-3 -right-3 bg-white/95 dark:bg-slate-900/95 border border-slate-200/80 dark:border-slate-700 p-2 sm:p-3 rounded-2xl shadow-xl hidden sm:flex items-center gap-2.5 backdrop-blur-md animate-float-delayed"
           >
             <div className="p-1.5 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600">
               <PieChart className="w-4 h-4" />

@@ -20,7 +20,7 @@ const ThemeChooser = () => {
     ];
 
     return (
-        <div className="fixed bottom-6 right-6 z-[9999]">
+        <div className="fixed bottom-6 right-6 z-9999">
             {isOpen && (
                 <div
                     className="mb-4 p-4 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 w-64 transition-all animate-in zoom-in-95 fade-in duration-150"
@@ -69,7 +69,7 @@ const ThemeChooser = () => {
 
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="w-14 h-14 bg-white dark:bg-slate-800 rounded-full shadow-lg border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:text-[var(--maincolor)] hover:scale-105 active:scale-95 transition-all cursor-pointer"
+                className="w-14 h-14 bg-white dark:bg-slate-800 rounded-full shadow-lg border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:text-(--maincolor) hover:scale-105 active:scale-95 transition-all cursor-pointer"
                 style={{
                     boxShadow: isOpen ? `0 0 20px ${mainColor}44` : '0 10px 15px -3px rgb(0 0 0 / 0.1)',
                     borderColor: isOpen ? mainColor : 'transparent'

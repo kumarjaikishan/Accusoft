@@ -5,7 +5,7 @@ const islogin = createSlice({
     initialState:{
         islogin:false,
         head:"LogIn",
-        narrow:true,
+        narrow:false,
         loader:false,
         apiadress: "jai",
     },

@@ -273,7 +273,7 @@ const Photo = () => {
 
             {/* Subtle Grid Dot Pattern */}
             <div 
-              className="absolute inset-0 opacity-15 pointer-events-none bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:16px_16px]" 
+              className="absolute inset-0 opacity-15 pointer-events-none bg-[radial-gradient(#ffffff_1px,transparent_1px)] bg-size-[16px_16px]" 
             />
 
             {/* Banner Content */}

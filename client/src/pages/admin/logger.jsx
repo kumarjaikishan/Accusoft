@@ -376,7 +376,7 @@ const Logger = () => {
             </span>
           </div>
 
-          <div className="space-y-1.5 max-h-[500px] overflow-y-auto pr-1">
+          <div className="space-y-1.5 max-h-125 overflow-y-auto pr-1">
             <button
               onClick={() => setActiveKey('ALL')}
               className={`w-full text-left p-3 rounded-xl border transition flex items-center justify-between ${
@@ -454,7 +454,7 @@ const Logger = () => {
             </span>
           </div>
 
-          <div className="space-y-3 max-h-[600px] overflow-y-auto pr-1">
+          <div className="space-y-3 max-h-150 overflow-y-auto pr-1">
             {displayedLogs.map((log) => {
               const percentage = Math.min(100, Math.max(5, (log.durationMs / maxLogLatency) * 100));
 

@@ -169,7 +169,7 @@ const AdminPanel = () => {
 
     return (
         <div
-            className="min-h-screen bg-[#f8fafc] dark:bg-[#0b1120] p-2.5 sm:p-5 space-y-3 transition-colors duration-300 font-sans text-slate-700 dark:text-slate-200 animate-in fade-in duration-200"
+            className="min-h-screen bg-[#f8fafc] dark:bg-[#0b1120] p-2.5 sm:p-5 space-y-3 transition-colors duration-300 font-sans text-slate-700 dark:text-slate-200 animate-in fade-in"
         >
             {/* ---------------- 1. STATS OVERVIEW (2 CARDS IN 1 ROW ON ALL SCREENS) ---------------- */}
             <div className="grid grid-cols-2 gap-2.5 sm:gap-4">

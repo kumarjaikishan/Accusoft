@@ -137,7 +137,7 @@ const Datanalysis = () => {
 
   return (
     <div
-      className="min-h-screen bg-[#f8fafc] dark:bg-[#0b1120] p-3 sm:p-5 space-y-3.5 transition-colors duration-300 font-sans text-slate-700 dark:text-slate-200 animate-in fade-in duration-200"
+      className="min-h-screen bg-[#f8fafc] dark:bg-[#0b1120] p-3 sm:p-5 space-y-3.5 transition-colors duration-300 font-sans text-slate-700 dark:text-slate-200 animate-in fade-in"
     >
       {/* ---------- MODERN HERO BAR & CONTROLS ---------- */}
       <div className="relative overflow-hidden rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 p-3.5 sm:p-4 shadow-sm backdrop-blur-xl">

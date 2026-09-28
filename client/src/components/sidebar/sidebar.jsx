@@ -21,12 +21,19 @@ import { Link, NavLink, useNavigate, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { confirmDialog } from "../../utils/confirm";
 import { toast } from "../../utils/toast";
-import { header } from "../../store/login";
+import { header, setnarrow } from "../../store/login";
 
 const Sidebar = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const location = useLocation();
+
+    const handleNavClick = (title) => {
+        if (title) dispatch(header(title));
+        if (window.innerWidth < 1024) {
+            dispatch(setnarrow(true));
+        }
+    };
 
     const log = useSelector((state) => state.login);
     const user = useSelector((state) => state.userexplist?.user);
@@ -107,27 +114,27 @@ const Sidebar = () => {
 
     return (
         <div
-            className={`fixed top-0 left-0 h-screen z-[102] print:hidden
+            className={`fixed top-0 left-0 h-screen z-102 print:hidden
             bg-white dark:bg-slate-900
             backdrop-blur-xl border-r border-slate-200 dark:border-slate-800
             transition-all duration-300 flex flex-col overflow-x-hidden
 
-            w-[var(--sidebarwidemobile)]
+            w-(--sidebarwidemobile)
             ${log.narrow
-                    ? "-translate-x-full lg:translate-x-0 lg:w-[var(--sidebarnarrow)]"
-                    : "translate-x-0 lg:w-[var(--sidebarwide)]"
+                    ? "-translate-x-full lg:translate-x-0 lg:w-(--sidebarnarrow)"
+                    : "translate-x-0 lg:w-(--sidebarwide)"
                 }
             `}
         >
             {/* Logo Header */}
             <Link to="/">
-                <div className="h-[var(--navheightmobile)] lg:h-[var(--navheight)] flex items-center px-4 border-b border-slate-200 dark:border-slate-800 gap-2.5">
+                <div className="h-(--navheightmobile) lg:h-(--navheight) flex items-center px-4 border-b border-slate-200 dark:border-slate-800 gap-2.5">
                     <img
                         src="/logo.webp"
                         alt="Accusoft"
                         className="w-8 h-8 object-contain shrink-0 rounded-lg"
                     />
-                    <span className={`text-xl font-black tracking-tight whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100"}`}>
+                    <span className={`text-xl font-black tracking-tight whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-50 opacity-100"}`}>
                         <span className="text-[#0B1B3D] dark:text-white">Accu</span>
                         <span className="text-[#0070F3] dark:text-[#2E90FA]">soft</span>
                     </span>
@@ -144,10 +151,10 @@ const Sidebar = () => {
                             to={item.link}
                             className={({ isActive }) => getNavLinkClass(isActive)}
                             style={({ isActive }) => getNavLinkStyle(isActive)}
-                            onClick={() => dispatch(header(item.name))}
+                            onClick={() => handleNavClick(item.name)}
                         >
-                            <span className="min-w-[20px] flex justify-center">{item.icon}</span>
-                            <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100 ml-3"}`}>
+                            <span className="min-w-5 flex justify-center">{item.icon}</span>
+                            <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-50 opacity-100 ml-3"}`}>
                                 {item.name}
                             </span>
                         </NavLink>
@@ -162,10 +169,10 @@ const Sidebar = () => {
                             className={getSubmenuHeaderClass(adminOpen, isAdminActive)}
                         >
                             <div className="flex items-center">
-                                <span className="min-w-[20px] flex justify-center">
+                                <span className="min-w-5 flex justify-center">
                                     <Shield size={18} />
                                 </span>
-                                <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100 ml-3"}`}>
+                                <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-50 opacity-100 ml-3"}`}>
                                     Admin
                                 </span>
                             </div>
@@ -183,50 +190,50 @@ const Sidebar = () => {
                                     to="/admin/dashboard"
                                     className={({ isActive }) => getSubmenuLinkClass(isActive)}
                                     style={({ isActive }) => getSubmenuLinkStyle(isActive)}
-                                    onClick={() => dispatch(header("Admin Dashboard"))}
+                                    onClick={() => handleNavClick("Admin Dashboard")}
                                 >
                                     <LayoutDashboard size={15} className="shrink-0" />
-                                    <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100 ml-2"}`}>Dashboard</span>
+                                    <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-50 opacity-100 ml-2"}`}>Dashboard</span>
                                 </NavLink>
 
                                 <NavLink
                                     to="/admin/logs"
                                     className={({ isActive }) => getSubmenuLinkClass(isActive)}
                                     style={({ isActive }) => getSubmenuLinkStyle(isActive)}
-                                    onClick={() => dispatch(header("System Logs"))}
+                                    onClick={() => handleNavClick("System Logs")}
                                 >
                                     <Activity size={15} className="shrink-0" />
-                                    <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100 ml-2"}`}>Logs</span>
+                                    <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-50 opacity-100 ml-2"}`}>Logs</span>
                                 </NavLink>
 
                                 <NavLink
                                     to="/admin/contacts"
                                     className={({ isActive }) => getSubmenuLinkClass(isActive)}
                                     style={({ isActive }) => getSubmenuLinkStyle(isActive)}
-                                    onClick={() => dispatch(header("User Inquiries"))}
+                                    onClick={() => handleNavClick("User Inquiries")}
                                 >
                                     <MessageSquare size={15} className="shrink-0" />
-                                    <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100 ml-2"}`}>Inquiries</span>
+                                    <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-50 opacity-100 ml-2"}`}>Inquiries</span>
                                 </NavLink>
 
                                 <NavLink
                                     to="/admin/tip"
                                     className={({ isActive }) => getSubmenuLinkClass(isActive)}
                                     style={({ isActive }) => getSubmenuLinkStyle(isActive)}
-                                    onClick={() => dispatch(header("StreamElement"))}
+                                    onClick={() => handleNavClick("StreamElement")}
                                 >
                                     <Radio size={15} className="shrink-0" />
-                                    <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100 ml-2"}`}>StreamElement</span>
+                                    <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-50 opacity-100 ml-2"}`}>StreamElement</span>
                                 </NavLink>
 
                                 <NavLink
                                     to="/admin/vault"
                                     className={({ isActive }) => getSubmenuLinkClass(isActive)}
                                     style={({ isActive }) => getSubmenuLinkStyle(isActive)}
-                                    onClick={() => dispatch(header("Credential Vault"))}
+                                    onClick={() => handleNavClick("Credential Vault")}
                                 >
                                     <Lock size={15} className="shrink-0" />
-                                    <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100 ml-2"}`}>Vault</span>
+                                    <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-50 opacity-100 ml-2"}`}>Vault</span>
                                 </NavLink>
                             </div>
                         </div>
@@ -242,10 +249,10 @@ const Sidebar = () => {
                             className={getSubmenuHeaderClass(serverOpen, isServerActive)}
                         >
                             <div className="flex items-center">
-                                <span className="min-w-[20px] flex justify-center">
+                                <span className="min-w-5 flex justify-center">
                                     <Server size={18} />
                                 </span>
-                                <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100 ml-3"}`}>
+                                <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-50 opacity-100 ml-3"}`}>
                                     Benchmarks
                                 </span>
                             </div>
@@ -263,20 +270,20 @@ const Sidebar = () => {
                                     to="/admin/slow"
                                     className={({ isActive }) => getSubmenuLinkClass(isActive)}
                                     style={({ isActive }) => getSubmenuLinkStyle(isActive)}
-                                    onClick={() => dispatch(header("Server Stress (Loop)"))}
+                                    onClick={() => handleNavClick("Server Stress (Loop)")}
                                 >
                                     <Hourglass size={15} className="shrink-0" />
-                                    <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100 ml-2"}`}>Server Slow</span>
+                                    <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-50 opacity-100 ml-2"}`}>Server Slow</span>
                                 </NavLink>
 
                                 <NavLink
                                     to="/admin/slowworker"
                                     className={({ isActive }) => getSubmenuLinkClass(isActive)}
                                     style={({ isActive }) => getSubmenuLinkStyle(isActive)}
-                                    onClick={() => dispatch(header("Worker Threads"))}
+                                    onClick={() => handleNavClick("Worker Threads")}
                                 >
                                     <Zap size={15} className="shrink-0" />
-                                    <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100 ml-2"}`}>Worker Fast</span>
+                                    <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-50 opacity-100 ml-2"}`}>Worker Fast</span>
                                 </NavLink>
                             </div>
                         </div>
@@ -292,13 +299,13 @@ const Sidebar = () => {
                         className={`w-full flex cursor-pointer items-center ${log.narrow ? 'justify-center px-0' : 'px-3'} py-2.5 rounded-xl 
             bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-900/50 transition-all duration-200 text-[13.5px] font-bold`}
                     >
-                        <span className="min-w-[20px] flex justify-center"><LogOut size={18} /></span>
-                        <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100 ml-3"}`}>Logout</span>
+                        <span className="min-w-5 flex justify-center"><LogOut size={18} /></span>
+                        <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-50 opacity-100 ml-3"}`}>Logout</span>
                     </button>
                 ) : (
-                    <NavLink to="/login" className={({ isActive }) => getNavLinkClass(isActive)} style={({ isActive }) => getNavLinkStyle(isActive)}>
-                        <span className="min-w-[20px] flex justify-center"><User size={18} /></span>
-                        <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100 ml-3"}`}>Login</span>
+                    <NavLink to="/login" className={({ isActive }) => getNavLinkClass(isActive)} style={({ isActive }) => getNavLinkStyle(isActive)} onClick={() => handleNavClick("LogIn")}>
+                        <span className="min-w-5 flex justify-center"><User size={18} /></span>
+                        <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-50 opacity-100 ml-3"}`}>Login</span>
                     </NavLink>
                 )}
             </div>

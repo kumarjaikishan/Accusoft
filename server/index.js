@@ -30,12 +30,13 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 app.use("/api", route);
-app.use(errorHandler);
 
+// 404 handler — must be BEFORE the error handler
 app.use((req, res, next) => {
-  // res.status(404).json({ message: 'Endpoint not found, kindly Re-Check api End point' });
-  res.status(404).json({ message: 'Endpoint not found' });
+  next({ statusCode: 404, message: 'Endpoint not found' });
 });
+
+app.use(errorHandler);
 
 app.listen(port, () => {
   console.log(`server listening at ${port}`);

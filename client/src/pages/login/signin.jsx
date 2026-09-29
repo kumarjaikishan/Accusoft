@@ -3,7 +3,7 @@ import { Mail, Eye, EyeOff, Key, LogIn } from 'lucide-react';
 import { useNavigate } from "react-router-dom";
 import { setloader, setlogin } from '../../store/login';
 import { useDispatch } from 'react-redux';
-import { userdata } from '../../store/api';
+import { useUserApi } from '../../store/apicalls';
 import { toast } from '../../utils/toast';
 import { confirmDialog } from '../../utils/confirm';
 import { useApi } from '../../utils/useApi';
@@ -13,6 +13,7 @@ import LoadingButton from '../../components/LoadingButton';
 const Signin = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const { userdatacall } = useUserApi();
     const init = {
         email: "",
         password: ""
@@ -65,7 +66,7 @@ const Signin = () => {
             toast.success(res.message || "Signed in successfully!", { autoClose: 1300 });
             setbtnclick(false);
             localStorage.setItem("token", res.token);
-            dispatch(userdata());
+            userdatacall();
             navigate('/dashboard');
             dispatch(setlogin(true));
 
@@ -82,24 +83,16 @@ const Signin = () => {
 
         try {
             setbtnclick(true);
-            const res = await fetch(`${import.meta.env.VITE_API_ADDRESS}checkmail`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ email })
+            const data = await request({
+                url: 'checkmail',
+                method: 'POST',
+                body: { email }
             });
-            const data = await res.json();
             setbtnclick(false);
 
-            if (!res.ok) {
-                return toast.warn(data.message || "Failed to send reset link", { autoClose: 2100 });
-            }
-
             setIsForgotMode(false);
-            toast.success(data.message || "Password reset link sent to your email!", { autoClose: 2500 });
+            toast.success(data?.message || "Password reset link sent to your email!", { autoClose: 2500 });
         } catch (error) {
-            toast.warn(error.message, { autoClose: 2100 });
             setbtnclick(false);
             console.error(error);
         }

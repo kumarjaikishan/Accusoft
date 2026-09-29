@@ -8,7 +8,6 @@ import { apiClient } from "./apiClient";
 
 export const useApi = () => {
     const [loading, setLoading] = useState(false);
-    const [data, setData] = useState(null);
     const [error, setError] = useState(null);
 
     const isAdmin = useSelector((state) => state.userexplist?.user?.isadmin);
@@ -41,7 +40,6 @@ export const useApi = () => {
                 logger(logDetail);
             }
 
-            setData(result);
             return result;
 
         } catch (err) {
@@ -98,7 +96,7 @@ export const useApi = () => {
         }
     }, [navigate, isAdmin]);
 
-    return { request, loading, error, data };
+    return { request, loading, error };
 };
 
 const getBaseEndpoint = (urlStr) => {

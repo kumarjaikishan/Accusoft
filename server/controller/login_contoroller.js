@@ -7,12 +7,13 @@ const sendemail = require('../utils/sendemail')
 const jwt = require('jsonwebtoken');
 const removePhotoBySecureUrl = require('../utils/cloudinaryremove');
 const asyncHandler = require('../utils/asyncHandler');
+const { ApiError } = require('../utils/apierror');
 const { generateResetPasswordEmailHtml, generateVerificationSuccessHtml } = require('../utils/emailTemplates');
 
 cloudinary.config({
-  cloud_name: 'dusxlxlvm',
-  api_key: '214119961949842',
-  api_secret: "kAFLEVAA5twalyNYte001m_zFno"
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
 // *--------------------------------------
@@ -53,71 +54,55 @@ const generateRefreshToken = async (userobj) => {
     // { expiresIn: "25s" }
   );
   try {
+    // Keep only the last 5 sessions — prevents unbounded array growth
     await user.findByIdAndUpdate(userobj._id, {
-      $push: { refreshTokens: newToken }
+      $push: { refreshTokens: { $each: [newToken], $slice: -5 } }
     });
-
   } catch (error) {
-    console.log(erro)
+    console.error('[generateRefreshToken] Failed to save refresh token:', error.message);
   }
-
-
 
   return newToken;
 };
 
-const photo = async (req, res) => {
+const photo = asyncHandler(async (req, res) => {
   if (!req.file) {
-    return res.status(400).json({
-      message: 'No file uploaded.'
-    });
+    throw new ApiError(400, 'No file uploaded.');
   }
-  // console.log("from final",req.body);
+
   const oldurl = req.body.oldimage;
   const userid = req.userid;
-  try {
-    await cloudinary.uploader.upload(req.file.path, { folder: 'accusoft/profile' }, async (error, result) => {
-      // console.log(error, result);
-      if (error) {
-        return res.status(500).json({
-          message: error
-        });
-      }
 
-      const imageurl = result.secure_url;
-      // console.log("photo upload ho gaya", imageurl);
+  // Promise-based upload — avoids mixing async/await with callbacks
+  const uploadResult = await new Promise((resolve, reject) => {
+    cloudinary.uploader.upload(req.file.path, { folder: 'accusoft/profile' }, (error, result) => {
+      if (error) reject(error);
+      else resolve(result);
+    });
+  });
 
-      fs.unlink(req.file.path, (err => {
-        if (err) {
-          console.log(err);
-          return res.status(500).json("error occured while deleting file");
-        }
-        //   getFilesInDirectory(); 
-        // }
-      }));
+  const imageurl = uploadResult.secure_url;
 
-      const query = await user.findByIdAndUpdate({ _id: userid }, { imgsrc: imageurl });
-      // console.log("url updateing", query);
-      if (oldurl != "") {
-        let arraye = [];
-        arraye.push(oldurl);
-        await removePhotoBySecureUrl(arraye);
-      }
+  // Clean up local temp file (non-blocking, don't fail the request if it errors)
+  fs.unlink(req.file.path, (err) => {
+    if (err) console.error('[photo] Temp file cleanup failed:', err.message);
+  });
 
-      res.status(201).json({
-        message: "photo updated",
-        url: imageurl
-      })
+  // Update user's profile picture in DB
+  await user.findByIdAndUpdate(userid, { imgsrc: imageurl });
 
-
-    })
-  } catch (error) {
-    res.status(501).json({
-      message: error
-    })
+  // Remove old Cloudinary image if one existed
+  if (oldurl && oldurl !== '') {
+    removePhotoBySecureUrl([oldurl]).catch(err =>
+      console.error('[photo] Failed to remove old image:', err.message)
+    );
   }
 
-}
+  return res.status(201).json({
+    message: 'photo updated',
+    url: imageurl
+  });
+});
 
 const random = async (len) => {
   const rand = 'abcdefghijklmnopqrstuvwxyz123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -289,9 +274,10 @@ const refreshToken = async (req, res) => {
         { expiresIn: "15d" }
       );
 
+      // Bound to last 5 refresh tokens per user (prevent unbounded growth)
       await user.updateOne(
         { _id: foundUser._id },
-        { $push: { refreshTokens: newRefreshToken } }
+        { $push: { refreshTokens: { $each: [newRefreshToken], $slice: -5 } } }
       );
 
       return res

@@ -21,6 +21,23 @@ import { useTableStyles } from '../../components/dataTableStyle';
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
+// Defined at module level (outside Expense) so React does not treat this as a new
+// component type on every render, which would cause unnecessary unmount/remount cycles.
+const TableSkeleton = () => (
+  <div className="w-full p-4 space-y-3 bg-surface animate-pulse">
+    {Array.from({ length: 10 }).map((_, idx) => (
+      <div key={idx} className="flex items-center gap-4 py-2 border-b border-border-subtle">
+        <div className="h-4 w-8 bg-slate-200 dark:bg-slate-700/80 rounded"></div>
+        <div className="h-4 w-12 bg-slate-200 dark:bg-slate-700/80 rounded"></div>
+        <div className="h-4 w-28 bg-slate-200 dark:bg-slate-700/80 rounded"></div>
+        <div className="h-4 w-24 bg-slate-200 dark:bg-slate-700/80 rounded"></div>
+        <div className="h-4 w-20 bg-slate-200 dark:bg-slate-700/80 rounded"></div>
+        <div className="h-4 flex-1 bg-slate-200 dark:bg-slate-700/50 rounded"></div>
+      </div>
+    ))}
+  </div>
+);
+
 const Expense = () => {
   const dispatch = useDispatch();
   const mode = useSelector((state) => state.theme?.mode || 'light');
@@ -272,21 +289,6 @@ const Expense = () => {
   }, []);
 
 
-
-  const TableSkeleton = () => (
-    <div className="w-full p-4 space-y-3 bg-surface animate-pulse">
-      {Array.from({ length: 10 }).map((_, idx) => (
-        <div key={idx} className="flex items-center gap-4 py-2 border-b border-border-subtle">
-          <div className="h-4 w-8 bg-slate-200 dark:bg-slate-700/80 rounded"></div>
-          <div className="h-4 w-12 bg-slate-200 dark:bg-slate-700/80 rounded"></div>
-          <div className="h-4 w-28 bg-slate-200 dark:bg-slate-700/80 rounded"></div>
-          <div className="h-4 w-24 bg-slate-200 dark:bg-slate-700/80 rounded"></div>
-          <div className="h-4 w-20 bg-slate-200 dark:bg-slate-700/80 rounded"></div>
-          <div className="h-4 flex-1 bg-slate-200 dark:bg-slate-700/50 rounded"></div>
-        </div>
-      ))}
-    </div>
-  );
 
   return (
     <>

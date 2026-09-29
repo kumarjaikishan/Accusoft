@@ -3,7 +3,7 @@ import { SquarePlus, RefreshCw, Pencil, Trash2, X } from 'lucide-react';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { setloader } from '../../store/login';
-import { userdata } from '../../store/api';
+import { useUserApi } from '../../store/apicalls';
 import { toast } from '../../utils/toast';
 import { confirmDialog } from '../../utils/confirm';
 import TextInput from '../../components/common/TextInput';
@@ -17,6 +17,7 @@ import { useTableStyles } from '../../components/dataTableStyle';
 const LedgerModal = ({ setdisable, isledupdate, setisledupdate }) => {
   const dispatch = useDispatch();
   const useralldetail = useSelector((state) => state.userexplist);
+  const { userdatacall } = useUserApi();
 
   const [isupda, setinsupdat] = useState(false);
 
@@ -66,7 +67,7 @@ const LedgerModal = ({ setdisable, isledupdate, setisledupdate }) => {
         isLoading: false, 
         autoClose: 1300 
       });
-      dispatch(userdata());
+      userdatacall();
       setledinp(init);
     } catch (error) {
       toast.update(toastId, { 
@@ -106,7 +107,7 @@ const LedgerModal = ({ setdisable, isledupdate, setisledupdate }) => {
       });
       setledinp(init);
       setinsupdat(false);
-      dispatch(userdata());
+      userdatacall();
 
     } catch (error) {
       toast.update(toastId, { 
@@ -143,7 +144,7 @@ const LedgerModal = ({ setdisable, isledupdate, setisledupdate }) => {
           isLoading: false, 
           autoClose: 1300 
         });
-        dispatch(userdata());
+        userdatacall();
       } catch (error) {
         toast.update(toastId, { 
           render: error?.message || "Failed to delete ledger", 

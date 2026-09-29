@@ -2,7 +2,6 @@ import React from 'react';
 import { RefreshCcw, Save, RefreshCw } from 'lucide-react';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { userdata } from '../../store/api';
 import { toast } from '../../utils/toast';
 import { useApi } from '../../utils/useApi';
 import Modalbox from '../../components/custommodal/Modalbox';
@@ -34,7 +33,6 @@ const ExpenseModalbox = ({ modal, disable, handlechange, fields, isupdate, sub, 
                 isLoading: false, 
                 autoClose: 1300 
             });
-            dispatch(userdata());
             if (onSuccess) onSuccess();
             reset();
             setisupdate(false);

@@ -4,6 +4,10 @@ const user = require('../modals/login_schema')
 const asyncHandler = require('../utils/asyncHandler')
 const { ApiError } = require('../utils/apierror')
 const dayjs = require('dayjs')
+const mongoose = require('mongoose')
+
+// Shorthand: convert string userId to ObjectId (avoids repeating in every handler)
+const toObjId = (id) => new mongoose.Types.ObjectId(id);
 
 
 // *--------------------------------------
@@ -132,11 +136,13 @@ const updateexp = asyncHandler(async (req, res, next) => {
     const { _id, ledger, date, amount, narration } = req.body;
     const userId = req.userid;
 
-    const result = await expense.findByIdAndUpdate({ _id, userid: userId }, {
-        ledger,
-        date,
-        amount, narration
-    });
+    if (!_id) throw new ApiError(400, 'Expense ID is required');
+
+    // findOneAndUpdate enforces BOTH _id AND userid ownership
+    const result = await expense.findOneAndUpdate(
+        { _id, userid: userId },
+        { ledger, date, amount, narration }
+    );
 
     if (!result) {
         throw new ApiError(
@@ -181,10 +187,8 @@ const explist = asyncHandler(async (req, res, next) => {
     const search = (req.query.search || '').trim();
     const skip = (page - 1) * limit;
 
-    const mongoose = require('mongoose');
-
-    const pipeline = [
-        { $match: { userid: new mongoose.Types.ObjectId(req.userid) } },
+const pipeline = [
+        { $match: { userid:     toObjId(req.userid) } },
         {
             $lookup: {
                 from: 'ledgers',
@@ -275,7 +279,7 @@ const ledgerSummary = asyncHandler(async (req, res, next) => {
         expense.aggregate([
             {
                 $match: {
-                    userid: new mongoose.Types.ObjectId(req.userid),
+                    userid:     toObjId(req.userid),
                     date: { $gte: startDate, $lte: endDate },
                 },
             },
@@ -311,8 +315,7 @@ const ledgerSummary = asyncHandler(async (req, res, next) => {
 // in one pass instead of scanning the user's entire expense history in the
 // browser on every page load.
 const homeSummary = asyncHandler(async (req, res, next) => {
-    const mongoose = require('mongoose');
-    const uid = new mongoose.Types.ObjectId(req.userid);
+    const uid = toObjId(req.userid);
 
     const today = dayjs();
     const yesterday = today.subtract(1, 'day');
@@ -390,12 +393,11 @@ const explistRange = asyncHandler(async (req, res, next) => {
         throw new ApiError(400, 'from and to are required');
     }
 
-    const mongoose = require('mongoose');
     const startDate = dayjs(from).startOf('day').toDate();
     const endDate = dayjs(to).endOf('day').toDate();
 
     const pipeline = [
-        { $match: { userid: new mongoose.Types.ObjectId(req.userid), date: { $gte: startDate, $lte: endDate } } },
+        { $match: { userid: toObjId(req.userid), date: { $gte: startDate, $lte: endDate } } },
         { $lookup: { from: 'ledgers', localField: 'ledger', foreignField: '_id', as: 'ledger' } },
         { $unwind: { path: '$ledger', preserveNullAndEmptyArrays: true } },
     ];
@@ -406,8 +408,17 @@ const explistRange = asyncHandler(async (req, res, next) => {
 
     pipeline.push({ $sort: { date: -1, _id: -1 } });
 
-    const items = await expense.aggregate(pipeline);
-    const sumAmount = items.reduce((acc, val) => acc + Number(val.amount || 0), 0);
+    // Compute sum inside MongoDB — avoids fetching all rows to Node just to reduce() them
+    pipeline.push({
+        $facet: {
+            items: [],
+            meta: [{ $group: { _id: null, sumAmount: { $sum: '$amount' } } }]
+        }
+    });
+
+    const [result] = await expense.aggregate(pipeline);
+    const items = result?.items || [];
+    const sumAmount = result?.meta?.[0]?.sumAmount || 0;
 
     res.json({ message: 'ok', items, sumAmount });
 })
@@ -424,13 +435,12 @@ const ledgerDetailList = asyncHandler(async (req, res, next) => {
         throw new ApiError(400, 'month and year are required');
     }
 
-    const mongoose = require('mongoose');
     const startDate = dayjs(`${yearNum}-${String(monthNum + 1).padStart(2, '0')}-01`).startOf('month').toDate();
     const endDate = dayjs(startDate).endOf('month').toDate();
 
-    const match = { userid: new mongoose.Types.ObjectId(req.userid), date: { $gte: startDate, $lte: endDate } };
+    const match = { userid: toObjId(req.userid), date: { $gte: startDate, $lte: endDate } };
     if (ledgerId && ledgerId !== 'all') {
-        match.ledger = new mongoose.Types.ObjectId(ledgerId);
+        match.ledger = toObjId(ledgerId);
     }
 
     const items = await expense

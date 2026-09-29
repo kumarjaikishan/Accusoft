@@ -20,8 +20,9 @@ import { getAdminTableColumns } from "./AdminTableColumns";
 const AdminPanel = () => {
     const dispatch = useDispatch();
     const mode = useSelector((state) => state.theme.mode);
-    const { request, loading, data } = useApi();
+    const { request, loading } = useApi();
 
+    const [data, setData] = useState(null);
     const [search, setSearch] = useState("");
     const [modal, setModal] = useState(false);
     const [deployModal, setDeployModal] = useState(false);
@@ -38,7 +39,12 @@ const AdminPanel = () => {
     }, [loading, dispatch]);
 
     const refetchUsers = async () => {
-        await request({ url: "adminuser", method: "GET" });
+        try {
+            const res = await request({ url: "adminuser", method: "GET" });
+            setData(res);
+        } catch (e) {
+            console.error(e);
+        }
     };
 
     const derivedData = useMemo(() => {
@@ -69,35 +75,22 @@ const AdminPanel = () => {
 
         const toastId = toast.loading("Deleting user...");
         try {
-            const res = await fetch(`${import.meta.env.VITE_API_ADDRESS}removeuser`, {
+            const result = await request({
+                url: "removeuser",
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                },
-                body: JSON.stringify({ id }),
+                body: { id },
             });
 
-            const result = await res.json();
-            if (res.ok) {
-                toast.update(toastId, {
-                    render: result.message || "User deleted successfully",
-                    type: "success",
-                    isLoading: false,
-                    autoClose: 1500,
-                });
-                refetchUsers();
-            } else {
-                toast.update(toastId, {
-                    render: result.message || "Failed to delete user",
-                    type: "error",
-                    isLoading: false,
-                    autoClose: 2000,
-                });
-            }
-        } catch {
             toast.update(toastId, {
-                render: "Network error occurred",
+                render: result?.message || "User deleted successfully",
+                type: "success",
+                isLoading: false,
+                autoClose: 1500,
+            });
+            refetchUsers();
+        } catch (error) {
+            toast.update(toastId, {
+                render: error?.message || "Failed to delete user",
                 type: "error",
                 isLoading: false,
                 autoClose: 2000,

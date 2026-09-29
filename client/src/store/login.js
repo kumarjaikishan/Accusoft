@@ -7,7 +7,6 @@ const islogin = createSlice({
         head:"LogIn",
         narrow:false,
         loader:false,
-        apiadress: "jai",
     },
     reducers:{
         setlogin(state, action){

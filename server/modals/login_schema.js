@@ -29,7 +29,8 @@ const log = new mongo.Schema({
     },
     temptoken: {
         type: String,
-        default: ""
+        default: "",
+        index: { sparse: true }  // fast lookup for password-reset flows
     },
     imgsrc: {
         type: String,
@@ -54,9 +55,8 @@ const log = new mongo.Schema({
     }
 }, { timestamps: true })
 
-// secure the password
-log.pre("save", async function () {
-    // console.log(this);
+// Hash password before saving (only when it has been modified)
+log.pre("save", async function (next) {
     const user = this;
     if (!user.isModified("password")) {
         return next();
@@ -65,8 +65,9 @@ log.pre("save", async function () {
         const saltRound = await bcrypt.genSalt(10);
         const hash_password = await bcrypt.hash(user.password, saltRound);
         user.password = hash_password;
+        next();
     } catch (error) {
-        console.log(error);
+        console.error('[login_schema pre-save] Password hash failed:', error.message);
         next(error);
     }
 })

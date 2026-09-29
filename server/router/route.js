@@ -1,5 +1,4 @@
 const express = require('express');
-const app = express();
 const router = express.Router();
 const login = require("../controller/login_contoroller");
 const expense = require("../controller/exp_controller");
@@ -15,9 +14,6 @@ const upload = require('../middleware/multer_middleware');
 const emailauth = require('../middleware/email_auth');
 const { createCategory, getCategories, updateCategory, deleteCategory, createSection, getSectionsByCategory, getSectionsByUser, updateSection, deleteSection, createItem, getItemsBySection, getItemsByUser, updateItem, deleteItem } = require('../controller/notes_controller');
 
-app.get('/', (req, res) => {
-  res.status(200).send("This is From Expense Manager Backend, Created by Jai kishan");
-});
 
 router.route('/jwtcheck').get(authmiddlewre, (req, res) => {
   res.status(201).json({
@@ -36,7 +32,9 @@ router.route('/checkmail').post(login.checkmail);
 router.route('/photo').post(authmiddlewre, upload.single('image'), login.photo);
 router.route('/updateuserdetail').post(authmiddlewre, login.updateuserdetail);
 
-router.route('/test').get(expense.allexpe);
+// NOTE: /test route was a one-time data migration endpoint (string dates → Date objects).
+// Migration is complete — this route has been removed to prevent unintended bulk DB writes.
+// router.route('/test').get(expense.allexpe);
 router.route('/expdetail').post(authmiddlewre, expense.expdetail);
 router.route('/explist').get(authmiddlewre, expense.explist);
 router.route('/ledgersummary').get(authmiddlewre, expense.ledgerSummary);

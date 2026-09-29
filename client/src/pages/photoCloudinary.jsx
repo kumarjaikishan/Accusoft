@@ -19,6 +19,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { header } from '../store/login';
 import { profilepicupdtae, profiledetailupdtae } from '../store/api';
 import { toast } from '../utils/toast';
+import { useApi } from '../utils/useApi';
 import Button from '../components/common/Button';
 import TextInput from '../components/common/TextInput';
 
@@ -39,6 +40,7 @@ const Photo = () => {
   const dispatch = useDispatch();
   const useralldetail = useSelector((state) => state.userexplist);
   const defaultProfile = "https://res.cloudinary.com/dusxlxlvm/image/upload/v1699090690/just_yoljye.png";
+  const { request } = useApi();
 
   const [webpImage, setWebpImage] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
@@ -174,34 +176,25 @@ const Photo = () => {
   const handleUpdateDetails = async (e) => {
     e.preventDefault();
     setSavingDetails(true);
-    const token = localStorage.getItem("token");
     const toastId = toast.loading("Saving profile details...");
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_ADDRESS}updateuserdetail`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
-        body: JSON.stringify({ name: input.name, phone: input.phone })
+      const result = await request({
+        url: 'updateuserdetail',
+        method: 'POST',
+        body: { name: input.name, phone: input.phone }
       });
-      const result = await response.json();
-      if (response.ok) {
-        dispatch(profiledetailupdtae(input));
-        toast.update(toastId, { 
-          render: result.message || 'Profile updated successfully!', 
-          type: "success", 
-          isLoading: false, 
-          autoClose: 1600 
-        });
-        setIsEditing(false);
-      } else {
-        throw new Error(result.message || "Failed to update profile");
-      }
+      dispatch(profiledetailupdtae(input));
+      toast.update(toastId, { 
+        render: result?.message || 'Profile updated successfully!', 
+        type: "success", 
+        isLoading: false, 
+        autoClose: 1600 
+      });
+      setIsEditing(false);
     } catch (error) {
       toast.update(toastId, { 
-        render: error.message, 
+        render: error.message || 'Failed to update profile', 
         type: "warning", 
         isLoading: false, 
         autoClose: 2600 
@@ -217,30 +210,22 @@ const Photo = () => {
     }
 
     setSendingReset(true);
-    const token = localStorage.getItem("token");
     const toastId = toast.loading("Sending password reset link...");
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_ADDRESS}passreset`, {
-        method: "GET",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-        }
+      const data = await request({
+        url: 'passreset',
+        method: 'GET'
       });
-      const data = await res.json();
-      if (res.ok) {
-        toast.update(toastId, { 
-          render: data.message || "Reset link sent to your email!", 
-          type: "success", 
-          isLoading: false, 
-          autoClose: 2500 
-        });
-      } else {
-        throw new Error(data.message || "Failed to send reset link");
-      }
+      toast.update(toastId, { 
+        render: data?.message || "Reset link sent to your email!", 
+        type: "success", 
+        isLoading: false, 
+        autoClose: 2500 
+      });
     } catch (error) {
       toast.update(toastId, { 
-        render: error.message, 
+        render: error.message || 'Failed to send reset link', 
         type: "error", 
         isLoading: false, 
         autoClose: 2500 

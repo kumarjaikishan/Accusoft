@@ -12,6 +12,7 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import { header, setloader } from "../../store/login";
 import { useApi } from "../../utils/useApi";
+import { useChartPreferences } from "./hooks/useChartPreferences";
 
 import dayjs from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
@@ -35,26 +36,7 @@ const Home = () => {
     typeof window !== "undefined" ? window.innerWidth < 768 : false
   );
 
-  const [monthsToShow, setMonthsToShow] = useState(() => {
-    const stored = localStorage.getItem("ShowChartMonth");
-    if (stored) return Number(stored);
-    return typeof window !== "undefined" && window.innerWidth < 768 ? 6 : 12;
-  });
-
-  const [chartType, setChartType] = useState(() => {
-    const chartStored = localStorage.getItem("ShowChartType");
-    return chartStored && ["bar", "line"].includes(chartStored) ? chartStored : "bar";
-  });
-
-  const [amountFormat, setAmountFormat] = useState(() => {
-    const stored = localStorage.getItem("ShowChartAmountFormat");
-    return stored && ["compact", "full"].includes(stored) ? stored : "compact";
-  });
-
-  const [amountPosition, setAmountPosition] = useState(() => {
-    const stored = localStorage.getItem("ShowChartAmountPosition");
-    return stored && ["top", "inside"].includes(stored) ? stored : "top";
-  });
+  const { monthsToShow, setMonthsToShow, chartType, setChartType, amountFormat, setAmountFormat, amountPosition, setAmountPosition } = useChartPreferences();
 
   useEffect(() => {
     dispatch(header("Dashboard"));
@@ -205,10 +187,7 @@ const Home = () => {
                   <button
                     key={opt.value}
                     type="button"
-                    onClick={() => {
-                      localStorage.setItem("ShowChartMonth", opt.value);
-                      setMonthsToShow(opt.value);
-                    }}
+                    onClick={() => setMonthsToShow(opt.value)}
                     className={`px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-lg font-semibold transition cursor-pointer text-[10px] sm:text-xs ${
                       monthsToShow === opt.value
                         ? "bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 shadow-sm"
@@ -224,10 +203,7 @@ const Home = () => {
               <div className="flex items-center gap-0.5 bg-slate-100 dark:bg-slate-800/90 p-0.5 rounded-xl border border-slate-200/60 dark:border-slate-700/60 text-xs">
                 <button
                   type="button"
-                  onClick={() => {
-                    localStorage.setItem("ShowChartType", "bar");
-                    setChartType("bar");
-                  }}
+                  onClick={() => setChartType("bar")}
                   className={`p-1 sm:px-2 sm:py-1 rounded-lg font-semibold transition cursor-pointer flex items-center gap-1 text-[10px] sm:text-xs ${
                     chartType === "bar"
                       ? "bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 shadow-sm"
@@ -240,10 +216,7 @@ const Home = () => {
                 </button>
                 <button
                   type="button"
-                  onClick={() => {
-                    localStorage.setItem("ShowChartType", "line");
-                    setChartType("line");
-                  }}
+                  onClick={() => setChartType("line")}
                   className={`p-1 sm:px-2 sm:py-1 rounded-lg font-semibold transition cursor-pointer flex items-center gap-1 text-[10px] sm:text-xs ${
                     chartType === "line"
                       ? "bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 shadow-sm"
@@ -261,10 +234,7 @@ const Home = () => {
                 <div className="flex items-center gap-0.5 bg-slate-100 dark:bg-slate-800/90 p-0.5 rounded-xl border border-slate-200/60 dark:border-slate-700/60 text-xs">
                   <button
                     type="button"
-                    onClick={() => {
-                      localStorage.setItem("ShowChartAmountPosition", "top");
-                      setAmountPosition("top");
-                    }}
+                    onClick={() => setAmountPosition("top")}
                     className={`px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-lg font-semibold transition cursor-pointer text-[10px] sm:text-xs ${
                       amountPosition === "top"
                         ? "bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 shadow-sm"
@@ -276,10 +246,7 @@ const Home = () => {
                   </button>
                   <button
                     type="button"
-                    onClick={() => {
-                      localStorage.setItem("ShowChartAmountPosition", "inside");
-                      setAmountPosition("inside");
-                    }}
+                    onClick={() => setAmountPosition("inside")}
                     className={`px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-lg font-semibold transition cursor-pointer text-[10px] sm:text-xs ${
                       amountPosition === "inside"
                         ? "bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 shadow-sm"
@@ -296,10 +263,7 @@ const Home = () => {
               <div className="flex items-center gap-0.5 bg-slate-100 dark:bg-slate-800/90 p-0.5 rounded-xl border border-slate-200/60 dark:border-slate-700/60 text-xs">
                 <button
                   type="button"
-                  onClick={() => {
-                    localStorage.setItem("ShowChartAmountFormat", "compact");
-                    setAmountFormat("compact");
-                  }}
+                  onClick={() => setAmountFormat("compact")}
                   className={`px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-lg font-semibold transition cursor-pointer text-[10px] sm:text-xs ${
                     amountFormat === "compact"
                       ? "bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 shadow-sm"
@@ -311,10 +275,7 @@ const Home = () => {
                 </button>
                 <button
                   type="button"
-                  onClick={() => {
-                    localStorage.setItem("ShowChartAmountFormat", "full");
-                    setAmountFormat("full");
-                  }}
+                  onClick={() => setAmountFormat("full")}
                   className={`px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-lg font-semibold transition cursor-pointer text-[10px] sm:text-xs ${
                     amountFormat === "full"
                       ? "bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 shadow-sm"

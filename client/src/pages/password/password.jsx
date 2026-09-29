@@ -3,6 +3,7 @@ import { Save } from 'lucide-react';
 import { useSelector } from 'react-redux';
 import { useState } from 'react';
 import { toast } from "../../utils/toast";
+import { useApi } from "../../utils/useApi";
 import TextInput from '../../components/common/TextInput';
 import Button from '../../components/common/Button';
 
@@ -10,11 +11,11 @@ const PasswordReset = () => {
     const { token } = useParams();
     const navigate = useNavigate();
     const useralldetail = useSelector((state) => state.userexplist);
+    const { request, loading: isloading } = useApi();
     const [inp, setinp] = useState({
         pass: '',
         cpass: ''
     });
-    const [isloading, setloading] = useState(false);
 
     const handlechange = (e) => {
         let naam = e.target.name;
@@ -27,27 +28,15 @@ const PasswordReset = () => {
     const handlesubmit = async (e) => {
         e.preventDefault();
         try {
-            setloading(true);
-            const rese = await fetch(`${import.meta.env.VITE_API_ADDRESS}setpassword?token=${token}`, {
+            const resuke = await request({
+                url: `setpassword?token=${token}`,
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ password: inp.pass })
+                body: { password: inp.pass }
             });
-            const resuke = await rese.json();
-            
-            if (!rese.ok) {
-                setloading(false);
-                return toast.warn(resuke.message, { autoClose: 2100 });
-            }
-            toast.success(resuke.message, { autoClose: 1600 });
-            setloading(false);
+            toast.success(resuke?.message || "Password reset successfully!", { autoClose: 1600 });
             navigate('/logout');
         } catch (error) {
-            toast.warn(error.message, { autoClose: 2100 });
             console.log(error);
-            setloading(false);
         }
     };
 

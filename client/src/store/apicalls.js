@@ -18,16 +18,7 @@ export const useUserApi = () => {
         return res;
     };
 
-    const expenseadd = async (body) => {
-        return request({
-            url: "expense",
-            method: "POST",
-            body,
-        });
-    };
-
     return {
         userdatacall,
-        expenseadd,
     };
 };

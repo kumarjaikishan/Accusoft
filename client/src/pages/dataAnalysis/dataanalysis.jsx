@@ -183,7 +183,7 @@ const Datanalysis = () => {
                 onChange={handle}
                 className="px-2 py-1 rounded-lg bg-white dark:bg-slate-900 text-xs font-semibold text-slate-700 dark:text-slate-200 outline-none shadow-sm cursor-pointer border border-transparent focus:border-indigo-500"
               >
-                {[2026, 2025, 2024, 2023, 2022].map((y) => (
+                {Array.from({ length: 6 }, (_, i) => new Date().getFullYear() - i).map((y) => (
                   <option key={y} value={y} className="text-slate-700 dark:text-slate-200 dark:bg-slate-900">
                     {y}
                   </option>

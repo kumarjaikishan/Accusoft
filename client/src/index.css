@@ -53,10 +53,10 @@
 }
 
 :root {
-  --maincolor: #0a3d62;
+  --maincolor: #334155;
   --modalBgColor: #1E293B;
-  --iconColor: #0a3d62;
-  --hovercolor: #012336;
+  --iconColor: #334155;
+  --hovercolor: #1e293b;
   --cardBackground: #dbe1e6;
   --background: #f0f0f0;
   --color: #2a2424;

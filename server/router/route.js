@@ -92,4 +92,27 @@ router.route('/admin/vault/item/:id')
     .put(authmiddlewre, authorizationMiddleware(['admin']), vault.updateVaultItem)
     .delete(authmiddlewre, authorizationMiddleware(['admin']), vault.deleteVaultItem);
 
+/* 📖 UTILITY: FINANCIAL ACCOUNT LEDGERS & DEBIT/CREDIT STATEMENTS */
+const accountLedger = require('../controller/account_ledger_controller');
+router.route('/util/ledgers').get(authmiddlewre, accountLedger.getAllLedgers);
+router.route('/util/ledgers').post(authmiddlewre, accountLedger.createAccountLedger);
+router.route('/util/ledgers/:id')
+    .put(authmiddlewre, accountLedger.updateAccountLedger)
+    .delete(authmiddlewre, accountLedger.deleteAccountLedger);
+router.route('/util/ledgers/:id/statement').get(authmiddlewre, accountLedger.getLedgerStatement);
+router.route('/util/ledgers/entry').post(authmiddlewre, accountLedger.addLedgerEntry);
+router.route('/util/ledgers/entry/:id')
+    .put(authmiddlewre, accountLedger.updateLedgerEntry)
+    .delete(authmiddlewre, accountLedger.deleteLedgerEntry);
+
+/* ✅ UTILITY: TODO TASKS */
+const todo = require('../controller/todo_controller');
+router.route('/util/todos').get(authmiddlewre, todo.getTodos);
+router.route('/util/todos').post(authmiddlewre, todo.createTodo);
+router.route('/util/todos/clear-completed').post(authmiddlewre, todo.clearCompletedTodos);
+router.route('/util/todos/:id')
+    .put(authmiddlewre, todo.updateTodo)
+    .delete(authmiddlewre, todo.deleteTodo);
+router.route('/util/todos/:id/toggle').patch(authmiddlewre, todo.toggleTodo);
+
 module.exports = router;

@@ -22,14 +22,18 @@ const Navbar = () => {
     "https://res.cloudinary.com/dusxlxlvm/image/upload/v1699090690/just_yoljye.png";
 
   const presets = [
-    { name: "Indigo", color: "#4f46e5" },
-    { name: "Slate", color: "#334155" },
-    { name: "Obsidian", color: "#0f172a" },
-    { name: "Emerald", color: "#059669" },
-    { name: "Cyan", color: "#0ea5e9" },
-    { name: "Violet", color: "#7c3aed" },
-    { name: "Rose", color: "#e11d48" },
-    { name: "Amber", color: "#d97706" },
+    { name: "Classic Slate", color: "#1e293b" },
+    { name: "Cool Gray / Charcoal", color: "#334155" },
+    { name: "Obsidian Midnight", color: "#0f172a" },
+    { name: "Royal Sapphire", color: "#0a3d62" },
+    { name: "Deep Emerald / Forest", color: "#064e3b" },
+    { name: "Imperial Amethyst", color: "#4c1d95" },
+    { name: "Rich Burgundy / Wine", color: "#881337" },
+    { name: "Warm Bronze / Amber", color: "#78350f" },
+    { name: "Oceanic Teal", color: "#0f766e" },
+    { name: "Nordic Indigo", color: "#312e81" },
+    { name: "Noble Plum", color: "#701a75" },
+    { name: "Dark Spruce", color: "#14532d" },
   ];
 
   // Close dropdown on click outside

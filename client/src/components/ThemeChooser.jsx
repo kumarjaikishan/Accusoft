@@ -8,15 +8,20 @@ const ThemeChooser = () => {
     const mainColor = useSelector((state) => state.theme.mainColor);
     const [isOpen, setIsOpen] = useState(false);
 
+    // Curated rich, luxury & premium palette (with Slate & Cool Gray preserved)
     const presets = [
-        '#1e293b', // Slate
-        '#0a3d62', // Default Blue
-        '#7c3aed', // Violet
-        '#db2777', // Pink
-        '#059669', // Emerald
-        '#ea580c', // Orange
-        '#2563eb', // Blue
-        '#4f46e5', // Indigo
+        { name: 'Classic Slate', color: '#1e293b' },
+        { name: 'Cool Gray / Charcoal', color: '#334155' },
+        { name: 'Obsidian Midnight', color: '#0f172a' },
+        { name: 'Royal Sapphire', color: '#0a3d62' },
+        { name: 'Deep Emerald / Forest', color: '#064e3b' },
+        { name: 'Imperial Amethyst', color: '#4c1d95' },
+        { name: 'Rich Burgundy / Wine', color: '#881337' },
+        { name: 'Warm Bronze / Amber', color: '#78350f' },
+        { name: 'Oceanic Teal', color: '#0f766e' },
+        { name: 'Nordic Indigo', color: '#312e81' },
+        { name: 'Noble Plum', color: '#701a75' },
+        { name: 'Dark Spruce', color: '#14532d' },
     ];
 
     return (
@@ -32,17 +37,18 @@ const ThemeChooser = () => {
                         </button>
                     </div>
 
-                    <div className="grid grid-cols-4 gap-3 mb-4">
-                        {presets.map((color) => (
+                    <div className="grid grid-cols-4 gap-2.5 mb-4">
+                        {presets.map((item) => (
                             <button
-                                key={color}
-                                onClick={() => dispatch(setMainColor(color))}
-                                className="w-full aspect-square rounded-full border-2 border-white dark:border-slate-700 shadow-sm relative overflow-hidden transition-transform hover:scale-110 cursor-pointer"
-                                style={{ backgroundColor: color }}
+                                key={item.color}
+                                onClick={() => dispatch(setMainColor(item.color))}
+                                title={item.name}
+                                className="w-full aspect-square rounded-xl border-2 border-white/80 dark:border-slate-700 shadow-sm relative overflow-hidden transition-all hover:scale-110 cursor-pointer"
+                                style={{ backgroundColor: item.color }}
                             >
-                                {mainColor === color && (
-                                    <div className="absolute inset-0 flex items-center justify-center bg-black/10">
-                                        <Check size={14} className="text-white" />
+                                {mainColor?.toLowerCase() === item.color.toLowerCase() && (
+                                    <div className="absolute inset-0 flex items-center justify-center bg-black/20">
+                                        <Check size={16} className="text-white drop-shadow" />
                                     </div>
                                 )}
                             </button>

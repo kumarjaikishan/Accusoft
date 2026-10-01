@@ -23,6 +23,9 @@ Accusoft/
 │   │   │   ├── others/      # Terms, Privacy, About, Contact
 │   │   │   ├── password/    # Password reset & recovery
 │   │   │   ├── Report/      # Financial & audit reports
+│   │   │   ├── util/        # 🧰 Utility features (Financial ledgers & Todo manager)
+│   │   │   │   ├── ledger/  # Modular Account Ledgers & Statement components
+│   │   │   │   └── TodoPage.jsx # Action & task manager
 │   │   │   ├── vault/       # 🔒 Zero-Knowledge Password & Credential Vault
 │   │   │   └── voucher/     # Office expense vouchers
 │   │   ├── store/           # Redux Toolkit store & slices

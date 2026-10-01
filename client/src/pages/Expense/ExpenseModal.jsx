@@ -4,7 +4,7 @@ import { RefreshCcw, Save, RefreshCw } from 'lucide-react';
 import { useSelector, useDispatch } from 'react-redux';
 import { toast } from '../../utils/toast';
 import { useApi } from '../../utils/useApi';
-import Modalbox from '../../components/custommodal/Modalbox';
+import ModalCard from '../../components/custommodal/ModalCard';
 import TextInput from '../../components/common/TextInput';
 import AutocompleteSelect from '../../components/common/AutocompleteSelect';
 import DatePicker from '../../components/common/DatePicker';
@@ -70,84 +70,83 @@ const ExpenseModalbox = ({ modal, disable, handlechange, fields, isupdate, sub, 
     }));
 
     return (
-        <Modalbox open={modal} onClose={() => setmodal(false)}>
-            <div className="w-[500px] h-max rounded-[20px] flex flex-col items-center max-sm:w-[96vw] bg-[var(--maincolor)] shadow-2xl">
-                <h1 className="w-full h-[50px] leading-[50px] text-[aliceblue] tracking-[2px] font-bold text-2xl text-center max-sm:text-[1.5em] max-sm:tracking-[1px] bg-[var(--maincolor)] rounded-t-[20px]">
-                    {isupdate ? "Update Voucher" : "Add Voucher"}
-                </h1>
+        <ModalCard
+            open={modal}
+            onClose={() => setmodal(false)}
+            title={isupdate ? "Update Voucher" : "Add Voucher"}
+            width="500px"
+        >
+            <div className="flex flex-col pt-4 items-center w-full px-6 pb-6 gap-3.5 relative">
+                <AutocompleteSelect
+                    label="Ledger"
+                    name="ledger"
+                    value={fields?.ledger || ''}
+                    onChange={handlechange}
+                    options={ledgerOptions}
+                    placeholder="Type or search ledger..."
+                    required
+                />
 
-                <div className="flex flex-col rounded-t-[30px] rounded-b-[20px] border-t border-white/20 pt-4 bg-surface items-center w-full px-6 pb-6 gap-3.5 relative">
-                    <AutocompleteSelect
-                        label="Ledger"
-                        name="ledger"
-                        value={fields?.ledger || ''}
-                        onChange={handlechange}
-                        options={ledgerOptions}
-                        placeholder="Type or search ledger..."
-                        required
-                    />
+                <DatePicker
+                    label="Date"
+                    name="date"
+                    value={fields?.date || ''}
+                    onChange={handlechange}
+                    required
+                />
 
-                    <DatePicker
-                        label="Date"
-                        name="date"
-                        value={fields?.date || ''}
-                        onChange={handlechange}
-                        required
-                    />
+                <TextInput
+                    id="voucher-amount"
+                    label="Amount"
+                    name="amount"
+                    type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    value={fields?.amount || ''}
+                    onChange={handleAmountChange}
+                    startAdornment={<span className="font-semibold text-slate-500">₹</span>}
+                    placeholder="0"
+                    required
+                />
 
-                    <TextInput
-                        id="voucher-amount"
-                        label="Amount"
-                        name="amount"
-                        type="text"
-                        inputMode="numeric"
-                        pattern="[0-9]*"
-                        value={fields?.amount || ''}
-                        onChange={handleAmountChange}
-                        startAdornment={<span className="font-semibold text-slate-500">₹</span>}
-                        placeholder="0"
-                        required
-                    />
+                <TextInput
+                    multiline
+                    rows={3.5}
+                    id="voucher-narration"
+                    label="Narration"
+                    name="narration"
+                    value={fields?.narration || ''}
+                    onChange={handlechange}
+                    placeholder="Enter description or details..."
+                    inputClassName="min-h-[85px]"
+                />
 
-                    <TextInput
-                        multiline
-                        rows={3.5}
-                        id="voucher-narration"
-                        label="Narration"
-                        name="narration"
-                        value={fields?.narration || ''}
-                        onChange={handlechange}
-                        placeholder="Enter description or details..."
-                        inputClassName="min-h-[85px]"
-                    />
+                <div className="w-full flex justify-between items-center gap-3 mt-3">
+                    <Button
+                        loading={loading}
+                        onClick={isupdate ? () => updatee(fields._id) : sub}
+                        icon={isupdate ? RefreshCw : Save}
+                        style={{ backgroundColor: mainColor || 'var(--maincolor)' }}
+                        className="flex-1 text-white hover:opacity-90 shadow-md transition-all duration-200"
+                    >
+                        {isupdate ? "Update" : "Submit"}
+                    </Button>
 
-                    <div className="w-full flex justify-between items-center gap-3 mt-3">
-                        <Button
-                            loading={loading}
-                            onClick={isupdate ? () => updatee(fields._id) : sub}
-                            icon={isupdate ? RefreshCw : Save}
-                            style={{ backgroundColor: mainColor || 'var(--maincolor)' }}
-                            className="flex-1 text-white hover:opacity-90 shadow-md transition-all duration-200"
-                        >
-                            {isupdate ? "Update" : "Submit"}
-                        </Button>
-
-                        <Button
-                            variant="outline"
-                            onClick={() => {
-                                setmodal(false);
-                                setisupdate(false);
-                                reset();
-                            }}
-                            icon={RefreshCcw}
-                            className="flex-1"
-                        >
-                            Cancel
-                        </Button>
-                    </div>
+                    <Button
+                        variant="outline"
+                        onClick={() => {
+                            setmodal(false);
+                            setisupdate(false);
+                            reset();
+                        }}
+                        icon={RefreshCcw}
+                        className="flex-1"
+                    >
+                        Cancel
+                    </Button>
                 </div>
             </div>
-        </Modalbox>
+        </ModalCard>
     );
 };
 

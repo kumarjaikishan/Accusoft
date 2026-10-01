@@ -14,7 +14,10 @@ import {
     Shield,
     Radio,
     Lock,
-    Zap
+    Zap,
+    Wrench,
+    BookOpen,
+    CheckSquare
 } from 'lucide-react';
 
 import { Link, NavLink, useNavigate, useLocation } from "react-router-dom";
@@ -39,17 +42,20 @@ const Sidebar = () => {
     const user = useSelector((state) => state.userexplist?.user);
     const { mode, mainColor } = useSelector((state) => state.theme);
 
+    const isUtilActive = location.pathname.startsWith("/util");
     const isAdminActive = location.pathname.startsWith("/admin") && !location.pathname.startsWith("/admin/slow");
     const isServerActive = location.pathname.startsWith("/admin/slow") || location.pathname.startsWith("/admin/slowworker");
 
+    const [utilOpen, setUtilOpen] = useState(isUtilActive);
     const [adminOpen, setAdminOpen] = useState(isAdminActive);
     const [serverOpen, setServerOpen] = useState(isServerActive);
 
     // Keep submenus open dynamically based on route switching
     useEffect(() => {
+        if (isUtilActive) setUtilOpen(true);
         if (isAdminActive) setAdminOpen(true);
         if (isServerActive) setServerOpen(true);
-    }, [isAdminActive, isServerActive]);
+    }, [isUtilActive, isAdminActive, isServerActive]);
 
     const menu = [
         { name: "Dashboard", link: "/dashboard", icon: <LayoutDashboard size={18} /> },
@@ -159,6 +165,56 @@ const Sidebar = () => {
                             </span>
                         </NavLink>
                     ))}
+
+                {/* 🧰 Util Parent Dropdown */}
+                {log.islogin && (
+                    <div className="space-y-0.5">
+                        <button
+                            type="button"
+                            onClick={() => setUtilOpen(!utilOpen)}
+                            className={getSubmenuHeaderClass(utilOpen, isUtilActive)}
+                        >
+                            <div className="flex items-center">
+                                <span className="min-w-5 flex justify-center">
+                                    <Wrench size={18} />
+                                </span>
+                                <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-50 opacity-100 ml-3"}`}>
+                                    Util
+                                </span>
+                            </div>
+                            <span className={`transition-transform duration-200 overflow-hidden text-slate-400 ${log.narrow ? "max-w-0 opacity-0" : "opacity-100"} ${utilOpen ? "rotate-180" : ""}`}>
+                                <ChevronDown size={15} />
+                            </span>
+                        </button>
+
+                        {/* ↳ Submenu Items with Tree Guide Line */}
+                        <div
+                            className={`overflow-hidden transition-all duration-200 ${utilOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"}`}
+                        >
+                            <div className="ml-4.5 pl-2.5 my-1 border-l-2 border-slate-200 dark:border-slate-800 space-y-1">
+                                <NavLink
+                                    to="/util/ledger"
+                                    className={({ isActive }) => getSubmenuLinkClass(isActive)}
+                                    style={({ isActive }) => getSubmenuLinkStyle(isActive)}
+                                    onClick={() => handleNavClick("Account Ledgers")}
+                                >
+                                    <BookOpen size={15} className="shrink-0" />
+                                    <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-50 opacity-100 ml-2"}`}>Ledger</span>
+                                </NavLink>
+
+                                <NavLink
+                                    to="/util/todo"
+                                    className={({ isActive }) => getSubmenuLinkClass(isActive)}
+                                    style={({ isActive }) => getSubmenuLinkStyle(isActive)}
+                                    onClick={() => handleNavClick("Todo List")}
+                                >
+                                    <CheckSquare size={15} className="shrink-0" />
+                                    <span className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-50 opacity-100 ml-2"}`}>Todo</span>
+                                </NavLink>
+                            </div>
+                        </div>
+                    </div>
+                )}
 
                 {/* 🛡️ Admin Parent Dropdown */}
                 {log.islogin && user?.isadmin && (

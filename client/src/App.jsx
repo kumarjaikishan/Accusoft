@@ -24,6 +24,11 @@ const Report = lazy(() => import('./pages/Report/Report'));
 const Photo = lazy(() => import('./pages/photoCloudinary'));
 const Officeexp = lazy(() => import('./pages/voucher'));
 
+// 🧰 Utility Pages (Ledger & Todo)
+const AccountLedgers = lazy(() => import('./pages/util/ledger/AccountLedgers'));
+const LedgerStatementDetail = lazy(() => import('./pages/util/ledger/LedgerStatementDetail'));
+const TodoPage = lazy(() => import('./pages/util/TodoPage'));
+
 // Compliance & Informational Pages
 const Terms = lazy(() => import('./pages/others/Terms'));
 const Privacy = lazy(() => import('./pages/others/Policy'));
@@ -127,6 +132,11 @@ function App() {
             <Route path="/data_analysis/ledgerDetail/:id" element={<VoucherDetail />} />
             <Route path="/data_analysis" element={<Datanalysis />} />
             <Route path="/report" element={<Report />} />
+
+            {/* 🧰 UTIL ROUTES */}
+            <Route path="/util/ledger" element={<AccountLedgers />} />
+            <Route path="/util/ledger/:id" element={<LedgerStatementDetail />} />
+            <Route path="/util/todo" element={<TodoPage />} />
 
             {/* 🛡️ ADMIN ONLY ROUTES (Isolated lazy chunk) */}
             <Route path="/admin" element={<AdminRoute />}>

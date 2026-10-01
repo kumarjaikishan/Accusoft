@@ -100,7 +100,7 @@ const updateTodo = asyncHandler(async (req, res) => {
     const updated = await Todo.findOneAndUpdate(
         { _id: id, userid: userId },
         updateData,
-        { new: true }
+        { returnDocument: 'after' }
     );
 
     if (!updated) {

@@ -64,7 +64,7 @@ const userupdate = asyncHandler(async (req, res, next) => {
     const query = await user.findByIdAndUpdate(
         { _id: id },
         { name, phone, email, isadmin: admin, isverified: verified },
-        { new: true }
+        { returnDocument: 'after' }
     );
     if (!query) {
         throw new ApiError(422, "Id Incorrect");

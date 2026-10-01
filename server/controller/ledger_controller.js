@@ -48,7 +48,7 @@ const updateledger = asyncHandler(async (req, res, next) => {
     const query = await ledmodel.findByIdAndUpdate(
         { _id: ledger_id , userid:userId},
         { ledger: newledger, budget: newbudget },
-        { new: true } // return updated doc if needed
+        { returnDocument: 'after' } // return updated doc if needed
     );
 
     if (!query) {

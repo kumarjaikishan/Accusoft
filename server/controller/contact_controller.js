@@ -44,7 +44,7 @@ const updateContactStatus = async (req, res) => {
       return res.status(400).json({ message: "Invalid status value" });
     }
 
-    const updated = await Contact.findByIdAndUpdate(id, { status }, { new: true });
+    const updated = await Contact.findByIdAndUpdate(id, { status }, { returnDocument: 'after' });
     if (!updated) {
       return res.status(404).json({ message: "Contact message not found" });
     }

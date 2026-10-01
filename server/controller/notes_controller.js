@@ -78,7 +78,7 @@ const updateCategory = asyncHandler(async (req, res) => {
     const category = await Category.findByIdAndUpdate(
         id,
         { name: name.trim() },
-        { new: true }
+        { returnDocument: 'after' }
     );
 
     if (!category) {
@@ -165,7 +165,7 @@ const updateSection = asyncHandler(async (req, res) => {
     const updated = await Section.findByIdAndUpdate(
         id,
         req.body,
-        { new: true }
+        { returnDocument: 'after' }
     );
 
     if (!updated) {
@@ -299,7 +299,7 @@ const updateItem = asyncHandler(async (req, res) => {
     const updatedItem = await Item.findByIdAndUpdate(
         id,
         updateData,
-        { new: true, runValidators: true }
+        { returnDocument: 'after', runValidators: true }
     );
 
     if (!updatedItem) {

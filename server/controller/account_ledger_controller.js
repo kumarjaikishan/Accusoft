@@ -142,7 +142,7 @@ const updateAccountLedger = asyncHandler(async (req, res) => {
     const updated = await AccountLedger.findOneAndUpdate(
         { _id: id, userid: userId },
         { name: formattedName },
-        { new: true }
+        { returnDocument: 'after' }
     );
 
     if (!updated) {
@@ -313,7 +313,7 @@ const updateLedgerEntry = asyncHandler(async (req, res) => {
     const updated = await LedgerEntry.findOneAndUpdate(
         { _id: id, userid: userId },
         updateData,
-        { new: true }
+        { returnDocument: 'after' }
     );
 
     if (!updated) {

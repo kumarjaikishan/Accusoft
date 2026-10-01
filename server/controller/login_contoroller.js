@@ -345,7 +345,7 @@ const googleAuth = asyncHandler(async (req, res) => {
     if (!existingUser.imgsrc && picture) updates.imgsrc = picture;
 
     if (Object.keys(updates).length > 0) {
-      existingUser = await user.findByIdAndUpdate(existingUser._id, updates, { new: true });
+      existingUser = await user.findByIdAndUpdate(existingUser._id, updates, { returnDocument: 'after' });
     }
   }
 

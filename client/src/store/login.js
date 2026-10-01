@@ -7,6 +7,7 @@ const islogin = createSlice({
         head:"LogIn",
         narrow:false,
         loader:false,
+        activeLedgerName: "",
     },
     reducers:{
         setlogin(state, action){
@@ -20,9 +21,12 @@ const islogin = createSlice({
         },
         setloader(state, action){
            state.loader = action.payload;
+        },
+        setActiveLedgerName(state, action){
+           state.activeLedgerName = action.payload;
         }
     }
 
 })
-export const {setlogin,header,setnarrow,setloader}= islogin.actions;
+export const {setlogin,header,setnarrow,setloader,setActiveLedgerName}= islogin.actions;
 export default islogin.reducer;

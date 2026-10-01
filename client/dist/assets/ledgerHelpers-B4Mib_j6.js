@@ -1,0 +1,1 @@
+var i=t=>"₹ "+Math.abs(Number(t)||0).toLocaleString("en-IN",{minimumFractionDigits:2,maximumFractionDigits:2}),a=t=>!t||typeof t!="string"?"":t.trim().split(/\s+/).map(r=>r.charAt(0).toUpperCase()+r.slice(1).toLowerCase()).join(" ");export{i as n,a as t};

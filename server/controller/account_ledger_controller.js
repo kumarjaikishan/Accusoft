@@ -7,6 +7,16 @@ const mongoose = require('mongoose');
 // Helper to convert string to ObjectId
 const toObjId = (id) => new mongoose.Types.ObjectId(id);
 
+// Capitalize words helper
+const capitalize = (val) => {
+    if (!val || typeof val !== 'string') return '';
+    return val
+        .trim()
+        .split(/\s+/)
+        .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+        .join(' ');
+};
+
 /**
  * 1. Get All Ledgers with Summary (Total Payable, Total Receivable, Net Balance, entry count)
  */
@@ -83,19 +93,20 @@ const getAllLedgers = asyncHandler(async (req, res) => {
 const createAccountLedger = asyncHandler(async (req, res) => {
     const userId = req.userid;
     const { name } = req.body;
+    const formattedName = capitalize(name);
 
-    if (!name || !name.trim()) {
+    if (!formattedName) {
         throw new ApiError(400, 'Ledger Name is required');
     }
 
-    const existing = await AccountLedger.findOne({ userid: userId, name: name.trim() }).lean();
+    const existing = await AccountLedger.findOne({ userid: userId, name: formattedName }).lean();
     if (existing) {
-        throw new ApiError(400, `Ledger "${name.trim()}" already exists`);
+        throw new ApiError(400, `Ledger "${formattedName}" already exists`);
     }
 
     const newLedger = await AccountLedger.create({
         userid: userId,
-        name: name.trim()
+        name: formattedName
     });
 
     res.status(201).json({
@@ -112,24 +123,25 @@ const updateAccountLedger = asyncHandler(async (req, res) => {
     const userId = req.userid;
     const { id } = req.params;
     const { name } = req.body;
+    const formattedName = capitalize(name);
 
-    if (!name || !name.trim()) {
+    if (!formattedName) {
         throw new ApiError(400, 'Ledger Name is required');
     }
 
     const duplicate = await AccountLedger.findOne({
         userid: userId,
-        name: name.trim(),
+        name: formattedName,
         _id: { $ne: id }
     }).lean();
 
     if (duplicate) {
-        throw new ApiError(400, `Ledger "${name.trim()}" already exists`);
+        throw new ApiError(400, `Ledger "${formattedName}" already exists`);
     }
 
     const updated = await AccountLedger.findOneAndUpdate(
         { _id: id, userid: userId },
-        { name: name.trim() },
+        { name: formattedName },
         { new: true }
     );
 
@@ -231,6 +243,9 @@ const getLedgerStatement = asyncHandler(async (req, res) => {
         });
     }
 
+    // Show latest entries on top (newest date / entry first)
+    const latestFirstEntries = [...filteredEntries].reverse();
+
     res.status(200).json({
         success: true,
         ledger,
@@ -241,7 +256,7 @@ const getLedgerStatement = asyncHandler(async (req, res) => {
             balanceStatus: (totalCredit - totalDebit) >= 0 ? 'PAYABLE' : 'RECEIVABLE',
             transactionCount: calculatedEntries.length
         },
-        entries: filteredEntries
+        entries: latestFirstEntries
     });
 });
 

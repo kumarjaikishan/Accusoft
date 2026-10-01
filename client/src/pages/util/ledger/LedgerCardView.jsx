@@ -13,7 +13,7 @@ const LedgerCardView = ({ ledgers, onCardClick, onQuickEntry, onEdit, onDelete }
                 return (
                     <div
                         key={led._id}
-                        onClick={() => onCardClick(led._id)}
+                        onClick={() => onCardClick(led)}
                         className="group relative rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 p-4.5 shadow-xs hover:shadow-md transition-all hover:-translate-y-0.5 cursor-pointer flex flex-col justify-between space-y-3"
                     >
                         <div className="space-y-2">

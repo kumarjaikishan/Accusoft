@@ -11,6 +11,7 @@ import LedgerTableView from './LedgerTableView';
 import LedgerCardView from './LedgerCardView';
 import LedgerFormModal from './LedgerFormModal';
 import QuickEntryModal from './QuickEntryModal';
+import { capitalize } from './ledgerHelpers';
 
 const AccountLedgers = () => {
     const navigate = useNavigate();
@@ -92,7 +93,8 @@ const AccountLedgers = () => {
     // Handle Create/Update Ledger
     const handleSaveLedger = async (e) => {
         e.preventDefault();
-        if (!formData.name.trim()) {
+        const capitalizedName = capitalize(formData.name);
+        if (!capitalizedName) {
             toast.error('Please enter a ledger name');
             return;
         }
@@ -102,14 +104,14 @@ const AccountLedgers = () => {
                 await request({
                     url: `util/ledgers/${editingLedger._id}`,
                     method: 'PUT',
-                    data: { name: formData.name.trim() }
+                    data: { name: capitalizedName }
                 });
                 toast.success('Ledger updated successfully');
             } else {
                 await request({
                     url: 'util/ledgers',
                     method: 'POST',
-                    data: { name: formData.name.trim() }
+                    data: { name: capitalizedName }
                 });
                 toast.success('Ledger created successfully');
             }
@@ -204,8 +206,11 @@ const AccountLedgers = () => {
         setIsModalOpen(true);
     };
 
-    const handleRowOrCardClick = useCallback((ledgerId) => {
-        navigate(`/util/ledger/${ledgerId}`);
+    const handleRowOrCardClick = useCallback((ledger) => {
+        const id = typeof ledger === 'string' ? ledger : ledger?._id;
+        const name = typeof ledger === 'object' ? ledger?.name : '';
+        const search = name ? `?ledgerName=${encodeURIComponent(name)}` : '';
+        navigate(`/util/ledger/${id}${search}`);
     }, [navigate]);
 
     return (

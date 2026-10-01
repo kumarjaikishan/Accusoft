@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { setActiveLedgerName } from '../../../store/login';
 import { useApi } from '../../../utils/useApi';
 import { toast } from '../../../utils/toast';
 import { confirmDialog } from '../../../utils/confirm';
@@ -11,10 +13,12 @@ import StatementMetricCards from './StatementMetricCards';
 import StatementFilterBar from './StatementFilterBar';
 import StatementTable from './StatementTable';
 import QuickEntryModal from './QuickEntryModal';
+import { capitalize } from './ledgerHelpers';
 
 const LedgerStatementDetail = () => {
     const { id } = useParams();
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const { request, loading } = useApi();
 
     const [ledger, setLedger] = useState(null);
@@ -66,17 +70,23 @@ const LedgerStatementDetail = () => {
 
             if (res?.success) {
                 setLedger(res.ledger);
+                if (res.ledger?.name) {
+                    dispatch(setActiveLedgerName(res.ledger.name));
+                }
                 setEntries(res.entries || []);
                 setSummary(res.summary || {});
             }
         } catch (error) {
             console.error('Error fetching statement:', error);
         }
-    }, [id, selectedYear, selectedMonth, fromDate, toDate, request]);
+    }, [id, selectedYear, selectedMonth, fromDate, toDate, request, dispatch]);
 
     useEffect(() => {
         if (id) fetchStatement();
-    }, [id, fetchStatement]);
+        return () => {
+            dispatch(setActiveLedgerName(''));
+        };
+    }, [id, fetchStatement, dispatch]);
 
     // Handle CSV Export
     const handleExportCSV = useCallback(() => {
@@ -146,17 +156,23 @@ const LedgerStatementDetail = () => {
 
     const handleSaveEntry = async (e) => {
         e.preventDefault();
-        if (!entryData.particular.trim() || !entryData.amount || Number(entryData.amount) <= 0) {
+        const capitalizedParticular = capitalize(entryData.particular);
+        if (!capitalizedParticular || !entryData.amount || Number(entryData.amount) <= 0) {
             toast.error('Please provide particular and valid amount');
             return;
         }
+
+        const payload = {
+            ...entryData,
+            particular: capitalizedParticular
+        };
 
         try {
             if (editingEntry) {
                 await request({
                     url: `util/ledgers/entry/${editingEntry._id}`,
                     method: 'PUT',
-                    data: entryData
+                    data: payload
                 });
                 toast.success('Entry updated');
             } else {
@@ -165,7 +181,7 @@ const LedgerStatementDetail = () => {
                     method: 'POST',
                     data: {
                         ledgerId: id,
-                        ...entryData
+                        ...payload
                     }
                 });
                 toast.success('Entry recorded');
@@ -247,14 +263,7 @@ const LedgerStatementDetail = () => {
 
             {/* Statement Table with running balances */}
             <StatementTable
-                ledger={ledger}
                 entries={entries}
-                paginatedEntries={paginatedEntries}
-                currentPage={currentPage}
-                pageSize={pageSize}
-                setPageSize={setPageSize}
-                setCurrentPage={setCurrentPage}
-                totalPages={totalPages}
                 onEditEntry={handleOpenModal}
                 onDeleteEntry={handleDeleteEntry}
             />

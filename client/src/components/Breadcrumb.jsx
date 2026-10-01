@@ -6,17 +6,19 @@ import { ChevronRight } from "lucide-react";
 function Breadcrumbs() {
   const location = useLocation();
   const mainColor = useSelector((state) => state.theme?.mainColor || "#4f46e5");
+  const activeLedgerName = useSelector((state) => state.login?.activeLedgerName || "");
 
   const breadcrumbs = useMemo(() => {
     const searchParams = new URLSearchParams(location.search);
-    const ledgerName = searchParams.get("ledgerName");
+    const ledgerNameParam = searchParams.get("ledgerName");
+    const ledgerName = ledgerNameParam || activeLedgerName;
     const segments = location.pathname.split("/").filter(Boolean);
 
     return segments.map((segment, index) => {
-      // If segment is a 24-char hex Mongo ObjectId and ledgerName is present, display ledgerName
+      // If segment is a 24-char hex Mongo ObjectId or 'all', display ledgerName if present
       let formattedName = segment;
-      if (/^[0-9a-fA-F]{24}$/.test(segment) && ledgerName) {
-        formattedName = decodeURIComponent(ledgerName);
+      if (/^[0-9a-fA-F]{24}$/.test(segment)) {
+        formattedName = ledgerName ? decodeURIComponent(ledgerName) : "Ledger Statement";
       } else if (segment.toLowerCase() === "all" && ledgerName) {
         formattedName = decodeURIComponent(ledgerName);
       } else {
@@ -34,7 +36,7 @@ function Breadcrumbs() {
         path: "/" + segments.slice(0, index + 1).join("/")
       };
     });
-  }, [location.pathname, location.search]);
+  }, [location.pathname, location.search, activeLedgerName]);
 
   if (breadcrumbs.length === 0) {
     return (

@@ -1,7 +1,10 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { useSelector } from 'react-redux';
 import { useApi } from '../../utils/useApi';
 import { toast } from '../../utils/toast';
 import { confirmDialog } from '../../utils/confirm';
+import DataTable from '../../components/common/DataTable';
+import { useTableStyles } from '../../components/dataTableStyle';
 import {
     CheckCircle2,
     Circle,
@@ -24,9 +27,12 @@ import ModalCard from '../../components/custommodal/ModalCard';
 import TextInput from '../../components/common/TextInput';
 import DatePicker from '../../components/common/DatePicker';
 import Button from '../../components/common/Button';
+import { capitalize } from './ledger/ledgerHelpers';
 
 const TodoPage = () => {
+    const mode = useSelector((state) => state.theme?.mode || 'light');
     const { request, loading } = useApi();
+    const baseTableStyles = useTableStyles();
 
     const [todos, setTodos] = useState([]);
     const [stats, setStats] = useState({
@@ -103,7 +109,8 @@ const TodoPage = () => {
     // Save Todo
     const handleSaveTodo = async (e) => {
         e.preventDefault();
-        if (!formData.title.trim()) {
+        const capitalizedTitle = capitalize(formData.title);
+        if (!capitalizedTitle) {
             toast.error('Task title is required');
             return;
         }
@@ -116,10 +123,10 @@ const TodoPage = () => {
             : [];
 
         const payload = {
-            title: formData.title.trim(),
+            title: capitalizedTitle,
             description: formData.description.trim(),
             priority: formData.priority,
-            category: formData.category.trim() || 'General',
+            category: capitalize(formData.category) || 'General',
             dueDate: formData.dueDate || null,
             tags: tagsArray
         };
@@ -166,15 +173,25 @@ const TodoPage = () => {
     // Delete Single Todo
     const handleDelete = async (todo, e) => {
         e?.stopPropagation();
-        try {
-            await request({
-                url: `util/todos/${todo._id}`,
-                method: 'DELETE'
-            });
-            toast.success('Task deleted');
-            fetchTodos();
-        } catch (error) {
-            // Handled in useApi
+        const confirm = await confirmDialog({
+            title: `Delete task "${todo.title}"?`,
+            text: 'This will permanently remove this task from your list.',
+            icon: 'warning',
+            buttons: ['Cancel', 'Delete Task'],
+            dangerMode: true
+        });
+
+        if (confirm) {
+            try {
+                await request({
+                    url: `util/todos/${todo._id}`,
+                    method: 'DELETE'
+                });
+                toast.success('Task deleted');
+                fetchTodos();
+            } catch (error) {
+                // Handled in useApi
+            }
         }
     };
 
@@ -216,6 +233,148 @@ const TodoPage = () => {
                 return 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700';
         }
     };
+
+    const customTableStyles = useMemo(() => ({
+        ...baseTableStyles,
+        rows: {
+            ...baseTableStyles?.rows,
+            style: {
+                ...baseTableStyles?.rows?.style,
+                minHeight: '44px',
+            },
+        },
+        cells: {
+            ...baseTableStyles?.cells,
+            style: {
+                ...baseTableStyles?.cells?.style,
+                paddingTop: '6px',
+                paddingBottom: '6px',
+            },
+        },
+    }), [baseTableStyles]);
+
+    const columns = useMemo(() => [
+        {
+            name: 'Status',
+            width: '65px',
+            center: true,
+            cell: (row) => (
+                <button
+                    onClick={() => handleToggle(row)}
+                    className="text-slate-400 hover:text-emerald-600 transition cursor-pointer inline-flex items-center justify-center p-1"
+                    title={row.completed ? 'Mark as Pending' : 'Mark as Completed'}
+                >
+                    {row.completed ? (
+                        <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+                    ) : (
+                        <Circle className="w-5 h-5" />
+                    )}
+                </button>
+            ),
+        },
+        {
+            name: 'Task & Description',
+            grow: 3,
+            cell: (row) => (
+                <div className="py-1">
+                    <h4
+                        className={`font-bold text-xs sm:text-sm text-slate-900 dark:text-white ${
+                            row.completed ? 'line-through text-slate-400 dark:text-slate-500' : ''
+                        }`}
+                    >
+                        {row.title}
+                    </h4>
+                    {row.description && (
+                        <p className="text-[11.5px] text-slate-500 dark:text-slate-400 mt-0.5 leading-relaxed line-clamp-2">
+                            {row.description}
+                        </p>
+                    )}
+                    {row.tags?.length > 0 && (
+                        <div className="flex items-center gap-1.5 flex-wrap mt-1 text-[10px]">
+                            <Tag className="w-3 h-3 text-slate-400" />
+                            {row.tags.map((tg, i) => (
+                                <span key={i} className="text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded text-[10px]">
+                                    #{tg}
+                                </span>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            ),
+        },
+        {
+            name: 'Category',
+            selector: (row) => row.category || 'General',
+            sortable: true,
+            width: '120px',
+            cell: (row) => (
+                <span className="px-2 py-0.5 rounded text-[10.5px] font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+                    {row.category || 'General'}
+                </span>
+            ),
+        },
+        {
+            name: 'Priority',
+            selector: (row) => row.priority,
+            sortable: true,
+            center: true,
+            width: '110px',
+            cell: (row) => (
+                <span className={`px-2 py-0.5 rounded text-[10px] font-extrabold uppercase border ${getPriorityBadge(row.priority)}`}>
+                    {row.priority}
+                </span>
+            ),
+        },
+        {
+            name: 'Due Date',
+            selector: (row) => row.dueDate || '',
+            sortable: true,
+            width: '140px',
+            cell: (row) => {
+                const isOverdue = row.dueDate && !row.completed && dayjs(row.dueDate).isBefore(dayjs(), 'day');
+                return row.dueDate ? (
+                    <div
+                        className={`flex items-center gap-1 text-[11px] font-medium ${
+                            isOverdue
+                                ? 'text-rose-600 dark:text-rose-400 font-bold'
+                                : 'text-slate-600 dark:text-slate-300'
+                        }`}
+                    >
+                        <Calendar className="w-3.5 h-3.5 shrink-0" />
+                        <span>
+                            {dayjs(row.dueDate).format('DD MMM, YYYY')}
+                            {isOverdue && ' (Overdue)'}
+                        </span>
+                    </div>
+                ) : (
+                    <span className="text-slate-400 text-xs">—</span>
+                );
+            },
+        },
+        {
+            name: 'Actions',
+            center: true,
+            width: '90px',
+            cell: (row) => (
+                <div className="flex items-center justify-center gap-1.5">
+                    <button
+                        onClick={() => handleEdit(row)}
+                        className="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
+                        title="Edit Task"
+                    >
+                        <Edit2 className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                        onClick={() => handleDelete(row)}
+                        className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
+                        title="Delete Task"
+                    >
+                        <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                </div>
+            ),
+        },
+    ], [baseTableStyles]);
 
     return (
         <div className="min-h-screen bg-[#f8fafc] dark:bg-[#0b1120] p-3 sm:p-5 lg:p-6 space-y-5 transition-colors duration-300 font-sans text-slate-700 dark:text-slate-200">
@@ -348,156 +507,37 @@ const TodoPage = () => {
             </div>
 
             {/* Todo Table Form */}
-            <div className="bg-white dark:bg-slate-900/90 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs overflow-hidden">
-                <div className="overflow-x-auto">
-                    <table className="w-full text-left border-collapse">
-                        <thead>
-                            <tr className="bg-[#123e35] text-white text-xs font-bold uppercase tracking-wider">
-                                <th className="py-3 px-3.5 w-12 text-center">STATUS</th>
-                                <th className="py-3 px-4">TASK & DESCRIPTION</th>
-                                <th className="py-3 px-3.5 w-32">CATEGORY</th>
-                                <th className="py-3 px-3.5 w-28 text-center">PRIORITY</th>
-                                <th className="py-3 px-3.5 w-36">DUE DATE</th>
-                                <th className="py-3 px-3.5 text-center w-24">ACTIONS</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-slate-100 dark:divide-slate-800/70 text-xs sm:text-sm">
-                            {todos.length === 0 ? (
-                                <tr>
-                                    <td colSpan="6" className="py-16 text-center text-slate-400">
-                                        <div className="w-14 h-14 mx-auto rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400 mb-3">
-                                            <Sparkles className="w-7 h-7 text-emerald-500" />
-                                        </div>
-                                        <h3 className="text-base font-bold text-slate-800 dark:text-slate-200">No tasks found</h3>
-                                        <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm mx-auto mt-1 mb-4">
-                                            {searchQuery ? 'No task matched your search criteria.' : 'Keep yourself organized by adding your first action item or reminder.'}
-                                        </p>
-                                        <button
-                                            onClick={() => {
-                                                setEditingTodo(null);
-                                                setIsModalOpen(true);
-                                            }}
-                                            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold transition cursor-pointer"
-                                        >
-                                            <Plus className="w-4 h-4" /> Add Task
-                                        </button>
-                                    </td>
-                                </tr>
-                            ) : (
-                                todos.map((todo) => {
-                                    const isOverdue = todo.dueDate && !todo.completed && dayjs(todo.dueDate).isBefore(dayjs(), 'day');
-
-                                    return (
-                                        <tr
-                                            key={todo._id}
-                                            className={`hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition ${
-                                                todo.completed ? 'bg-slate-50/40 dark:bg-slate-900/30 opacity-70' : ''
-                                            }`}
-                                        >
-                                            {/* Status Checkbox */}
-                                            <td className="py-3 px-3.5 text-center">
-                                                <button
-                                                    onClick={() => handleToggle(todo)}
-                                                    className="text-slate-400 hover:text-emerald-600 transition cursor-pointer inline-flex items-center justify-center"
-                                                    title={todo.completed ? 'Mark as Pending' : 'Mark as Completed'}
-                                                >
-                                                    {todo.completed ? (
-                                                        <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
-                                                    ) : (
-                                                        <Circle className="w-5 h-5" />
-                                                    )}
-                                                </button>
-                                            </td>
-
-                                            {/* Title, Description & Tags */}
-                                            <td className="py-3 px-4">
-                                                <div>
-                                                    <h4
-                                                        className={`font-bold text-slate-900 dark:text-white ${
-                                                            todo.completed ? 'line-through text-slate-400 dark:text-slate-500' : ''
-                                                        }`}
-                                                    >
-                                                        {todo.title}
-                                                    </h4>
-                                                    {todo.description && (
-                                                        <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 leading-relaxed">
-                                                            {todo.description}
-                                                        </p>
-                                                    )}
-                                                    {todo.tags?.length > 0 && (
-                                                        <div className="flex items-center gap-1.5 flex-wrap mt-1.5 text-[11px]">
-                                                            <Tag className="w-3 h-3 text-slate-400" />
-                                                            {todo.tags.map((tg, i) => (
-                                                                <span key={i} className="text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded text-[10.5px]">
-                                                                    #{tg}
-                                                                </span>
-                                                            ))}
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            </td>
-
-                                            {/* Category */}
-                                            <td className="py-3 px-3.5 whitespace-nowrap">
-                                                <span className="px-2.5 py-1 rounded-md text-[11px] font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
-                                                    {todo.category || 'General'}
-                                                </span>
-                                            </td>
-
-                                            {/* Priority */}
-                                            <td className="py-3 px-3.5 text-center whitespace-nowrap">
-                                                <span className={`px-2 py-0.5 rounded-md text-[10.5px] font-extrabold uppercase border ${getPriorityBadge(todo.priority)}`}>
-                                                    {todo.priority}
-                                                </span>
-                                            </td>
-
-                                            {/* Due Date */}
-                                            <td className="py-3 px-3.5 whitespace-nowrap">
-                                                {todo.dueDate ? (
-                                                    <div
-                                                        className={`flex items-center gap-1 text-xs font-medium ${
-                                                            isOverdue
-                                                                ? 'text-rose-600 dark:text-rose-400 font-bold'
-                                                                : 'text-slate-600 dark:text-slate-300'
-                                                        }`}
-                                                    >
-                                                        <Calendar className="w-3.5 h-3.5 shrink-0" />
-                                                        <span>
-                                                            {dayjs(todo.dueDate).format('DD MMM, YYYY')}
-                                                            {isOverdue && ' (Overdue)'}
-                                                        </span>
-                                                    </div>
-                                                ) : (
-                                                    <span className="text-slate-400 text-xs">—</span>
-                                                )}
-                                            </td>
-
-                                            {/* Actions */}
-                                            <td className="py-3 px-3.5 text-center">
-                                                <div className="flex items-center justify-center gap-1.5">
-                                                    <button
-                                                        onClick={() => handleEdit(todo)}
-                                                        className="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
-                                                        title="Edit Task"
-                                                    >
-                                                        <Edit2 className="w-4 h-4" />
-                                                    </button>
-                                                    <button
-                                                        onClick={() => handleDelete(todo)}
-                                                        className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
-                                                        title="Delete Task"
-                                                    >
-                                                        <Trash2 className="w-4 h-4" />
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    );
-                                })
-                            )}
-                        </tbody>
-                    </table>
-                </div>
+            <div className="bg-surface rounded-xl shadow-md border border-border-subtle overflow-hidden relative">
+                <DataTable
+                    columns={columns}
+                    data={todos}
+                    theme={mode === 'dark' ? 'dark' : 'default'}
+                    pagination
+                    paginationPerPage={15}
+                    paginationRowsPerPageOptions={[10, 15, 25, 50]}
+                    highlightOnHover
+                    customStyles={customTableStyles}
+                    noDataComponent={
+                        <div className="py-16 text-center text-content bg-surface">
+                            <div className="w-14 h-14 mx-auto rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400 mb-3">
+                                <Sparkles className="w-7 h-7 text-emerald-500" />
+                            </div>
+                            <h3 className="text-base font-bold text-slate-800 dark:text-slate-200">No tasks found</h3>
+                            <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm mx-auto mt-1 mb-4">
+                                {searchQuery ? 'No task matched your search criteria.' : 'Keep yourself organized by adding your first action item or reminder.'}
+                            </p>
+                            <button
+                                onClick={() => {
+                                    setEditingTodo(null);
+                                    setIsModalOpen(true);
+                                }}
+                                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold transition cursor-pointer"
+                            >
+                                <Plus className="w-4 h-4" /> Add Task
+                            </button>
+                        </div>
+                    }
+                />
             </div>
 
             {/* ================= MODAL: ADD / EDIT TODO ================= */}

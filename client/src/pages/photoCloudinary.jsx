@@ -39,7 +39,6 @@ const urlToFile = (url, filename) => {
 const Photo = () => {
   const dispatch = useDispatch();
   const useralldetail = useSelector((state) => state.userexplist);
-  const defaultProfile = "https://res.cloudinary.com/dusxlxlvm/image/upload/v1699090690/just_yoljye.png";
   const { request } = useApi();
 
   const [webpImage, setWebpImage] = useState(null);
@@ -275,12 +274,20 @@ const Photo = () => {
           <div className="px-5 sm:px-8 pb-5 pt-0 flex flex-col sm:flex-row items-center sm:items-end justify-between gap-4 -mt-12 sm:-mt-14 relative z-20">
             {/* Avatar with Upload Trigger */}
             <div className="relative group">
-              <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full ring-4 ring-white dark:ring-slate-900 overflow-hidden shadow-xl bg-slate-100 dark:bg-slate-800">
-                <img 
-                  src={useralldetail?.profilepic || defaultProfile} 
-                  alt={useralldetail?.user?.name || "Profile Avatar"}
-                  className="w-full h-full object-cover"
-                />
+              <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full ring-4 ring-white dark:ring-slate-900 overflow-hidden shadow-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
+                {useralldetail?.profilepic ? (
+                  <img 
+                    src={useralldetail.profilepic} 
+                    alt={useralldetail?.user?.name || "Profile Avatar"}
+                    referrerPolicy="no-referrer"
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none';
+                    }}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <User className="w-12 h-12 sm:w-14 sm:h-14 text-slate-500 dark:text-slate-400" />
+                )}
               </div>
 
               {/* Photo Edit Bubble */}

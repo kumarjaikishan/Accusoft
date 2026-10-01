@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Wallet, ShieldCheck, Zap, ArrowLeft, CheckCircle, Sparkles, Moon, Sun } from 'lucide-react';
+import { BookOpen, PieChart, Sparkles, ArrowLeft, Moon, Sun } from 'lucide-react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
 import { toggleTheme } from '../../store/themeSlice';
@@ -21,14 +21,14 @@ const Login = () => {
 
     const benefits = [
         {
-            icon: <Zap className="w-4 h-4 text-amber-400" />,
-            title: "Instant Logging",
-            desc: "Smart receipt & multi-ledger analytics"
+            icon: <BookOpen className="w-4 h-4 text-cyan-400" />,
+            title: "Smart Multi-Ledgers",
+            desc: "Custom categories, budgets & transaction tracking"
         },
         {
-            icon: <ShieldCheck className="w-4 h-4 text-emerald-400" />,
-            title: "Bank-Grade Security",
-            desc: "Encrypted logs with strict data privacy"
+            icon: <PieChart className="w-4 h-4 text-emerald-400" />,
+            title: "Real-Time Analytics",
+            desc: "Instant monthly spending breakdown & health"
         },
         {
             icon: <Sparkles className="w-4 h-4 text-indigo-400" />,
@@ -80,7 +80,7 @@ const Login = () => {
                                 <img 
                                     src="/logo.webp" 
                                     alt="Accusoft" 
-                                    className="w-9 h-9 object-contain rounded-xl shadow-md group-hover:scale-105 transition-transform" 
+                                    className="w-9 h-9 object-contain logo-direct group-hover:scale-105 transition-transform" 
                                 />
                                 <span className="text-xl font-black tracking-tight">
                                     <span className="text-white">Accu</span>
@@ -127,7 +127,7 @@ const Login = () => {
                             <img 
                                 src="/logo.webp" 
                                 alt="Accusoft" 
-                                className="w-7 h-7 object-contain rounded-lg shadow-sm" 
+                                className="w-7 h-7 object-contain logo-direct" 
                             />
                             <span className="text-lg font-black tracking-tight">
                                 <span className="text-[#0B1B3D] dark:text-white">Accu</span>

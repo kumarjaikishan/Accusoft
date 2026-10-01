@@ -138,7 +138,7 @@ const Sidebar = () => {
                     <img
                         src="/logo.webp"
                         alt="Accusoft"
-                        className="w-8 h-8 object-contain shrink-0 rounded-lg"
+                        className="w-8 h-8 object-contain shrink-0 logo-direct"
                     />
                     <span className={`text-xl font-black tracking-tight whitespace-nowrap overflow-hidden transition-all duration-300 ${log.narrow ? "max-w-0 opacity-0" : "max-w-50 opacity-100"}`}>
                         <span className="text-[#0B1B3D] dark:text-white">Accu</span>

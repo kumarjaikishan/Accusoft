@@ -20,7 +20,7 @@ export const LandingNav = ({ theme, toggleTheme, isScrolled }) => {
           <img 
             src="/logo.webp" 
             alt="Accusoft" 
-            className="w-9 h-9 sm:w-10 sm:h-10 object-contain rounded-xl shadow-sm transition-transform group-hover:scale-105 shrink-0" 
+            className="w-9 h-9 sm:w-10 sm:h-10 object-contain logo-direct transition-transform group-hover:scale-105 shrink-0" 
           />
           <div className="flex flex-col">
             <span className="text-xl sm:text-2xl font-black tracking-tight leading-none">

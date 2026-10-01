@@ -53,7 +53,7 @@ export const LandingFooter = ({ theme, subtextClass }) => {
               <img 
                 src="/logo.webp" 
                 alt="Accusoft" 
-                className="w-7 h-7 object-contain rounded-lg shadow-sm" 
+                className="w-7 h-7 sm:w-8 sm:h-8 object-contain logo-direct" 
               />
               <span className="text-xl font-black tracking-tight">
                 <span className="text-[#0B1B3D] dark:text-white">Accu</span>

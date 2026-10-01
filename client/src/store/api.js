@@ -37,8 +37,15 @@ const userexplist = createSlice({
                 state.user.phone = action.payload.phone;
             }
         },
+        updateCookieConsentStatus(state, action) {
+            if (state.user) {
+                if (!state.user.cookieConsent) state.user.cookieConsent = {};
+                state.user.cookieConsent.status = action.payload;
+                state.user.cookieConsent.consentDate = new Date().toISOString();
+            }
+        },
     }
 });
 
-export const { userlogout, profilepicupdtae, profiledetailupdtae, setUserData } = userexplist.actions;
+export const { userlogout, profilepicupdtae, profiledetailupdtae, updateCookieConsentStatus, setUserData } = userexplist.actions;
 export default userexplist.reducer;

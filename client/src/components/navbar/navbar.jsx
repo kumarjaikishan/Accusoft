@@ -18,9 +18,6 @@ const Navbar = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  const defaultprofile =
-    "https://res.cloudinary.com/dusxlxlvm/image/upload/v1699090690/just_yoljye.png";
-
   const presets = [
     { name: "Classic Slate", color: "#1e293b" },
     { name: "Cool Gray / Charcoal", color: "#334155" },
@@ -130,16 +127,20 @@ const Navbar = () => {
                 </span>
               </div>
 
-              <div className="relative w-8 h-8 sm:w-9 sm:h-9 rounded-full overflow-hidden ring-2 ring-indigo-500/20 dark:ring-indigo-400/20 shrink-0">
-                <img
-                  src={
-                    useralldetail?.profilepic
-                      ? useralldetail.profilepic
-                      : defaultprofile
-                  }
-                  alt="Profile"
-                  className="w-full h-full object-cover"
-                />
+              <div className="relative w-8 h-8 sm:w-9 sm:h-9 rounded-full overflow-hidden ring-2 ring-indigo-500/20 dark:ring-indigo-400/20 shrink-0 bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
+                {useralldetail?.profilepic ? (
+                  <img
+                    src={useralldetail.profilepic}
+                    alt="Profile"
+                    referrerPolicy="no-referrer"
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none';
+                    }}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <User className="w-4 h-4 sm:w-5 sm:h-5 text-slate-600 dark:text-slate-300" />
+                )}
               </div>
 
               <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 hidden sm:block ${isProfileOpen ? 'rotate-180' : ''}`} />
@@ -153,12 +154,20 @@ const Navbar = () => {
                 {/* Account Header */}
                 <div className="p-3.5 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 ring-1 ring-slate-200 dark:ring-slate-700">
-                      <img
-                        src={useralldetail?.profilepic || defaultprofile}
-                        alt="Avatar"
-                        className="w-full h-full object-cover"
-                      />
+                    <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 ring-1 ring-slate-200 dark:ring-slate-700 bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
+                      {useralldetail?.profilepic ? (
+                        <img
+                          src={useralldetail.profilepic}
+                          alt="Avatar"
+                          referrerPolicy="no-referrer"
+                          onError={(e) => {
+                            e.currentTarget.style.display = 'none';
+                          }}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <User className="w-5 h-5 text-slate-600 dark:text-slate-300" />
+                      )}
                     </div>
                     <div className="min-w-0">
                       <p className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-100 truncate">

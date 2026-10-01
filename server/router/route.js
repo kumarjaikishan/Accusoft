@@ -21,16 +21,20 @@ router.route('/jwtcheck').get(authmiddlewre, (req, res) => {
   });
 });
 
-router.route('/signup').post(login.signup, emailauth);
+router.route('/signup').post(login.signup);
 router.route('/login').post(emailauth, login.login);
+router.route('/auth/google').post(login.googleAuth);
+router.route('/verify-otp').post(login.verifyEmailOtp);
+router.route('/reset-password-otp').post(login.resetPasswordWithOtp);
+router.route('/resend-otp').post(login.resendOtp);
 router.route('/verify').get(login.verify);
-router.route('/setpassword').post(login.setpassword);
 router.route('/refresh').post(login.refreshToken);
 router.route('/logout').post(login.logout);
 router.route('/passreset').get(authmiddlewre, authorizationMiddleware(['user', 'admin']), login.passreset);
 router.route('/checkmail').post(login.checkmail);
 router.route('/photo').post(authmiddlewre, upload.single('image'), login.photo);
 router.route('/updateuserdetail').post(authmiddlewre, login.updateuserdetail);
+router.route('/cookieconsent').post(authmiddlewre, login.updateCookieConsent);
 
 // NOTE: /test route was a one-time data migration endpoint (string dates → Date objects).
 // Migration is complete — this route has been removed to prevent unintended bulk DB writes.

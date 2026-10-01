@@ -21,18 +21,23 @@ const Privacy = () => {
     },
     {
       icon: <ShieldCheck className="w-5 h-5 text-purple-500" />,
-      title: "4. No Data Selling or Third-Party Sharing",
+      title: "4. Cookies & Local Session Storage",
+      text: "Accusoft uses strictly essential technical cookies and browser local storage to maintain authenticated user sessions (JWT), secure token refresh, and user interface preferences (such as dark mode and accent themes). We do not deploy third-party advertising cookies or cross-site tracking pixels."
+    },
+    {
+      icon: <ShieldCheck className="w-5 h-5 text-cyan-500" />,
+      title: "5. No Data Selling or Third-Party Sharing",
       text: "We respect user privacy unconditionally: Accusoft will NEVER sell, rent, or trade your personal or financial data to third-party brokers or advertisers. Data is only processed by essential cloud infrastructure providers solely for hosting."
     },
     {
       icon: <RefreshCw className="w-5 h-5 text-amber-500" />,
-      title: "5. Data Retention & User Rights",
-      text: "Under applicable data protection regulations (including GDPR & DPDP compliance principles), you have the absolute right to view, rectify, export, or permanently purge your expense logs and user profile from our database at any time upon request."
+      title: "6. Data Retention & User Rights (DPDP & GDPR)",
+      text: "Under applicable data protection regulations including India's DPDP Act, 2023 and GDPR principles, you have the right to view, rectify, export, or permanently purge your expense logs and user profile from our database at any time upon request."
     },
     {
       icon: <Mail className="w-5 h-5 text-rose-500" />,
-      title: "6. Data Protection Contact",
-      text: "For privacy inquiries, data export requests, or erasure notices, please contact our data privacy desk directly at: privacy@accusoft.app"
+      title: "7. Grievance Officer & Contact",
+      text: "In compliance with the Digital Personal Data Protection Act, 2023, for any privacy concerns, consent withdrawal, or grievance redressal, you may reach out to our designated Data Protection / Grievance Desk directly at: privacy@accusoft.app"
     }
   ];
 

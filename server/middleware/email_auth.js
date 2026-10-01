@@ -1,61 +1,55 @@
-const nodemailer = require('nodemailer');
+const sendemail = require('../utils/sendemail');
 const user = require('../modals/login_schema');
-const { generateVerificationEmailHtml } = require('../utils/emailTemplates');
+const { generateVerificationOtpEmailHtml } = require('../utils/emailTemplates');
 
-// Create a transporter using Gmail SMTP
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: 'kumar.jaikishan0@gmail.com',
-        pass: process.env.gmail_password
-    }
-});
+const generateOtpCode = () => {
+    return Math.floor(100000 + Math.random() * 900000).toString();
+};
 
 const emailmiddleware = async (req, res, next) => {
     try {
-        const query = await user.findOne({ email: req.body.email });
+        const query = await user.findOne({ email: req.body.email.toLowerCase().trim() });
         if (!query) {
-            return next({ statusCode: 400, message: "User not found" });
+            return next({ status: 400, message: "User not found" });
         }
         if (query.isverified) {
-            next();
-        } else {
-            const appUrl = process.env.frontEndUrl || 'https://accusoft.battlefiesta.in';
-            const verificationUrl = `${appUrl}/api/verify?id=${query._id}`;
-
-            const mailOptions = {
-                from: 'Accusoft <kumar.jaikishan0@gmail.com>',
-                to: query.email,
-                subject: 'Verify your email address • Accusoft',
-                html: generateVerificationEmailHtml({
-                    name: query.name,
-                    verificationUrl,
-                    appUrl
-                })
-            };
-
-            // Send the email
-            transporter.sendMail(mailOptions, (error, info) => {
-                if (error) {
-                    console.error('Error sending verification email:', error);
-                    return res.status(500).json({
-                        message: "Failed to send verification email",
-                        error: error.message
-                    });
-                } else {
-                    res.status(201).json({
-                        message: "Email sent, check your inbox",
-                    });
-                    console.log('Verification email sent:', info.response);
-                }
-            });
+            return next();
         }
+
+        // Generate 6-Digit OTP with 10 minute expiry
+        const otpCode = generateOtpCode();
+        const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+
+        await user.findByIdAndUpdate(query._id, {
+            otp: {
+                code: otpCode,
+                expiresAt,
+                otpType: 'verify_email'
+            }
+        });
+
+        const appUrl = process.env.frontEndUrl || 'https://accusoft.battlefiesta.in';
+        const msg = generateVerificationOtpEmailHtml({
+            name: query.name,
+            otp: otpCode,
+            appUrl
+        });
+
+        await sendemail(query.email, 'Your Verification Code • Accusoft', msg);
+
+        return res.status(200).json({
+            message: "OTP sent to your email",
+            requiresVerification: true,
+            email: query.email
+        });
     } catch (error) {
-        res.status(500).json({
-            message: "Something went wrong",
+        console.error('[emailmiddleware error]:', error);
+        return res.status(500).json({
+            message: "Failed to send verification OTP",
             error: error.message || error
         });
     }
 };
 
 module.exports = emailmiddleware;
+

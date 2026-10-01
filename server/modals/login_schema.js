@@ -20,17 +20,33 @@ const log = new mongo.Schema({
     },
     phone: {
         type: Number,
-        required: true,
-        unique: true
+        required: false,
+        default: null
     },
     password: {
         type: String,
-        required: true
+        required: false,
+        default: ""
+    },
+    googleId: {
+        type: String,
+        default: "",
+        index: { sparse: true }
+    },
+    authProvider: {
+        type: String,
+        enum: ['local', 'google'],
+        default: 'local'
     },
     temptoken: {
         type: String,
         default: "",
         index: { sparse: true }  // fast lookup for password-reset flows
+    },
+    otp: {
+        code: { type: String, default: "" },
+        expiresAt: { type: Date, default: null },
+        otpType: { type: String, enum: ['verify_email', 'reset_password', 'none'], default: 'none' }
     },
     imgsrc: {
         type: String,
@@ -49,28 +65,33 @@ const log = new mongo.Schema({
         type: Boolean,
         default: false
     },
+    cookieConsent: {
+        status: {
+            type: String,
+            enum: ['accepted', 'essential_only', 'none'],
+            default: 'none'
+        },
+        consentDate: {
+            type: Date,
+            default: null
+        }
+    },
     lastActivity: {
         type: Date,
         default: null
     }
 }, { timestamps: true })
 
-// Hash password before saving (only when it has been modified)
-log.pre("save", async function (next) {
+// Hash password before saving in Mongoose 9 (only if password exists and modified)
+log.pre("save", async function () {
     const user = this;
-    if (!user.isModified("password")) {
-        return next();
+    if (!user.password || !user.isModified("password")) {
+        return;
     }
-    try {
-        const saltRound = await bcrypt.genSalt(10);
-        const hash_password = await bcrypt.hash(user.password, saltRound);
-        user.password = hash_password;
-        next();
-    } catch (error) {
-        console.error('[login_schema pre-save] Password hash failed:', error.message);
-        next(error);
-    }
-})
+    const saltRound = await bcrypt.genSalt(10);
+    const hash_password = await bcrypt.hash(user.password, saltRound);
+    user.password = hash_password;
+});
 
 log.methods.generateToken = async function () {
     try {

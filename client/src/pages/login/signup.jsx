@@ -1,14 +1,20 @@
-import React, { useState } from 'react';
-import { Mail, Eye, EyeOff, Key, Phone, User, UserPlus } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Mail, Eye, EyeOff, Key, Phone, User, UserPlus, ShieldCheck, ArrowLeft, CheckCircle2 } from 'lucide-react';
+import { useNavigate } from "react-router-dom";
 import { useDispatch } from 'react-redux';
+import { setlogin } from '../../store/login';
+import { useUserApi } from '../../store/apicalls';
 import { toast } from '../../utils/toast';
-import { confirmDialog } from '../../utils/confirm';
 import { useForm } from '../../utils/useForm';
 import { useApi } from '../../utils/useApi';
 import LoadingButton from '../../components/LoadingButton';
+import OtpInput from '../../components/common/OtpInput';
+import GoogleAuthButton from '../../components/GoogleAuthButton';
 
 const Signup = ({ setlog }) => {
+    const navigate = useNavigate();
     const dispatch = useDispatch();
+    const { userdatacall } = useUserApi();
 
     const init = {
         name: "",
@@ -21,6 +27,35 @@ const Signup = ({ setlog }) => {
     const { fields, handlechange, reset } = useForm(init);
     const { request, loading } = useApi();
     const [showPassword, setShowPassword] = useState(false);
+    const [btnclick, setbtnclick] = useState(false);
+
+    // Modes: 'form' | 'verify_otp'
+    const [isOtpMode, setIsOtpMode] = useState(false);
+    const [otpCode, setOtpCode] = useState('');
+    const [pendingEmail, setPendingEmail] = useState('');
+    const [resendTimer, setResendTimer] = useState(60);
+    const [canResend, setCanResend] = useState(false);
+
+    useEffect(() => {
+        let interval;
+        if (isOtpMode && resendTimer > 0) {
+            interval = setInterval(() => {
+                setResendTimer((prev) => {
+                    if (prev <= 1) {
+                        setCanResend(true);
+                        return 0;
+                    }
+                    return prev - 1;
+                });
+            }, 1000);
+        }
+        return () => clearInterval(interval);
+    }, [isOtpMode, resendTimer]);
+
+    const startTimer = () => {
+        setResendTimer(60);
+        setCanResend(false);
+    };
 
     const submit = async (e) => {
         e.preventDefault();
@@ -37,30 +72,132 @@ const Signup = ({ setlog }) => {
         }
 
         try {
+            setbtnclick(true);
             const res = await request({
                 url: "signup",
                 method: "POST",
                 body: { name, email, phone, password }
             });
+            setbtnclick(false);
 
             if (res) {
-                reset();
-                await confirmDialog({
-                    title: 'Account Created Successfully!',
-                    text: 'Please check your email to verify your account before logging in. (Check Spam/Junk folder if not in inbox).',
-                    icon: 'success',
-                    button: { text: 'Proceed to Login' },
-                });
-                setlog(true);
+                setPendingEmail(email);
+                setIsOtpMode(true);
+                startTimer();
+                toast.success("Account created! 6-digit OTP sent to your email.", { autoClose: 3500 });
             }
         } catch (error) {
+            setbtnclick(false);
             console.error(error);
+        }
+    };
+
+    const handleVerifyOtp = async (e) => {
+        e.preventDefault();
+        if (otpCode.length !== 6) {
+            return toast.warn("Please enter complete 6-digit OTP code.", { autoClose: 1800 });
+        }
+
+        try {
+            setbtnclick(true);
+            const res = await request({
+                url: 'verify-otp',
+                method: 'POST',
+                body: { email: pendingEmail, otp: otpCode }
+            });
+            setbtnclick(false);
+
+            toast.success(res?.message || "Email verified successfully!", { autoClose: 1800 });
+            if (res?.token) {
+                localStorage.setItem("token", res.token);
+                userdatacall();
+                navigate('/dashboard');
+                dispatch(setlogin(true));
+            } else {
+                setlog(true);
+            }
+        } catch (err) {
+            setbtnclick(false);
+        }
+    };
+
+    const handleResend = async () => {
+        if (!canResend) return;
+        try {
+            setbtnclick(true);
+            const res = await request({
+                url: 'resend-otp',
+                method: 'POST',
+                body: { email: pendingEmail, type: 'verify_email' }
+            });
+            setbtnclick(false);
+            startTimer();
+            toast.success(res?.message || "New OTP code sent to your email!", { autoClose: 2500 });
+        } catch (err) {
+            setbtnclick(false);
         }
     };
 
     const isPasswordMatch = fields.password && fields.cpassword && fields.password === fields.cpassword;
     const isPhoneValid = fields.phone && fields.phone.length === 10;
 
+    // MODE: Verify Registration OTP
+    if (isOtpMode) {
+        return (
+            <form onSubmit={handleVerifyOtp} className="space-y-4 pt-1">
+                <div className="text-center space-y-1">
+                    <div className="w-10 h-10 rounded-2xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-100 dark:border-indigo-800/60 mx-auto flex items-center justify-center">
+                        <ShieldCheck className="w-5 h-5" />
+                    </div>
+                    <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white">
+                        Enter Verification Code
+                    </h3>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                        We sent a 6-digit code to <br />
+                        <strong className="text-slate-700 dark:text-slate-200">{pendingEmail}</strong>
+                    </p>
+                </div>
+
+                <div className="py-1">
+                    <OtpInput value={otpCode} onChange={setOtpCode} length={6} autoFocus />
+                </div>
+
+                <div className="flex items-center justify-between text-xs pt-1">
+                    <button
+                        type="button"
+                        onClick={() => setIsOtpMode(false)}
+                        className="inline-flex items-center gap-1 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
+                    >
+                        <ArrowLeft className="w-3.5 h-3.5" /> Back
+                    </button>
+
+                    <button
+                        type="button"
+                        disabled={!canResend}
+                        onClick={handleResend}
+                        className={`font-semibold ${
+                            canResend
+                                ? "text-indigo-600 dark:text-indigo-400 hover:underline cursor-pointer"
+                                : "text-slate-400 dark:text-slate-600 cursor-not-allowed"
+                        }`}
+                    >
+                        {canResend ? "Resend Code" : `Resend in ${resendTimer}s`}
+                    </button>
+                </div>
+
+                <LoadingButton
+                    type="submit"
+                    loading={loading || btnclick}
+                    icon={CheckCircle2}
+                    className="w-full py-2.5 px-4 rounded-xl text-xs sm:text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 active:scale-[0.99] shadow-md shadow-indigo-500/25 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                >
+                    Verify &amp; Activate Account
+                </LoadingButton>
+            </form>
+        );
+    }
+
+    // DEFAULT MODE: Sign Up Form
     return (
         <form onSubmit={submit} className="space-y-2.5 pt-0.5">
             {/* Full Name */}
@@ -202,15 +339,27 @@ const Signup = ({ setlog }) => {
             </div>
 
             {/* Submit Button */}
-            <div className="pt-1.5">
+            <div className="pt-1.5 space-y-2.5">
                 <LoadingButton
                     type="submit"
-                    loading={loading}
+                    loading={loading || btnclick}
                     icon={UserPlus}
                     className="w-full py-2.5 px-4 rounded-xl text-xs sm:text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 active:scale-[0.99] shadow-md shadow-indigo-500/25 transition-all flex items-center justify-center gap-2 cursor-pointer"
                 >
                     Create Free Account
                 </LoadingButton>
+
+                {/* Divider */}
+                <div className="relative flex items-center justify-center my-1.5">
+                    <div className="border-t border-slate-200 dark:border-slate-700/80 w-full" />
+                    <span className="bg-white dark:bg-slate-900 px-2.5 text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+                        or
+                    </span>
+                    <div className="border-t border-slate-200 dark:border-slate-700/80 w-full" />
+                </div>
+
+                {/* Google Sign Up */}
+                <GoogleAuthButton text="Sign up with Google" />
             </div>
         </form>
     );

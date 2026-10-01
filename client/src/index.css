@@ -399,3 +399,17 @@ body {
     --theme-border: #e2e8f0 !important;
   }
 }
+
+/* Seamless Direct Logo without background box */
+.logo-direct {
+  background-color: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+  mix-blend-mode: multiply;
+}
+
+.dark .logo-direct {
+  mix-blend-mode: normal;
+  filter: drop-shadow(0 2px 8px rgba(0, 112, 243, 0.3));
+}
+

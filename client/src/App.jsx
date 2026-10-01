@@ -6,6 +6,7 @@ import { setnarrow } from './store/login';
 import ProtectedRoutes from './utils/protectedRoute';
 import AdminRoute from './utils/adminRoute';
 import { useUserApi } from './store/apicalls';
+import PrivacyBanner from './components/PrivacyBanner';
 
 // 🚀 CORE LAZY LOADED ROUTE CHUNKS (Optimized so only visited pages load)
 const LandingLayout = lazy(() => import('./pages/landingPage/Landing'));
@@ -169,6 +170,7 @@ function App() {
           <Route path="/about" element={<About />} />
         </Route>
       </Routes>
+      <PrivacyBanner />
     </Suspense>
   );
 };

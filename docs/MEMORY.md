@@ -11,7 +11,7 @@
 
 | Module | Status | Location | Notes |
 | :--- | :--- | :--- | :--- |
-| **Authentication** | Active | `server/controller/login_contoroller.js`, `client/src/pages/login/` | JWT Bearer token + Refresh tokens (bounded array with max 5 sessions) |
+| **Authentication & OAuth** | Active | `server/controller/login_contoroller.js`, `client/src/pages/login/`, `client/src/components/GoogleAuthButton.jsx` | 6-Digit Email OTP verification, Google Identity Services (GSI) 1-click popup OAuth ID Token flow, JWT Bearer tokens + bounded refresh token rotation. |
 | **Theme System** | Active | `client/src/store/themeSlice.js`, `client/src/index.css` | Light/Dark + dynamic `--maincolor` |
 | **Expenses & Vouchers** | Active | `client/src/pages/Expense/`, `client/src/pages/voucher/` | Expense CRUD + categorization + MongoDB `$facet` aggregation |
 | **Financial Ledger** | Active | `client/src/pages/dataAnalysis/` | Ledger breakdown, dynamic year selection, charts, drill-down |
@@ -24,7 +24,8 @@
 | **App Starting Loader** | Active | `client/src/preloader.jsx`, `client/src/index.css` | 💫 Ultra-lightweight pure Tailwind & CSS 3D logo animation featuring floating levitation, light shimmer sweep, ascending financial growth micro-bars, sonar aura ripples, zero-JS fallback, and light/dark mode support. |
 | **Animation Engine** | Active | `client/src/index.css`, Tailwind CSS v4 | ⚡ Pure Tailwind CSS & CSS keyframe animations (zero runtime JS overhead, `framer-motion` fully uninstalled). |
 | **Server Benchmark Suite** | Active | `client/src/pages/serverTest/` | ⏱️ Concurrency & stress testing suite comparing Event Loop Blocking (`/admin/slow`) vs Worker Threads (`/admin/slowworker`) with live API ping & latency metrics. |
-| **Branded Email System** | Active | `server/utils/emailTemplates.js`, `server/middleware/email_auth.js` | ✉️ Modern, high-conversion email verification, password reset, and verification landing page matching Accusoft's brand theme (`#0B1B3D`, `#0070F3`). |
+| **Branded Email & OTP System** | Active | `server/utils/emailTemplates.js`, `server/middleware/email_auth.js` | ✉️ Modern, high-conversion 6-digit OTP email verification and password reset matching Accusoft's brand theme (`#0B1B3D`, `#0070F3`). |
+| **DPDP & Privacy Consent** | Active | `client/src/components/PrivacyBanner.jsx`, `client/src/pages/others/Policy.jsx`, `server/modals/login_schema.js` | 🍪 Indian DPDP Act 2023 & GDPR compliant privacy notice banner with cross-device MongoDB profile sync, grievance officer contact, and transparent session storage declaration. |
 
 ---
 

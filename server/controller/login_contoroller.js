@@ -8,7 +8,10 @@ const jwt = require('jsonwebtoken');
 const removePhotoBySecureUrl = require('../utils/cloudinaryremove');
 const asyncHandler = require('../utils/asyncHandler');
 const { ApiError } = require('../utils/apierror');
-const { generateResetPasswordEmailHtml, generateVerificationSuccessHtml } = require('../utils/emailTemplates');
+const { 
+  generateVerificationOtpEmailHtml, 
+  generateResetPasswordOtpEmailHtml 
+} = require('../utils/emailTemplates');
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -114,59 +117,254 @@ const random = async (len) => {
   return result;
 };
 
+const generateOtpCode = () => {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+};
+
 const checkmail = async (req, res, next) => {
-  console.log(req.body);
-  if (req.body.email == "") {
-    return next({ status: 400, message: 'Please send Email' });
+  const email = req.body.email ? req.body.email.toLowerCase().trim() : '';
+  if (!email) {
+    return next({ status: 400, message: 'Please enter your email address' });
   }
   try {
-    const query = await user.findOne({ email: req.body.email });
+    const query = await user.findOne({ email });
     if (!query) {
-      return next({ status: 400, message: 'Email not Found' });
+      return next({ status: 400, message: 'No account found with this email' });
     }
-    const temptoken = await random(20);
-    await user.findByIdAndUpdate(query._id, { temptoken: temptoken });
+
+    const otpCode = generateOtpCode();
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+
+    await user.findByIdAndUpdate(query._id, {
+      otp: {
+        code: otpCode,
+        expiresAt,
+        otpType: 'reset_password'
+      }
+    });
+
     const appUrl = process.env.frontEndUrl || 'https://accusoft.battlefiesta.in';
-    const resetUrl = `${appUrl}/resetpassword/${temptoken}`;
-    const msg = generateResetPasswordEmailHtml({
+    const msg = generateResetPasswordOtpEmailHtml({
       name: query.name,
-      resetUrl,
+      otp: otpCode,
       appUrl
     });
-    await sendemail(query.email, 'Reset Your Password • Accusoft', msg);
+    await sendemail(query.email, 'Password Reset Code • Accusoft', msg);
 
     return res.status(200).json({
-      message: 'Reset Link sent to Email'
-    })
+      message: 'Reset OTP sent to your email',
+      email: query.email
+    });
   } catch (error) {
-    console.log(error);
-    return next({ status: 500, message: error });
+    console.error('[checkmail error]:', error);
+    return next({ status: 500, message: error.message || error });
   }
-}
+};
 
-const setpassword = async (req, res, next) => {
-  const token = req.query.token;
-  const password = req.body.password;
-  //  console.log(token,password);
+const resetPasswordWithOtp = async (req, res, next) => {
+  const { email, otp, newPassword } = req.body;
+  if (!email || !otp || !newPassword) {
+    return next({ status: 400, message: 'Email, OTP, and new password are required' });
+  }
   try {
-    const query = await user.findOne({ temptoken: token });
+    const foundUser = await user.findOne({ email: email.toLowerCase().trim() });
+    if (!foundUser) {
+      return next({ status: 400, message: 'User not found' });
+    }
 
-    if (!query) {
-      return next({ status: 400, message: 'This link has been Expired' });
+    if (!foundUser.otp || !foundUser.otp.code || foundUser.otp.otpType !== 'reset_password') {
+      return next({ status: 400, message: 'No active password reset OTP requested' });
+    }
+
+    if (new Date() > new Date(foundUser.otp.expiresAt)) {
+      return next({ status: 400, message: 'OTP has expired. Please request a new one.' });
+    }
+
+    if (foundUser.otp.code !== String(otp).trim()) {
+      return next({ status: 400, message: 'Invalid 6-digit OTP code' });
     }
 
     const saltRound = await bcrypt.genSalt(10);
-    const hash_password = await bcrypt.hash(password, saltRound);
-    // console.log(hash_password);
-    await user.updateOne({ _id: query._id }, { password: hash_password, temptoken: '' })
+    const hash_password = await bcrypt.hash(newPassword, saltRound);
+
+    await user.updateOne(
+      { _id: foundUser._id },
+      { 
+        password: hash_password, 
+        temptoken: '', 
+        otp: { code: '', expiresAt: null, otpType: 'none' } 
+      }
+    );
+
     return res.status(200).json({
-      message: 'Password Updated Successfully'
-    })
+      message: 'Password reset successfully! You can now sign in.'
+    });
   } catch (error) {
-    console.log(error);
-    return next({ status: 500, message: error });
+    console.error('[resetPasswordWithOtp error]:', error);
+    return next({ status: 500, message: error.message || error });
   }
-}
+};
+
+const verifyEmailOtp = async (req, res, next) => {
+  const { email, otp } = req.body;
+  if (!email || !otp) {
+    return next({ status: 400, message: 'Email and OTP are required' });
+  }
+  try {
+    const foundUser = await user.findOne({ email: email.toLowerCase().trim() });
+    if (!foundUser) {
+      return next({ status: 400, message: 'User not found' });
+    }
+
+    if (!foundUser.otp || !foundUser.otp.code || foundUser.otp.otpType !== 'verify_email') {
+      return next({ status: 400, message: 'No active email verification OTP found' });
+    }
+
+    if (new Date() > new Date(foundUser.otp.expiresAt)) {
+      return next({ status: 400, message: 'OTP has expired. Please click resend.' });
+    }
+
+    if (foundUser.otp.code !== String(otp).trim()) {
+      return next({ status: 400, message: 'Invalid 6-digit verification code' });
+    }
+
+    await user.updateOne(
+      { _id: foundUser._id },
+      { 
+        isverified: true, 
+        otp: { code: '', expiresAt: null, otpType: 'none' } 
+      }
+    );
+
+    const accessToken = generateAccessToken(foundUser);
+    const refreshToken = await generateRefreshToken(foundUser);
+
+    return res
+      .status(200)
+      .cookie('refreshToken', refreshToken, options)
+      .json({
+        message: "Email verified successfully!",
+        token: accessToken,
+        userId: foundUser._id.toString(),
+        isadmin: foundUser.isadmin,
+        name: foundUser.name
+      });
+  } catch (error) {
+    console.error('[verifyEmailOtp error]:', error);
+    return next({ status: 500, message: error.message || error });
+  }
+};
+
+const resendOtp = async (req, res, next) => {
+  const { email, type = 'verify_email' } = req.body;
+  if (!email) {
+    return next({ status: 400, message: 'Email is required' });
+  }
+  try {
+    const foundUser = await user.findOne({ email: email.toLowerCase().trim() });
+    if (!foundUser) {
+      return next({ status: 400, message: 'User not found' });
+    }
+
+    const otpCode = generateOtpCode();
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+
+    await user.findByIdAndUpdate(foundUser._id, {
+      otp: {
+        code: otpCode,
+        expiresAt,
+        otpType: type
+      }
+    });
+
+    const appUrl = process.env.frontEndUrl || 'https://accusoft.battlefiesta.in';
+    const msg = type === 'reset_password'
+      ? generateResetPasswordOtpEmailHtml({ name: foundUser.name, otp: otpCode, appUrl })
+      : generateVerificationOtpEmailHtml({ name: foundUser.name, otp: otpCode, appUrl });
+
+    const subject = type === 'reset_password' ? 'Password Reset Code • Accusoft' : 'Your Verification Code • Accusoft';
+    await sendemail(foundUser.email, subject, msg);
+
+    return res.status(200).json({
+      message: 'New 6-digit OTP code sent to your email',
+      email: foundUser.email
+    });
+  } catch (error) {
+    console.error('[resendOtp error]:', error);
+    return next({ status: 500, message: error.message || error });
+  }
+};
+
+const googleAuth = asyncHandler(async (req, res) => {
+  const { credential } = req.body;
+  if (!credential) {
+    throw new ApiError(400, "Google ID Token credential is required");
+  }
+
+  // Decode the cryptographically signed Google JWT payload
+  let payload;
+  try {
+    payload = jwt.decode(credential);
+  } catch (err) {
+    throw new ApiError(400, "Invalid Google ID Token format");
+  }
+
+  if (!payload || !payload.email) {
+    throw new ApiError(400, "Unable to extract email from Google credential");
+  }
+
+  const email = payload.email.toLowerCase().trim();
+  const name = payload.name || payload.given_name || email.split("@")[0];
+  const picture = payload.picture || "";
+  const googleId = payload.sub || "";
+
+  // Check if user already exists
+  let existingUser = await user.findOne({ email });
+
+  if (!existingUser) {
+    // 1. Create new user record for first-time Google sign up
+    const newUser = new user({
+      name,
+      email,
+      imgsrc: picture,
+      googleId,
+      authProvider: 'google',
+      isverified: true
+    });
+    existingUser = await newUser.save();
+
+    // 2. Provision default initial ledgers
+    const ledger1 = new ledmodel({ userid: existingUser._id.toString(), ledger: "general" });
+    const ledger2 = new ledmodel({ userid: existingUser._id.toString(), ledger: "other" });
+    await Promise.all([ledger1.save(), ledger2.save()]);
+  } else {
+    // Update avatar or link googleId if not linked
+    const updates = {};
+    if (!existingUser.isverified) updates.isverified = true;
+    if (!existingUser.googleId) updates.googleId = googleId;
+    if (!existingUser.imgsrc && picture) updates.imgsrc = picture;
+
+    if (Object.keys(updates).length > 0) {
+      existingUser = await user.findByIdAndUpdate(existingUser._id, updates, { new: true });
+    }
+  }
+
+  // Issue Access & Refresh Tokens
+  const accessToken = generateAccessToken(existingUser);
+  const refreshToken = await generateRefreshToken(existingUser);
+
+  return res
+    .status(200)
+    .cookie("refreshToken", refreshToken, options)
+    .json({
+      message: "Google sign-in successful!",
+      token: accessToken,
+      userId: existingUser._id.toString(),
+      isadmin: existingUser.isadmin,
+      name: existingUser.name,
+      userType: existingUser.userType
+    });
+});
 
 const passreset = async (req, res, next) => {
 
@@ -317,25 +515,58 @@ const logout = async (req, res) => {
 };
 
 const signup = asyncHandler(async (req, res, next) => {
-  // console.log(req.body);
   const { name, email, phone, password } = req.body;
   if (!name || !email || !phone || !password) {
-    return next({ status: 400, message: "all fields are required" });
+    throw new ApiError(400, "All fields are required");
   }
-  const checkemail = await user.findOne({ email });
+
+  const cleanEmail = email.toLowerCase().trim();
+  const checkemail = await user.findOne({ email: cleanEmail });
   if (checkemail) {
-    return next({ status: 400, message: "Email Already Exists" });
+    throw new ApiError(400, "Email already exists. Please sign in instead.");
   }
-  const query = new user({ name, email, phone, password });
+
+  // Generate 6-Digit OTP with 10 minute expiry
+  const otpCode = generateOtpCode();
+  const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+
+  const query = new user({ 
+    name: name.trim(), 
+    email: cleanEmail, 
+    phone, 
+    password,
+    isverified: false,
+    otp: {
+      code: otpCode,
+      expiresAt,
+      otpType: 'verify_email'
+    }
+  });
+
   const result = await query.save();
   if (result) {
+    // Create initial default ledgers
     const ledger1 = new ledmodel({ userid: result._id.toString(), ledger: "general" });
     const ledger2 = new ledmodel({ userid: result._id.toString(), ledger: "other" });
-    await ledger1.save();
-    await ledger2.save();
-    next();
+    await Promise.all([ledger1.save(), ledger2.save()]);
+
+    // Send Verification Email with 6-Digit OTP
+    const appUrl = process.env.frontEndUrl || 'https://accusoft.battlefiesta.in';
+    const msg = generateVerificationOtpEmailHtml({
+      name: result.name,
+      otp: otpCode,
+      appUrl
+    });
+
+    await sendemail(result.email, 'Your Verification Code • Accusoft', msg);
+
+    return res.status(201).json({
+      message: "Account created! Verification OTP sent to your email",
+      email: result.email,
+      requiresVerification: true
+    });
   }
-})
+});
 
 const updateuserdetail = asyncHandler(async (req, res, next) => {
   // console.log(req.user);
@@ -352,6 +583,25 @@ const updateuserdetail = asyncHandler(async (req, res, next) => {
   }
 
 })
+
+const updateCookieConsent = asyncHandler(async (req, res) => {
+  const { status } = req.body;
+  if (!status || !['accepted', 'essential_only'].includes(status)) {
+    throw new ApiError(400, 'Invalid cookie consent status');
+  }
+
+  await user.findByIdAndUpdate(req.userid, {
+    cookieConsent: {
+      status,
+      consentDate: new Date()
+    }
+  });
+
+  return res.status(200).json({
+    message: 'Cookie consent recorded successfully',
+    status
+  });
+});
 
 const verify = async (req, res) => {
   try {
@@ -376,4 +626,19 @@ const verify = async (req, res) => {
   }
 };
 
-module.exports = { signup, passreset, setpassword, refreshToken, logout, checkmail, photo, login, updateuserdetail, verify };
+module.exports = { 
+  signup, 
+  passreset, 
+  resetPasswordWithOtp, 
+  verifyEmailOtp, 
+  resendOtp, 
+  googleAuth,
+  refreshToken, 
+  logout, 
+  checkmail, 
+  photo, 
+  login, 
+  updateuserdetail, 
+  updateCookieConsent, 
+  verify 
+};

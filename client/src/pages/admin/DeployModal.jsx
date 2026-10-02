@@ -46,6 +46,15 @@ const DEPLOY_PROJECTS = [
     color: "emerald"
   },
   {
+    key: "webnex",
+    name: "Webnex",
+    desc: "Web Application & Services",
+    path: "/var/www/webnex",
+    script: "webnex.sh",
+    icon: Globe,
+    color: "cyan"
+  },
+  {
     key: "goodnature_ems",
     name: "Goodnature EMS",
     desc: "Employee Attendance & Payroll",

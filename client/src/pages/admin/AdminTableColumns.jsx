@@ -62,6 +62,14 @@ const getDesktopColumns = ({ setForm, setModal, deleteUser }) => [
         {row.totalExpenses || 0}
       </span>
     ),
+    footer: ({ data }) => {
+      const total = (data || []).reduce((sum, u) => sum + (u.totalExpenses || 0), 0);
+      return (
+        <span className="px-2 py-0.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 text-xs font-black font-mono border border-emerald-200/50 dark:border-emerald-800/50">
+          {total.toLocaleString()}
+        </span>
+      );
+    },
   },
   {
     name: "Last Active",
@@ -180,6 +188,14 @@ const getMobileColumns = ({ setForm, setModal, deleteUser }) => [
         {row.totalExpenses || 0}
       </span>
     ),
+    footer: ({ data }) => {
+      const total = (data || []).reduce((sum, u) => sum + (u.totalExpenses || 0), 0);
+      return (
+        <span className="text-[10px] font-black text-emerald-600 dark:text-emerald-400 font-mono">
+          {total.toLocaleString()}
+        </span>
+      );
+    },
   },
   {
     name: "Act",

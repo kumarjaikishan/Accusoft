@@ -1,7 +1,5 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { 
-  Users, 
-  Receipt, 
   Search, 
   RefreshCw,
   Rocket
@@ -46,20 +44,6 @@ const AdminPanel = () => {
             console.error(e);
         }
     };
-
-    const derivedData = useMemo(() => {
-        if (!data?.users) {
-            return { totalUsers: 0, totalRecords: 0 };
-        }
-
-        const totalUsers = data.users.length;
-        const totalRecords = data.users.reduce(
-            (sum, user) => sum + (user.totalExpenses || 0),
-            0
-        );
-
-        return { totalUsers, totalRecords };
-    }, [data]);
 
     /* ---------------- DELETE ---------------- */
     const deleteUser = async (id) => {
@@ -164,46 +148,7 @@ const AdminPanel = () => {
         <div
             className="min-h-screen bg-[#f8fafc] dark:bg-[#0b1120] p-2.5 sm:p-5 space-y-3 transition-colors duration-300 font-sans text-slate-700 dark:text-slate-200 animate-in fade-in"
         >
-            {/* ---------------- 1. STATS OVERVIEW (2 CARDS IN 1 ROW ON ALL SCREENS) ---------------- */}
-            <div className="grid grid-cols-2 gap-2.5 sm:gap-4">
-                {/* Total Users */}
-                <div className="relative overflow-hidden rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 p-3 sm:p-4 shadow-sm backdrop-blur-xl">
-                    <div className="flex items-center justify-between">
-                        <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                            Total Users
-                        </span>
-                        <div className="p-1.5 sm:p-2 rounded-xl bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 border border-indigo-200/40 dark:border-indigo-800/40">
-                            <Users className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                        </div>
-                    </div>
-                    <div className="mt-1 text-xl sm:text-2xl font-black tracking-tight text-slate-800 dark:text-slate-100">
-                        {derivedData?.totalUsers || 0}
-                    </div>
-                    <p className="text-[10px] sm:text-[11px] text-slate-400 dark:text-slate-500 mt-0.5 truncate">
-                        Platform accounts
-                    </p>
-                </div>
-
-                {/* Total Expenses Logged */}
-                <div className="relative overflow-hidden rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 p-3 sm:p-4 shadow-sm backdrop-blur-xl">
-                    <div className="flex items-center justify-between">
-                        <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                            Expense Records
-                        </span>
-                        <div className="p-1.5 sm:p-2 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 border border-emerald-200/40 dark:border-emerald-800/40">
-                            <Receipt className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                        </div>
-                    </div>
-                    <div className="mt-1 text-xl sm:text-2xl font-black tracking-tight text-slate-800 dark:text-slate-100">
-                        {derivedData?.totalRecords?.toLocaleString() || 0}
-                    </div>
-                    <p className="text-[10px] sm:text-[11px] text-slate-400 dark:text-slate-500 mt-0.5 truncate">
-                        Entries logged
-                    </p>
-                </div>
-            </div>
-
-            {/* ---------------- 2. USER MANAGEMENT TABLE CONTAINER ---------------- */}
+            {/* ---------------- USER MANAGEMENT TABLE CONTAINER ---------------- */}
             <div className="bg-white dark:bg-slate-900/90 rounded-2xl shadow-sm border border-slate-200/80 dark:border-slate-800 overflow-hidden">
                 {/* Header Toolbar: Search, Filters & Refresh */}
                 <div className="p-3.5 sm:p-4 pb-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5 border-b border-slate-100 dark:border-slate-800/80">

@@ -1,11 +1,13 @@
-import React, { useState, useMemo, useCallback, useEffect } from "react";
+import React, { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import {
     Download,
     Printer,
     RotateCcw,
     Calendar,
     Layers,
-    Filter
+    Filter,
+    ChevronDown,
+    Check
 } from 'lucide-react';
 import { useSelector, useDispatch } from "react-redux";
 import { setnarrow, setloader } from "../../store/login";
@@ -17,6 +19,8 @@ dayjs.extend(isBetween);
 import { getReportTableColumns } from "./reportTableColumns";
 import { useTableStyles } from "../../components/dataTableStyle";
 import { useApi } from "../../utils/useApi";
+import DatePicker from "../../components/common/DatePicker";
+import SelectInput from "../../components/common/SelectInput";
 
 const Report = () => {
     const dispatch = useDispatch();
@@ -44,6 +48,15 @@ const Report = () => {
     const [sumAmount, setSumAmount] = useState(0);
 
     /* ---------------- FILTER HANDLERS ---------------- */
+    const handleDateChange = useCallback((e) => {
+        const { name, value } = e.target;
+        setInputs((prev) => {
+            const updated = { ...prev, [name]: value };
+            setAppliedInputs(updated);
+            return updated;
+        });
+    }, []);
+
     const handleInputChange = useCallback((e) => {
         const { name, value } = e.target;
         setInputs((prev) => ({ ...prev, [name]: value }));
@@ -165,12 +178,20 @@ const Report = () => {
         </div>
     );
 
+    const categoryOptions = useMemo(() => [
+        { value: "all", label: "All Categories" },
+        ...ledgerlist.map((val) => ({
+            value: val.ledger,
+            label: val.ledger
+        }))
+    ], [ledgerlist]);
+
     return (
         <div
             className="min-h-screen bg-[#f8fafc] dark:bg-[#0b1120] p-3 sm:p-5 space-y-3.5 transition-colors duration-300 font-sans text-slate-700 dark:text-slate-200 animate-in fade-in"
         >
             {/* ---------------- FILTER & PRESETS BAR ---------------- */}
-            <div className="bg-white dark:bg-slate-900/90 rounded-2xl shadow-sm border border-slate-200/80 dark:border-slate-800 p-4 print:hidden space-y-3">
+            <div className="relative z-30 overflow-visible bg-white dark:bg-slate-900/90 rounded-2xl shadow-sm border border-slate-200/80 dark:border-slate-800 p-4 print:hidden space-y-3">
                 {/* Top Row: Presets & Actions */}
                 <div className="flex flex-wrap items-center justify-between gap-2.5 pb-2.5 border-b border-slate-100 dark:border-slate-800/80">
                     {/* Left: Quick Preset Buttons */}
@@ -238,64 +259,46 @@ const Report = () => {
                 </div>
 
                 {/* Bottom Row: Detailed Date Range & Category Inputs */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-1">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-1 items-end">
                     {/* From Date */}
-                    <div className="flex flex-col text-xs">
-                        <label className="text-slate-500 dark:text-slate-400 font-semibold mb-1 flex items-center gap-1">
-                            <Calendar className="w-3 h-3 text-indigo-500" /> Start Date
-                        </label>
-                        <input
-                            type="date"
+                    <div>
+                        <DatePicker
+                            label="Start Date"
                             name="from"
                             value={inputs.from}
-                            onChange={handleInputChange}
-                            onBlur={handleBlur}
-                            onKeyDown={(e) => e.key === "Enter" && e.target.blur()}
-                            className="w-full h-9 border border-slate-200 dark:border-slate-700/80 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-100 px-3 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-xs font-medium"
+                            onChange={handleDateChange}
+                            placeholder="Select start date"
                         />
                     </div>
 
                     {/* To Date */}
-                    <div className="flex flex-col text-xs">
-                        <label className="text-slate-500 dark:text-slate-400 font-semibold mb-1 flex items-center gap-1">
-                            <Calendar className="w-3 h-3 text-indigo-500" /> End Date
-                        </label>
-                        <input
-                            type="date"
+                    <div>
+                        <DatePicker
+                            label="End Date"
                             name="to"
                             value={inputs.to}
-                            onChange={handleInputChange}
-                            onBlur={handleBlur}
-                            onKeyDown={(e) => e.key === "Enter" && e.target.blur()}
-                            className="w-full h-9 border border-slate-200 dark:border-slate-700/80 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-100 px-3 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-xs font-medium"
+                            onChange={handleDateChange}
+                            placeholder="Select end date"
                         />
                     </div>
 
-                    {/* Ledger Selector */}
-                    <div className="flex flex-col text-xs">
-                        <label className="text-slate-500 dark:text-slate-400 font-semibold mb-1 flex items-center gap-1">
-                            <Layers className="w-3 h-3 text-indigo-500" /> Category
-                        </label>
-                        <select
+                    {/* Ledger / Category Selector */}
+                    <div>
+                        <SelectInput
+                            label="Category"
                             name="ledger"
                             value={inputs.ledger}
                             onChange={handleSelectChange}
-                            className="w-full h-9 border border-slate-200 dark:border-slate-700/80 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-100 px-2.5 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-xs font-medium cursor-pointer"
-                        >
-                            <option value="all">All Categories</option>
-                            {ledgerlist.map((val) => (
-                                <option key={val._id} value={val.ledger}>
-                                    {val.ledger}
-                                </option>
-                            ))}
-                        </select>
+                            options={categoryOptions}
+                            placeholder="Select category"
+                        />
                     </div>
 
                     {/* Reset Button */}
                     <div className="flex items-end">
                         <button
                             onClick={clearSearch}
-                            className="w-full h-9 flex items-center justify-center gap-1.5 px-3 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-xl transition text-xs font-semibold cursor-pointer"
+                            className="w-full h-[42px] flex items-center justify-center gap-1.5 px-3 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-xl transition text-xs font-semibold cursor-pointer shadow-sm"
                         >
                             <RotateCcw size={13} /> Reset Filter
                         </button>

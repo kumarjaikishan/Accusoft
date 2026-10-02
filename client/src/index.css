@@ -413,3 +413,17 @@ body {
   filter: drop-shadow(0 2px 8px rgba(0, 112, 243, 0.3));
 }
 
+/* Custom Scrollbar Utilities */
+.no-scrollbar::-webkit-scrollbar,
+.scrollbar-none::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+.no-scrollbar,
+.scrollbar-none {
+  -ms-overflow-style: none !important; /* IE and Edge */
+  scrollbar-width: none !important; /* Firefox */
+}
+

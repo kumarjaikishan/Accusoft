@@ -1,5 +1,6 @@
 import React from 'react';
 import { Search, LayoutGrid, Table as TableIcon, Plus } from 'lucide-react';
+import SelectInput from '../../../components/common/SelectInput';
 
 const LedgerFilterBar = ({
     searchQuery,
@@ -12,8 +13,22 @@ const LedgerFilterBar = ({
     setSortBy,
     onAddNew
 }) => {
+    const balanceOptions = [
+        { value: 'ALL', label: 'All Balances' },
+        { value: 'PAYABLE', label: 'Payable Only' },
+        { value: 'RECEIVABLE', label: 'Receivable Only' },
+        { value: 'ZERO', label: 'Settled (0.00)' },
+    ];
+
+    const sortOptions = [
+        { value: 'name_asc', label: 'Name (A → Z)' },
+        { value: 'name_desc', label: 'Name (Z → A)' },
+        { value: 'balance_desc', label: 'Highest Balance' },
+        { value: 'balance_asc', label: 'Lowest Balance' },
+    ];
+
     return (
-        <div className="rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 p-3 sm:p-4 shadow-xs flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+        <div className="relative z-20 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 p-3 sm:p-4 shadow-xs flex flex-col md:flex-row md:items-center md:justify-between gap-3">
             <div className="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-2.5 flex-1">
                 {/* Search input */}
                 <div className="relative flex-1 min-w-[200px] w-full sm:w-auto sm:max-w-md">
@@ -55,28 +70,22 @@ const LedgerFilterBar = ({
                     </div>
 
                     {/* Filter Balance Status */}
-                    <select
+                    <SelectInput
+                        size="sm"
                         value={balanceFilter}
                         onChange={(e) => setBalanceFilter(e.target.value)}
-                        className="flex-1 sm:flex-none px-2.5 py-1.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-200 outline-none cursor-pointer"
-                    >
-                        <option value="ALL">All Balances</option>
-                        <option value="PAYABLE">Payable Only</option>
-                        <option value="RECEIVABLE">Receivable Only</option>
-                        <option value="ZERO">Settled (0.00)</option>
-                    </select>
+                        options={balanceOptions}
+                        className="!h-8 !px-2.5 font-bold min-w-[130px]"
+                    />
 
                     {/* Sort Dropdown */}
-                    <select
+                    <SelectInput
+                        size="sm"
                         value={sortBy}
                         onChange={(e) => setSortBy(e.target.value)}
-                        className="flex-1 sm:flex-none px-2.5 py-1.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-200 outline-none cursor-pointer"
-                    >
-                        <option value="name_asc">Name (A → Z)</option>
-                        <option value="name_desc">Name (Z → A)</option>
-                        <option value="balance_desc">Highest Balance</option>
-                        <option value="balance_asc">Lowest Balance</option>
-                    </select>
+                        options={sortOptions}
+                        className="!h-8 !px-2.5 font-bold min-w-[145px]"
+                    />
                 </div>
             </div>
 

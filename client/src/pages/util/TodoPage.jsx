@@ -26,6 +26,7 @@ import dayjs from 'dayjs';
 import ModalCard from '../../components/custommodal/ModalCard';
 import TextInput from '../../components/common/TextInput';
 import DatePicker from '../../components/common/DatePicker';
+import SelectInput from '../../components/common/SelectInput';
 import Button from '../../components/common/Button';
 import { capitalize } from './ledger/ledgerHelpers';
 
@@ -478,30 +479,32 @@ const TodoPage = () => {
                     </div>
 
                     {/* Priority filter */}
-                    <select
+                    <SelectInput
+                        size="sm"
                         value={priorityFilter}
                         onChange={(e) => setPriorityFilter(e.target.value)}
-                        className="px-2.5 py-1.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-semibold text-slate-700 dark:text-slate-200 outline-none cursor-pointer"
-                    >
-                        <option value="all">All Priorities</option>
-                        <option value="URGENT">Urgent</option>
-                        <option value="HIGH">High</option>
-                        <option value="MEDIUM">Medium</option>
-                        <option value="LOW">Low</option>
-                    </select>
+                        options={[
+                            { value: 'all', label: 'All Priorities' },
+                            { value: 'URGENT', label: 'Urgent 🔥' },
+                            { value: 'HIGH', label: 'High' },
+                            { value: 'MEDIUM', label: 'Medium' },
+                            { value: 'LOW', label: 'Low' },
+                        ]}
+                        className="!h-8 !px-2.5 font-bold min-w-[125px]"
+                    />
 
                     {/* Category filter */}
                     {stats.categories?.length > 0 && (
-                        <select
+                        <SelectInput
+                            size="sm"
                             value={categoryFilter}
                             onChange={(e) => setCategoryFilter(e.target.value)}
-                            className="px-2.5 py-1.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-semibold text-slate-700 dark:text-slate-200 outline-none cursor-pointer"
-                        >
-                            <option value="all">All Categories</option>
-                            {stats.categories.map((c) => (
-                                <option key={c} value={c}>{c}</option>
-                            ))}
-                        </select>
+                            options={[
+                                { value: 'all', label: 'All Categories' },
+                                ...stats.categories.map((c) => ({ value: c, label: c }))
+                            ]}
+                            className="!h-8 !px-2.5 font-bold min-w-[130px]"
+                        />
                     )}
                 </div>
             </div>
@@ -575,20 +578,19 @@ const TodoPage = () => {
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
-                        <div className="flex flex-col gap-1.5">
-                            <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-                                Priority
-                            </label>
-                            <select
+                        <div className="w-full">
+                            <SelectInput
+                                label="Priority"
+                                name="priority"
                                 value={formData.priority}
                                 onChange={(e) => setFormData({ ...formData, priority: e.target.value })}
-                                className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl font-medium bg-white dark:bg-slate-800/90 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-700 outline-none focus:border-indigo-500 cursor-pointer"
-                            >
-                                <option value="LOW">Low</option>
-                                <option value="MEDIUM">Medium</option>
-                                <option value="HIGH">High</option>
-                                <option value="URGENT">Urgent 🔥</option>
-                            </select>
+                                options={[
+                                    { value: 'LOW', label: 'Low' },
+                                    { value: 'MEDIUM', label: 'Medium' },
+                                    { value: 'HIGH', label: 'High' },
+                                    { value: 'URGENT', label: 'Urgent 🔥' },
+                                ]}
+                            />
                         </div>
 
                         <div className="w-full">

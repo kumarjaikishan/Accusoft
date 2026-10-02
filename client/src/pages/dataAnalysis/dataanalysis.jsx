@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useCallback } from "react";
+import React, { useEffect, useState, useMemo, useCallback, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setloader } from "../../store/login";
 import { useNavigate } from "react-router-dom";
@@ -12,6 +12,7 @@ import dayjs from "dayjs";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import { useApi } from "../../utils/useApi";
+import SelectInput from "../../components/common/SelectInput";
 
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
@@ -135,12 +136,23 @@ const Datanalysis = () => {
     "July", "August", "September", "October", "November", "December"
   ];
 
+  const currentYear = new Date().getFullYear();
+  const yearOptions = useMemo(() => Array.from({ length: 7 }, (_, i) => ({
+    value: currentYear - i,
+    label: String(currentYear - i),
+  })), [currentYear]);
+
+  const monthOptions = useMemo(() => monname.map((m, i) => ({
+    value: i,
+    label: m,
+  })), [monname]);
+
   return (
     <div
       className="min-h-screen bg-[#f8fafc] dark:bg-[#0b1120] p-3 sm:p-5 space-y-3.5 transition-colors duration-300 font-sans text-slate-700 dark:text-slate-200 animate-in fade-in"
     >
       {/* ---------- MODERN HERO BAR & CONTROLS ---------- */}
-      <div className="relative overflow-hidden rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 p-3.5 sm:p-4 shadow-sm backdrop-blur-xl">
+      <div className="relative z-30 overflow-visible rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 p-3.5 sm:p-4 shadow-sm backdrop-blur-xl">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
           {/* Title & Description */}
           <div>
@@ -162,39 +174,33 @@ const Datanalysis = () => {
 
           {/* Controls */}
           <div className="flex flex-wrap items-center gap-2">
-            {/* Date Dropdowns */}
-            <div className="flex items-center gap-1 bg-slate-100/90 dark:bg-slate-800/90 p-0.5 rounded-xl border border-slate-200/60 dark:border-slate-700/60">
-              <select
+            {/* Custom Month & Year Dropdown Selectors using common SelectInput */}
+            <div className="flex items-center gap-1.5 bg-slate-100/90 dark:bg-slate-800/90 p-1 rounded-xl border border-slate-200/70 dark:border-slate-700/70">
+              <SelectInput
+                size="sm"
                 name="month"
                 value={inp.month}
-                onChange={handle}
-                className="px-2 py-1 rounded-lg bg-white dark:bg-slate-900 text-xs font-semibold text-slate-700 dark:text-slate-200 outline-none shadow-sm cursor-pointer border border-transparent focus:border-indigo-500"
-              >
-                {monname.map((m, i) => (
-                  <option key={i} value={i} className="text-slate-700 dark:text-slate-200 dark:bg-slate-900">
-                    {m}
-                  </option>
-                ))}
-              </select>
+                onChange={(e) => setinp((prev) => ({ ...prev, month: Number(e.target.value) }))}
+                options={monthOptions}
+                className="!h-7 !px-2.5 !rounded-lg font-semibold text-xs !shadow-none"
+                menuClassName="min-w-[130px]"
+              />
 
-              <select
+              <SelectInput
+                size="sm"
                 name="year"
                 value={inp.year}
-                onChange={handle}
-                className="px-2 py-1 rounded-lg bg-white dark:bg-slate-900 text-xs font-semibold text-slate-700 dark:text-slate-200 outline-none shadow-sm cursor-pointer border border-transparent focus:border-indigo-500"
-              >
-                {Array.from({ length: 6 }, (_, i) => new Date().getFullYear() - i).map((y) => (
-                  <option key={y} value={y} className="text-slate-700 dark:text-slate-200 dark:bg-slate-900">
-                    {y}
-                  </option>
-                ))}
-              </select>
+                onChange={(e) => setinp((prev) => ({ ...prev, year: Number(e.target.value) }))}
+                options={yearOptions}
+                className="!h-7 !px-2.5 !rounded-lg font-semibold text-xs !shadow-none"
+                menuClassName="min-w-[90px]"
+              />
             </div>
 
             {/* Modern Budget Toggle Switch */}
             <button
               onClick={() => setshowbudget(!showbudget)}
-              className={`flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-semibold transition-all shadow-sm cursor-pointer border ${
+              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-semibold transition-all shadow-sm cursor-pointer border ${
                 showbudget
                   ? "bg-indigo-600 text-white border-indigo-600 shadow-indigo-500/20"
                   : "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700/80 hover:bg-slate-50 dark:hover:bg-slate-700/50"

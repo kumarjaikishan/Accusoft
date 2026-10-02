@@ -7,7 +7,7 @@ const { ApiError } = require('../utils/apierror');
  */
 const getTodos = asyncHandler(async (req, res) => {
     const userId = req.userid;
-    const { status, priority, category, search } = req.query;
+    const { status, priority, search } = req.query;
 
     const filter = { userid: userId };
 
@@ -19,10 +19,6 @@ const getTodos = asyncHandler(async (req, res) => {
 
     if (priority && priority !== 'all') {
         filter.priority = priority.toUpperCase();
-    }
-
-    if (category && category !== 'all') {
-        filter.category = category;
     }
 
     if (search && search.trim()) {
@@ -41,8 +37,7 @@ const getTodos = asyncHandler(async (req, res) => {
         total: allUserTodos.length,
         completed: allUserTodos.filter(t => t.completed).length,
         pending: allUserTodos.filter(t => !t.completed).length,
-        urgent: allUserTodos.filter(t => !t.completed && t.priority === 'URGENT').length,
-        categories: [...new Set(allUserTodos.map(t => t.category).filter(Boolean))]
+        urgent: allUserTodos.filter(t => !t.completed && t.priority === 'URGENT').length
     };
 
     res.status(200).json({
@@ -57,7 +52,7 @@ const getTodos = asyncHandler(async (req, res) => {
  */
 const createTodo = asyncHandler(async (req, res) => {
     const userId = req.userid;
-    const { title, description, priority, category, dueDate, tags } = req.body;
+    const { title, description, priority, dueDate, tags } = req.body;
 
     if (!title || !title.trim()) {
         throw new ApiError(400, 'Title is required');
@@ -68,7 +63,6 @@ const createTodo = asyncHandler(async (req, res) => {
         title: title.trim(),
         description: description?.trim() || '',
         priority: priority || 'MEDIUM',
-        category: category?.trim() || 'General',
         dueDate: dueDate ? new Date(dueDate) : null,
         tags: Array.isArray(tags) ? tags.map(t => t.trim()).filter(Boolean) : []
     });
@@ -86,13 +80,12 @@ const createTodo = asyncHandler(async (req, res) => {
 const updateTodo = asyncHandler(async (req, res) => {
     const userId = req.userid;
     const { id } = req.params;
-    const { title, description, priority, category, dueDate, tags, completed } = req.body;
+    const { title, description, priority, dueDate, tags, completed } = req.body;
 
     const updateData = {};
     if (title !== undefined) updateData.title = title.trim();
     if (description !== undefined) updateData.description = description.trim();
     if (priority !== undefined) updateData.priority = priority;
-    if (category !== undefined) updateData.category = category.trim();
     if (dueDate !== undefined) updateData.dueDate = dueDate ? new Date(dueDate) : null;
     if (tags !== undefined) updateData.tags = Array.isArray(tags) ? tags.map(t => t.trim()).filter(Boolean) : [];
     if (completed !== undefined) updateData.completed = Boolean(completed);

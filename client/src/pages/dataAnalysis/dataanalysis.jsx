@@ -182,8 +182,8 @@ const Datanalysis = () => {
                 value={inp.month}
                 onChange={(e) => setinp((prev) => ({ ...prev, month: Number(e.target.value) }))}
                 options={monthOptions}
-                className="!h-7 !px-2.5 !rounded-lg font-semibold text-xs !shadow-none"
-                menuClassName="min-w-[130px]"
+                className="!h-7 !px-2.5 !rounded-lg font-semibold text-xs !shadow-none min-w-[100px]"
+                menuClassName="w-auto min-w-[130px]"
               />
 
               <SelectInput
@@ -192,8 +192,8 @@ const Datanalysis = () => {
                 value={inp.year}
                 onChange={(e) => setinp((prev) => ({ ...prev, year: Number(e.target.value) }))}
                 options={yearOptions}
-                className="!h-7 !px-2.5 !rounded-lg font-semibold text-xs !shadow-none"
-                menuClassName="min-w-[90px]"
+                className="!h-7 !px-2.5 !rounded-lg font-semibold text-xs !shadow-none min-w-[85px]"
+                menuClassName="w-auto min-w-[95px]"
               />
             </div>
 

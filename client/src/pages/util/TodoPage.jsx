@@ -40,14 +40,12 @@ const TodoPage = () => {
         total: 0,
         completed: 0,
         pending: 0,
-        urgent: 0,
-        categories: []
+        urgent: 0
     });
 
     const [searchQuery, setSearchQuery] = useState('');
     const [statusFilter, setStatusFilter] = useState('all'); // 'all', 'pending', 'completed'
     const [priorityFilter, setPriorityFilter] = useState('all');
-    const [categoryFilter, setCategoryFilter] = useState('all');
 
     // Modal state
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -56,7 +54,6 @@ const TodoPage = () => {
         title: '',
         description: '',
         priority: 'MEDIUM',
-        category: 'General',
         dueDate: '',
         tags: ''
     });
@@ -67,7 +64,6 @@ const TodoPage = () => {
             const params = new URLSearchParams();
             if (statusFilter !== 'all') params.append('status', statusFilter);
             if (priorityFilter !== 'all') params.append('priority', priorityFilter);
-            if (categoryFilter !== 'all') params.append('category', categoryFilter);
             if (searchQuery.trim()) params.append('search', searchQuery.trim());
 
             const res = await request({
@@ -77,7 +73,7 @@ const TodoPage = () => {
 
             if (res?.success) {
                 setTodos(res.todos || []);
-                setStats(res.stats || { total: 0, completed: 0, pending: 0, urgent: 0, categories: [] });
+                setStats(res.stats || { total: 0, completed: 0, pending: 0, urgent: 0 });
             }
         } catch (error) {
             console.error('Error fetching todos:', error);
@@ -86,7 +82,7 @@ const TodoPage = () => {
 
     useEffect(() => {
         fetchTodos();
-    }, [statusFilter, priorityFilter, categoryFilter, searchQuery]);
+    }, [statusFilter, priorityFilter, searchQuery]);
 
     // Toggle todo status
     const handleToggle = async (todo) => {
@@ -127,7 +123,6 @@ const TodoPage = () => {
             title: capitalizedTitle,
             description: formData.description.trim(),
             priority: formData.priority,
-            category: capitalize(formData.category) || 'General',
             dueDate: formData.dueDate || null,
             tags: tagsArray
         };
@@ -164,7 +159,6 @@ const TodoPage = () => {
             title: todo.title || '',
             description: todo.description || '',
             priority: todo.priority || 'MEDIUM',
-            category: todo.category || 'General',
             dueDate: todo.dueDate ? dayjs(todo.dueDate).format('YYYY-MM-DD') : '',
             tags: (todo.tags || []).join(', ')
         });
@@ -304,17 +298,6 @@ const TodoPage = () => {
             ),
         },
         {
-            name: 'Category',
-            selector: (row) => row.category || 'General',
-            sortable: true,
-            width: '120px',
-            cell: (row) => (
-                <span className="px-2 py-0.5 rounded text-[10.5px] font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
-                    {row.category || 'General'}
-                </span>
-            ),
-        },
-        {
             name: 'Priority',
             selector: (row) => row.priority,
             sortable: true,
@@ -408,7 +391,6 @@ const TodoPage = () => {
                                 title: '',
                                 description: '',
                                 priority: 'MEDIUM',
-                                category: 'General',
                                 dueDate: '',
                                 tags: ''
                             });
@@ -492,20 +474,6 @@ const TodoPage = () => {
                         ]}
                         className="!h-8 !px-2.5 font-bold min-w-[125px]"
                     />
-
-                    {/* Category filter */}
-                    {stats.categories?.length > 0 && (
-                        <SelectInput
-                            size="sm"
-                            value={categoryFilter}
-                            onChange={(e) => setCategoryFilter(e.target.value)}
-                            options={[
-                                { value: 'all', label: 'All Categories' },
-                                ...stats.categories.map((c) => ({ value: c, label: c }))
-                            ]}
-                            className="!h-8 !px-2.5 font-bold min-w-[130px]"
-                        />
-                    )}
                 </div>
             </div>
 
@@ -577,31 +545,19 @@ const TodoPage = () => {
                         />
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
-                        <div className="w-full">
-                            <SelectInput
-                                label="Priority"
-                                name="priority"
-                                value={formData.priority}
-                                onChange={(e) => setFormData({ ...formData, priority: e.target.value })}
-                                options={[
-                                    { value: 'LOW', label: 'Low' },
-                                    { value: 'MEDIUM', label: 'Medium' },
-                                    { value: 'HIGH', label: 'High' },
-                                    { value: 'URGENT', label: 'Urgent 🔥' },
-                                ]}
-                            />
-                        </div>
-
-                        <div className="w-full">
-                            <TextInput
-                                label="Category"
-                                name="category"
-                                placeholder="e.g. Accounts, Operations"
-                                value={formData.category}
-                                onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                            />
-                        </div>
+                    <div className="w-full">
+                        <SelectInput
+                            label="Priority"
+                            name="priority"
+                            value={formData.priority}
+                            onChange={(e) => setFormData({ ...formData, priority: e.target.value })}
+                            options={[
+                                { value: 'LOW', label: 'Low' },
+                                { value: 'MEDIUM', label: 'Medium' },
+                                { value: 'HIGH', label: 'High' },
+                                { value: 'URGENT', label: 'Urgent 🔥' },
+                            ]}
+                        />
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">

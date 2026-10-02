@@ -25,7 +25,32 @@ export const DatePicker = forwardRef(({
 }, ref) => {
   const [isOpen, setIsOpen] = useState(false);
   const [viewMode, setViewMode] = useState('days'); // 'days' | 'months'
+  const [placement, setPlacement] = useState('bottom'); // 'bottom' | 'top'
   const wrapperRef = useRef(null);
+
+  // Auto detect if calendar should open upwards or downwards based on viewport bounds
+  useEffect(() => {
+    if (isOpen && wrapperRef.current) {
+      const updatePosition = () => {
+        const rect = wrapperRef.current.getBoundingClientRect();
+        const spaceBelow = window.innerHeight - rect.bottom;
+        const spaceAbove = rect.top;
+        // Popover height is approx 300px
+        if (spaceBelow < 310 && spaceAbove > spaceBelow) {
+          setPlacement('top');
+        } else {
+          setPlacement('bottom');
+        }
+      };
+      updatePosition();
+      window.addEventListener('resize', updatePosition);
+      window.addEventListener('scroll', updatePosition, true);
+      return () => {
+        window.removeEventListener('resize', updatePosition);
+        window.removeEventListener('scroll', updatePosition, true);
+      };
+    }
+  }, [isOpen]);
 
   // Parse current selected date or fallback to today
   const selectedDate = useMemo(() => {
@@ -257,13 +282,14 @@ export const DatePicker = forwardRef(({
       {/* Popover Calendar */}
       {isOpen && !disabled && (
         <div
-          className="
-            absolute top-[calc(100%+6px)] left-0 sm:left-auto right-0 sm:right-auto
+          className={`
+            absolute left-0 sm:left-auto right-0 sm:right-auto
             w-full sm:w-[320px] min-w-70 max-w-[calc(100vw-32px)]
             bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800
             rounded-2xl shadow-2xl z-50 p-3 sm:p-3.5 select-none font-sans touch-manipulation
             transition-all animate-in zoom-in-95 fade-in duration-150
-          "
+            ${placement === 'top' ? 'bottom-[calc(100%+6px)]' : 'top-[calc(100%+6px)]'}
+          `}
         >
             {/* Calendar Header */}
             <div className="flex items-center justify-between gap-1 pb-2.5 sm:pb-3 mb-2 border-b border-slate-100 dark:border-slate-800">
@@ -347,7 +373,7 @@ export const DatePicker = forwardRef(({
                         type="button"
                         onClick={() => handleSelectDate(item.date)}
                         className={`
-                          h-8.5 sm:h-8 text-xs font-semibold rounded-xl flex items-center justify-center relative transition-all duration-150 cursor-pointer active:scale-95 touch-manipulation
+                          h-7.5 sm:h-8 text-xs font-semibold rounded-xl flex items-center justify-center relative transition-all duration-150 cursor-pointer active:scale-95 touch-manipulation
                           ${
                             isSelected
                               ? 'bg-(--maincolor,#4f46e5) text-white font-black shadow-md shadow-(--maincolor)/30 scale-105'

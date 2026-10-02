@@ -27,11 +27,6 @@ const todoSchema = new mongoose.Schema({
         enum: ['LOW', 'MEDIUM', 'HIGH', 'URGENT'],
         default: 'MEDIUM'
     },
-    category: {
-        type: String,
-        default: 'General',
-        trim: true
-    },
     dueDate: {
         type: Date,
         default: null

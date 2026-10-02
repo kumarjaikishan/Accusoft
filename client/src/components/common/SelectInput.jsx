@@ -195,7 +195,7 @@ export const SelectInput = forwardRef(({
                       }
                     `}
                   >
-                    <span className="truncate">{opt.label}</span>
+                    <span className="whitespace-nowrap">{opt.label}</span>
                     {isSelected && (
                       <Check size={13} strokeWidth={2.5} className="text-teal-600 dark:text-teal-400 shrink-0" />
                     )}

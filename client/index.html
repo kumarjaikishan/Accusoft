@@ -32,6 +32,23 @@
         }
       } catch (e) {}
     })();
+
+    // 1. Auto-recovery when waking up from background with an empty DOM / frozen state
+    document.addEventListener('visibilitychange', function() {
+      if (document.visibilityState === 'visible') {
+        var root = document.getElementById('root');
+        // If #root is completely empty or lost all rendered child elements
+        if (root && root.children.length === 0) {
+          window.location.reload();
+        }
+      }
+    });
+
+    // 2. Auto-reload when dynamic chunk / asset imports fail (e.g. after deployments or mobile cache invalidation)
+    window.addEventListener('vite:preloadError', function(event) {
+      event.preventDefault();
+      window.location.reload();
+    });
   </script>
 
   <!-- Google Identity Services (GSI) Client Library -->

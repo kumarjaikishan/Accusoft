@@ -57,6 +57,7 @@ const PrivacyBanner = () => {
     localStorage.setItem(`${CONSENT_STORAGE_KEY}_${user._id}`, status);
     dispatch(updateCookieConsentStatus(status));
 
+
     const token = localStorage.getItem("token");
     if (token) {
       try {

@@ -590,7 +590,8 @@ const updateCookieConsent = asyncHandler(async (req, res) => {
     throw new ApiError(400, 'Invalid cookie consent status');
   }
 
-  await user.findByIdAndUpdate(req.userid, {
+  const targetId = req.userid || req.user?._id || req.user?.userId;
+  await user.findByIdAndUpdate(targetId, {
     cookieConsent: {
       status,
       consentDate: new Date()

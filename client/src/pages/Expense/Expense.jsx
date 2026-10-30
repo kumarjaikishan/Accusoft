@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useCallback, useMemo } from 'react';
-import { SquarePlus, Trash2, X, Book, Settings } from 'lucide-react';
+import { SquarePlus, Trash2, X, Book, Settings, SearchX, RotateCcw, ReceiptText } from 'lucide-react';
 
 import { useSelector, useDispatch } from 'react-redux';
 import DataTable from '../../components/common/DataTable';
@@ -24,15 +24,16 @@ dayjs.extend(timezone);
 // Defined at module level (outside Expense) so React does not treat this as a new
 // component type on every render, which would cause unnecessary unmount/remount cycles.
 const TableSkeleton = () => (
-  <div className="w-full p-4 space-y-3 bg-surface animate-pulse">
-    {Array.from({ length: 10 }).map((_, idx) => (
-      <div key={idx} className="flex items-center gap-4 py-2 border-b border-border-subtle">
-        <div className="h-4 w-8 bg-slate-200 dark:bg-slate-700/80 rounded"></div>
-        <div className="h-4 w-12 bg-slate-200 dark:bg-slate-700/80 rounded"></div>
-        <div className="h-4 w-28 bg-slate-200 dark:bg-slate-700/80 rounded"></div>
-        <div className="h-4 w-24 bg-slate-200 dark:bg-slate-700/80 rounded"></div>
-        <div className="h-4 w-20 bg-slate-200 dark:bg-slate-700/80 rounded"></div>
-        <div className="h-4 flex-1 bg-slate-200 dark:bg-slate-700/50 rounded"></div>
+  <div className="w-full px-4 sm:px-5 py-3 space-y-3 bg-transparent animate-pulse">
+    {Array.from({ length: 8 }).map((_, idx) => (
+      <div key={idx} className="flex items-center gap-4 py-2.5 border-b border-slate-200/60 dark:border-slate-800/60 last:border-b-0">
+        <div className="h-4 w-4 bg-slate-200 dark:bg-slate-700/70 rounded shrink-0"></div>
+        <div className="h-4 w-8 bg-slate-200 dark:bg-slate-700/70 rounded shrink-0"></div>
+        <div className="h-4 w-24 bg-slate-200 dark:bg-slate-700/70 rounded shrink-0"></div>
+        <div className="h-4 w-16 bg-slate-200 dark:bg-slate-700/70 rounded shrink-0"></div>
+        <div className="h-4 flex-1 bg-slate-200 dark:bg-slate-700/50 rounded min-w-[120px]"></div>
+        <div className="h-4 w-24 bg-slate-200 dark:bg-slate-700/70 rounded shrink-0"></div>
+        <div className="h-4 w-12 bg-slate-200 dark:bg-slate-700/70 rounded shrink-0"></div>
       </div>
     ))}
   </div>
@@ -403,11 +404,11 @@ const Expense = () => {
                 `}</style>
               </div>
             )}
-            <div className={`transition-all duration-300 ${tableLoading && rows.length > 0 ? 'opacity-60 blur-[1.5px] pointer-events-none' : ''}`}>
+            <div>
               <DataTable
                 columns={columns}
                 data={rows}
-                progressPending={tableLoading && rows.length === 0}
+                progressPending={tableLoading}
                 progressComponent={<TableSkeleton />}
                 theme={mode === "dark" ? "dark" : "default"}
                 selectableRows={isMobile ? false : true}
@@ -426,10 +427,60 @@ const Expense = () => {
                 highlightOnHover
                 customStyles={customTableStyles}
                 noDataComponent={
-                  <div className="py-12 text-center text-content bg-surface">
-                    <div className="text-4xl mb-2 opacity-20">📂</div>
-                    <p className="font-medium">No expense records found</p>
-                    <p className="text-sm">Try adjusting your search or add a new expense</p>
+                  <div className="py-14 sm:py-16 px-4 flex flex-col items-center justify-center text-center bg-surface transition-colors">
+                    {searchInput ? (
+                      <>
+                        <div className="relative mb-3.5">
+                          <div className="w-14 h-14 rounded-2xl bg-indigo-50 dark:bg-indigo-950/50 border border-indigo-100 dark:border-indigo-800/60 flex items-center justify-center text-indigo-600 dark:text-indigo-400 shadow-xs">
+                            <SearchX size={26} strokeWidth={2.2} />
+                          </div>
+                          <span className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-amber-500/10 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-300 dark:border-amber-700/60 text-[10px] font-black flex items-center justify-center">
+                            0
+                          </span>
+                        </div>
+                        <h3 className="text-sm sm:text-base font-bold text-slate-800 dark:text-slate-100 mb-1">
+                          No results for &ldquo;{searchInput}&rdquo;
+                        </h3>
+                        <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm mx-auto mb-4 leading-relaxed">
+                          We couldn't find any transactions matching your search. Check for typos or try clearing the search filter.
+                        </p>
+                        <div className="flex items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={() => { setSearchInput(''); setfinalserach(''); }}
+                            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 transition-colors shadow-2xs cursor-pointer"
+                          >
+                            <RotateCcw size={13} /> Clear Search
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setdisable(true)}
+                            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 transition-all shadow-xs cursor-pointer"
+                          >
+                            <SquarePlus size={14} /> Add Expense
+                          </button>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="w-14 h-14 rounded-2xl bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 flex items-center justify-center text-slate-400 dark:text-slate-500 shadow-xs mb-3.5">
+                          <ReceiptText size={26} strokeWidth={2} />
+                        </div>
+                        <h3 className="text-sm sm:text-base font-bold text-slate-800 dark:text-slate-100 mb-1">
+                          No expense records yet
+                        </h3>
+                        <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm mx-auto mb-4 leading-relaxed">
+                          Your ledger is fresh and ready. Record your first expense transaction to begin tracking your finances.
+                        </p>
+                        <button
+                          type="button"
+                          onClick={() => setdisable(true)}
+                          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 transition-all shadow-xs cursor-pointer"
+                        >
+                          <SquarePlus size={14} /> Add First Expense
+                        </button>
+                      </>
+                    )}
                   </div>
                 }
               />

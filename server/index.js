@@ -1,4 +1,8 @@
-require('dotenv').config();
+try {
+  require('dotenv').config();
+} catch (err) {
+  // Loaded via Node.js native --env-file or system environment in production
+}
 require('./conn/conn')
 // require('./utils/nodecron')
 // require('./test');

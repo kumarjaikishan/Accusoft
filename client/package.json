@@ -11,7 +11,6 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.12.0",
-    "@tailwindcss/vite": "^4.3.3",
     "chart.js": "^4.5.1",
     "dayjs": "^1.11.23",
     "lucide-react": "^1.38.0",
@@ -21,19 +20,21 @@
     "react-redux": "^9.3.0",
     "react-router-dom": "^7.18.3",
     "redux-persist": "^6.0.0",
-    "rollup-plugin-visualizer": "^6.0.11",
     "sonner": "^2.0.8",
-    "tailwindcss": "^4.3.3",
-    "vite-plugin-compression": "^0.5.1",
-    "vite-plugin-svgr": "^5.2.0",
     "web-vitals": "^6.2.1"
   },
   "devDependencies": {
+    "@tailwindcss/vite": "^4.3.3",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",
     "@vitejs/plugin-react": "^6.1.0",
+    "esbuild": "^0.28.2",
     "oxlint": "^1.79.0",
+    "rollup-plugin-visualizer": "^6.0.11",
     "sharp": "^0.35.4",
-    "vite": "^8.2.2"
+    "tailwindcss": "^4.3.3",
+    "vite": "^8.2.2",
+    "vite-plugin-compression": "^0.5.1",
+    "vite-plugin-svgr": "^5.2.0"
   }
 }

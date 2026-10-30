@@ -264,18 +264,6 @@ export const DataTable = ({
     <div className={`w-full bg-white dark:bg-slate-900/50 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs overflow-hidden ${className}`}>
       {/* ── Table Container ── */}
       <div className="w-full overflow-x-auto min-h-[160px] relative">
-        {progressPending ? (
-          <div className="absolute inset-0 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xs flex flex-col items-center justify-center gap-3 z-10 p-8">
-            {progressComponent ? (
-              progressComponent
-            ) : (
-              <>
-                <Loader2 className="animate-spin text-teal-700" size={32} />
-                <span className="text-xs font-bold text-slate-500">Loading records...</span>
-              </>
-            )}
-          </div>
-        ) : null}
 
         <table className="w-full border-collapse text-left text-xs font-sans">
           <thead>
@@ -362,13 +350,35 @@ export const DataTable = ({
           </thead>
 
           <tbody className="divide-y divide-slate-200 dark:divide-slate-700/80 text-slate-800 dark:text-slate-200">
-            {displayData.length === 0 && !progressPending ? (
+            {progressPending ? (
               <tr>
                 <td
                   colSpan={columns.length + (selectableRows ? 1 : 0)}
-                  className="py-12 px-4 text-center text-slate-400 font-medium italic text-xs"
+                  className="p-0 border-0"
                 >
-                  {noDataComponent ? noDataComponent : 'There are no records to display'}
+                  {progressComponent ? (
+                    progressComponent
+                  ) : (
+                    <div className="py-16 flex flex-col items-center justify-center gap-3">
+                      <Loader2 className="animate-spin text-teal-700 dark:text-teal-400" size={32} />
+                      <span className="text-xs font-bold text-slate-500 dark:text-slate-400">Loading records...</span>
+                    </div>
+                  )}
+                </td>
+              </tr>
+            ) : displayData.length === 0 ? (
+              <tr>
+                <td
+                  colSpan={columns.length + (selectableRows ? 1 : 0)}
+                  className={noDataComponent ? "p-0 border-0" : "py-16 px-4 text-center text-slate-400 dark:text-slate-500 font-medium text-xs"}
+                >
+                  {noDataComponent ? (
+                    noDataComponent
+                  ) : (
+                    <div className="py-16 px-4 text-center text-slate-400 dark:text-slate-500 font-medium text-xs">
+                      There are no records to display
+                    </div>
+                  )}
                 </td>
               </tr>
             ) : (

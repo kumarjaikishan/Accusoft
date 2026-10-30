@@ -22,28 +22,17 @@ const Preloader = () => {
 
   return (
     <div className={`preloader-overlay ${isDark ? 'dark bg-[#0f172a]' : 'bg-[#f1f5f9]'}`}>
-      {/* Subtle Ambient Background Glows (Clean Blue / Indigo only) */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden flex items-center justify-center">
-        <div className="absolute w-80 h-80 sm:w-96 sm:h-96 rounded-full bg-linear-to-tr from-blue-500/20 via-indigo-400/15 to-transparent blur-3xl animate-accu-aurora" />
-        <div className="absolute w-72 h-72 sm:w-88 sm:h-88 rounded-full bg-linear-to-br from-cyan-500/15 via-blue-400/10 to-transparent blur-3xl animate-accu-aurora [animation-delay:2s]" />
-      </div>
-
       <div className="preloader-container px-4">
-        {/* Floating Brand Logo - Clean, No Border, No Background */}
+        {/* Floating Brand Logo - Clean, No Rings, No Circular Background Glow */}
         <div className="relative flex items-center justify-center">
-          {/* Subtle Sonar Ripple Rings (Clean Blue / Cyan) */}
-          <div className="absolute w-32 h-32 sm:w-40 sm:h-40 rounded-full border border-blue-500/20 dark:border-blue-400/15 pointer-events-none animate-accu-sonar" />
-          <div className="absolute w-32 h-32 sm:w-40 sm:h-40 rounded-full border border-cyan-500/20 dark:border-cyan-400/15 pointer-events-none animate-accu-sonar [animation-delay:1.4s]" />
-
-          {/* Pure Floating Logo (No Card, No Box, No Border) */}
           <div className="relative z-10 animate-accu-float">
             <div className="relative flex items-center justify-center">
-              {/* Accusoft 3D Logo Image without any border or background */}
+              {/* Accusoft 3D Logo Image without any background glow or border */}
               <div className="relative w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center overflow-hidden">
                 <img
                   src="/logo.webp"
                   alt="Accusoft Logo"
-                  className="w-full h-full object-contain filter drop-shadow-[0_10px_20px_rgba(0,112,243,0.25)] dark:drop-shadow-[0_12px_24px_rgba(0,112,243,0.35)] select-none"
+                  className="w-full h-full object-contain filter drop-shadow-[0_8px_16px_rgba(0,112,243,0.18)] dark:drop-shadow-[0_10px_20px_rgba(0,112,243,0.28)] select-none"
                 />
 
                 {/* Shimmer Specular Sweep */}
@@ -73,9 +62,9 @@ const Preloader = () => {
             <span>REPORTS</span>
           </div>
 
-          {/* Indeterminate Gradient Loading Bar */}
-          <div className="w-44 sm:w-52 h-1.5 bg-slate-200/90 dark:bg-slate-800 rounded-full overflow-hidden mt-3.5 relative">
-            <div className="absolute top-0 bottom-0 w-20 rounded-full bg-linear-to-r from-blue-600 via-cyan-400 to-indigo-600 shadow-xs shadow-blue-400/50 animate-accu-indeterminate" />
+          {/* Minimalist Thin Progress Bar (2px height) */}
+          <div className="w-36 sm:w-44 h-0.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden mt-3.5 relative">
+            <div className="absolute top-0 bottom-0 w-16 rounded-full bg-linear-to-r from-blue-600 via-sky-400 to-blue-600 animate-accu-indeterminate" />
           </div>
 
           {/* Dynamic Status Text */}

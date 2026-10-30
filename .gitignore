@@ -14,11 +14,9 @@ node_modules/
 !.env.example
 
 # Production & Build outputs
-dist/
+
 dist-ssr/
-build/
 out/
-client/dist/
 
 # Logs
 logs/

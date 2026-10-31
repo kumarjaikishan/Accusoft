@@ -55,7 +55,7 @@ const PrivacyBanner = () => {
     // Instantly hide and persist locally so it never shows again.
     setIsVisible(false);
     localStorage.setItem(`${CONSENT_STORAGE_KEY}_${user._id}`, status);
-    dispatch(updateCookieConsentStatus(status));
+    dispatch(updateCookieConsentStatus(status))
 
 
     const token = localStorage.getItem("token");

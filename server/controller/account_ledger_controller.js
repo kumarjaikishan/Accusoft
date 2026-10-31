@@ -1,5 +1,7 @@
 const AccountLedger = require('../modals/account_ledger_schema');
 const LedgerEntry = require('../modals/ledger_entry_schema');
+const expense = require('../modals/exp_schema');
+const ledmodel = require('../modals/ledger_schema');
 const asyncHandler = require('../utils/asyncHandler');
 const { ApiError } = require('../utils/apierror');
 const mongoose = require('mongoose');
@@ -24,7 +26,10 @@ const getAllLedgers = asyncHandler(async (req, res) => {
     const userId = req.userid;
     if (!userId) throw new ApiError(401, 'Unauthorized');
 
-    const ledgers = await AccountLedger.find({ userid: userId }).sort({ name: 1 }).lean();
+    const ledgers = await AccountLedger.find({ userid: userId })
+        .populate('linkedExpenseLedger', 'ledger budget')
+        .sort({ name: 1 })
+        .lean();
 
     // Aggregate summary per ledger
     const ledgerSummaries = await LedgerEntry.aggregate([
@@ -92,7 +97,7 @@ const getAllLedgers = asyncHandler(async (req, res) => {
  */
 const createAccountLedger = asyncHandler(async (req, res) => {
     const userId = req.userid;
-    const { name } = req.body;
+    const { name, linkedExpenseLedger } = req.body;
     const formattedName = capitalize(name);
 
     if (!formattedName) {
@@ -104,25 +109,38 @@ const createAccountLedger = asyncHandler(async (req, res) => {
         throw new ApiError(400, `Ledger "${formattedName}" already exists`);
     }
 
+    let validLinkedLedger = null;
+    if (linkedExpenseLedger && mongoose.Types.ObjectId.isValid(linkedExpenseLedger)) {
+        const checkLedger = await ledmodel.findOne({ _id: linkedExpenseLedger, userid: userId });
+        if (checkLedger) {
+            validLinkedLedger = checkLedger._id;
+        }
+    }
+
     const newLedger = await AccountLedger.create({
         userid: userId,
-        name: formattedName
+        name: formattedName,
+        linkedExpenseLedger: validLinkedLedger
     });
+
+    const populated = await AccountLedger.findById(newLedger._id)
+        .populate('linkedExpenseLedger', 'ledger budget')
+        .lean();
 
     res.status(201).json({
         success: true,
         message: 'Ledger created successfully',
-        ledger: newLedger
+        ledger: populated || newLedger
     });
 });
 
 /**
- * 3. Update Account Ledger Name
+ * 3. Update Account Ledger Name & Linked Expense Ledger
  */
 const updateAccountLedger = asyncHandler(async (req, res) => {
     const userId = req.userid;
     const { id } = req.params;
-    const { name } = req.body;
+    const { name, linkedExpenseLedger } = req.body;
     const formattedName = capitalize(name);
 
     if (!formattedName) {
@@ -139,11 +157,22 @@ const updateAccountLedger = asyncHandler(async (req, res) => {
         throw new ApiError(400, `Ledger "${formattedName}" already exists`);
     }
 
+    let validLinkedLedger = null;
+    if (linkedExpenseLedger && mongoose.Types.ObjectId.isValid(linkedExpenseLedger)) {
+        const checkLedger = await ledmodel.findOne({ _id: linkedExpenseLedger, userid: userId });
+        if (checkLedger) {
+            validLinkedLedger = checkLedger._id;
+        }
+    }
+
     const updated = await AccountLedger.findOneAndUpdate(
         { _id: id, userid: userId },
-        { name: formattedName },
+        { 
+            name: formattedName,
+            linkedExpenseLedger: validLinkedLedger
+        },
         { returnDocument: 'after' }
-    );
+    ).populate('linkedExpenseLedger', 'ledger budget');
 
     if (!updated) {
         throw new ApiError(404, 'Ledger not found');
@@ -168,6 +197,21 @@ const deleteAccountLedger = asyncHandler(async (req, res) => {
         throw new ApiError(404, 'Ledger not found');
     }
 
+    // Clean up any linked expenses generated from entries in this ledger
+    const entriesWithExpense = await LedgerEntry.find({
+        ledgerId: id,
+        userid: userId,
+        linkedExpenseId: { $ne: null }
+    }).select('linkedExpenseId').lean();
+
+    const linkedExpenseIds = entriesWithExpense
+        .map(e => e.linkedExpenseId)
+        .filter(Boolean);
+
+    if (linkedExpenseIds.length > 0) {
+        await expense.deleteMany({ _id: { $in: linkedExpenseIds }, userid: userId });
+    }
+
     await LedgerEntry.deleteMany({ ledgerId: id, userid: userId });
 
     res.status(200).json({
@@ -184,7 +228,9 @@ const getLedgerStatement = asyncHandler(async (req, res) => {
     const { id } = req.params;
     const { year, month, fromDate, toDate } = req.query;
 
-    const ledger = await AccountLedger.findOne({ _id: id, userid: userId }).lean();
+    const ledger = await AccountLedger.findOne({ _id: id, userid: userId })
+        .populate('linkedExpenseLedger', 'ledger budget')
+        .lean();
     if (!ledger) {
         throw new ApiError(404, 'Ledger not found');
     }
@@ -262,6 +308,7 @@ const getLedgerStatement = asyncHandler(async (req, res) => {
 
 /**
  * 6. Add Entry to a Ledger (Debit / Credit)
+ * If DEBIT and ledger is linked to an expense category, automatically records an entry in the main Expense ledger!
  */
 const addLedgerEntry = asyncHandler(async (req, res) => {
     const userId = req.userid;
@@ -271,7 +318,8 @@ const addLedgerEntry = asyncHandler(async (req, res) => {
         throw new ApiError(400, 'Ledger, Particular, Type (CREDIT/DEBIT) and Amount are required');
     }
 
-    if (!['CREDIT', 'DEBIT'].includes(type.toUpperCase())) {
+    const normalizedType = type.toUpperCase();
+    if (!['CREDIT', 'DEBIT'].includes(normalizedType)) {
         throw new ApiError(400, 'Entry type must be CREDIT or DEBIT');
     }
 
@@ -280,29 +328,70 @@ const addLedgerEntry = asyncHandler(async (req, res) => {
         throw new ApiError(404, 'Account ledger not found');
     }
 
+    const entryAmount = Math.abs(Number(amount));
+    const entryDate = date ? new Date(date) : new Date();
+    const cleanParticular = particular.trim();
+
+    // Auto-create expense in main Expense tracker if DEBIT and linked
+    let linkedExpenseId = null;
+    let expenseSynced = false;
+
+    if (normalizedType === 'DEBIT' && ledger.linkedExpenseLedger) {
+        const createdExp = await expense.create({
+            userid: userId,
+            ledger: ledger.linkedExpenseLedger,
+            date: entryDate,
+            amount: entryAmount,
+            narration: `${cleanParticular} (${ledger.name})`
+        });
+        linkedExpenseId = createdExp._id;
+        expenseSynced = true;
+    }
+
     const newEntry = await LedgerEntry.create({
         userid: userId,
         ledgerId,
-        date: date ? new Date(date) : new Date(),
-        particular: particular.trim(),
-        type: type.toUpperCase(),
-        amount: Math.abs(Number(amount))
+        date: entryDate,
+        particular: cleanParticular,
+        type: normalizedType,
+        amount: entryAmount,
+        linkedExpenseId
     });
+
+    if (linkedExpenseId) {
+        await expense.findByIdAndUpdate(linkedExpenseId, {
+            accountLedgerEntryId: newEntry._id
+        });
+    }
 
     res.status(201).json({
         success: true,
-        message: 'Transaction entry added',
-        entry: newEntry
+        message: expenseSynced 
+            ? 'Transaction entry added & auto-recorded in Expense ledger' 
+            : 'Transaction entry added',
+        entry: newEntry,
+        expenseSynced
     });
 });
 
 /**
  * 7. Update Ledger Entry
+ * Automatically keeps linked expense in sync (or deletes if changed to CREDIT)
  */
 const updateLedgerEntry = asyncHandler(async (req, res) => {
     const userId = req.userid;
     const { id } = req.params;
     const { date, particular, type, amount } = req.body;
+
+    const existingEntry = await LedgerEntry.findOne({ _id: id, userid: userId });
+    if (!existingEntry) {
+        throw new ApiError(404, 'Ledger entry not found');
+    }
+
+    const ledger = await AccountLedger.findOne({ _id: existingEntry.ledgerId, userid: userId });
+    if (!ledger) {
+        throw new ApiError(404, 'Account ledger not found');
+    }
 
     const updateData = {};
     if (date) updateData.date = new Date(date);
@@ -310,15 +399,42 @@ const updateLedgerEntry = asyncHandler(async (req, res) => {
     if (type) updateData.type = type.toUpperCase();
     if (amount !== undefined) updateData.amount = Math.abs(Number(amount));
 
+    const finalType = updateData.type || existingEntry.type;
+    const finalAmount = updateData.amount !== undefined ? updateData.amount : existingEntry.amount;
+    const finalDate = updateData.date || existingEntry.date;
+    const finalParticular = updateData.particular || existingEntry.particular;
+
+    // Handle linked expense synchronization
+    if (existingEntry.linkedExpenseId) {
+        if (finalType === 'DEBIT') {
+            await expense.findByIdAndUpdate(existingEntry.linkedExpenseId, {
+                date: finalDate,
+                amount: finalAmount,
+                narration: `${finalParticular} (${ledger.name})`
+            });
+        } else {
+            // Changed from DEBIT to CREDIT -> delete the auto-created expense
+            await expense.findByIdAndDelete(existingEntry.linkedExpenseId);
+            updateData.linkedExpenseId = null;
+        }
+    } else if (finalType === 'DEBIT' && ledger.linkedExpenseLedger) {
+        // Was CREDIT and is now DEBIT -> create the linked expense
+        const createdExp = await expense.create({
+            userid: userId,
+            ledger: ledger.linkedExpenseLedger,
+            date: finalDate,
+            amount: finalAmount,
+            narration: `${finalParticular} (${ledger.name})`,
+            accountLedgerEntryId: existingEntry._id
+        });
+        updateData.linkedExpenseId = createdExp._id;
+    }
+
     const updated = await LedgerEntry.findOneAndUpdate(
         { _id: id, userid: userId },
         updateData,
         { returnDocument: 'after' }
     );
-
-    if (!updated) {
-        throw new ApiError(404, 'Ledger entry not found');
-    }
 
     res.status(200).json({
         success: true,
@@ -329,6 +445,7 @@ const updateLedgerEntry = asyncHandler(async (req, res) => {
 
 /**
  * 8. Delete Ledger Entry
+ * Automatically deletes the linked expense if one was created
  */
 const deleteLedgerEntry = asyncHandler(async (req, res) => {
     const userId = req.userid;
@@ -337,6 +454,10 @@ const deleteLedgerEntry = asyncHandler(async (req, res) => {
     const deleted = await LedgerEntry.findOneAndDelete({ _id: id, userid: userId });
     if (!deleted) {
         throw new ApiError(404, 'Entry not found');
+    }
+
+    if (deleted.linkedExpenseId) {
+        await expense.findByIdAndDelete(deleted.linkedExpenseId);
     }
 
     res.status(200).json({

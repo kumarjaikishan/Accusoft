@@ -1,6 +1,7 @@
 const ledger = require('../modals/ledger_schema')
 const expense = require('../modals/exp_schema')
 const user = require('../modals/login_schema')
+const LedgerEntry = require('../modals/ledger_entry_schema')
 const asyncHandler = require('../utils/asyncHandler')
 const { ApiError } = require('../utils/apierror')
 const dayjs = require('dayjs')
@@ -104,6 +105,11 @@ const delmany = asyncHandler(async (req, res, next) => {
     if (result.deletedCount === 0) {
         throw new ApiError(403, "No expenses deleted or unauthorized access");
     }
+
+    await LedgerEntry.updateMany(
+        { linkedExpenseId: { $in: id }, userid: userId },
+        { $set: { linkedExpenseId: null } }
+    );
 
     return res.status(200).json({
         message: "Deleted Successfully",

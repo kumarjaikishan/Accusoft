@@ -32,12 +32,18 @@ const ledgerEntrySchema = new mongoose.Schema({
         type: Number,
         required: true,
         min: 0
+    },
+    linkedExpenseId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'expense',
+        default: null
     }
 }, { timestamps: true });
 
 // Compound indexes for fast querying and running balance computation
 ledgerEntrySchema.index({ userid: 1, ledgerId: 1, date: 1, createdAt: 1 });
 ledgerEntrySchema.index({ userid: 1, date: -1 });
+ledgerEntrySchema.index({ linkedExpenseId: 1 });
 
 const LedgerEntry = mongoose.model('account_ledger_entry', ledgerEntrySchema);
 module.exports = LedgerEntry;

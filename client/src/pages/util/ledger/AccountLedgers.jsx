@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useApi } from '../../../utils/useApi';
 import { toast } from '../../../utils/toast';
@@ -12,10 +13,13 @@ import LedgerCardView from './LedgerCardView';
 import LedgerFormModal from './LedgerFormModal';
 import QuickEntryModal from './QuickEntryModal';
 import { capitalize } from './ledgerHelpers';
+import { useUserApi } from '../../../store/apicalls';
 
 const AccountLedgers = () => {
     const navigate = useNavigate();
     const { request, loading } = useApi();
+    const { userdatacall } = useUserApi();
+    const expenseLedgers = useSelector((state) => state.userexplist?.ledgerlist || []);
 
     const [ledgers, setLedgers] = useState([]);
     const [stats, setStats] = useState({
@@ -34,7 +38,8 @@ const AccountLedgers = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingLedger, setEditingLedger] = useState(null);
     const [formData, setFormData] = useState({
-        name: ''
+        name: '',
+        linkedExpenseLedger: ''
     });
 
     // Quick transaction modal state
@@ -65,6 +70,9 @@ const AccountLedgers = () => {
 
     useEffect(() => {
         fetchLedgers();
+        if (!expenseLedgers || expenseLedgers.length === 0) {
+            userdatacall();
+        }
     }, [fetchLedgers]);
 
     // Filter & Sort Ledgers
@@ -100,18 +108,23 @@ const AccountLedgers = () => {
         }
 
         try {
+            const payload = {
+                name: capitalizedName,
+                linkedExpenseLedger: formData.linkedExpenseLedger || null
+            };
+
             if (editingLedger) {
                 await request({
                     url: `util/ledgers/${editingLedger._id}`,
                     method: 'PUT',
-                    data: { name: capitalizedName }
+                    data: payload
                 });
                 toast.success('Ledger updated successfully');
             } else {
                 await request({
                     url: 'util/ledgers',
                     method: 'POST',
-                    data: { name: capitalizedName }
+                    data: payload
                 });
                 toast.success('Ledger created successfully');
             }
@@ -128,7 +141,8 @@ const AccountLedgers = () => {
         e?.stopPropagation();
         setEditingLedger(ledger);
         setFormData({
-            name: ledger.name || ''
+            name: ledger.name || '',
+            linkedExpenseLedger: ledger.linkedExpenseLedger?._id || ledger.linkedExpenseLedger || ''
         });
         setIsModalOpen(true);
     }, []);
@@ -201,7 +215,8 @@ const AccountLedgers = () => {
     const handleAddNew = () => {
         setEditingLedger(null);
         setFormData({
-            name: ''
+            name: '',
+            linkedExpenseLedger: ''
         });
         setIsModalOpen(true);
     };
@@ -287,6 +302,7 @@ const AccountLedgers = () => {
                 editingLedger={editingLedger}
                 formData={formData}
                 setFormData={setFormData}
+                expenseLedgers={expenseLedgers}
                 loading={loading}
             />
 

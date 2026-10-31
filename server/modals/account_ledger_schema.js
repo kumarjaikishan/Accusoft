@@ -11,6 +11,11 @@ const ledgerItemSchema = new mongoose.Schema({
         type: String,
         required: true,
         trim: true
+    },
+    linkedExpenseLedger: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'ledger',
+        default: null
     }
 }, { timestamps: true });
 

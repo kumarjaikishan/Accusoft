@@ -169,14 +169,14 @@ const LedgerStatementDetail = () => {
 
         try {
             if (editingEntry) {
-                await request({
+                const res = await request({
                     url: `util/ledgers/entry/${editingEntry._id}`,
                     method: 'PUT',
                     data: payload
                 });
-                toast.success('Entry updated');
+                toast.success(res?.message || 'Entry updated');
             } else {
-                await request({
+                const res = await request({
                     url: 'util/ledgers/entry',
                     method: 'POST',
                     data: {
@@ -184,7 +184,7 @@ const LedgerStatementDetail = () => {
                         ...payload
                     }
                 });
-                toast.success('Entry recorded');
+                toast.success(res?.message || 'Entry recorded');
             }
             setIsEntryModalOpen(false);
             setEditingEntry(null);

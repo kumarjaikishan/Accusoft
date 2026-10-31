@@ -1,5 +1,5 @@
 import React from 'react';
-import { Edit2, Trash2 } from 'lucide-react';
+import { Edit2, Trash2, Link2 } from 'lucide-react';
 import { formatCurrency } from './ledgerHelpers';
 
 const LedgerCardView = ({ ledgers, onCardClick, onQuickEntry, onEdit, onDelete }) => {
@@ -38,9 +38,16 @@ const LedgerCardView = ({ ledgers, onCardClick, onQuickEntry, onEdit, onDelete }
                                 <h3 className="font-bold text-base text-slate-900 dark:text-white truncate group-hover:text-emerald-600 transition">
                                     {led.name}
                                 </h3>
-                                <p className="text-[11px] text-slate-400">
-                                    {led.transactionCount || 0} Transactions
-                                </p>
+                                <div className="flex items-center gap-2 mt-0.5">
+                                    <p className="text-[11px] text-slate-400">
+                                        {led.transactionCount || 0} Transactions
+                                    </p>
+                                    {led.linkedExpenseLedger?.ledger && (
+                                        <span className="inline-flex items-center gap-1 text-[10.5px] text-indigo-600 dark:text-indigo-400 font-semibold truncate">
+                                            <Link2 size={10} className="shrink-0" /> {led.linkedExpenseLedger.ledger}
+                                        </span>
+                                    )}
+                                </div>
                             </div>
 
                             <div className="pt-2 border-t border-slate-100 dark:border-slate-800">

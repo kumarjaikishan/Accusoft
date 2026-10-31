@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Save, RefreshCw, RefreshCcw } from 'lucide-react';
+import { Save, RefreshCw, RefreshCcw, Link2 } from 'lucide-react';
 import ModalCard from '../../../components/custommodal/ModalCard';
 import DatePicker from '../../../components/common/DatePicker';
 import TextInput from '../../../components/common/TextInput';
@@ -132,6 +132,16 @@ const QuickEntryModal = ({ isOpen, onClose, onSubmit, activeLedger, entryData, s
                             />
                         </div>
                     </div>
+
+                    {/* Auto-Sync Banner for Debit payments */}
+                    {entryData.type === 'DEBIT' && activeLedger?.linkedExpenseLedger && (
+                        <div className="w-full px-3 py-2 rounded-xl bg-indigo-50/80 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-800/60 text-indigo-700 dark:text-indigo-300 text-xs flex items-center gap-2 animate-fade-in">
+                            <Link2 className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400 shrink-0" />
+                            <span className="text-[11px] leading-tight">
+                                <strong>Auto-Sync:</strong> This debit will automatically be logged as an expense in <strong>{activeLedger.linkedExpenseLedger?.ledger || activeLedger.linkedExpenseLedger}</strong>.
+                            </span>
+                        </div>
+                    )}
 
                     {/* Action buttons */}
                     <div className="w-full flex justify-between items-center gap-3 mt-3">

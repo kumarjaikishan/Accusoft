@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { Eye, Edit2, Trash2 } from 'lucide-react';
+import { Eye, Edit2, Trash2, Link2 } from 'lucide-react';
 import DataTable from '../../../components/common/DataTable';
 import { useTableStyles } from '../../../components/dataTableStyle';
 import { formatCurrency } from './ledgerHelpers';
@@ -36,14 +36,22 @@ const LedgerTableView = ({ ledgers, onRowClick, onEdit, onDelete }) => {
             grow: 2,
             cell: (row) => {
                 const initial = (row.name || 'L').charAt(0).toUpperCase();
+                const linkedName = row.linkedExpenseLedger?.ledger;
                 return (
                     <div className="flex items-center gap-2.5 py-1">
                         <div className="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-950/70 text-emerald-800 dark:text-emerald-300 font-bold flex items-center justify-center text-xs ring-1 ring-emerald-300/40 shrink-0">
                             {initial}
                         </div>
-                        <span className="font-bold text-slate-900 dark:text-white text-xs sm:text-sm truncate">
-                            {row.name}
-                        </span>
+                        <div className="flex flex-col min-w-0">
+                            <span className="font-bold text-slate-900 dark:text-white text-xs sm:text-sm truncate">
+                                {row.name}
+                            </span>
+                            {linkedName && (
+                                <span className="inline-flex items-center gap-1 text-[10.5px] text-indigo-600 dark:text-indigo-400 font-semibold truncate">
+                                    <Link2 size={10} className="shrink-0" /> Linked: {linkedName}
+                                </span>
+                            )}
+                        </div>
                     </div>
                 );
             },

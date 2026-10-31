@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowLeft, Plus, Download, Printer } from 'lucide-react';
+import { ArrowLeft, Plus, Download, Printer, Link2 } from 'lucide-react';
 
 const StatementHeader = ({ ledger, entriesCount, onBack, onAddEntry, onExportCSV, onPrint }) => {
     const initial = (ledger?.name || 'L').charAt(0).toUpperCase();
@@ -12,9 +12,16 @@ const StatementHeader = ({ ledger, entriesCount, onBack, onAddEntry, onExportCSV
                     {initial}
                 </div>
                 <div>
-                    <h1 className="text-xl sm:text-2xl font-black tracking-tight text-slate-900 dark:text-white">
-                        {ledger?.name || 'Ledger Detail'}
-                    </h1>
+                    <div className="flex flex-wrap items-center gap-2">
+                        <h1 className="text-xl sm:text-2xl font-black tracking-tight text-slate-900 dark:text-white">
+                            {ledger?.name || 'Ledger Detail'}
+                        </h1>
+                        {ledger?.linkedExpenseLedger?.ledger && (
+                            <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-indigo-700 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/50 border border-indigo-200 dark:border-indigo-800/60 px-2.5 py-0.5 rounded-full shadow-2xs">
+                                <Link2 size={11} className="text-indigo-500 shrink-0" /> Linked: {ledger.linkedExpenseLedger.ledger}
+                            </span>
+                        )}
+                    </div>
                     <p className="text-xs text-slate-400 font-medium mt-0.5">
                         Total Transactions: <strong className="text-slate-600 dark:text-slate-300">{entriesCount}</strong>
                     </p>

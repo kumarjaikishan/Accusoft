@@ -1,18 +1,18 @@
 import React, { useState, useEffect, useRef } from "react";
-import { 
-  Rocket, 
-  CheckCircle2, 
-  X, 
-  Terminal, 
-  Loader2, 
-  Copy, 
-  Check, 
-  Server, 
-  RefreshCw, 
-  GitBranch, 
-  ShieldAlert, 
-  Layers, 
-  Building2, 
+import {
+  Rocket,
+  CheckCircle2,
+  X,
+  Terminal,
+  Loader2,
+  Copy,
+  Check,
+  Server,
+  RefreshCw,
+  GitBranch,
+  ShieldAlert,
+  Layers,
+  Building2,
   Sparkles,
   Gamepad2,
   Briefcase,
@@ -55,11 +55,11 @@ const DEPLOY_PROJECTS = [
     color: "cyan"
   },
   {
-    key: "goodnature_ems",
-    name: "Goodnature EMS",
-    desc: "Employee Attendance & Payroll",
-    path: "/var/www/goodnatureoffice",
-    script: "goodnature_ems.sh",
+    key: "goodfeel_dev",
+    name: "GoodFeel Dev",
+    desc: "Goodfeel developemnt",
+    path: "/var/www/goodfeel_dev",
+    script: "goodfeel_dev.sh",
     icon: Building2,
     color: "emerald"
   },
@@ -230,7 +230,7 @@ const DeployModal = ({ isOpen, onClose }) => {
 
         {/* Modal Body */}
         <div className="p-5 space-y-4 overflow-y-auto thin-scrollbar flex-1">
-          
+
           {/* Target Project Selector Grid */}
           <div>
             <div className="flex items-center justify-between mb-2">
@@ -253,11 +253,10 @@ const DeployModal = ({ isOpen, onClose }) => {
                     type="button"
                     onClick={() => setTarget(proj.key)}
                     disabled={deploying}
-                    className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between relative ${
-                      isSelected
+                    className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between relative ${isSelected
                         ? "bg-indigo-50 dark:bg-indigo-950/50 border-indigo-500 text-indigo-950 dark:text-indigo-200 shadow-sm ring-1 ring-indigo-500/40"
                         : "bg-slate-50/70 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700/60 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 hover:border-slate-300"
-                    }`}
+                      }`}
                   >
                     <div className="flex items-center justify-between mb-1">
                       <span className="text-xs font-bold flex items-center gap-1.5 truncate">
